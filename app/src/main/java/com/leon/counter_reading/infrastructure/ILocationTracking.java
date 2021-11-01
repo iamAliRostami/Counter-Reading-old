@@ -1,6 +1,5 @@
 package com.leon.counter_reading.infrastructure;
 
-import android.content.Context;
 import android.location.Location;
 
 public interface ILocationTracking {
@@ -15,5 +14,5 @@ public interface ILocationTracking {
 
     void addLocation(Location location);
 
-    Location getCurrentLocation(Context context);
+    Location getCurrentLocation(/*Context context*/);
 }

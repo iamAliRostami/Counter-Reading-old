@@ -10,7 +10,7 @@ import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import javax.inject.Inject;
 
 public class SharedPreferencemanagerModel implements ISharedPreferenceManager {
-    final SharedPreferences appPrefs;
+    private final SharedPreferences appPrefs;
 
     @Inject
     public SharedPreferencemanagerModel(Context context, String xml) {
@@ -24,6 +24,11 @@ public class SharedPreferencemanagerModel implements ISharedPreferenceManager {
         } else if (appPrefs.getString(key, "").length() > 0) {
             return true;
         } else return !appPrefs.getString(key, "").isEmpty();
+    }
+
+    @Override
+    public boolean checkIsNotEmpty(String key, boolean b) {
+        return appPrefs != null;
     }
 
     @Override

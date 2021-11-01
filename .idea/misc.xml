@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_help.xml" value="0.2625" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_reading.xml" value="0.2625" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/toolbar.xml" value="0.2625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading/app/src/main/res/drawable/background_spinner.xml" value="0.39609375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading/app/src/main/res/drawable/border.xml" value="0.39609375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading/app/src/main/res/drawable/border_blue_3.xml" value="0.39609375" />

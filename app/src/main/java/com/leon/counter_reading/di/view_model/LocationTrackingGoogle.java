@@ -1,12 +1,12 @@
 package com.leon.counter_reading.di.view_model;
 
+
 import static com.leon.counter_reading.helpers.Constants.FASTEST_INTERVAL;
 import static com.leon.counter_reading.helpers.Constants.MIN_TIME_BW_UPDATES;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.IBinder;
@@ -27,11 +27,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class LocationTrackingGoogle extends Service implements ILocationTracking {
     private static LocationTrackingGoogle instance;
-    private static FusedLocationProviderClient fusedLocationClient;
-    private static LocationRequest locationRequest;
     private static Location location;
     private static LocationCallback locationCallback;
     private final OnSuccessListener<Location> onSuccessListener = this::addLocation;
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationRequest locationRequest;
 
     public LocationTrackingGoogle(Activity activity) {
         locationCallback = new LocationCallback() {
@@ -89,7 +89,7 @@ public class LocationTrackingGoogle extends Service implements ILocationTracking
     }
 
     @Override
-    public Location getCurrentLocation(Context context) {
+    public Location getCurrentLocation(/*Context context*/) {
         return location;
     }
 

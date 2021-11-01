@@ -10,12 +10,6 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_weight="1"
         app:popupTheme="@style/AppTheme.PopupOverlay"
-        app:titleTextAppearance="@style/Toolbar.TitleText">
-
-        <include
-            layout="@layout/reading_header"
-            android:visibility="gone" />
-    </androidx.appcompat.widget.Toolbar>
+        app:titleTextAppearance="@style/Toolbar.TitleText" />
 </com.google.android.material.appbar.AppBarLayout>

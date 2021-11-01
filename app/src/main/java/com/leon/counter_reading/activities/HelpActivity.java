@@ -1,14 +1,11 @@
 package com.leon.counter_reading.activities;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Debug;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,7 +20,7 @@ public class HelpActivity extends BaseActivity {
     private ActivityHelpBinding binding;
     private Activity activity;
 
-    @SuppressLint("SetJavaScriptEnabled")
+    //    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void initialize() {
         binding = ActivityHelpBinding.inflate(getLayoutInflater());
@@ -34,13 +31,13 @@ public class HelpActivity extends BaseActivity {
         TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
 
-        WebSettings settings = binding.webView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setAllowFileAccessFromFileURLs(true);
-        settings.setAllowUniversalAccessFromFileURLs(true);
-        settings.setBuiltInZoomControls(true);
-        binding.webView.setWebChromeClient(new WebChromeClient());
-        binding.webView.loadUrl("file:///android_asset/counter_reading.pdf");
+//        WebSettings settings = binding.webView.getSettings();
+//        settings.setJavaScriptEnabled(true);
+//        settings.setAllowFileAccessFromFileURLs(true);
+//        settings.setAllowUniversalAccessFromFileURLs(true);
+//        settings.setBuiltInZoomControls(true);
+//        binding.webView.setWebChromeClient(new WebChromeClient());
+//        binding.webView.loadUrl("file:///android_asset/counter_reading.pdf");
         activity = this;
     }
 

@@ -1,4 +1,4 @@
-package com.leon.counter_reading.adapters;
+package com.leon.counter_reading.adapters.items;
 
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -6,8 +6,8 @@ import android.graphics.drawable.Drawable;
 import java.util.ArrayList;
 
 public class DrawerItem {
-    final String ItemName;
-    Drawable drawable;
+    private final String ItemName;
+    private final Drawable drawable;
 
     DrawerItem(String itemName, Drawable drawable) {
         this.ItemName = itemName;
@@ -27,7 +27,7 @@ public class DrawerItem {
         return drawable;
     }
 
-    public void setDrawable(Drawable drawable) {
-        this.drawable = drawable;
+    public String getItemName() {
+        return ItemName;
     }
 }

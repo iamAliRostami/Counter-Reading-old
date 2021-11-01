@@ -16,8 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
+import com.leon.counter_reading.adapters.items.DrawerItem;
 
 import java.util.List;
 
@@ -53,8 +53,8 @@ public class NavigationDrawerAdapter extends
             holder.textViewTitle.setTextColor(color);
             holder.linearLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.border_red_3));
         }
-        holder.imageViewIcon.setImageDrawable(drawerItem.drawable);
-        holder.textViewTitle.setText(drawerItem.ItemName);
+        holder.imageViewIcon.setImageDrawable(drawerItem.getDrawable());
+        holder.textViewTitle.setText(drawerItem.getItemName());
 
     }
 

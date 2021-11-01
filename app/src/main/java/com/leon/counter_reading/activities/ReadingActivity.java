@@ -332,7 +332,7 @@ public class ReadingActivity extends BaseActivity {
             showImage(position);
         } else {
             makeRing(activity, NotificationType.SAVE);
-            new Update(position, getLocationTracker(activity).getCurrentLocation(activity))
+            new Update(position, getLocationTracker(activity).getCurrentLocation())
                     .execute(activity);
             new PrepareToSend(sharedPreferenceManager
                     .getStringData(SharedReferenceKeys.TOKEN.getValue())).execute(activity);
@@ -435,8 +435,6 @@ public class ReadingActivity extends BaseActivity {
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
                 intent.putExtra(BundleEnum.TRACKING.getValue(),
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
-                intent.putExtra(BundleEnum.DESCRIPTION.getValue(),
-                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).description);
                 intent.putExtra(BundleEnum.POSITION.getValue(), binding.viewPager.getCurrentItem());
                 startActivityForResult(intent, DESCRIPTION);
             }

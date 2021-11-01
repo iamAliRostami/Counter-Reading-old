@@ -5,9 +5,6 @@ import static com.leon.counter_reading.helpers.Constants.POSITION;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_WIFI_CODE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.helpers.MyApplication.getContext;
-import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
-import static com.leon.counter_reading.helpers.MyApplication.setActivityComponent;
 import static com.leon.counter_reading.utils.PermissionManager.checkCameraPermission;
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
@@ -23,7 +20,6 @@ import android.os.Debug;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,7 +36,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.BuildConfig;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.DownloadActivity;
 import com.leon.counter_reading.activities.HelpActivity;
@@ -51,15 +46,16 @@ import com.leon.counter_reading.activities.ReadingSettingActivity;
 import com.leon.counter_reading.activities.ReportActivity;
 import com.leon.counter_reading.activities.SettingActivity;
 import com.leon.counter_reading.activities.UploadActivity;
-import com.leon.counter_reading.adapters.DrawerItem;
 import com.leon.counter_reading.adapters.NavigationDrawerAdapter;
 import com.leon.counter_reading.adapters.RecyclerItemClickListener;
+import com.leon.counter_reading.adapters.items.DrawerItem;
 import com.leon.counter_reading.databinding.ActivityBaseBinding;
 import com.leon.counter_reading.di.view_model.LocationTrackingGoogle;
 import com.leon.counter_reading.di.view_model.LocationTrackingGps;
 import com.leon.counter_reading.di.view_model.MyDatabaseClientModel;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.PermissionManager;
@@ -86,10 +82,11 @@ public abstract class BaseActivity extends AppCompatActivity
             theme = getIntent().getExtras().getInt(BundleEnum.THEME.getValue());
             if (theme == 0)
                 theme = sharedPreferenceManager.getIntData(SharedReferenceKeys.THEME_STABLE.getValue());
+            getIntent().getExtras().clear();
         } else {
             theme = sharedPreferenceManager.getIntData(SharedReferenceKeys.THEME_STABLE.getValue());
         }
-        onActivitySetTheme(this, theme, false);
+        MyApplication.onActivitySetTheme(this, theme, false);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         binding = ActivityBaseBinding.inflate(getLayoutInflater());
@@ -100,7 +97,7 @@ public abstract class BaseActivity extends AppCompatActivity
         else PermissionManager.enableNetwork(this);
     }
 
-    void checkPermissions() {
+    private void checkPermissions() {
         if (PermissionManager.gpsEnabled(this))
             if (checkLocationPermission(getApplicationContext())) {
                 askLocationPermission();
@@ -111,7 +108,7 @@ public abstract class BaseActivity extends AppCompatActivity
             }
     }
 
-    void askStoragePermission() {
+    private void askStoragePermission() {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -138,15 +135,14 @@ public abstract class BaseActivity extends AppCompatActivity
                 ).check();
     }
 
-    void askLocationPermission() {
+    private void askLocationPermission() {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(getString(R.string.access_granted));
                 LocationTrackingGps.setInstance(null);
                 LocationTrackingGoogle.setInstance(null);
-//                new CustomDialogModel();
-                setActivityComponent(activity);
+                MyApplication.setActivityComponent(activity);
                 checkPermissions();
             }
 
@@ -184,11 +180,11 @@ public abstract class BaseActivity extends AppCompatActivity
         return true;
     }
 
-    void setOnDrawerItemClick() {
+    private void setOnDrawerItemClick() {
         binding.imageViewHeader.setOnClickListener(v -> {
             if (POSITION != -1) {
                 POSITION = -1;
-                Intent intent = new Intent(getContext(), HomeActivity.class);
+                Intent intent = new Intent(MyApplication.getContext(), HomeActivity.class);
                 startActivity(intent);
                 finish();
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -196,7 +192,7 @@ public abstract class BaseActivity extends AppCompatActivity
                 binding.drawerLayout.closeDrawer(GravityCompat.START);
         });
         binding.recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(),
+                new RecyclerItemClickListener(MyApplication.getContext(),
                         binding.recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -247,7 +243,7 @@ public abstract class BaseActivity extends AppCompatActivity
     @SuppressLint("RtlHardcoded")
     private void initializeBase() {
         activity = this;
-        setActivityComponent(activity);
+        MyApplication.setActivityComponent(activity);
         MyDatabaseClientModel.migration(activity);
         TextView textView = findViewById(R.id.text_view_title);
         textView.setText(sharedPreferenceManager.getStringData(
@@ -256,13 +252,13 @@ public abstract class BaseActivity extends AppCompatActivity
                 SharedReferenceKeys.USER_CODE.getValue())).concat(")"));
         binding.textViewVersion.setText(getString(R.string.version).concat(" ")
                 .concat(BuildConfig.VERSION_NAME));
-        LinearLayout linearLayout = findViewById(R.id.linear_layout_reading_header);
-        if (POSITION == 1) {
-            linearLayout.setVisibility(View.VISIBLE);
-        }
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        dataList = new ArrayList<>();
+        if (POSITION == 1) {
+            View view = getLayoutInflater().inflate(R.layout.reading_header, null);
+            toolbar.addView(view);
+        }
         fillDrawerListView();
         setOnDrawerItemClick();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle
@@ -279,13 +275,13 @@ public abstract class BaseActivity extends AppCompatActivity
         toolbar.setNavigationOnClickListener(view1 -> binding.drawerLayout.openDrawer(Gravity.RIGHT));
     }
 
-    void fillDrawerListView() {
+    private void fillDrawerListView() {
         dataList = DrawerItem.createItemList(
                 getResources().getStringArray(R.array.menu),
                 getResources().obtainTypedArray(R.array.icons));
         NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(this, dataList);
         binding.recyclerView.setAdapter(adapter);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(MyApplication.getContext()));
         binding.recyclerView.setNestedScrollingEnabled(true);
     }
 

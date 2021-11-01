@@ -18,7 +18,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
@@ -66,12 +65,12 @@ public class ReadingFragment extends Fragment {
         return fragment;
     }
 
-    static Bundle putBundle(OnOffLoadDto onOffLoadDto,
-                            ReadingConfigDefaultDto readingConfigDefaultDto,
-                            KarbariDto karbariDto,
-                            ArrayList<CounterStateDto> counterStateDtos,
-                            SpinnerCustomAdapter adapterTemp,
-                            int position) {
+    private static Bundle putBundle(OnOffLoadDto onOffLoadDto,
+                                    ReadingConfigDefaultDto readingConfigDefaultDto,
+                                    KarbariDto karbariDto,
+                                    ArrayList<CounterStateDto> counterStateDtos,
+                                    SpinnerCustomAdapter adapterTemp,
+                                    int position) {
         Bundle args = new Bundle();
         Gson gson = new Gson();
         String json1 = gson.toJson(onOffLoadDto);
@@ -108,14 +107,14 @@ public class ReadingFragment extends Fragment {
         return binding.getRoot();
     }
 
-    void initialize() {
+    private void initialize() {
         binding.editTextNumber.setOnLongClickListener(view -> {
             binding.editTextNumber.setText("");
             return false;
         });
         if (onOffLoadDto.isLocked) {
             new CustomToast().error(getString(R.string.by_mistakes).concat(onOffLoadDto.eshterak).
-                    concat(getString(R.string.is_locked)), Toast.LENGTH_LONG);
+                    concat(getString(R.string.is_locked)), Toast.LENGTH_SHORT);
             binding.editTextNumber.setFocusable(false);
             binding.editTextNumber.setEnabled(false);
         }
@@ -124,7 +123,7 @@ public class ReadingFragment extends Fragment {
         onButtonSubmitClickListener();
     }
 
-    void initializeViews() {
+    private void initializeViews() {
         binding.textViewAhad1Title.setText(DifferentCompanyManager.getAhad1(
                 DifferentCompanyManager.getActiveCompanyName()).concat(" : "));
         binding.textViewAhad2Title.setText(DifferentCompanyManager.getAhad2(
@@ -175,7 +174,7 @@ public class ReadingFragment extends Fragment {
         });
     }
 
-    void initializeSpinner() {
+    private void initializeSpinner() {
         binding.spinner.setAdapter(adapter);
         boolean found = false;
         int i;
@@ -187,7 +186,7 @@ public class ReadingFragment extends Fragment {
         setOnSpinnerSelectedListener();
     }
 
-    void setOnSpinnerSelectedListener() {
+    private void setOnSpinnerSelectedListener() {
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int i, long id) {
@@ -203,15 +202,15 @@ public class ReadingFragment extends Fragment {
                 canBeEmpty = !counterStateDto.shouldEnterNumber;
                 canLessThanPre = counterStateDto.canNumberBeLessThanPre;
                 isMakoos = counterStateDto.title.equals("معکوس");
-                if (onOffLoadDto.counterStatePosition == null ||
-                        onOffLoadDto.counterStatePosition != binding.spinner.getSelectedItemPosition()) {
-                    if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
-                            counterStateDto.moshtarakinId != onOffLoadDto.preCounterStateCode) {
-                        SerialFragment serialFragment = SerialFragment.newInstance(position,
-                                counterStateDto.id, counterStatePosition);
-                        serialFragment.show(getChildFragmentManager(), getString(R.string.counter_serial));
-                    }
-                }
+//                if (onOffLoadDto.counterStatePosition == null ||
+//                        onOffLoadDto.counterStatePosition != binding.spinner.getSelectedItemPosition()) {
+//                    if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
+//                            counterStateDto.moshtarakinId != onOffLoadDto.preCounterStateCode) {
+//                        SerialFragment serialFragment = SerialFragment.newInstance(position,
+//                                counterStateDto.id, counterStatePosition);
+//                        serialFragment.show(getChildFragmentManager(), getString(R.string.counter_serial));
+//                    }
+//                }
             }
 
             @Override
@@ -220,7 +219,11 @@ public class ReadingFragment extends Fragment {
         });
     }
 
-    void askLocationPermission() {
+    private void onButtonSubmitClickListener() {
+        binding.buttonSubmit.setOnClickListener(v -> checkPermissions());
+    }
+
+    private void askLocationPermission() {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -244,30 +247,7 @@ public class ReadingFragment extends Fragment {
                         Manifest.permission.ACCESS_COARSE_LOCATION).check();
     }
 
-    void checkPermissions() {
-        if (PermissionManager.gpsEnabledNew(activity))
-            if (PermissionManager.checkLocationPermission(getContext())) {
-                askLocationPermission();
-            } else if (PermissionManager.checkStoragePermission(getContext())) {
-                askStoragePermission();
-            } else {
-                //TODO
-                onOffLoadDto.attemptCount++;
-                if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount + 1 == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
-                    new CustomToast().warning(getString(R.string.mistakes_error), Toast.LENGTH_LONG);
-                if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
-                    new CustomToast().error(getString(R.string.by_mistakes).
-                            concat(onOffLoadDto.eshterak).concat(getString(R.string.is_locked)), Toast.LENGTH_LONG);
-                new UpdateOnOffLoadByAttemptNumber(position, onOffLoadDto.attemptCount).execute(activity);
-                if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName())) {
-                    new UpdateOnOffLoadDtoByLock(position, onOffLoadDto.trackNumber, onOffLoadDto.id).execute(activity);
-                } else {
-                    attemptSend();
-                }
-            }
-    }
-
-    void askStoragePermission() {
+    private void askStoragePermission() {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -292,8 +272,27 @@ public class ReadingFragment extends Fragment {
                         Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
     }
 
-    void onButtonSubmitClickListener() {
-        binding.buttonSubmit.setOnClickListener(v -> checkPermissions());
+    private void checkPermissions() {
+        if (PermissionManager.gpsEnabledNew(activity))
+            if (PermissionManager.checkLocationPermission(getContext())) {
+                askLocationPermission();
+            } else if (PermissionManager.checkStoragePermission(getContext())) {
+                askStoragePermission();
+            } else {
+                //TODO
+                onOffLoadDto.attemptCount++;
+                if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount + 1 == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
+                    new CustomToast().warning(getString(R.string.mistakes_error), Toast.LENGTH_LONG);
+                if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
+                    new CustomToast().error(getString(R.string.by_mistakes).
+                            concat(onOffLoadDto.eshterak).concat(getString(R.string.is_locked)), Toast.LENGTH_LONG);
+                new UpdateOnOffLoadByAttemptNumber(position, onOffLoadDto.attemptCount).execute(activity);
+                if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName())) {
+                    new UpdateOnOffLoadDtoByLock(position, onOffLoadDto.trackNumber, onOffLoadDto.id).execute(activity);
+                } else {
+                    attemptSend();
+                }
+            }
     }
 
     public void attemptSend() {
@@ -304,7 +303,7 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-    void canBeEmpty() {//TODO
+    private void canBeEmpty() {//TODO
         if (binding.editTextNumber.getText().toString().isEmpty() || isMane) {
             ((ReadingActivity) activity).updateOnOffLoadWithoutCounterNumber(position,
                     counterStateCode, counterStatePosition);
@@ -322,7 +321,7 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-    void canNotBeEmpty() {
+    private void canNotBeEmpty() {
         View view = binding.editTextNumber;
         if (binding.editTextNumber.getText().toString().isEmpty()) {
             makeRing(activity, NotificationType.NOT_SAVE);
@@ -343,7 +342,7 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-    void lessThanPre(int currentNumber) {
+    private void lessThanPre(int currentNumber) {
         if (!isMakoos)
             ((ReadingActivity) activity).updateOnOffLoadByCounterNumber(position, currentNumber,
                     counterStateCode, counterStatePosition);
@@ -352,7 +351,7 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-    void notEmptyIsMakoos(int currentNumber) {
+    private void notEmptyIsMakoos(int currentNumber) {
         FragmentTransaction fragmentTransaction = requireActivity().
                 getSupportFragmentManager().beginTransaction();
         AreYouSureFragment areYouSureFragment;
@@ -386,7 +385,7 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-    void notEmpty(int currentNumber) {
+    private void notEmpty(int currentNumber) {
         FragmentTransaction fragmentTransaction = requireActivity().
                 getSupportFragmentManager().beginTransaction();
         AreYouSureFragment areYouSureFragment;
@@ -420,25 +419,25 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-    void getBundle() {
+    private void getBundle() {
         if (getArguments() != null) {
             position = getArguments().getInt(BundleEnum.POSITION.getValue());
 
             Gson gson = new Gson();
-            onOffLoadDto = gson.fromJson(getArguments().getString(
-                    BundleEnum.ON_OFF_LOAD.getValue()), OnOffLoadDto.class);
-            readingConfigDefaultDto = gson.fromJson(getArguments().getString(
-                    BundleEnum.READING_CONFIG.getValue()),
+            onOffLoadDto = gson.fromJson(getArguments().getString(BundleEnum.ON_OFF_LOAD.getValue()),
+                    OnOffLoadDto.class);
+            readingConfigDefaultDto = gson.fromJson(getArguments()
+                            .getString(BundleEnum.READING_CONFIG.getValue()),
                     ReadingConfigDefaultDto.class);
-            karbariDto = gson.fromJson(getArguments().getString(
-                    BundleEnum.KARBARI_DICTONARY.getValue()),
-                    KarbariDto.class);
-            ArrayList<String> json1 = getArguments().getStringArrayList(
-                    BundleEnum.COUNTER_STATE.getValue());
+            karbariDto = gson.fromJson(getArguments()
+                    .getString(BundleEnum.KARBARI_DICTONARY.getValue()), KarbariDto.class);
+            ArrayList<String> json1 = getArguments()
+                    .getStringArrayList(BundleEnum.COUNTER_STATE.getValue());
             counterStateDtos.clear();
             for (String s : json1) {
                 counterStateDtos.add(gson.fromJson(s, CounterStateDto.class));
             }
+//            getArguments().clear();
         }
     }
 
