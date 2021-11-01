@@ -1,6 +1,5 @@
 package com.leon.counter_reading.activities;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Debug;
 import android.widget.TextView;
@@ -9,10 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.leon.counter_reading.BuildConfig;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityContactUsBinding;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 
@@ -30,7 +29,6 @@ public class ContactUsActivity extends AppCompatActivity {
         initialize();
     }
 
-    @SuppressLint("SetTextI18n")
     void initialize() {
         TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
@@ -39,7 +37,7 @@ public class ContactUsActivity extends AppCompatActivity {
             binding.textViewDate.setText(sharedPreferenceManager
                     .getStringData(SharedReferenceKeys.DATE.getValue()));
         binding.textViewVersion.setText(BuildConfig.VERSION_NAME);
-        binding.textViewSite.setText("tarnamesep.com");
+        binding.textViewSite.setText(R.string.site);
         binding.imageViewLogo.setImageDrawable(AppCompatResources.getDrawable(
                 getApplicationContext(), R.drawable.img_logo));
     }

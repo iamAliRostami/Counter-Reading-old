@@ -246,5 +246,6 @@
     <string name="error_on_download_counter_states">بارگیری وضعیت های کنتور به درستی انجام نشده است، با پشیبانی تماس بگیرید.</string>
     <string name="error_on_download_karbari">بارگیری کاربری ها به درستی انجام نشده است، با پشیبانی تماس بگیرید.</string>
     <string name="error_on_download_qotr">بارگیری قطرها به درستی انجام نشده است، با پشیبانی تماس بگیرید.</string>
+    <string name="site">tarnamesep.com</string>
     <!--    <string name="COMPANY_NAME" />-->
 </resources>
