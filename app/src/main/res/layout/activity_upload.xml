@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.leon.counter_reading.activities.UploadActivity">
+
+    <LinearLayout
+        android:id="@+id/linear_layout_header"
+        style="@style/ViewPagerMenu"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/text_view_upload"
+            style="@style/ViewPagerItems"
+            android:background="@drawable/border_white_2"
+            android:text="@string/upload" />
+
+        <TextView
+            android:id="@+id/text_view_upload_off"
+            style="@style/ViewPagerItems"
+            android:text="@string/upload_off" />
+
+        <TextView
+            android:id="@+id/text_view_upload_multimedia"
+            style="@style/ViewPagerItems"
+            android:text="@string/multimedia"/>
+
+    </LinearLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linear_layout_footer"
+        android:layout_below="@id/linear_layout_header"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <include layout="@layout/footer" />
+</RelativeLayout>

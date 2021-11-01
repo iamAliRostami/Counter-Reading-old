@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/large_dp"
+    tools:context="com.leon.counter_reading.fragments.ReadingSettingDeleteFragment">
+
+    <ImageView
+        android:id="@+id/image_view_delete"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/linear_layout_1"
+        android:src="@drawable/img_delete"
+        tools:ignore="ContentDescription" />
+
+    <RelativeLayout
+        android:id="@+id/linear_layout_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/button_delete"
+        android:layout_marginTop="@dimen/low_dp"
+        android:layout_marginBottom="@dimen/low_dp"
+        android:background="@drawable/border_gray_1"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinner"
+            style="@style/Spinner"
+            tools:listitem="@layout/item_dropdown_menu" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/button_delete"
+        style="@style/ButtonWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/border_yellow_1"
+        android:text="@string/delete" />
+
+</RelativeLayout>

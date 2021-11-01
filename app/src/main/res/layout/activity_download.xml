@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.leon.counter_reading.activities.DownloadActivity">
+
+    <LinearLayout
+        android:id="@+id/linear_layout_header"
+        style="@style/ViewPagerMenu"
+        android:weightSum="4">
+
+        <TextView
+            android:id="@+id/text_view_download_normal"
+            style="@style/ViewPagerItems"
+            android:background="@drawable/border_white_2"
+            android:text="@string/normal" />
+
+        <TextView
+            android:id="@+id/text_view_download_retry"
+            style="@style/ViewPagerItems"
+            android:text="@string/again" />
+
+        <TextView
+            android:id="@+id/text_view_download_off"
+            style="@style/ViewPagerItems"
+            android:text="@string/off_line" />
+
+        <TextView
+            android:id="@+id/text_view_download_special"
+            style="@style/ViewPagerItems"
+            android:text="@string/special" />
+    </LinearLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linear_layout_footer"
+        android:layout_below="@id/linear_layout_header"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <include layout="@layout/footer" />
+</RelativeLayout>

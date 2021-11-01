@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_white_3"
+    tools:context=".fragments.SerialFragment">
+
+    <View
+        android:id="@+id/view_1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/small_dp"
+        android:background="?attr/colorAccent" />
+
+    <EditText
+        android:id="@+id/edit_text_serial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view_1"
+        android:layout_marginStart="@dimen/low_dp"
+        android:layout_marginTop="@dimen/low_dp"
+        android:layout_marginEnd="@dimen/low_dp"
+        android:layout_marginBottom="@dimen/low_dp"
+        android:background="@drawable/border_gray_2"
+        android:gravity="center"
+        android:hint="@string/counter_serial"
+        android:inputType="number"
+        android:maxLength="15"
+        android:maxLines="1"
+        android:padding="@dimen/medium_dp"
+        android:textSize="@dimen/text_size_large"
+        tools:ignore="Autofill" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_serial"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_submit"
+            style="@style/ButtonSubmit.Fragment"
+            android:text="@string/confirm_serial" />
+
+        <Button
+            android:id="@+id/button_close"
+            style="@style/ButtonSubmit.Fragment.Error"
+            android:visibility="gone"
+            android:text="@string/close"/>
+    </LinearLayout>
+</RelativeLayout>

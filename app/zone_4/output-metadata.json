@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.leon.counter_reading.zone_4",
+  "variantName": "zone_4",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 32,
+      "versionName": "1.00.06.04",
+      "outputFile": "app-zone_4.apk"
+    }
+  ],
+  "elementType": "File"
+}

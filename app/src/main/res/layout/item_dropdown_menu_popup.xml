@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/low_dp"
+    android:background="@color/milky"
+    android:padding="@dimen/low_dp">
+
+    <CheckedTextView
+        android:id="@+id/text_view"
+        style="?android:attr/spinnerDropDownItemStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:ellipsize="marquee"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="@color/text_color_dark"
+        android:textSize="@dimen/text_size_medium" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view"
+        android:src="@drawable/img_bar"
+        tools:ignore="ContentDescription" />
+</RelativeLayout>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/FragmentStyle"
+    tools:context=".fragments.KarbariFragment">
+
+    <View
+        android:id="@+id/view_1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/small_dp"
+        android:background="?attr/colorAccent" />
+
+    <LinearLayout
+        android:id="@+id/linear_layout_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view_1"
+        android:layout_marginStart="@dimen/medium_dp"
+        android:layout_marginTop="@dimen/medium_dp"
+        android:layout_marginEnd="@dimen/medium_dp"
+        android:layout_marginBottom="@dimen/medium_dp"
+        android:background="@drawable/border_gray_6"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/medium_dp">
+
+        <Spinner
+            android:id="@+id/spinner"
+            style="@style/Spinner"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            tools:listitem="@layout/item_dropdown_menu" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_layout_1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_submit"
+            style="@style/ButtonSubmit.Fragment"
+            android:text="@string/submit" />
+
+        <Button
+            android:id="@+id/button_close"
+            style="@style/ButtonSubmit.Fragment.Error"
+            android:text="@string/close"
+            android:visibility="gone" />
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.leon.counter_reading.activities.ReadingSettingActivity">
+
+    <LinearLayout
+        android:id="@+id/linear_layout_header"
+        style="@style/ViewPagerMenu"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/text_view_read"
+            style="@style/ViewPagerItems"
+            android:background="@drawable/border_white_2"
+            android:text="@string/reading_setting" />
+
+        <TextView
+            android:id="@+id/text_view_sending_setting"
+            style="@style/ViewPagerItems"
+            android:text="@string/sending_setting"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/text_view_navigation"
+            style="@style/ViewPagerItems"
+            android:text="@string/dynamic_navigation" />
+
+        <TextView
+            android:id="@+id/text_view_delete"
+            style="@style/ViewPagerItems"
+            android:text="@string/delete_data" />
+
+    </LinearLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linear_layout_footer"
+        android:layout_below="@id/linear_layout_header"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <include layout="@layout/footer" />
+</RelativeLayout>

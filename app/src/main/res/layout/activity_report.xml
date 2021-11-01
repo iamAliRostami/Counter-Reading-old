@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.leon.counter_reading.activities.ReportActivity">
+
+    <LinearLayout
+        android:id="@+id/linear_layout_header"
+        style="@style/ViewPagerMenu"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/text_view_total"
+            style="@style/ViewPagerItems"
+            android:background="@drawable/border_white_2"
+            android:text="@string/total_statistic" />
+
+        <TextView
+            android:id="@+id/text_view_not_read"
+            style="@style/ViewPagerItems"
+            android:text="@string/not_read" />
+
+        <TextView
+            android:id="@+id/text_view_temporary"
+            style="@style/ViewPagerItems"
+            android:text="@string/temporary"
+            android:textColor="@color/text_color_light" />
+
+    </LinearLayout>
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/linear_layout_header"
+        android:layout_margin="@dimen/low_dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+</RelativeLayout>

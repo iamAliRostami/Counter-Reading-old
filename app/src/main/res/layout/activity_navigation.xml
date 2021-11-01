@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    tools:context="com.leon.counter_reading.activities.NavigationActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/large_dp"
+        android:layout_marginRight="@dimen/large_dp">
+
+        <TextView
+            android:id="@+id/text_view_account"
+            style="@style/InputTitle"
+            android:text="@string/account" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout_account"
+            android:layout_below="@id/text_view_account"
+            style="@style/LinearLayoutNavigation">
+
+            <ImageView
+                android:id="@+id/image_view_account"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_subscribe"
+                tools:ignore="ContentDescription" />
+
+            <EditText
+                android:id="@+id/edit_text_account"
+                android:inputType="number"
+                style="@style/InputNavigation"
+                tools:ignore="Autofill,LabelFor" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_view_phone"
+            style="@style/InputTitle"
+            android:layout_below="@id/linear_layout_account"
+            android:text="@string/phone_number" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout_phone"
+            android:layout_below="@id/text_view_phone"
+            style="@style/LinearLayoutNavigation">
+
+            <ImageView
+                android:id="@+id/image_view_phone_number"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_phone"
+                tools:ignore="ContentDescription" />
+
+            <EditText
+                android:id="@+id/edit_text_phone"
+                android:inputType="phone"
+                android:maxLength="8"
+                style="@style/InputNavigation"
+                tools:ignore="Autofill,LabelFor" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_view_mobile"
+            style="@style/InputTitle"
+            android:layout_below="@id/linear_layout_phone"
+            android:text="@string/mobile_number" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout_cell"
+            android:layout_below="@id/text_view_mobile"
+            style="@style/LinearLayoutNavigation">
+
+            <ImageView
+                android:id="@+id/image_view_mobile"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_mobile"
+                tools:ignore="ContentDescription" />
+
+            <EditText
+                android:id="@+id/edit_text_mobile"
+                android:inputType="phone"
+                android:maxLength="11"
+                style="@style/InputNavigation"
+                tools:ignore="Autofill,LabelFor" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_view_counter"
+            style="@style/InputTitle"
+            android:layout_below="@id/linear_layout_cell"
+            android:text="@string/counter_serial" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout_counter"
+            android:layout_below="@id/text_view_counter"
+            style="@style/LinearLayoutNavigation">
+
+            <ImageView
+                android:id="@+id/image_view_counter_serial"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_counter"
+                tools:ignore="ContentDescription" />
+
+            <EditText
+                android:id="@+id/edit_text_serial_counter"
+                android:inputType="number"
+                android:maxLength="15"
+                style="@style/InputNavigation"
+                tools:ignore="Autofill,LabelFor" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_view_address"
+            style="@style/InputTitle"
+            android:layout_below="@id/linear_layout_counter"
+            android:text="@string/address" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout_address"
+            android:layout_below="@id/text_view_address"
+            style="@style/LinearLayoutNavigation">
+
+            <ImageView
+                android:id="@+id/image_view_address"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_address"
+                tools:ignore="ContentDescription" />
+
+            <EditText
+                android:id="@+id/edit_text_address"
+                android:inputType="text"
+                android:maxLength="1000"
+                style="@style/InputNavigation"
+                tools:ignore="Autofill,LabelFor,TextFields" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_view_empty"
+            style="@style/InputTitle"
+            android:layout_below="@id/linear_layout_address" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout_empty"
+            android:layout_below="@id/text_view_empty"
+            style="@style/LinearLayoutNavigation">
+
+            <ImageView
+                android:id="@+id/image_view_empty"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_home"
+                tools:ignore="ContentDescription" />
+
+            <EditText
+                android:id="@+id/edit_text_empty"
+                android:inputType="number"
+                style="@style/InputNavigation"
+                tools:ignore="Autofill,LabelFor" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_navigation"
+            style="@style/ButtonWarning"
+            android:layout_below="@id/linear_layout_empty"
+            android:layout_marginTop="@dimen/low_dp"
+            android:layout_marginBottom="@dimen/low_dp"
+            android:text="@string/navigation" />
+    </RelativeLayout>
+</ScrollView>

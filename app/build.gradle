@@ -1,0 +1,150 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
+android {
+    compileSdkVersion 31
+    buildToolsVersion "30.0.3"
+    signingConfigs {
+        config {
+            keyAlias 'ali_angel'
+            keyPassword 'kaka019930'
+            storeFile file('D:/keys/MyFourthKey.jks')
+            storePassword 'kaka019930'
+        }
+    }
+    defaultConfig {
+        applicationId 'com.leon.counter_reading'
+        minSdkVersion 23
+        targetSdkVersion 31
+        versionCode 43
+        versionName "1.00.07.19"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        signingConfig signingConfigs.config
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
+        sourceSets {
+            androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+        }
+        clean
+        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
+                    "com.leon.counter_reading.enums.CompanyNames.DEBUG"
+        }
+        release {
+            debuggable true
+            signingConfig signingConfigs.config
+            buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
+                    "com.leon.counter_reading.enums.CompanyNames.ESF"
+        }
+        esf {
+            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.config
+            applicationIdSuffix ".esf"
+//            buildConfigField 'type', 'var_name', "\"value\""
+            buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
+                    "com.leon.counter_reading.enums.CompanyNames.ESF"
+        }
+
+        zone_4 {
+            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.config
+            applicationIdSuffix ".zone4"
+            buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
+                    "com.leon.counter_reading.enums.CompanyNames.ZONE4"
+        }
+        tse {
+            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.config
+            applicationIdSuffix ".tse"
+            buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
+                    "com.leon.counter_reading.enums.CompanyNames.TSE"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries true
+        dexInProcess = true
+    }
+}
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    testImplementation 'junit:junit:4.13.2'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+//    implementation 'com.google.android.gms:play-services-vision:20.1.3'
+//    implementation 'com.google.mlkit:barcode-scanning:17.0.0'
+    implementation 'com.journeyapps:zxing-android-embedded:4.2.0'
+
+    implementation 'com.android.support:multidex:1.0.3'
+
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.facebook.shimmer:shimmer:0.5.0@aar'
+
+    implementation 'com.google.firebase:firebase-analytics:19.0.2'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.3'
+    implementation platform('com.google.firebase:firebase-bom:28.1.0')
+    implementation 'com.google.firebase:firebase-analytics'
+
+    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+
+    implementation 'org.osmdroid:osmdroid-android:6.1.11@aar'
+
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
+    androidTestImplementation 'android.arch.persistence.room:testing:1.1.1'
+
+    annotationProcessor("javax.annotation:javax.annotation-api:1.3.2")
+    // Libraries For Dependency Injection Using Dagger 2
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    implementation 'com.google.dagger:dagger:2.11'
+    implementation 'com.google.dagger:dagger-android:2.38.1'
+
+    implementation 'com.auth0.android:jwtdecode:2.0.0'
+    implementation 'gun0912.ted:tedpermission:1.0.3'
+
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+    implementation 'com.github.GrenderG:Toasty:1.5.0'
+    implementation 'com.github.blackfizz:eazegraph:1.2.3@aar'
+
+    implementation 'com.yandex.android:mobmetricalib:4.0.0'
+    implementation 'com.yandex.android:mobmetricalib-ndk-crashes:1.1.0'
+}

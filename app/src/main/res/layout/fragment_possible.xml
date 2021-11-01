@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/FragmentStyle"
+    android:background="@color/transparent"
+    tools:context=".fragments.PossibleFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/small_dp"
+            android:background="?attr/colorAccent" />
+
+        <ScrollView
+            android:id="@+id/scroll_view_form"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_mobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/low_dp"
+                    android:background="@drawable/border_gray_6"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/medium_dp">
+
+                    <TextView
+                        style="@style/TitlePossible"
+                        android:text="@string/mobile_number" />
+
+                    <TextView
+                        android:id="@+id/text_view_mobile"
+                        style="@style/TitlePossible"
+                        android:layout_width="match_parent" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/edit_text_mobile"
+                    style="@style/InputPossible"
+                    android:hint="@string/mobile_number"
+                    android:inputType="phone"
+                    android:maxLength="11"
+                    tools:ignore="Autofill" />
+
+                <EditText
+                    android:id="@+id/edit_text_address"
+                    style="@style/InputPossible"
+                    android:hint="@string/address"
+                    tools:ignore="Autofill,TextFields" />
+
+                <EditText
+                    android:id="@+id/edit_text_search"
+                    style="@style/InputPossible"
+                    android:hint="@string/karbari"
+                    tools:ignore="Autofill,TextFields" />
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_karbari"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/low_dp"
+                    android:background="@drawable/border_gray_6"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/medium_dp">
+
+                    <Spinner
+                        android:id="@+id/spinner_karbari"
+                        style="@style/Spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        tools:listitem="@layout/item_dropdown_menu" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/edit_text_account"
+                    style="@style/InputPossible"
+                    android:hint="@string/account"
+                    android:inputType="number"
+                    tools:ignore="Autofill" />
+
+                <EditText
+                    android:id="@+id/edit_text_serial"
+                    style="@style/InputPossible"
+                    android:hint="@string/counter_serial"
+                    android:inputType="number"
+                    android:maxLength="15"
+                    tools:ignore="Autofill" />
+
+                <EditText
+                    android:id="@+id/edit_text_ahad_empty"
+                    style="@style/InputPossible"
+                    android:inputType="number"
+                    android:maxLength="9"
+                    tools:ignore="Autofill,LabelFor" />
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_ahad"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/low_dp"
+                    android:background="@drawable/border_gray_6"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/medium_dp"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/text_view_ahad_1_title"
+                        style="@style/TitlePossible"
+                        android:layout_marginLeft="@dimen/small_dp"
+                        android:layout_marginRight="@dimen/small_dp" />
+
+                    <TextView
+                        android:id="@+id/text_view_ahad_1"
+                        style="@style/TitlePossible"
+                        android:layout_marginLeft="@dimen/small_dp"
+                        android:layout_marginRight="@dimen/small_dp" />
+
+                    <View
+                        android:layout_width="@dimen/small_dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/smoked" />
+
+                    <TextView
+                        android:id="@+id/text_view_ahad2_title"
+                        style="@style/TitlePossible"
+                        android:layout_marginLeft="@dimen/small_dp"
+                        android:layout_marginRight="@dimen/small_dp" />
+
+                    <TextView
+                        android:id="@+id/text_view_ahad_2"
+                        style="@style/TitlePossible"
+                        android:layout_marginLeft="@dimen/small_dp"
+                        android:layout_marginRight="@dimen/small_dp" />
+
+                    <View
+                        android:layout_width="@dimen/small_dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/smoked" />
+
+                    <TextView
+                        android:id="@+id/text_view_ahad_total_title"
+                        style="@style/TitlePossible"
+                        android:layout_marginLeft="@dimen/small_dp"
+                        android:layout_marginRight="@dimen/small_dp" />
+
+                    <TextView
+                        android:id="@+id/text_view_ahad_total"
+                        style="@style/TitlePossible"
+                        android:layout_marginLeft="@dimen/small_dp"
+                        android:layout_marginRight="@dimen/small_dp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/edit_text_ahad_1"
+                    style="@style/InputPossible"
+                    android:inputType="number"
+                    android:maxLength="9"
+                    tools:ignore="Autofill,LabelFor" />
+
+                <EditText
+                    android:id="@+id/edit_text_ahad_2"
+                    style="@style/InputPossible"
+                    android:inputType="number"
+                    android:maxLength="9"
+                    tools:ignore="Autofill,LabelFor" />
+
+                <EditText
+                    android:id="@+id/edit_text_ahad_total"
+                    style="@style/InputPossible"
+                    android:inputType="number"
+                    android:maxLength="9"
+                    tools:ignore="Autofill,LabelFor" />
+
+                <EditText
+                    android:id="@+id/edit_text_description"
+                    style="@style/InputPossible"
+                    android:hint="@string/description"
+                    tools:ignore="Autofill,TextFields" />
+
+                <TextView
+                    android:id="@+id/text_view_report"
+                    style="@style/InputPossible"
+                    android:layout_width="match_parent"
+                    android:textSize="@dimen/text_size_large"
+                    android:layout_marginLeft="@dimen/small_dp"
+                    android:layout_marginRight="@dimen/small_dp"
+                    android:background="@drawable/border_gray_6"
+                    android:text="@string/reports"/>
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/linear_layout_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_submit"
+                style="@style/ButtonSubmit.Fragment"
+                android:text="@string/submit" />
+
+            <Button
+                android:id="@+id/button_close"
+                style="@style/ButtonSubmit.Fragment.Error"
+                android:text="@string/close"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
