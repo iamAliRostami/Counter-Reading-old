@@ -39,14 +39,15 @@ public class ReadingReportActivity extends AppCompatActivity {
         initialize();
     }
 
-    void initialize() {
+    private void initialize() {
         if (getIntent().getExtras() != null) {
             uuid = getIntent().getExtras().getString(BundleEnum.BILL_ID.getValue());
             trackNumber = getIntent().getExtras().getInt(BundleEnum.TRACKING.getValue());
             position = getIntent().getExtras().getInt(BundleEnum.POSITION.getValue());
             zoneId = getIntent().getExtras().getInt(BundleEnum.ZONE_ID.getValue());
+//            getIntent().getExtras().clear();
         }
-        new GetReadingReportDBData(activity, trackNumber,zoneId, uuid).execute(activity);
+        new GetReadingReportDBData(activity, trackNumber, zoneId, uuid).execute(activity);
         binding.buttonSubmit.setOnClickListener(v -> {
             Intent intent = new Intent();
             intent.putExtra(BundleEnum.POSITION.getValue(), position);
