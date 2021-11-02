@@ -1,9 +1,9 @@
 package com.leon.counter_reading.adapters;
 
+import static com.leon.counter_reading.activities.TakePhotoActivity.replace;
 import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GALLERY_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
-import static com.leon.counter_reading.activities.TakePhotoActivity.replace;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 
@@ -27,7 +27,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.leon.counter_reading.BuildConfig;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.TakePhotoActivity;
 import com.leon.counter_reading.fragments.HighQualityFragment;
@@ -70,14 +69,14 @@ public class ImageViewAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.item_image, null);
         }
         ImageViewHolder holder = new ImageViewHolder(view);
-        holder.imageViewDelete.setVisibility(position < images.size() && !images.get(position).isSent ? View.VISIBLE : View.GONE);
+        holder.imageViewDelete.setVisibility(position < images.size() && !images.get(position).isSent ?
+                View.VISIBLE : View.GONE);
         holder.imageViewSent.setVisibility(position < images.size() && images.get(position).isSent ?
                 View.VISIBLE : View.GONE);
         holder.imageView.setOnClickListener(view1 -> {
             replace = position < images.size() ? position + 1 : 0;
             imagePicker();
         });
-
         if (position < images.size()) {
             final Bitmap[] bitmap;
             bitmap = new Bitmap[]{images.get(position).bitmap};
@@ -101,12 +100,11 @@ public class ImageViewAdapter extends BaseAdapter {
             });
         } else {
             holder.imageView.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.img_camera));
-
         }
         return view;
     }
 
-    void imagePicker() {
+    private void imagePicker() {
         AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
         builder.setTitle(R.string.choose_document);
         builder.setMessage(R.string.select_source);
@@ -148,7 +146,9 @@ public class ImageViewAdapter extends BaseAdapter {
 
 class ImageViewHolder {
 
-    public ImageView imageView, imageViewDelete, imageViewSent;
+    public final ImageView imageView;
+    public final ImageView imageViewDelete;
+    public final ImageView imageViewSent;
 
     public ImageViewHolder(View view) {
         imageView = view.findViewById(R.id.image_view);

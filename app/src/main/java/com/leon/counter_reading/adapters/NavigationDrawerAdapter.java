@@ -55,7 +55,6 @@ public class NavigationDrawerAdapter extends
         }
         holder.imageViewIcon.setImageDrawable(drawerItem.getDrawable());
         holder.textViewTitle.setText(drawerItem.getItemName());
-
     }
 
     @Override
@@ -67,8 +66,6 @@ public class NavigationDrawerAdapter extends
     public int getItemCount() {
         return drawerItemList.size();
     }
-
-
 }
 
 class DrawerItemHolder extends RecyclerView.ViewHolder {

@@ -172,5 +172,4 @@ public class UploadActivity extends BaseActivity {
         System.gc();
         super.onDestroy();
     }
-
 }

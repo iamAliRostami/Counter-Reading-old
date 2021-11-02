@@ -1,8 +1,8 @@
-package com.leon.counter_reading.adapters;
+package com.leon.counter_reading.adapters.items;
 
 public class MultiSelectionItem {
-    private String name;
-    private Boolean value;
+    private final String name;
+    private final Boolean value;
 
     public MultiSelectionItem(String name, Boolean value) {
         this.name = name;
@@ -13,15 +13,7 @@ public class MultiSelectionItem {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Boolean getValue() {
         return value;
-    }
-
-    public void setValue(Boolean value) {
-        this.value = value;
     }
 }
