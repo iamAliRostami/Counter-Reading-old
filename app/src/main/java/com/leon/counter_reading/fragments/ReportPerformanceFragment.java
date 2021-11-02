@@ -49,8 +49,8 @@ public class ReportPerformanceFragment extends Fragment {
     private void setupTextViews() {
         binding.textViewFrom.setText(new PersianCalendar().getPersianShortDate());
         binding.textViewEnd.setText(new PersianCalendar().getPersianShortDate());
-        setLinearLayoutVisibility(View.GONE);
-//        binding.relativeLayoutDetail.setVisibility(View.GONE);
+//        setLinearLayoutVisibility(View.GONE);
+        binding.relativeLayoutDetail.setVisibility(View.GONE);
         setOnTextViewFromOnClickListener();
         setOnTextViewEndOnClickListener();
         setSubmitButtonOnClickListener();
@@ -75,8 +75,8 @@ public class ReportPerformanceFragment extends Fragment {
 //                    );
             datePickerDialog.setOnSingleDateSelectedListener(date -> {
 //                startDate = date.getPersianShortDate();
-//                binding.relativeLayoutDetail.setVisibility(View.GONE);
-                setLinearLayoutVisibility(View.GONE);
+                binding.relativeLayoutDetail.setVisibility(View.GONE);
+//                setLinearLayoutVisibility(View.GONE);
                 binding.textViewFrom.setText(date.getPersianShortDate());
             });
             datePickerDialog.showDialog();
@@ -93,8 +93,8 @@ public class ReportPerformanceFragment extends Fragment {
             datePickerDialog.setTextSizeDate(14.0f);
             datePickerDialog.setCanceledOnTouchOutside(true);
             datePickerDialog.setOnSingleDateSelectedListener(date -> {
-                setLinearLayoutVisibility(View.GONE);
-//                binding.relativeLayoutDetail.setVisibility(View.GONE);
+//                setLinearLayoutVisibility(View.GONE);
+                binding.relativeLayoutDetail.setVisibility(View.GONE);
 //                endDate = date.getPersianShortDate();
                 binding.textViewEnd.setText(date.getPersianShortDate());
             });
@@ -108,8 +108,8 @@ public class ReportPerformanceFragment extends Fragment {
 //            binding.linearLayoutEnd.setVisibility(View.GONE);
 //            binding.linearLayoutFrom.setVisibility(View.GONE);
 //            visible = false;
-            setLinearLayoutVisibility(View.VISIBLE);
-//            binding.relativeLayoutDetail.setVisibility(View.VISIBLE);
+//            setLinearLayoutVisibility(View.VISIBLE);
+            binding.relativeLayoutDetail.setVisibility(View.VISIBLE);
             binding.textViewAdiCount.setText(String.valueOf(performanceResponse.adiCount));
             binding.textViewTotal.setText(String.valueOf(performanceResponse.overalCount));
             binding.textViewMedia.setText(String.valueOf(performanceResponse.mediaCount));

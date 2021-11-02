@@ -3,14 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/border_gray_3"
+    android:padding="@dimen/medium_dp"
     tools:context=".fragments.ReportPerformanceFragment">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="vertical"
-        android:padding="@dimen/medium_dp">
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/linear_layout_from"
@@ -27,6 +31,7 @@
                     android:textSize="@dimen/text_size_medium" />
 
                 <TextView
+                    android:padding="@dimen/low_dp"
                     android:id="@+id/text_view_from"
                     style="@style/InputPossible" />
 
@@ -48,28 +53,35 @@
                     android:textSize="@dimen/text_size_medium" />
 
                 <TextView
+                    android:padding="@dimen/low_dp"
                     android:id="@+id/text_view_end"
                     style="@style/InputPossible" />
             </LinearLayout>
 
             <Button
+                android:background="@drawable/border_blue_1"
                 android:id="@+id/button_submit"
                 style="@style/ButtonSubmit.Fragment"
                 android:layout_width="match_parent"
                 android:layout_below="@id/linear_layout_end"
-                android:padding="@dimen/medium_dp"
                 android:text="@string/show" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relative_layout_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/linear_layout_1"
                 style="@style/ReadingSettingItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/button_submit"
-                android:background="@drawable/border_blue_3">
+                android:background="@drawable/border_blue_2">
 
                 <TextView
-                    style="@style/ReadingSettingItem"
+                    style="@style/ReadingSettingItemWhite"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -77,7 +89,7 @@
 
                 <TextView
                     android:id="@+id/text_view_total"
-                    style="@style/ReadingSettingItemBlueBold"
+                    style="@style/ReadingSettingItemWhiteBold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
@@ -89,10 +101,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/linear_layout_1"
-                android:background="@drawable/border_blue_2">
+                android:background="@drawable/border_blue_3">
 
                 <TextView
-                    style="@style/ReadingSettingItemWhite"
+                    style="@style/ReadingSettingItem"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -100,7 +112,7 @@
 
                 <TextView
                     android:id="@+id/text_view_media"
-                    style="@style/ReadingSettingItemWhiteBold"
+                    style="@style/ReadingSettingItemBlueBold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
@@ -112,10 +124,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/linear_layout_2"
-                android:background="@drawable/border_blue_3">
+                android:background="@drawable/border_blue_2">
 
                 <TextView
-                    style="@style/ReadingSettingItem"
+                    style="@style/ReadingSettingItemWhite"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -123,7 +135,7 @@
 
                 <TextView
                     android:id="@+id/text_view_forbid"
-                    style="@style/ReadingSettingItemBlueBold"
+                    style="@style/ReadingSettingItemWhiteBold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
@@ -135,10 +147,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/linear_layout_3"
-                android:background="@drawable/border_blue_2">
+                android:background="@drawable/border_blue_3">
 
                 <TextView
-                    style="@style/ReadingSettingItemWhite"
+                    style="@style/ReadingSettingItem"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -146,7 +158,7 @@
 
                 <TextView
                     android:id="@+id/text_view_adi_count"
-                    style="@style/ReadingSettingItemWhiteBold"
+                    style="@style/ReadingSettingItemBlueBold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
@@ -158,10 +170,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/linear_layout_4"
-                android:background="@drawable/border_blue_3">
+                android:background="@drawable/border_blue_2">
 
                 <TextView
-                    style="@style/ReadingSettingItem"
+                    style="@style/ReadingSettingItemWhite"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -169,7 +181,7 @@
 
                 <TextView
                     android:id="@+id/text_view_xarab"
-                    style="@style/ReadingSettingItemBlueBold"
+                    style="@style/ReadingSettingItemWhiteBold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
@@ -181,10 +193,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/linear_layout_5"
-                android:background="@drawable/border_blue_2">
+                android:background="@drawable/border_blue_3">
 
                 <TextView
-                    style="@style/ReadingSettingItemWhite"
+                    style="@style/ReadingSettingItem"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -192,7 +204,7 @@
 
                 <TextView
                     android:id="@+id/text_view_taviz"
-                    style="@style/ReadingSettingItemWhiteBold"
+                    style="@style/ReadingSettingItemBlueBold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
@@ -204,10 +216,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/linear_layout_6"
-                android:background="@drawable/border_blue_3">
+                android:background="@drawable/border_blue_2">
 
                 <TextView
-                    style="@style/ReadingSettingItem"
+                    style="@style/ReadingSettingItemWhite"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -215,7 +227,7 @@
 
                 <TextView
                     android:id="@+id/text_view_faqed"
-                    style="@style/ReadingSettingItemBlueBold"
+                    style="@style/ReadingSettingItemWhiteBold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
@@ -227,10 +239,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/linear_layout_7"
-                android:background="@drawable/border_blue_2">
+                android:background="@drawable/border_blue_3">
 
                 <TextView
-                    style="@style/ReadingSettingItemWhite"
+                    style="@style/ReadingSettingItem"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -238,10 +250,11 @@
 
                 <TextView
                     android:id="@+id/text_view_mane"
-                    style="@style/ReadingSettingItemWhiteBold"
+                    style="@style/ReadingSettingItemBlueBold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
             </LinearLayout>
         </RelativeLayout>
+    </LinearLayout>
 </ScrollView>
