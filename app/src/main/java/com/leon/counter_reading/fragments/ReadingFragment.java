@@ -6,6 +6,7 @@ import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import android.Manifest;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,13 +37,14 @@ import com.leon.counter_reading.utils.reading.Counting;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByAttemptNumber;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByIsShown;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadDtoByLock;
+import static com.leon.counter_reading.helpers.Constants.adapter;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 public class ReadingFragment extends Fragment {
-    private static SpinnerCustomAdapter adapter;
+//    private static SpinnerCustomAdapter adapter;
     private FragmentReadingBinding binding;
     private ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
     private OnOffLoadDto onOffLoadDto;
@@ -57,11 +59,10 @@ public class ReadingFragment extends Fragment {
             ReadingConfigDefaultDto readingConfigDefaultDto,
             KarbariDto karbariDto,
             ArrayList<CounterStateDto> counterStateDtos,
-            SpinnerCustomAdapter adapter,
             int position) {
         ReadingFragment fragment = new ReadingFragment();
         fragment.setArguments(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto,
-                counterStateDtos, adapter, position));
+                counterStateDtos, position));
         return fragment;
     }
 
@@ -69,7 +70,6 @@ public class ReadingFragment extends Fragment {
                                     ReadingConfigDefaultDto readingConfigDefaultDto,
                                     KarbariDto karbariDto,
                                     ArrayList<CounterStateDto> counterStateDtos,
-                                    SpinnerCustomAdapter adapterTemp,
                                     int position) {
         Bundle args = new Bundle();
         Gson gson = new Gson();
@@ -87,7 +87,7 @@ public class ReadingFragment extends Fragment {
             json7.add(json);
         }
         args.putStringArrayList(BundleEnum.COUNTER_STATE.getValue(), json7);
-        adapter = adapterTemp;
+//        adapter = adapterTemp;
         args.putInt(BundleEnum.POSITION.getValue(), position);
         return args;
     }
@@ -454,6 +454,7 @@ public class ReadingFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        Log.e("here","onDestroyView");
     }
 
     @Override
@@ -462,5 +463,7 @@ public class ReadingFragment extends Fragment {
         karbariDto = null;
         readingConfigDefaultDto = null;
         counterStateDtos = null;
+        binding = null;
+        Log.e("here","onDestroy");
     }
 }

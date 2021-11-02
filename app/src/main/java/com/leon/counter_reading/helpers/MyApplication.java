@@ -50,34 +50,6 @@ import java.util.ArrayList;
 import es.dmoral.toasty.Toasty;
 
 public class MyApplication extends Application {
-//    public static final String FONT_NAME = "font/font_1.ttf";
-//    public static final int TOAST_TEXT_SIZE = 20;
-//
-//    public static final int GPS_CODE = 1231;
-//    public static final int REQUEST_NETWORK_CODE = 1232;
-//    public static final int REQUEST_WIFI_CODE = 1233;
-//    public static final int CAMERA_REQUEST = 1888;
-//    public static final int GALLERY_REQUEST = 1889;
-//    public static final int CARRIER_PRIVILEGE_STATUS = 901;
-//
-//    public static final int CAMERA = 1446;
-//    public static final int REPORT = 1445;
-//    public static final int NAVIGATION = 1903;
-//    public static final int COUNTER_LOCATION = 1914;
-//    public static final int DESCRIPTION = 1909;
-//
-//    public static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
-//    public static final long MIN_TIME_BW_UPDATES = 10000;
-//    public static final long FASTEST_INTERVAL = 10000;
-//    public static final int MAX_IMAGE_SIZE = 200000;
-//
-//    public static int POSITION = -1;
-//    public static Bitmap BITMAP_SELECTED_IMAGE;
-//    public static Uri PHOTO_URI;
-//
-//    public static boolean FOCUS_ON_EDIT_TEXT;
-//    public static ArrayList<Integer> IS_MANE = new ArrayList<>();
-//    public static ReadingData readingData, readingDataTemp;
 
     private static Context appContext;
     private static int ERROR_COUNTER = 0;
@@ -101,21 +73,44 @@ public class MyApplication extends Application {
                 .sharedPreferenceModule(new SharedPreferenceModule(appContext, SharedReferenceNames.ACCOUNT))
                 .build();
         applicationComponent.inject(this);
-        if (!BuildConfig.BUILD_TYPE.equals("release")) {
-            //TODO on comment for release.
-            Log.e("here","initialize Yandex");
-            YandexMetricaConfig config = YandexMetricaConfig
-                    .newConfigBuilder("6d39e473-5c5c-4163-9c4c-21eb91758e8f").withLogs()
-                    .withAppVersion(BuildConfig.VERSION_NAME).build();
-//         Initializing the AppMetrica SDK.
-            YandexMetrica.activate(appContext, config);
-//         Automatic tracking of user activity.
-            YandexMetrica.enableActivityAutoTracking(this);
-            YandexMetrica.activate(getApplicationContext(), config);
-        }
         super.onCreate();
+        if (!BuildConfig.BUILD_TYPE.equals("release")) {
+            setupYandex();
+        } else {
+            setupLeakCanary();
+        }
     }
 
+//    private com.squareup.leakcanary.RefWatcher refWatcher;
+
+    protected void setupLeakCanary() {
+//        if (com.squareup.leakcanary.LeakCanary.isInAnalyzerProcess(this)) {
+//            return;
+//        }
+//        refWatcher = com.squareup.leakcanary.LeakCanary.install(this);
+    }
+
+//    public static com.squareup.leakcanary.RefWatcher getRefWatcher(Context context) {
+//        MyApplication application = (MyApplication) context.getApplicationContext();
+//        return application.refWatcher;
+//    }
+//
+//    public void mustDie(Object object) {
+//        if (refWatcher != null) {
+//            refWatcher.watch(object);
+//        }
+//    }
+
+    protected void setupYandex() {
+        com.yandex.metrica.YandexMetricaConfig config = com.yandex.metrica.YandexMetricaConfig
+                .newConfigBuilder("6d39e473-5c5c-4163-9c4c-21eb91758e8f").withLogs()
+                .withAppVersion(BuildConfig.VERSION_NAME).build();
+//         Initializing the AppMetrica SDK.
+        com.yandex.metrica.YandexMetrica.activate(appContext, config);
+//         Automatic tracking of user activity.
+        com.yandex.metrica.YandexMetrica.enableActivityAutoTracking(this);
+        com.yandex.metrica.YandexMetrica.activate(getApplicationContext(), config);
+    }
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
