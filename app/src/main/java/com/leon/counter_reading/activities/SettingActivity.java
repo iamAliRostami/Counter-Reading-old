@@ -3,9 +3,12 @@ package com.leon.counter_reading.activities;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Debug;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
@@ -37,7 +40,7 @@ public class SettingActivity extends BaseActivity {
         initializeTextViews();
     }
 
-    void initializeTextViews() {
+    private void initializeTextViews() {
         TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
 
@@ -47,7 +50,7 @@ public class SettingActivity extends BaseActivity {
         textViewAvatar();
     }
 
-    void textViewChangeTheme() {
+    private void textViewChangeTheme() {
         binding.textViewChangeTheme.setOnClickListener(view -> {
             setColor();
             binding.textViewChangeTheme.setBackground(
@@ -57,7 +60,7 @@ public class SettingActivity extends BaseActivity {
         });
     }
 
-    void textViewChangePassword() {
+    private void textViewChangePassword() {
         binding.textViewChangePassword.setOnClickListener(view -> {
             setColor();
             binding.textViewChangePassword.
@@ -67,7 +70,7 @@ public class SettingActivity extends BaseActivity {
         });
     }
 
-    void textViewUpdate() {
+    private void textViewUpdate() {
         binding.textViewUpdate.setOnClickListener(view -> {
             setColor();
             binding.textViewUpdate.
@@ -77,7 +80,7 @@ public class SettingActivity extends BaseActivity {
         });
     }
 
-    void textViewAvatar() {
+    private void textViewAvatar() {
         binding.textViewChangeAvatar.setOnClickListener(view -> {
             setColor();
             binding.textViewChangeAvatar.
@@ -152,7 +155,22 @@ public class SettingActivity extends BaseActivity {
         });
         binding.viewPager.setPageTransformer(true, new DepthPageTransformer());
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.setting_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_backup) {
+            new BackUp(activity).execute(activity);
+        } else if (id ==R.id.menu_restore){
+            new Restore(activity).execute(activity);
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     protected void onStop() {
         Debug.getNativeHeapAllocatedSize();
