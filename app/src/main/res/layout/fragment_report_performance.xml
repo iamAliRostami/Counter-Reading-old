@@ -31,9 +31,16 @@
                     android:textSize="@dimen/text_size_medium" />
 
                 <TextView
-                    android:padding="@dimen/low_dp"
                     android:id="@+id/text_view_from"
-                    style="@style/InputPossible" />
+                    style="@style/InputPlace"
+                    android:layout_margin="@dimen/low_dp"
+                    android:maxLength="10"
+                    android:padding="@dimen/low_dp"
+                    android:textSize="@dimen/text_size_large" />
+                <!--                <TextView-->
+                <!--                    android:padding="@dimen/low_dp"-->
+                <!--                    android:id="@+id/text_view_from"-->
+                <!--                    style="@style/InputPossible" />-->
 
             </LinearLayout>
 
@@ -53,17 +60,20 @@
                     android:textSize="@dimen/text_size_medium" />
 
                 <TextView
-                    android:padding="@dimen/low_dp"
                     android:id="@+id/text_view_end"
-                    style="@style/InputPossible" />
+                    style="@style/InputPlace"
+                    android:layout_margin="@dimen/low_dp"
+                    android:maxLength="10"
+                    android:padding="@dimen/low_dp"
+                    android:textSize="@dimen/text_size_large" />
             </LinearLayout>
 
             <Button
-                android:background="@drawable/border_blue_1"
                 android:id="@+id/button_submit"
                 style="@style/ButtonSubmit.Fragment"
                 android:layout_width="match_parent"
                 android:layout_below="@id/linear_layout_end"
+                android:background="@drawable/border_blue_1"
                 android:text="@string/show" />
 
         </RelativeLayout>

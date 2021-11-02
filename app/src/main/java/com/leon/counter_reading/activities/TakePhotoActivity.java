@@ -1,9 +1,9 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.helpers.Constants.BITMAP_SELECTED_IMAGE;
 import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GALLERY_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
-import static com.leon.counter_reading.helpers.Constants.BITMAP_SELECTED_IMAGE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
 
@@ -23,7 +23,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ImageViewAdapter;
 import com.leon.counter_reading.databinding.ActivityTakePhotoBinding;
@@ -68,7 +67,7 @@ public class TakePhotoActivity extends AppCompatActivity {
         else askCameraPermission();
     }
 
-    void initialize() {
+    private void initialize() {
         if (getIntent().getExtras() != null) {
             uuid = getIntent().getExtras().getString(BundleEnum.BILL_ID.getValue());
             position = getIntent().getExtras().getInt(BundleEnum.POSITION.getValue());
@@ -76,12 +75,13 @@ public class TakePhotoActivity extends AppCompatActivity {
             result = getIntent().getExtras().getBoolean(BundleEnum.IMAGE.getValue());
             binding.textViewNotSent.setVisibility(getIntent().getExtras()
                     .getBoolean(BundleEnum.SENT.getValue()) ? View.GONE : View.VISIBLE);
+            getIntent().getExtras().clear();
         }
         imageSetup();
         setOnButtonSendClickListener();
     }
 
-    void imageSetup() {
+    private void imageSetup() {
         images = new ArrayList<>();
         if (!result) {
             images.addAll(getApplicationComponent().MyDatabase()
@@ -94,16 +94,14 @@ public class TakePhotoActivity extends AppCompatActivity {
         binding.gridViewImage.setAdapter(imageViewAdapter);
     }
 
-    void setOnButtonSendClickListener() {
+    private void setOnButtonSendClickListener() {
         binding.buttonSaveSend.setOnClickListener(v ->
                 new PrepareMultimedia(activity, position, result,
-                        binding.editTextDescription.getText().toString().isEmpty() ?
-                                getString(R.string.description) :
-                                binding.editTextDescription.getText().toString(), images)
+                        binding.editTextDescription.getText().toString(), images)
                         .execute(activity));
     }
 
-    void askCameraPermission() {
+    private void askCameraPermission() {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -152,7 +150,6 @@ public class TakePhotoActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
                 }
             }
         }
@@ -160,9 +157,10 @@ public class TakePhotoActivity extends AppCompatActivity {
 
     private void prepareImage() {
         Image image = new Image();
+        image.bitmap = BITMAP_SELECTED_IMAGE;
+        BITMAP_SELECTED_IMAGE = null;
         image.OnOffLoadId = uuid;
         image.trackNumber = trackNumber;
-        image.bitmap = BITMAP_SELECTED_IMAGE;
         if (replace > 0) {
             getApplicationComponent().MyDatabase()
                     .imageDao().deleteImage(images.get(replace - 1).id);
@@ -175,6 +173,7 @@ public class TakePhotoActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        BITMAP_SELECTED_IMAGE = null;
         Debug.getNativeHeapAllocatedSize();
         System.runFinalization();
         Runtime.getRuntime().totalMemory();
@@ -187,7 +186,6 @@ public class TakePhotoActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        BITMAP_SELECTED_IMAGE = null;
         images = null;
         binding = null;
         Debug.getNativeHeapAllocatedSize();

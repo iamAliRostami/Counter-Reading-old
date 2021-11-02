@@ -23,6 +23,8 @@ import com.leon.counter_reading.fragments.SettingChangeThemeFragment;
 import com.leon.counter_reading.fragments.SettingUpdateFragment;
 import com.leon.counter_reading.utils.DepthPageTransformer;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
+import com.leon.counter_reading.utils.backup_restore.BackUp;
+import com.leon.counter_reading.utils.backup_restore.Restore;
 
 public class SettingActivity extends BaseActivity {
     private ActivitySettingBinding binding;
@@ -155,6 +157,7 @@ public class SettingActivity extends BaseActivity {
         });
         binding.viewPager.setPageTransformer(true, new DepthPageTransformer());
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.setting_menu, menu);
@@ -166,11 +169,12 @@ public class SettingActivity extends BaseActivity {
         int id = item.getItemId();
         if (id == R.id.menu_backup) {
             new BackUp(activity).execute(activity);
-        } else if (id ==R.id.menu_restore){
+        } else if (id == R.id.menu_restore) {
             new Restore(activity).execute(activity);
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     protected void onStop() {
         Debug.getNativeHeapAllocatedSize();
