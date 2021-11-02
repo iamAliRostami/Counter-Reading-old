@@ -6,7 +6,6 @@
     android:background="@drawable/border_gray_3"
     tools:context="com.leon.counter_reading.fragments.ReportTemporaryFragment">
 
-
     <ImageView
         android:id="@+id/image_view_temporary"
         android:layout_width="wrap_content"
