@@ -21,7 +21,7 @@ public class LocationTrackingModule {
         if (CheckSensor.checkSensor(activity,true))
             locationTrackingGoogle = LocationTrackingGoogle.getInstance(activity);
         else
-            locationTrackingGps = LocationTrackingGps.getInstance(activity);
+            locationTrackingGps = LocationTrackingGps.getInstance();
     }
 
     @Singleton

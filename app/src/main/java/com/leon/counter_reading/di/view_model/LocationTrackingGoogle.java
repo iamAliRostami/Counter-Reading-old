@@ -18,8 +18,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ILocationTracking;
 import com.leon.counter_reading.tables.SavedLocation;
 

@@ -20,22 +20,22 @@ import com.leon.counter_reading.tables.SavedLocation;
 
 public class LocationTrackingGps extends Service implements LocationListener, ILocationTracking {
     private static LocationTrackingGps instance = null;
-    private final Context context;
-    //    private Location location;
     private volatile static Location location;
+    protected LocationManager locationManager;
     private double latitude;
     private double longitude;
 
-    protected LocationManager locationManager;
-
-    public LocationTrackingGps(Context context) {
-        this.context = context;
+    public LocationTrackingGps() {
+//        this.context = context;
         getLocation();
     }
 
-    public static synchronized LocationTrackingGps getInstance(Context context) {
+//    public static LocationTrackingGps getInstance() {
+//        return instance;
+//    }
+    public static synchronized LocationTrackingGps getInstance() {
         if (instance == null) {
-            instance = new LocationTrackingGps(context);
+            instance = new LocationTrackingGps();
             instance.addLocation(location);
         }
         return instance;
@@ -46,8 +46,7 @@ public class LocationTrackingGps extends Service implements LocationListener, IL
     public Location getLocation() {
         try {
 //            Log.e("here", "1");
-            locationManager = (LocationManager) context
-                    .getSystemService(LOCATION_SERVICE);
+            locationManager = (LocationManager) MyApplication.getContext().getSystemService(LOCATION_SERVICE);
 
             // get GPS status
             boolean checkGPS = locationManager
@@ -154,9 +153,6 @@ public class LocationTrackingGps extends Service implements LocationListener, IL
         }
     }
 
-    public static LocationTrackingGps getInstance() {
-        return instance;
-    }
 
     public static void setInstance(LocationTrackingGps instance) {
         LocationTrackingGps.instance = instance;

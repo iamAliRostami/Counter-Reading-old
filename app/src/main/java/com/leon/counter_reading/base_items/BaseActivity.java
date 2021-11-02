@@ -67,7 +67,6 @@ public abstract class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private Activity activity;
     private Toolbar toolbar;
-    private List<DrawerItem> dataList;
     private ActivityBaseBinding binding;
     private ISharedPreferenceManager sharedPreferenceManager;
     private boolean exit = false;
@@ -276,7 +275,7 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     private void fillDrawerListView() {
-        dataList = DrawerItem.createItemList(
+        List<DrawerItem> dataList = DrawerItem.createItemList(
                 getResources().getStringArray(R.array.menu),
                 getResources().obtainTypedArray(R.array.icons));
         NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(this, dataList);
