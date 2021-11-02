@@ -63,7 +63,7 @@ public class ReportTemporaryFragment extends Fragment {
         return binding.getRoot();
     }
 
-    void initialize() {
+    private void initialize() {
         binding.imageViewTemporary.setImageDrawable(
                 ContextCompat.getDrawable(activity, R.drawable.img_temporary_report));
         binding.textViewTotal.setText(String.valueOf(total));
@@ -71,7 +71,7 @@ public class ReportTemporaryFragment extends Fragment {
         initializeSpinner();
     }
 
-    void initializeSpinner() {
+    private void initializeSpinner() {
         adapter = new SpinnerCustomAdapter(activity, items);
         binding.spinner.setAdapter(adapter);
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -115,7 +115,7 @@ public class ReportTemporaryFragment extends Fragment {
         });
     }
 
-    void getBundle() {
+    private void getBundle() {
         activity = getActivity();
         if (getArguments() != null) {
             total = getArguments().getInt(BundleEnum.TOTAL.getValue());
@@ -125,6 +125,7 @@ public class ReportTemporaryFragment extends Fragment {
                     {getString(R.string.select_one),
                             getString(R.string.all_mane),
                             getString(R.string.all_mane_unread)});
+            getArguments().clear();
         }
     }
 

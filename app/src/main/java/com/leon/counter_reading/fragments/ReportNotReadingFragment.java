@@ -70,6 +70,7 @@ public class ReportNotReadingFragment extends Fragment {
         if (getArguments() != null) {
             total = getArguments().getInt(BundleEnum.TOTAL.getValue());
             unread = getArguments().getInt(BundleEnum.UNREAD.getValue());
+            getArguments().clear();
         }
     }
 

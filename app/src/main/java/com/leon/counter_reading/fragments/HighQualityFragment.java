@@ -19,7 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Objects;
 
 public class HighQualityFragment extends DialogFragment {
-    FragmentHighQualityBinding binding;
+    private FragmentHighQualityBinding binding;
     private Bitmap bitmap;
 
     public HighQualityFragment() {
@@ -43,6 +43,7 @@ public class HighQualityFragment extends DialogFragment {
             if (bytes != null) {
                 bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             }
+            getArguments().clear();
         }
     }
 

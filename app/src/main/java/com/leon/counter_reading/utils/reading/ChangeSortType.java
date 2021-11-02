@@ -1,15 +1,14 @@
 package com.leon.counter_reading.utils.reading;
 
-
 import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 
 import android.app.Activity;
 import android.os.AsyncTask;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
+import com.leon.counter_reading.helpers.MyApplication;
 
 import java.util.Collections;
 
@@ -22,11 +21,6 @@ public class ChangeSortType extends AsyncTask<Activity, Void, Void> {
         this.sortType = sortType;
         customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
     }
 
     @Override

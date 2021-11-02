@@ -28,9 +28,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class DeleteFragment extends DialogFragment {
-    String id;
-    FragmentDeleteBinding binding;
-    Activity activity;
+    private String id;
+    private FragmentDeleteBinding binding;
+    private Activity activity;
 
     public DeleteFragment() {
     }
@@ -48,6 +48,7 @@ public class DeleteFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             id = getArguments().getString(BundleEnum.BILL_ID.getValue());
+            getArguments().clear();
         }
     }
 
@@ -60,13 +61,13 @@ public class DeleteFragment extends DialogFragment {
         return binding.getRoot();
     }
 
-    void initialize() {
+   private void initialize() {
         makeRing(activity, NotificationType.SAVE);
         setOnImageViewPasswordClickListener();
         setOnButtonsClickListener();
     }
 
-    void setOnButtonsClickListener() {
+    private void setOnButtonsClickListener() {
         binding.buttonSubmit.setOnClickListener(v -> {
             View view;
             if (binding.editTextUsername.getText().toString().isEmpty()) {
@@ -104,7 +105,7 @@ public class DeleteFragment extends DialogFragment {
         binding.buttonClose.setOnClickListener(v -> dismiss());
     }
 
-    void setOnImageViewPasswordClickListener() {
+    private void setOnImageViewPasswordClickListener() {
         binding.imageViewPassword.setOnClickListener(
                 v -> binding.imageViewPassword.setOnClickListener(view -> {
                     if (binding.editTextPassword.getInputType() != InputType.TYPE_CLASS_TEXT) {

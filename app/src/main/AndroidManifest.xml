@@ -127,7 +127,7 @@
             android:label="@string/download_information" />
         <activity
             android:name=".activities.ReadingActivity"
-            android:label="@string/reading" />
+            android:label="" />
         <activity
             android:name=".activities.LocationActivity"
             android:label="@string/location" />

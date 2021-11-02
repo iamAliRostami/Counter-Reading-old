@@ -73,7 +73,7 @@ public class ReportForbidActivity extends AppCompatActivity {
         checkPermissions();
     }
 
-    void checkPermissions() {
+    private void checkPermissions() {
         if (PermissionManager.gpsEnabled(this))
             if (PermissionManager.checkLocationPermission(getApplicationContext())) {
                 askLocationPermission();
@@ -84,7 +84,7 @@ public class ReportForbidActivity extends AppCompatActivity {
             }
     }
 
-    void askLocationPermission() {
+    private void askLocationPermission() {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -110,7 +110,7 @@ public class ReportForbidActivity extends AppCompatActivity {
                 ).check();
     }
 
-    void askCameraPermission() {
+    private void askCameraPermission() {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -137,9 +137,11 @@ public class ReportForbidActivity extends AppCompatActivity {
                 ).check();
     }
 
-    void initialize() {
-        if (getIntent().getExtras() != null)
+    private void initialize() {
+        if (getIntent().getExtras() != null) {
             zoneId = getIntent().getExtras().getInt(BundleEnum.ZONE_ID.getValue());
+            getIntent().getExtras().clear();
+        }
         binding.textViewHome.setText(getString(R.string.number).concat(DifferentCompanyManager
                 .getAhad(DifferentCompanyManager.getActiveCompanyName())));
 
@@ -159,7 +161,7 @@ public class ReportForbidActivity extends AppCompatActivity {
         setOnEditTextChangeListener();
     }
 
-    void setOnEditTextChangeListener() {
+    private void setOnEditTextChangeListener() {
         binding.editTextPreAccount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -217,7 +219,7 @@ public class ReportForbidActivity extends AppCompatActivity {
         });
     }
 
-    void setOnImageViewDeleteClickListener() {
+    private void setOnImageViewDeleteClickListener() {
         binding.imageViewDelete.setOnClickListener(v -> {
             forbiddenDto.File.remove(forbiddenDto.File.size() - 1);
             forbiddenDto.bitmaps.remove(forbiddenDto.bitmaps.size() - 1);
@@ -230,7 +232,7 @@ public class ReportForbidActivity extends AppCompatActivity {
         });
     }
 
-    void setOnButtonSubmitClickListener() {
+    private  void setOnButtonSubmitClickListener() {
         binding.buttonSubmit.setOnClickListener(v -> {
             View view = null;
             boolean cancel = false;
@@ -244,7 +246,8 @@ public class ReportForbidActivity extends AppCompatActivity {
                 binding.editTextNextAccount.setError(getString(R.string.error_format));
                 view = binding.editTextNextAccount;
                 cancel = true;
-            } else if (binding.editTextPostalCode.getText().length() < 10) {
+            } else if (binding.editTextPostalCode.getText().length() > 0 &&
+                    binding.editTextPostalCode.getText().length() < 10) {
                 binding.editTextPostalCode.setError(getString(R.string.error_format));
                 view = binding.editTextPostalCode;
                 cancel = true;
@@ -263,7 +266,7 @@ public class ReportForbidActivity extends AppCompatActivity {
         });
     }
 
-    void sendForbid() {
+    private void sendForbid() {
         double latitude = 0, longitude = 0, accuracy = 0;
         if (getLocationTracker(activity).getCurrentLocation() != null) {
             latitude = getLocationTracker(activity).getCurrentLocation().getLatitude();
@@ -279,7 +282,7 @@ public class ReportForbidActivity extends AppCompatActivity {
         new PrepareForbid(activity, forbiddenDto, zoneId).execute(activity);
     }
 
-    void setOnImageViewTakenClickListener() {
+    private void setOnImageViewTakenClickListener() {
         binding.imageViewTaken.setOnClickListener(v -> {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             HighQualityFragment highQualityFragment =
@@ -288,7 +291,7 @@ public class ReportForbidActivity extends AppCompatActivity {
         });
     }
 
-    void setOnButtonPhotoClickListener() {
+    private void setOnButtonPhotoClickListener() {
         binding.buttonPhoto.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(ReportForbidActivity.this, R.style.AlertDialogCustom));
             builder.setTitle(R.string.choose_document);

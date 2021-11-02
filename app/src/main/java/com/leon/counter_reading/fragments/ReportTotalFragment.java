@@ -83,13 +83,13 @@ public class ReportTotalFragment extends Fragment {
         return binding.getRoot();
     }
 
-    void initialize() {
+    private void initialize() {
         setupChart();
         initializeTextViews();
         setOnLinearLayoutClickListener();
     }
 
-    void setupChart() {
+    private void setupChart() {
         binding.pieChart.addPieSlice(new PieModel(getString(R.string.zero), zero, ContextCompat.getColor(activity, R.color.blue)));
         binding.pieChart.addPieSlice(new PieModel(getString(R.string.normal), normal, ContextCompat.getColor(activity, R.color.green)));
         binding.pieChart.addPieSlice(new PieModel(getString(R.string.down), low, ContextCompat.getColor(activity, R.color.yellow)));
@@ -97,7 +97,7 @@ public class ReportTotalFragment extends Fragment {
         binding.pieChart.startAnimation();
     }
 
-    void initializeTextViews() {
+    private void initializeTextViews() {
         binding.textViewHigh.setText(String.valueOf(high));
         binding.textViewLow.setText(String.valueOf(low));
         binding.textViewZero.setText(String.valueOf(zero));
@@ -105,7 +105,7 @@ public class ReportTotalFragment extends Fragment {
         binding.textViewTotal.setText(String.valueOf(normal + low + high + zero));
     }
 
-    void setOnLinearLayoutClickListener() {
+    private void setOnLinearLayoutClickListener() {
         binding.linearLayoutHigh.setOnClickListener(onClickListener);
         binding.linearLayoutLow.setOnClickListener(onClickListener);
         binding.linearLayoutZero.setOnClickListener(onClickListener);
@@ -113,12 +113,13 @@ public class ReportTotalFragment extends Fragment {
         binding.linearLayoutTotal.setOnClickListener(onClickListener);
     }
 
-    void getBundle() {
+    private void getBundle() {
         if (getArguments() != null) {
             zero = getArguments().getInt(BundleEnum.ZERO.getValue());
             low = getArguments().getInt(BundleEnum.LOW.getValue());
             high = getArguments().getInt(BundleEnum.HIGH.getValue());
             normal = getArguments().getInt(BundleEnum.NORMAL.getValue());
+            getArguments().clear();
         }
     }
 

@@ -15,7 +15,6 @@ import android.view.WindowManager;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.gson.Gson;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
@@ -23,6 +22,7 @@ import com.leon.counter_reading.databinding.FragmentPossibleBinding;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.KarbariDto;
@@ -52,6 +52,7 @@ public class PossibleFragment extends DialogFragment {
         PossibleFragment.justMobile = justMobile;
         PossibleFragment fragment = new PossibleFragment();
         fragment.setArguments(putBundle(onOffLoadDto, position));
+        fragment.setCancelable(false);
         return fragment;
     }
 
@@ -70,12 +71,13 @@ public class PossibleFragment extends DialogFragment {
         getBundle();
     }
 
-    void getBundle() {
+    private void getBundle() {
         if (getArguments() != null) {
             Gson gson = new Gson();
             onOffLoadDto = gson.fromJson(getArguments().getString(
                     BundleEnum.ON_OFF_LOAD.getValue()), OnOffLoadDto.class);
             position = getArguments().getInt(BundleEnum.POSITION.getValue());
+            getArguments().clear();
         }
     }
 
@@ -88,7 +90,7 @@ public class PossibleFragment extends DialogFragment {
         return binding.getRoot();
     }
 
-    void initialize() {
+    private void initialize() {
         makeRing(activity, NotificationType.OTHER);
         sharedPreferenceManager = MyApplication.getApplicationComponent().SharedPreferenceModel();
         if (justMobile) {
@@ -119,7 +121,7 @@ public class PossibleFragment extends DialogFragment {
         setOnEditTextSearchChangeListener();
     }
 
-    void setOnEditTextSearchChangeListener() {
+    private void setOnEditTextSearchChangeListener() {
         binding.editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -148,7 +150,7 @@ public class PossibleFragment extends DialogFragment {
         });
     }
 
-    void initializeTextViews() {
+    private void initializeTextViews() {
         binding.editTextAccount.setFilters(new InputFilter[]{
                 new InputFilter.LengthFilter(DifferentCompanyManager
                         .getEshterakMaxLength(DifferentCompanyManager.getActiveCompanyName()))});
@@ -258,7 +260,7 @@ public class PossibleFragment extends DialogFragment {
 
                     for (int i = 0; i < positions.size(); i++) {
                         OffLoadReport offLoadReport = new OffLoadReport(onOffLoadDto.id,
-                                onOffLoadDto.trackNumber,counterReportDtos.get(positions.get(i)).id);
+                                onOffLoadDto.trackNumber, counterReportDtos.get(positions.get(i)).id);
                         MyApplication.getApplicationComponent().MyDatabase().offLoadReportDao()
                                 .insertOffLoadReport(offLoadReport);
                     }

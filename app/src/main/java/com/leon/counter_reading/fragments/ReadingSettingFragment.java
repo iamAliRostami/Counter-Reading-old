@@ -44,9 +44,8 @@ public class ReadingSettingFragment extends Fragment {
 
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            json = getArguments().getStringArrayList(
-                    BundleEnum.TRACKING.getValue());
-
+            json = getArguments().getStringArrayList(BundleEnum.TRACKING.getValue());
+            getArguments().clear();
         }
     }
 
@@ -58,7 +57,7 @@ public class ReadingSettingFragment extends Fragment {
         return binding.getRoot();
     }
 
-    void initialize() {
+    private void initialize() {
         context = getActivity();
         Gson gson = new Gson();
         trackingDtos.clear();
@@ -69,7 +68,7 @@ public class ReadingSettingFragment extends Fragment {
         setupListView();
     }
 
-    void setupListView() {
+    private void setupListView() {
         if (trackingDtos.size() > 0) {
             ReadingSettingCustomAdapter readingSettingCustomAdapter =
                     new ReadingSettingCustomAdapter(context, trackingDtos);

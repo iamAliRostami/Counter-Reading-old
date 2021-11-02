@@ -51,6 +51,7 @@ public class ReadingSettingDeleteFragment extends Fragment {
         if (getArguments() != null) {
             json = getArguments().getStringArrayList(
                     BundleEnum.TRACKING.getValue());
+            getArguments().clear();
         }
     }
 

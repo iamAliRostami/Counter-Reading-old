@@ -16,11 +16,10 @@ import com.leon.counter_reading.utils.downloading.Download;
 import org.jetbrains.annotations.NotNull;
 
 public class DownloadFragment extends Fragment {
-    final int[] imageSrc = {R.drawable.img_download, R.drawable.img_download_retry,
+    private final int[] imageSrc = {R.drawable.img_download, R.drawable.img_download_retry,
             R.drawable.img_download_off, R.drawable.img_download_special};
-    FragmentDownloadBinding binding;
-    int type;
-    Context context;
+    private FragmentDownloadBinding binding;
+    private int type;
 
     public static DownloadFragment newInstance(int type) {
         DownloadFragment fragment = new DownloadFragment();
@@ -47,7 +46,6 @@ public class DownloadFragment extends Fragment {
     }
 
     void initialize() {
-        context = getActivity();
         binding.imageViewDownload.setImageResource(imageSrc[type - 1]);
         setOnButtonDownloadClickListener();
     }

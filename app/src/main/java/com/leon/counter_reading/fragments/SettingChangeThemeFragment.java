@@ -36,7 +36,7 @@ public class SettingChangeThemeFragment extends Fragment {
         return binding.getRoot();
     }
 
-    void initialize() {
+    private void initialize() {
         binding.imageViewBlack.setImageDrawable(ContextCompat
                 .getDrawable(MyApplication.getContext(), R.drawable.img_black));
         binding.imageViewBlue.setImageDrawable(ContextCompat
@@ -51,7 +51,7 @@ public class SettingChangeThemeFragment extends Fragment {
         setButtonChangeThemeClickListener();
     }
 
-    void setOnChangeThemeClickListener() {
+    private void setOnChangeThemeClickListener() {
         binding.linearLayoutBlue.setOnClickListener(view -> {
             theme = 1;
             changeTheme();
@@ -70,7 +70,7 @@ public class SettingChangeThemeFragment extends Fragment {
         });
     }
 
-    void setButtonChangeThemeClickListener() {
+    private void setButtonChangeThemeClickListener() {
         binding.buttonChangeTheme.setOnClickListener(view -> {
             MyApplication.getApplicationComponent().SharedPreferenceModel().putData(SharedReferenceKeys.THEME_STABLE.getValue(), theme);
             new CustomToast().success(getString(R.string.theme_changed));
@@ -78,7 +78,7 @@ public class SettingChangeThemeFragment extends Fragment {
         });
     }
 
-    void changeTheme() {
+    private void changeTheme() {
         Intent intent = new Intent(getActivity(), SettingActivity.class);
         intent.putExtra(BundleEnum.THEME.getValue(), theme);
         requireActivity().finish();

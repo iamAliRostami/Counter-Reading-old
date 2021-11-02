@@ -11,11 +11,11 @@ import android.widget.CheckedTextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.fragments.AhadFragment;
 import com.leon.counter_reading.fragments.KarbariFragment;
 import com.leon.counter_reading.fragments.TaviziFragment;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
@@ -76,7 +76,7 @@ public class ReadingReportCustomAdapter extends BaseAdapter {
                 offLoadReports.add(offLoadReport);
                 FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
                 if (counterReportDtos.get(position).isAhad) {
-                    AhadFragment ahadFragment = AhadFragment.newInstance(uuid, position);
+                    AhadFragment ahadFragment = AhadFragment.newInstance(uuid);
                     ahadFragment.show(fragmentManager, context.getString(R.string.number).concat(DifferentCompanyManager.getAhad(DifferentCompanyManager.getActiveCompanyName())));
                 }
                 if (counterReportDtos.get(position).isTavizi) {
@@ -84,7 +84,7 @@ public class ReadingReportCustomAdapter extends BaseAdapter {
                     taviziFragment.show(fragmentManager, context.getString(R.string.counter_serial));
                 }
                 if (counterReportDtos.get(position).isKarbari) {
-                    KarbariFragment karbariFragment = KarbariFragment.newInstance(uuid, position);
+                    KarbariFragment karbariFragment = KarbariFragment.newInstance(uuid);
                     karbariFragment.show(fragmentManager, context.getString(R.string.karbari));
                 }
             } else {
@@ -98,12 +98,9 @@ public class ReadingReportCustomAdapter extends BaseAdapter {
             }
             counterReportDtos.get(position).isSelected = holder.checkBox.isChecked();
         });
-
         holder.checkBox.setChecked(counterReportDtos.get(position).isSelected);
         return view;
     }
-
-
 }
 
 class ReadingReportCheckBoxViewHolder {

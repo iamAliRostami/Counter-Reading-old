@@ -38,11 +38,6 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
     }
 
     @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-
-    @Override
     protected void onPostExecute(Integer integer) {
         customProgressModel.getDialog().dismiss();
         super.onPostExecute(integer);
@@ -85,7 +80,8 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
 //                        getAllOnOffLoadNotRead(0, readingData.trackingDtos.get(j).trackNumber));
 
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
-                        getOnOffLoadReadByIsManeNotRead(IS_MANE, 0, readingData.trackingDtos.get(j).trackNumber));
+                        getOnOffLoadReadByIsManeNotRead(IS_MANE, 0,
+                                readingData.trackingDtos.get(j).trackNumber));
 
             } else if (readStatus == ReadStatusEnum.ALL_MANE.getValue()) {
                 //TODO

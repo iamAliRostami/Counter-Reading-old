@@ -24,20 +24,19 @@ import java.util.Objects;
 
 public class AhadFragment extends DialogFragment {
 
-    FragmentAhadBinding binding;
-    String uuid;
-    int position;
-    Context context;
+    private FragmentAhadBinding binding;
+    private String uuid;
+    private Context context;
 
     public AhadFragment() {
     }
 
-    public static AhadFragment newInstance(String uuid, int position) {
+    public static AhadFragment newInstance(String uuid) {
         AhadFragment fragment = new AhadFragment();
         Bundle args = new Bundle();
         args.putString(BundleEnum.BILL_ID.getValue(), uuid);
-        args.putInt(BundleEnum.POSITION.getValue(), position);
         fragment.setArguments(args);
+        fragment.setCancelable(false);
         return fragment;
     }
 
@@ -46,7 +45,7 @@ public class AhadFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             uuid = getArguments().getString(BundleEnum.BILL_ID.getValue());
-            position = getArguments().getInt(BundleEnum.POSITION.getValue());
+            getArguments().clear();
         }
     }
 
@@ -59,14 +58,14 @@ public class AhadFragment extends DialogFragment {
         return binding.getRoot();
     }
 
-    void initialize() {
+    private void initialize() {
         makeRing(context, NotificationType.OTHER);
         setOnButtonClickListener();
         binding.editTextAhad1.setHint(DifferentCompanyManager.getAhad1(DifferentCompanyManager.getActiveCompanyName()));
         binding.editTextAhad2.setHint(DifferentCompanyManager.getAhad2(DifferentCompanyManager.getActiveCompanyName()));
     }
 
-    void setOnButtonClickListener() {
+    private void setOnButtonClickListener() {
         binding.buttonClose.setOnClickListener(v -> dismiss());
         binding.buttonSubmit.setOnClickListener(v -> {
             int asli = 0, fari = 0;

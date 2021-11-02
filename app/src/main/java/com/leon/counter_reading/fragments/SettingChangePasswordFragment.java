@@ -40,7 +40,7 @@ public class SettingChangePasswordFragment extends Fragment {
         setOnButtonChangePasswordClickListener();
     }
 
-    void setOnButtonChangePasswordClickListener() {
+    private void setOnButtonChangePasswordClickListener() {
         binding.buttonChangePassword.setOnClickListener(v -> {
             View view = null;
             boolean cancel = false;

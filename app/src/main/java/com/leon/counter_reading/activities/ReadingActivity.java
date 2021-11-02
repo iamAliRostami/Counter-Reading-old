@@ -42,9 +42,11 @@ import com.leon.counter_reading.enums.SearchTypeEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.fragments.PossibleFragment;
 import com.leon.counter_reading.fragments.SearchFragment;
+import com.leon.counter_reading.fragments.SerialFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IFlashLightManager;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
+import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DepthPageTransformer;
@@ -68,7 +70,7 @@ public class ReadingActivity extends BaseActivity {
     private ViewPagerAdapterReading viewPagerAdapterReading;
     private ISharedPreferenceManager sharedPreferenceManager;
     private int readStatus = 0, highLow = 1;
-    private boolean isReading = false;
+    private boolean isReading = false, isShowing = false;
 
     @Override
     protected void initialize() {
@@ -85,17 +87,18 @@ public class ReadingActivity extends BaseActivity {
                 getBoolData(SharedReferenceKeys.SORT_TYPE.getValue())).execute(activity);
     }
 
-    void getBundle() {
+    private void getBundle() {
         if (getIntent().getExtras() != null) {
             readStatus = getIntent().getIntExtra(BundleEnum.READ_STATUS.getValue(), 0);
             highLow = getIntent().getIntExtra(BundleEnum.TYPE.getValue(), 1);
             ArrayList<String> json = getIntent().getExtras().getStringArrayList(
                     BundleEnum.IS_MANE.getValue());
+            getIntent().getExtras().clear();
             new GetBundle(json).execute();
         }
     }
 
-    void setOnImageViewsClickListener() {
+    private void setOnImageViewsClickListener() {
         flashLightManager = MyApplication.getApplicationComponent().FlashViewModel();
         ImageView imageViewFlash = findViewById(R.id.image_view_flash);
         imageViewFlash.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
@@ -167,14 +170,13 @@ public class ReadingActivity extends BaseActivity {
     }
 
     // TODO
-    void updateOnOffLoad(int position, int counterStateCode, int counterStatePosition) {
+    private void updateOnOffLoad(int position, int counterStateCode, int counterStatePosition) {
         readingData.onOffLoadDtos.get(position).isBazdid = true;
         readingData.onOffLoadDtos.get(position).offLoadStateId = OffloadStateEnum.INSERTED.getValue();
         readingData.onOffLoadDtos.get(position).counterStatePosition = counterStatePosition;
         readingData.onOffLoadDtos.get(position).counterStateId = counterStateCode;
     }
 
-    //TODO
     public void updateOnOffLoadWithoutCounterNumber(int position, int counterStateCode,
                                                     int counterStatePosition) {
         readingData.onOffLoadDtos.get(position).counterNumber = null;
@@ -186,6 +188,8 @@ public class ReadingActivity extends BaseActivity {
                                                int counterStateCode, String counterSerial) {
         updateOnOffLoad(position, counterStateCode, counterStatePosition);
         readingData.onOffLoadDtos.get(position).possibleCounterSerial = counterSerial;
+        isShowing = true;
+        attemptSend(position, false, false);
     }
 
     public void updateOnOffLoadByCounterNumber(int position, int number, int counterStateCode,
@@ -257,6 +261,7 @@ public class ReadingActivity extends BaseActivity {
                     View.VISIBLE : View.GONE);
             binding.viewPager.setVisibility(readingData.onOffLoadDtos.size() > 0 ?
                     View.VISIBLE : View.GONE);
+            //TODO
             binding.viewPager.setPageTransformer(true, new DepthPageTransformer());
             setOnPageChangeListener();
         });
@@ -282,7 +287,7 @@ public class ReadingActivity extends BaseActivity {
         });
     }
 
-    void setOnPageChangeListener() {
+    private void setOnPageChangeListener() {
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset,
@@ -302,7 +307,7 @@ public class ReadingActivity extends BaseActivity {
         });
     }
 
-    void showImage(int position) {
+    private void showImage(int position) {
         Intent intent = new Intent(activity, TakePhotoActivity.class);
         intent.putExtra(BundleEnum.BILL_ID.getValue(),
                 readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
@@ -315,7 +320,7 @@ public class ReadingActivity extends BaseActivity {
         startActivityForResult(intent, CAMERA);
     }
 
-    void attemptSend(int position, boolean isForm, boolean isImage) {
+    private void attemptSend(int position, boolean isForm, boolean isImage) {
         if (isForm
                 && (sharedPreferenceManager.getBoolData(SharedReferenceKeys.SERIAL.getValue())
                 || sharedPreferenceManager.getBoolData(SharedReferenceKeys.AHAD_2.getValue())
@@ -331,23 +336,35 @@ public class ReadingActivity extends BaseActivity {
         } else if (isImage && sharedPreferenceManager.getBoolData(SharedReferenceKeys.IMAGE.getValue())) {
             showImage(position);
         } else {
-            makeRing(activity, NotificationType.SAVE);
-            new Update(position, getLocationTracker(activity).getCurrentLocation())
-                    .execute(activity);
-            new PrepareToSend(sharedPreferenceManager
-                    .getStringData(SharedReferenceKeys.TOKEN.getValue())).execute(activity);
-            changePage(binding.viewPager.getCurrentItem() + 1);
+            if (!isShowing) {
+                CounterStateDto counterStateDto = readingData.counterStateDtos.get(readingData.onOffLoadDtos.get(position).counterStatePosition);
+                if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
+                        counterStateDto.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {
+                    SerialFragment serialFragment = SerialFragment.newInstance(position,
+                            counterStateDto.id, readingData.onOffLoadDtos.get(position).counterStatePosition);
+                    serialFragment.show(getSupportFragmentManager(), getString(R.string.counter_serial));
+                } else isShowing = true;
+            }
+            if (isShowing) {
+                isShowing = false;
+                makeRing(activity, NotificationType.SAVE);
+                new Update(position, getLocationTracker(activity).getCurrentLocation())
+                        .execute(activity);
+                new PrepareToSend(sharedPreferenceManager
+                        .getStringData(SharedReferenceKeys.TOKEN.getValue())).execute(activity);
+                changePage(binding.viewPager.getCurrentItem() + 1);
+            }
         }
     }
 
-    void showPossible(int position) {
+    private void showPossible(int position) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         PossibleFragment possibleFragment = PossibleFragment.newInstance(
                 readingData.onOffLoadDtos.get(position), position, false);
         possibleFragment.show(fragmentTransaction, getString(R.string.dynamic_navigation));
     }
 
-    void setAboveIconsSrc(int position) {
+    private void setAboveIconsSrc(int position) {
         if (readingData.onOffLoadDtos != null) {
             runOnUiThread(() -> {
                 setHighLowImage(position);
@@ -358,7 +375,7 @@ public class ReadingActivity extends BaseActivity {
         }
     }
 
-    void setExceptionImage(int position) {
+    private void setExceptionImage(int position) {
         int src = ReadingUtils.setExceptionImage(position);
         binding.imageViewExceptionState.setVisibility(View.GONE);
         if (src > -1) {
@@ -367,25 +384,25 @@ public class ReadingActivity extends BaseActivity {
         }
     }
 
-    void setIsBazdidImage(int position) {
+    private void setIsBazdidImage(int position) {
         if (readingData.onOffLoadDtos.get(position).isBazdid)
             binding.imageViewReadingType.setImageResource(imageSrc[6]);
         else binding.imageViewReadingType.setImageResource(imageSrc[7]);
     }
 
-    void setReadStatusImage(int position) {
+    private void setReadStatusImage(int position) {
         binding.imageViewOffLoadState.setImageResource(
                 imageSrc[readingData.onOffLoadDtos.get(position).offLoadStateId]);
         if (readingData.onOffLoadDtos.get(position).offLoadStateId == 0)
             binding.imageViewOffLoadState.setImageResource(imageSrc[8]);
     }
 
-    void setHighLowImage(int position) {
+    private void setHighLowImage(int position) {
         binding.imageViewHighLowState.setImageResource(
                 imageSrc[readingData.onOffLoadDtos.get(position).highLowStateId]);
     }
 
-    void showNoEshterakFound() {
+    private void showNoEshterakFound() {
         new CustomDialogModel(DialogType.Yellow, activity, getString(R.string.no_eshterak_found),
                 getString(R.string.dear_user), getString(R.string.eshterak),
                 getString(R.string.accepted));
@@ -435,6 +452,8 @@ public class ReadingActivity extends BaseActivity {
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
                 intent.putExtra(BundleEnum.TRACKING.getValue(),
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
+                intent.putExtra(BundleEnum.DESCRIPTION.getValue(),
+                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).description);
                 intent.putExtra(BundleEnum.POSITION.getValue(), binding.viewPager.getCurrentItem());
                 startActivityForResult(intent, DESCRIPTION);
             }

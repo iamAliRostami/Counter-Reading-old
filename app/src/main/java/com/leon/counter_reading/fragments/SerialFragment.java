@@ -33,6 +33,7 @@ public class SerialFragment extends DialogFragment {
         args.putInt(BundleEnum.COUNTER_STATE_CODE.getValue(), counterStateCode);
         args.putInt(BundleEnum.COUNTER_STATE_POSITION.getValue(), counterStatePosition);
         fragment.setArguments(args);
+        fragment.setCancelable(false);
         return fragment;
     }
 
@@ -43,6 +44,7 @@ public class SerialFragment extends DialogFragment {
             position = getArguments().getInt(BundleEnum.POSITION.getValue());
             counterStateCode = getArguments().getInt(BundleEnum.COUNTER_STATE_CODE.getValue());
             counterStatePosition = getArguments().getInt(BundleEnum.COUNTER_STATE_POSITION.getValue());
+            getArguments().clear();
         }
     }
 
@@ -63,11 +65,11 @@ public class SerialFragment extends DialogFragment {
         binding.buttonClose.setOnClickListener(v -> dismiss());
         binding.buttonSubmit.setOnClickListener(v -> {
             String number = binding.editTextSerial.getText().toString();
-            if (number.length() < 3) {
+            if (number.length() > 0&& number.length() < 3){
                 View view = binding.editTextSerial;
                 binding.editTextSerial.setError(getString(R.string.error_format));
                 view.requestFocus();
-            } else {
+            } else{
                 ((ReadingActivity) (requireActivity())).updateOnOffLoadByCounterSerial(
                         position, counterStatePosition, counterStateCode, number);
                 dismiss();

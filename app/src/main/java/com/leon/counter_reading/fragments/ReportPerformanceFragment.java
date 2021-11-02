@@ -120,14 +120,4 @@ public class ReportPerformanceFragment extends Fragment {
             binding.textViewFaqed.setText(String.valueOf(performanceResponse.faqedCount));
         });
     }
-    private void setLinearLayoutVisibility(int visibility){
-        binding.linearLayout1.setVisibility(visibility);
-        binding.linearLayout2.setVisibility(visibility);
-        binding.linearLayout3.setVisibility(visibility);
-        binding.linearLayout4.setVisibility(visibility);
-        binding.linearLayout5.setVisibility(visibility);
-        binding.linearLayout6.setVisibility(visibility);
-        binding.linearLayout7.setVisibility(visibility);
-        binding.linearLayout8.setVisibility(visibility);
-    }
 }
