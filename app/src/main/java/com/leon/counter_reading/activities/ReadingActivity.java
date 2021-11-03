@@ -30,6 +30,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.gson.Gson;
 import com.leon.counter_reading.R;
+import com.leon.counter_reading.adapters.ViewPagerAdapter;
 import com.leon.counter_reading.adapters.ViewPagerAdapterReading;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReadingBinding;
@@ -67,7 +68,7 @@ public class ReadingActivity extends BaseActivity {
     private ActivityReadingBinding binding;
     private Activity activity;
     private IFlashLightManager flashLightManager;
-    private ViewPagerAdapterReading viewPagerAdapterReading;
+    private ViewPagerAdapter viewPagerAdapterReading;
     private ISharedPreferenceManager sharedPreferenceManager;
     private int readStatus = 0, highLow = 1;
     private boolean isReading = false, isShowing = false;
@@ -274,8 +275,9 @@ public class ReadingActivity extends BaseActivity {
     }
 
     public void setupViewPagerAdapter(int currentItem) {
-        viewPagerAdapterReading = new ViewPagerAdapterReading(getSupportFragmentManager(),
-                readingData, activity);
+//        viewPagerAdapterReading = new ViewPagerAdapter(getSupportFragmentManager(),
+//                readingData, activity);
+        viewPagerAdapterReading = new ViewPagerAdapter(readingData, activity);
         runOnUiThread(() -> {
             try {
                 binding.viewPager.setAdapter(viewPagerAdapterReading);

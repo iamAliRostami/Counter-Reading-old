@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.fragments.ReadingFragment;
 import com.leon.counter_reading.helpers.MyApplication;
+import com.leon.counter_reading.infrastructure.IViewPagerAdapter;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class ViewPagerAdapterReading extends FragmentStatePagerAdapter {
+public class ViewPagerAdapterReading extends FragmentStatePagerAdapter implements IViewPagerAdapter {
     private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
     private final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
     private final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
