@@ -2,19 +2,17 @@ package com.leon.counter_reading.utils.reading;
 
 import static com.leon.counter_reading.helpers.Constants.IS_MANE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.helpers.Constants.readingData;
-import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.enums.OffloadStateEnum;
 import com.leon.counter_reading.enums.ReadStatusEnum;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.CustomToast;
@@ -24,9 +22,9 @@ import java.util.Collections;
 
 public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
     private final CustomProgressModel customProgressModel;
+    private final ReadingData readingData, readingDataTemp;
+    private final int readStatus, highLow;
     private final boolean sortType;
-    private final int readStatus;
-    private final int highLow;
 
     public GetReadingDBData(Activity activity, int readStatus, int highLow, boolean sortType) {
         super();
@@ -35,6 +33,8 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
         this.sortType = sortType;
         this.highLow = highLow;
         this.readStatus = readStatus;
+        readingData = new ReadingData();
+        readingDataTemp = new ReadingData();
     }
 
     @Override
@@ -45,8 +45,6 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
 
     @Override
     protected Integer doInBackground(Activity... activities) {
-        readingData = new ReadingData();
-        readingDataTemp = new ReadingData();
         MyDatabase myDatabase = getApplicationComponent().MyDatabase();
         readingData.trackingDtos.addAll(myDatabase.trackingDao().
                 getTrackingDtosIsActiveNotArchive(true, false));
@@ -70,30 +68,18 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
                         getAllOnOffLoadRead(OffloadStateEnum.SENT.getValue(), readingData.trackingDtos.get(j).trackNumber));
             } else if (readStatus == ReadStatusEnum.ALL_MANE_UNREAD.getValue()) {
-                //TODO
-//                for (int k = 0, is_maneSize = IS_MANE.size(); k < is_maneSize; k++) {
-//                    int i = IS_MANE.get(k);
-//                    readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
-//                            getOnOffLoadReadByIsMane(i, readingData.trackingDtos.get(j).trackNumber));
-//                }
-//                readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
-//                        getAllOnOffLoadNotRead(0, readingData.trackingDtos.get(j).trackNumber));
-
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
                         getOnOffLoadReadByIsManeNotRead(IS_MANE, 0,
                                 readingData.trackingDtos.get(j).trackNumber));
 
             } else if (readStatus == ReadStatusEnum.ALL_MANE.getValue()) {
-                //TODO
-//                for (int k = 0, is_maneSize = IS_MANE.size(); k < is_maneSize; k++) {
-//                    int i = IS_MANE.get(k);
-//                }
+
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
                         getOnOffLoadReadByIsMane(IS_MANE, readingData.trackingDtos.get(j).trackNumber));
             }
         }
 
-        if (readingData != null && readingData.onOffLoadDtos != null && readingData.onOffLoadDtos.size() > 0) {
+        if (readingData.onOffLoadDtos != null && readingData.onOffLoadDtos.size() > 0) {
             readingData.counterStateDtos.addAll(myDatabase.counterStateDao().getCounterStateDtos(readingData.onOffLoadDtos.get(0).zoneId));
             if (readingData.counterStateDtos.size() > 0)
                 readingDataTemp.counterStateDtos.addAll(readingData.counterStateDtos);
@@ -127,7 +113,7 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
                         o1.eshterak));
             }
         }
-        ((ReadingActivity) (activities[0])).setupViewPager();
+        ((ReadingActivity) (activities[0])).setupViewPager(readingData,readingDataTemp);
         return null;
     }
 }

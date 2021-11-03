@@ -96,6 +96,7 @@ public class ReadingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
+
         getBundle();
     }
 
@@ -288,7 +289,7 @@ public class ReadingFragment extends Fragment {
                             concat(onOffLoadDto.eshterak).concat(getString(R.string.is_locked)), Toast.LENGTH_LONG);
                 new UpdateOnOffLoadByAttemptNumber(position, onOffLoadDto.attemptCount).execute(activity);
                 if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName())) {
-                    new UpdateOnOffLoadDtoByLock(position, onOffLoadDto.trackNumber, onOffLoadDto.id).execute(activity);
+//                    new UpdateOnOffLoadDtoByLock(position, onOffLoadDto.trackNumber, onOffLoadDto.id).execute(activity);
                 } else {
                     attemptSend();
                 }

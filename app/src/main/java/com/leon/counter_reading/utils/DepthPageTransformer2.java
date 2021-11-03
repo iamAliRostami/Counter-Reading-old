@@ -4,7 +4,7 @@ import android.view.View;
 
 import androidx.viewpager2.widget.ViewPager2;
 
-public class DepthPageTransformerNew implements ViewPager2.PageTransformer {
+public class DepthPageTransformer2 implements ViewPager2.PageTransformer {
 
     public void transformPage(View view, float position) {
         final float MIN_SCALE = 0.75f;

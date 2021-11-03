@@ -5,10 +5,10 @@ import static com.leon.counter_reading.helpers.Constants.readingData;
 import android.app.Activity;
 import android.os.AsyncTask;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.DialogType;
+import com.leon.counter_reading.helpers.MyApplication;
 
 public class UpdateOnOffLoadByAttemptNumber extends AsyncTask<Activity, Void, Void> {
     private final int position;
@@ -23,9 +23,10 @@ public class UpdateOnOffLoadByAttemptNumber extends AsyncTask<Activity, Void, Vo
     @Override
     protected Void doInBackground(Activity... activities) {
         try {
-            MyApplication.getApplicationComponent().MyDatabase()
-                    .onOffLoadDao().updateOnOffLoadByAttemptNumber(readingData.onOffLoadDtos.get(position).id, attemptNumber);
-            readingData.onOffLoadDtos.get(position).attemptCount = attemptNumber;
+            MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao()
+                    .updateOnOffLoadByAttemptNumber(readingData.onOffLoadDtos.get(position).id,
+                            attemptNumber);
+//            readingData.onOffLoadDtos.get(position).attemptCount = attemptNumber;
         } catch (Exception e) {
             activities[0].runOnUiThread(() -> new CustomDialogModel(DialogType.Red,
                     activities[0], e.getMessage(),

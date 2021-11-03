@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/scroll_view_reading"
     tools:context="com.leon.counter_reading.fragments.ReadingFragment">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

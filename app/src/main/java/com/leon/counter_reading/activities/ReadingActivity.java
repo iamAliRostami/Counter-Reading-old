@@ -6,11 +6,10 @@ import static com.leon.counter_reading.helpers.Constants.DESCRIPTION;
 import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
 import static com.leon.counter_reading.helpers.Constants.NAVIGATION;
 import static com.leon.counter_reading.helpers.Constants.REPORT;
-import static com.leon.counter_reading.helpers.Constants.readingData;
-import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Debug;
@@ -26,12 +25,11 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.gson.Gson;
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.ViewPagerAdapter;
-import com.leon.counter_reading.adapters.ViewPagerAdapterReading;
+import com.leon.counter_reading.adapters.ViewPagerAdapterReading2;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReadingBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
@@ -49,8 +47,9 @@ import com.leon.counter_reading.infrastructure.IFlashLightManager;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
+import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.utils.CustomToast;
-import com.leon.counter_reading.utils.DepthPageTransformer;
+import com.leon.counter_reading.utils.DepthPageTransformer2;
 import com.leon.counter_reading.utils.login.TwoStepVerification;
 import com.leon.counter_reading.utils.reading.ChangeSortType;
 import com.leon.counter_reading.utils.reading.GetBundle;
@@ -64,11 +63,12 @@ import com.leon.counter_reading.utils.reading.Update;
 import java.util.ArrayList;
 
 public class ReadingActivity extends BaseActivity {
+    private final ReadingData readingData = new ReadingData(), readingDataTemp = new ReadingData();
     private int[] imageSrc = new int[15];
     private ActivityReadingBinding binding;
     private Activity activity;
     private IFlashLightManager flashLightManager;
-    private ViewPagerAdapter viewPagerAdapterReading;
+    private ViewPagerAdapterReading2 viewPagerAdapterReading;
     private ISharedPreferenceManager sharedPreferenceManager;
     private int readStatus = 0, highLow = 1;
     private boolean isReading = false, isShowing = false;
@@ -170,7 +170,6 @@ public class ReadingActivity extends BaseActivity {
         });
     }
 
-    // TODO
     private void updateOnOffLoad(int position, int counterStateCode, int counterStatePosition) {
         readingData.onOffLoadDtos.get(position).isBazdid = true;
         readingData.onOffLoadDtos.get(position).offLoadStateId = OffloadStateEnum.INSERTED.getValue();
@@ -208,11 +207,9 @@ public class ReadingActivity extends BaseActivity {
 
     public void updateOnOffLoadByNavigation(int position, OnOffLoadDto onOffLoadDto, boolean justMobile) {
         readingData.onOffLoadDtos.get(position).possibleMobile = onOffLoadDto.possibleMobile;
-        if (justMobile)
-            return;
+        if (justMobile) return;
         readingData.onOffLoadDtos.get(position).possibleCounterSerial = onOffLoadDto.possibleCounterSerial;
         readingData.onOffLoadDtos.get(position).description = onOffLoadDto.description;
-
         readingData.onOffLoadDtos.get(position).possibleKarbariCode = onOffLoadDto.possibleKarbariCode;
         readingData.onOffLoadDtos.get(position).possibleAhadTejariOrFari = onOffLoadDto.possibleAhadTejariOrFari;
         readingData.onOffLoadDtos.get(position).possibleAhadMaskooniOrAsli = onOffLoadDto.possibleAhadMaskooniOrAsli;
@@ -230,12 +227,11 @@ public class ReadingActivity extends BaseActivity {
                     binding.viewPager.setCurrentItem(pageNumber);
                 else {
                     new CustomToast().success(getString(R.string.all_masir_bazdid));
-//                binding.viewPager.setCurrentItem(0);
                 }
             });
         } catch (Exception e) {
-            activity.runOnUiThread(() -> new CustomDialogModel(DialogType.Red,
-                    activity, e.getMessage(),
+            activity.runOnUiThread(() -> new CustomDialogModel(DialogType.Red, activity,
+                    e.getMessage(),
                     getString(R.string.dear_user),
                     getString(R.string.take_screen_shot),
                     getString(R.string.accepted)));
@@ -254,6 +250,11 @@ public class ReadingActivity extends BaseActivity {
         }
     }
 
+    public void setupViewPager(ReadingData readingData, ReadingData readingDataTemp) {
+        setReadingData(readingData, readingDataTemp);
+        setupViewPager();
+    }
+
     public void setupViewPager() {
         runOnUiThread(() -> {
             binding.textViewNotFound.setVisibility(readingData.onOffLoadDtos.size() > 0 ?
@@ -262,11 +263,9 @@ public class ReadingActivity extends BaseActivity {
                     View.VISIBLE : View.GONE);
             binding.viewPager.setVisibility(readingData.onOffLoadDtos.size() > 0 ?
                     View.VISIBLE : View.GONE);
-            //TODO
-            binding.viewPager.setPageTransformer(true, new DepthPageTransformer());
+            binding.viewPager.setPageTransformer(new DepthPageTransformer2());
             setOnPageChangeListener();
         });
-
         setupViewPagerAdapter(0);
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (FOCUS_ON_EDIT_TEXT)
@@ -274,12 +273,55 @@ public class ReadingActivity extends BaseActivity {
         isReading = true;
     }
 
+    private void setReadingDataOnOffload(ArrayList<OnOffLoadDto> onOffLoadDtos,
+                                         ArrayList<OnOffLoadDto> onOffLoadDtosTemp) {
+        this.readingData.onOffLoadDtos.clear();
+        this.readingData.onOffLoadDtos.addAll(onOffLoadDtos);
+        this.readingDataTemp.onOffLoadDtos.clear();
+        this.readingDataTemp.onOffLoadDtos.addAll(onOffLoadDtosTemp);
+    }
+
+    private void setReadingData(ReadingData readingData, ReadingData readingDataTemp) {
+        setReadingDataOnOffload(readingData.onOffLoadDtos, readingDataTemp.onOffLoadDtos);
+        this.readingData.qotrDictionary.clear();
+        this.readingData.qotrDictionary.addAll(readingData.qotrDictionary);
+        this.readingData.karbariDtos.clear();
+        this.readingData.karbariDtos.addAll(readingData.karbariDtos);
+        this.readingData.trackingDtos.clear();
+        this.readingData.trackingDtos.addAll(readingData.trackingDtos);
+        this.readingData.readingConfigDefaultDtos.clear();
+        this.readingData.readingConfigDefaultDtos.addAll(readingData.readingConfigDefaultDtos);
+        this.readingData.counterReportDtos.clear();
+        this.readingData.counterReportDtos.addAll(readingData.counterReportDtos);
+        this.readingData.counterStateDtos.clear();
+        this.readingData.counterStateDtos.addAll(readingData.counterStateDtos);
+
+        this.readingDataTemp.qotrDictionary.clear();
+        this.readingDataTemp.qotrDictionary.addAll(readingDataTemp.qotrDictionary);
+        this.readingDataTemp.karbariDtos.clear();
+        this.readingDataTemp.karbariDtos.addAll(readingDataTemp.karbariDtos);
+        this.readingDataTemp.trackingDtos.clear();
+        this.readingDataTemp.trackingDtos.addAll(readingDataTemp.trackingDtos);
+        this.readingDataTemp.readingConfigDefaultDtos.clear();
+        this.readingDataTemp.readingConfigDefaultDtos.addAll(readingDataTemp.readingConfigDefaultDtos);
+        this.readingDataTemp.counterReportDtos.clear();
+        this.readingDataTemp.counterReportDtos.addAll(readingDataTemp.counterReportDtos);
+        this.readingDataTemp.counterStateDtos.clear();
+        this.readingDataTemp.counterStateDtos.addAll(readingDataTemp.counterStateDtos);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void dataChanged(ArrayList<OnOffLoadDto> onOffLoadDtos, ArrayList<OnOffLoadDto> onOffLoadDtosTemp) {
+        setReadingDataOnOffload(onOffLoadDtos, onOffLoadDtosTemp);
+        setupViewPagerAdapter(0);
+    }
+
     public void setupViewPagerAdapter(int currentItem) {
-//        viewPagerAdapterReading = new ViewPagerAdapter(getSupportFragmentManager(),
-//                readingData, activity);
-        viewPagerAdapterReading = new ViewPagerAdapter(readingData, activity);
         runOnUiThread(() -> {
+            viewPagerAdapterReading = new ViewPagerAdapterReading2(readingData,
+                    readingDataTemp.onOffLoadDtos ,activity);
             try {
+                binding.viewPager.setOffscreenPageLimit(1);
                 binding.viewPager.setAdapter(viewPagerAdapterReading);
                 if (currentItem > 0)
                     binding.viewPager.setCurrentItem(currentItem);
@@ -290,21 +332,13 @@ public class ReadingActivity extends BaseActivity {
     }
 
     private void setOnPageChangeListener() {
-        binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
-            public void onPageScrolled(int position, float positionOffset,
-                                       int positionOffsetPixels) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
                 final String number = (position + 1) + "/" + readingData.onOffLoadDtos.size();
                 runOnUiThread(() -> binding.textViewPageNumber.setText(number));
                 setAboveIconsSrc(position);
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
             }
         });
     }
@@ -378,7 +412,7 @@ public class ReadingActivity extends BaseActivity {
     }
 
     private void setExceptionImage(int position) {
-        int src = ReadingUtils.setExceptionImage(position);
+        int src = ReadingUtils.setExceptionImage(readingData, position);
         binding.imageViewExceptionState.setVisibility(View.GONE);
         if (src > -1) {
             binding.imageViewExceptionState.setVisibility(View.VISIBLE);
@@ -393,15 +427,15 @@ public class ReadingActivity extends BaseActivity {
     }
 
     private void setReadStatusImage(int position) {
-        binding.imageViewOffLoadState.setImageResource(
-                imageSrc[readingData.onOffLoadDtos.get(position).offLoadStateId]);
+        binding.imageViewOffLoadState.setImageResource(imageSrc[readingData.onOffLoadDtos
+                .get(position).offLoadStateId]);
         if (readingData.onOffLoadDtos.get(position).offLoadStateId == 0)
             binding.imageViewOffLoadState.setImageResource(imageSrc[8]);
     }
 
     private void setHighLowImage(int position) {
-        binding.imageViewHighLowState.setImageResource(
-                imageSrc[readingData.onOffLoadDtos.get(position).highLowStateId]);
+        binding.imageViewHighLowState.setImageResource(imageSrc[readingData.onOffLoadDtos
+                .get(position).highLowStateId]);
     }
 
     private void showNoEshterakFound() {
@@ -426,7 +460,8 @@ public class ReadingActivity extends BaseActivity {
         if (id == R.id.menu_sort) {
             item.setChecked(!item.isChecked());
             sharedPreferenceManager.putData(SharedReferenceKeys.SORT_TYPE.getValue(), item.isChecked());
-            new ChangeSortType(activity, item.isChecked()).execute(activity);
+            new ChangeSortType(activity, item.isChecked(), readingData.onOffLoadDtos,
+                    readingDataTemp.onOffLoadDtos).execute(activity);
         } else if (id == R.id.menu_navigation) {
             if (readingDataTemp.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
@@ -563,7 +598,7 @@ public class ReadingActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        viewPagerAdapterReading = null;
         ImageView imageViewFlash = findViewById(R.id.image_view_flash);
         imageViewFlash.setImageDrawable(null);
         ImageView imageViewReverse = findViewById(R.id.image_view_reverse);
@@ -578,6 +613,20 @@ public class ReadingActivity extends BaseActivity {
         binding.imageViewOffLoadState.setImageDrawable(null);
         binding.imageViewReadingType.setImageDrawable(null);
         binding.imageViewExceptionState.setImageDrawable(null);
+        this.readingData.onOffLoadDtos.clear();
+        this.readingData.qotrDictionary.clear();
+        this.readingData.karbariDtos.clear();
+        this.readingData.trackingDtos.clear();
+        this.readingData.readingConfigDefaultDtos.clear();
+        this.readingData.counterReportDtos.clear();
+        this.readingData.counterStateDtos.clear();
+        this.readingDataTemp.onOffLoadDtos.clear();
+        this.readingDataTemp.qotrDictionary.clear();
+        this.readingDataTemp.karbariDtos.clear();
+        this.readingDataTemp.trackingDtos.clear();
+        this.readingDataTemp.readingConfigDefaultDtos.clear();
+        this.readingDataTemp.counterReportDtos.clear();
+        this.readingDataTemp.counterStateDtos.clear();
         Debug.getNativeHeapAllocatedSize();
         System.runFinalization();
         Runtime.getRuntime().totalMemory();

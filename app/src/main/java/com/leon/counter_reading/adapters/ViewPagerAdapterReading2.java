@@ -5,25 +5,16 @@ import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ScrollView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -33,7 +24,7 @@ import com.leon.counter_reading.enums.HighLowStateEnum;
 import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.fragments.AreYouSureFragment;
 import com.leon.counter_reading.fragments.PossibleFragment;
-import com.leon.counter_reading.infrastructure.IViewPagerAdapter;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
@@ -43,16 +34,16 @@ import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.reading.Counting;
-import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByAttemptNumber;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByIsShown;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadDtoByLock;
 
 import java.util.ArrayList;
 
-public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter {
+public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderReading> {
     private final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
     private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
-    private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
+    private final ArrayList<OnOffLoadDto> onOffLoadDtos;
+    private final ArrayList<OnOffLoadDto> onOffLoadDtosTemp;
     private final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
     private final SpinnerCustomAdapter adapter;
     private final Activity activity;
@@ -63,9 +54,11 @@ public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter 
     private boolean isMakoos;
     private boolean canLessThanPre;
 
-    public ViewPagerAdapter(ReadingData readingData, Activity activity) {
+    public ViewPagerAdapterReading2(ReadingData readingData, ArrayList<OnOffLoadDto> onOffLoadDtosTemp,
+                                    Activity activity) {
         this.activity = activity;
-        onOffLoadDtos.addAll(readingData.onOffLoadDtos);
+        this.onOffLoadDtos = new ArrayList<>(readingData.onOffLoadDtos);
+        this.onOffLoadDtosTemp = new ArrayList<>(onOffLoadDtosTemp);
         final String[] items = new String[readingData.counterStateDtos.size()];
         for (int i = 0; i < readingData.counterStateDtos.size(); i++) {
             items[i] = readingData.counterStateDtos.get(i).title;
@@ -111,24 +104,15 @@ public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter 
         }
     }
 
-    @Override
-    public int getCount() {
-        return onOffLoadDtos.size();
-    }
-
-    @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view == object;
-    }
-
     @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        //    private ViewHolderReading holder;
-        final LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View itemView = inflater.inflate(R.layout.fragment_reading, container, false);
-        final ViewHolderReading holder = new ViewHolderReading(itemView);
+    public ViewHolderReading onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(activity).inflate(R.layout.fragment_reading, parent, false);
+        return new ViewHolderReading(view);
+    }
 
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolderReading holder, int position) {
         holder.editTextNumber.setOnLongClickListener(view -> {
             holder.editTextNumber.setText("");
             return false;
@@ -142,14 +126,7 @@ public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter 
         }
         initializeViews(holder, position);
         initializeSpinner(holder, position);
-//        holder.buttonSubmit.setText(String.valueOf(position));
-        holder.buttonSubmit.setOnClickListener(v -> {
-//            Log.e("position 1", String.valueOf(holder.buttonSubmit.getText()));
-            checkPermissions(holder, position);
-        });
-
-        container.addView(itemView);
-        return itemView;
+        holder.buttonSubmit.setOnClickListener(v -> checkPermissions(holder, position));
     }
 
     private void initializeViews(ViewHolderReading holder, int position) {
@@ -233,78 +210,6 @@ public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter 
         });
     }
 
-    private void checkPermissions(ViewHolderReading holder, int position) {
-        if (PermissionManager.gpsEnabledNew(activity))
-            if (PermissionManager.checkLocationPermission(getContext())) {
-                askLocationPermission(holder, position);
-            } else if (PermissionManager.checkStoragePermission(getContext())) {
-                askStoragePermission(holder, position);
-            } else {
-                //TODO
-                onOffLoadDtos.get(position).attemptCount++;
-                if (!onOffLoadDtos.get(position).isLocked && onOffLoadDtos.get(position).attemptCount + 1 == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
-                    new CustomToast().warning(activity.getString(R.string.mistakes_error), Toast.LENGTH_LONG);
-                if (!onOffLoadDtos.get(position).isLocked && onOffLoadDtos.get(position).attemptCount == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
-                    new CustomToast().error(activity.getString(R.string.by_mistakes).
-                            concat(onOffLoadDtos.get(position).eshterak).concat(activity.getString(R.string.is_locked)), Toast.LENGTH_LONG);
-                new UpdateOnOffLoadByAttemptNumber(position, onOffLoadDtos.get(position).attemptCount).execute(activity);
-                if (!onOffLoadDtos.get(position).isLocked && onOffLoadDtos.get(position).attemptCount >= DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName())) {
-//                    new UpdateOnOffLoadDtoByLock(position, onOffLoadDtos.get(position).trackNumber, onOffLoadDtos.get(position).id).execute(activity);
-                } else {
-                    attemptSend(holder, position);
-                }
-            }
-    }
-
-    private void askLocationPermission(ViewHolderReading holder, int position) {
-        PermissionListener permissionlistener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                new CustomToast().info(activity.getString(R.string.access_granted));
-                checkPermissions(holder, position);
-            }
-
-            @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                new CustomToast().warning("به علت عدم دسترسی به مکان یابی، امکان ثبت وجود ندارد.");
-            }
-        };
-        new TedPermission(activity)
-                .setPermissionListener(permissionlistener)
-                .setRationaleMessage(activity.getString(R.string.confirm_permission))
-                .setRationaleConfirmText(activity.getString(R.string.allow_permission))
-                .setDeniedMessage(activity.getString(R.string.if_reject_permission))
-                .setDeniedCloseButtonText(activity.getString(R.string.close))
-                .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION).check();
-    }
-
-    private void askStoragePermission(ViewHolderReading holder, int position) {
-        PermissionListener permissionlistener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                new CustomToast().info(activity.getString(R.string.access_granted));
-                checkPermissions(holder, position);
-            }
-
-            @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                PermissionManager.forceClose(activity);
-            }
-        };
-        new TedPermission(activity)
-                .setPermissionListener(permissionlistener)
-                .setRationaleMessage(activity.getString(R.string.confirm_permission))
-                .setRationaleConfirmText(activity.getString(R.string.allow_permission))
-                .setDeniedMessage(activity.getString(R.string.if_reject_permission))
-                .setDeniedCloseButtonText(activity.getString(R.string.close))
-                .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(Manifest.permission.CAMERA,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
-    }
-
     public void attemptSend(ViewHolderReading holder, int position) {
         counterStatePosition = holder.spinner.getSelectedItemPosition();
         counterStateCode = counterStateDtos.get(counterStatePosition).id;
@@ -312,7 +217,7 @@ public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter 
         isMane = counterStateDtos.get(counterStatePosition).isMane;
         isMakoos = counterStateDtos.get(counterStatePosition).title.equals("معکوس");
         boolean canBeEmpty = !counterStateDtos.get(counterStatePosition).shouldEnterNumber;
-//        Log.e("position 1", String.valueOf(position));
+
         if (canBeEmpty) {
             canBeEmpty(holder, position);
         } else {
@@ -369,29 +274,18 @@ public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter 
     }
 
     private void notEmptyIsMakoos(int currentNumber, int position) {
-        FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
-
-        AreYouSureFragment areYouSureFragment;
+        int type = -1000;
         if (currentNumber == onOffLoadDtos.get(position).preNumber) {
-            areYouSureFragment = AreYouSureFragment.newInstance(
-                    position, currentNumber, HighLowStateEnum.ZERO.getValue(),
-                    counterStateCode, counterStatePosition);
-            areYouSureFragment.show(fragmentManager, activity.getString(R.string.use_out_of_range));
+            type = HighLowStateEnum.ZERO.getValue();
         } else {
             int status = Counting.checkHighLowMakoos(onOffLoadDtos.get(position),
                     karbariDtos.get(position), readingConfigDefaultDtos.get(position), currentNumber);
             switch (status) {
                 case 1:
-                    areYouSureFragment = AreYouSureFragment.newInstance(
-                            position, currentNumber, HighLowStateEnum.HIGH.getValue(),
-                            counterStateCode, counterStatePosition);
-                    areYouSureFragment.show(fragmentManager, activity.getString(R.string.use_out_of_range));
+                    type = HighLowStateEnum.HIGH.getValue();
                     break;
                 case -1:
-                    areYouSureFragment = AreYouSureFragment.newInstance(
-                            position, currentNumber, HighLowStateEnum.LOW.getValue(),
-                            counterStateCode, counterStatePosition);
-                    areYouSureFragment.show(fragmentManager, activity.getString(R.string.use_out_of_range));
+                    type = HighLowStateEnum.LOW.getValue();
                     break;
                 case 0:
                     ((ReadingActivity) activity).updateOnOffLoadByCounterNumber(position,
@@ -399,6 +293,12 @@ public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter 
                             HighLowStateEnum.NORMAL.getValue());
                     break;
             }
+        }
+        if (type != 1000) {
+            FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
+            AreYouSureFragment areYouSureFragment = AreYouSureFragment.newInstance(position,
+                    currentNumber, type, counterStateCode, counterStatePosition);
+            areYouSureFragment.show(fragmentManager, activity.getString(R.string.use_out_of_range));
         }
     }
 
@@ -435,22 +335,83 @@ public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter 
         }
     }
 
-    @Override
-    public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
-        // Remove viewpager_item.xml from ViewPager
-//        container.removeView((RelativeLayout) object);
-        container.removeView((ScrollView) object);
-        container = null;
+    private void askLocationPermission(ViewHolderReading holder, int position) {
+        PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                new CustomToast().info(activity.getString(R.string.access_granted));
+                checkPermissions(holder, position);
+            }
+
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                new CustomToast().warning("به علت عدم دسترسی به مکان یابی، امکان ثبت وجود ندارد.");
+            }
+        };
+        new TedPermission(activity)
+                .setPermissionListener(permissionlistener)
+                .setRationaleMessage(activity.getString(R.string.confirm_permission))
+                .setRationaleConfirmText(activity.getString(R.string.allow_permission))
+                .setDeniedMessage(activity.getString(R.string.if_reject_permission))
+                .setDeniedCloseButtonText(activity.getString(R.string.close))
+                .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
+                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION).check();
     }
-    @Override
-    public void destroyItem(@NonNull View collection, int position, Object o) {
-        View view = (View)o;
-        ((ViewPager) collection).removeView(view);
-        view = null;
+
+    private void askStoragePermission(ViewHolderReading holder, int position) {
+        PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                new CustomToast().info(activity.getString(R.string.access_granted));
+                checkPermissions(holder, position);
+            }
+
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                PermissionManager.forceClose(activity);
+            }
+        };
+        new TedPermission(activity)
+                .setPermissionListener(permissionlistener)
+                .setRationaleMessage(activity.getString(R.string.confirm_permission))
+                .setRationaleConfirmText(activity.getString(R.string.allow_permission))
+                .setDeniedMessage(activity.getString(R.string.if_reject_permission))
+                .setDeniedCloseButtonText(activity.getString(R.string.close))
+                .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
+                .setPermissions(Manifest.permission.CAMERA,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
     }
+
+    private void checkPermissions(ViewHolderReading holder, int position) {
+        if (PermissionManager.gpsEnabledNew(activity))
+            if (PermissionManager.checkLocationPermission(getContext())) {
+                askLocationPermission(holder, position);
+            } else if (PermissionManager.checkStoragePermission(getContext())) {
+                askStoragePermission(holder, position);
+            } else {
+                onOffLoadDtos.get(position).attemptCount++;
+                if (!onOffLoadDtos.get(position).isLocked && onOffLoadDtos.get(position).attemptCount + 1 == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
+                    new CustomToast().warning(activity.getString(R.string.mistakes_error), Toast.LENGTH_LONG);
+                if (!onOffLoadDtos.get(position).isLocked && onOffLoadDtos.get(position).attemptCount == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
+                    new CustomToast().error(activity.getString(R.string.by_mistakes).
+                            concat(onOffLoadDtos.get(position).eshterak).concat(activity.getString(R.string.is_locked)), Toast.LENGTH_LONG);
+                MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao().
+                        updateOnOffLoadByAttemptNumber(onOffLoadDtos.get(position).id,
+                                onOffLoadDtos.get(position).attemptCount);
+                if (!onOffLoadDtos.get(position).isLocked && onOffLoadDtos.get(position).attemptCount >= DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName())) {
+                    new UpdateOnOffLoadDtoByLock(onOffLoadDtos, onOffLoadDtosTemp, position,
+                            onOffLoadDtos.get(position).trackNumber, onOffLoadDtos.get(position).id)
+                            .execute(activity);
+                } else {
+//                    attemptSend(holder, position);
+                }
+            }
+    }
+
     @Override
-    public int getItemPosition(@NonNull Object object) {
-        return PagerAdapter.POSITION_NONE;
+    public int getItemCount() {
+        return onOffLoadDtos.size();
     }
 }
-

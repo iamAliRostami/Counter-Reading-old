@@ -1,8 +1,9 @@
 package com.leon.counter_reading.utils.reading;
 
-import static com.leon.counter_reading.helpers.Constants.readingData;
+//import static com.leon.counter_reading.helpers.Constants.readingData;
 
 import com.leon.counter_reading.R;
+import com.leon.counter_reading.tables.ReadingData;
 
 public class ReadingUtils {
     /**
@@ -28,7 +29,7 @@ public class ReadingUtils {
         return imageSrc;
     }
 
-    static public int setExceptionImage(int position) {
+    static public int setExceptionImage(ReadingData readingData, int position) {
         for (int i = 0; i < readingData.counterStateDtos.size(); i++) {
             if (readingData.counterStateDtos.get(i).moshtarakinId ==
                     readingData.onOffLoadDtos.get(position).preCounterStateCode &&
