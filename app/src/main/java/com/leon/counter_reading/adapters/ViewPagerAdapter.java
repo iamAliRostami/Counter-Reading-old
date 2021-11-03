@@ -6,13 +6,13 @@ import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -47,7 +47,6 @@ import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByIsShown;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadDtoByLock;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter {
     private final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
@@ -62,9 +61,6 @@ public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter 
     private boolean isMane;
     private boolean isMakoos;
     private boolean canLessThanPre;
-
-    private ViewHolderReading holder;
-    LayoutInflater inflater;
 
     public ViewPagerAdapter(ReadingData readingData, Activity activity) {
         this.activity = activity;
@@ -127,9 +123,10 @@ public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter 
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        //    private ViewHolderReading holder;
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.fragment_reading, container, false);
-        holder = new ViewHolderReading(itemView);
+        ViewHolderReading holder = new ViewHolderReading(itemView);
 
         holder.editTextNumber.setOnLongClickListener(view -> {
             holder.editTextNumber.setText("");
@@ -144,7 +141,11 @@ public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter 
         }
         initializeViews(holder, position);
         initializeSpinner(holder, position);
-        holder.buttonSubmit.setOnClickListener(v -> checkPermissions(holder, position));
+//        holder.buttonSubmit.setText(String.valueOf(position));
+        holder.buttonSubmit.setOnClickListener(v -> {
+//            Log.e("position 1", String.valueOf(holder.buttonSubmit.getText()));
+            checkPermissions(holder, position);
+        });
 
         container.addView(itemView);
         return itemView;
@@ -310,7 +311,7 @@ public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter 
         isMane = counterStateDtos.get(counterStatePosition).isMane;
         isMakoos = counterStateDtos.get(counterStatePosition).title.equals("معکوس");
         boolean canBeEmpty = !counterStateDtos.get(counterStatePosition).shouldEnterNumber;
-
+//        Log.e("position 1", String.valueOf(position));
         if (canBeEmpty) {
             canBeEmpty(holder, position);
         } else {
