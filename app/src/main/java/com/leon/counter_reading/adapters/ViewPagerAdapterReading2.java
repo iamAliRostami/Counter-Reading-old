@@ -5,7 +5,6 @@ import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.Manifest;
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,81 +119,82 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
             holder.editTextNumber.setText("");
             return false;
         });
-        if (onOffLoadDtos.get(position).isLocked) {
+        final OnOffLoadDto onOffLoadDto = onOffLoadDtos.get(position);
+        if (onOffLoadDto.isLocked) {
             new CustomToast().error(activity.getString(R.string.by_mistakes)
-                    .concat(onOffLoadDtos.get(position).eshterak).concat(activity
+                    .concat(onOffLoadDto.eshterak).concat(activity
                             .getString(R.string.is_locked)), Toast.LENGTH_SHORT);
             holder.editTextNumber.setFocusable(false);
             holder.editTextNumber.setEnabled(false);
         }
 
-        initializeViews(holder, position);
-        initializeSpinner(holder, position);
+        initializeViews(holder, onOffLoadDto, position);
+        initializeSpinner(holder, onOffLoadDto);
         holder.buttonSubmit.setOnClickListener(v -> checkPermissions(holder, position));
     }
 
-    private void initializeViews(ViewHolderReading holder, int position) {
+    private void initializeViews(ViewHolderReading holder, OnOffLoadDto onOffLoadDto, int position) {
         holder.textViewAhad1Title.setText(DifferentCompanyManager.getAhad1(
                 DifferentCompanyManager.getActiveCompanyName()).concat(" : "));
         holder.textViewAhad2Title.setText(DifferentCompanyManager.getAhad2(
                 DifferentCompanyManager.getActiveCompanyName()).concat(" : "));
         holder.textViewAhadTotalTitle.setText(DifferentCompanyManager.getAhadTotal(
                 DifferentCompanyManager.getActiveCompanyName()).concat(" : "));
-        holder.textViewAddress.setText(onOffLoadDtos.get(position).address);
-        holder.textViewName.setText(onOffLoadDtos.get(position).firstName.concat(" ")
-                .concat(onOffLoadDtos.get(position).sureName));
-        holder.textViewPreDate.setText(onOffLoadDtos.get(position).preDate);
-        holder.textViewSerial.setText(onOffLoadDtos.get(position).counterSerial);
+        holder.textViewAddress.setText(onOffLoadDto.address);
+        holder.textViewName.setText(onOffLoadDto.firstName.concat(" ")
+                .concat(onOffLoadDto.sureName));
+        holder.textViewPreDate.setText(onOffLoadDto.preDate);
+        holder.textViewSerial.setText(onOffLoadDto.counterSerial);
 
-        if (onOffLoadDtos.get(position).displayRadif)
-            holder.textViewRadif.setText(String.valueOf(onOffLoadDtos.get(position).radif));
-        else if (onOffLoadDtos.get(position).displayBillId)
-            holder.textViewRadif.setText(String.valueOf(onOffLoadDtos.get(position).billId));
+        if (onOffLoadDto.displayRadif)
+            holder.textViewRadif.setText(String.valueOf(onOffLoadDto.radif));
+        else if (onOffLoadDto.displayBillId)
+            holder.textViewRadif.setText(String.valueOf(onOffLoadDto.billId));
         else holder.textViewRadif.setVisibility(View.GONE);
 
-        holder.textViewAhad1.setText(String.valueOf(onOffLoadDtos.get(position).ahadMaskooniOrAsli));
-        Log.e("position", String.valueOf(position));
-        if (onOffLoadDtos.get(position).counterNumber != null) {
-            holder.editTextNumber.setText(String.valueOf(onOffLoadDtos.get(position).counterNumber));
+        holder.textViewAhad1.setText(String.valueOf(onOffLoadDto.ahadMaskooniOrAsli));
+
+        if (onOffLoadDto.counterNumber != null) {
+            holder.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
         }
-        holder.textViewAhad2.setText(String.valueOf(onOffLoadDtos.get(position).ahadTejariOrFari));
-        holder.textViewAhadTotal.setText(String.valueOf(onOffLoadDtos.get(position).ahadSaierOrAbBaha));
+        holder.textViewAhad2.setText(String.valueOf(onOffLoadDto.ahadTejariOrFari));
+        holder.textViewAhadTotal.setText(String.valueOf(onOffLoadDto.ahadSaierOrAbBaha));
 
         if (readingConfigDefaultDtos.get(position).isOnQeraatCode) {
-            holder.textViewCode.setText(onOffLoadDtos.get(position).qeraatCode);
-        } else holder.textViewCode.setText(onOffLoadDtos.get(position).eshterak);
+            holder.textViewCode.setText(onOffLoadDto.qeraatCode);
+        } else holder.textViewCode.setText(onOffLoadDto.eshterak);
 
         holder.textViewKarbari.setText(karbariDtos.get(position).title);
-        holder.textViewBranch.setText(onOffLoadDtos.get(position).qotr.equals(activity.getString(R.string.unknown)) ? "-" : onOffLoadDtos.get(position).qotr);
-        holder.textViewSiphon.setText(onOffLoadDtos.get(position).sifoonQotr.equals(activity.getString(R.string.unknown)) ? "-" : onOffLoadDtos.get(position).sifoonQotr);
+        holder.textViewBranch.setText(onOffLoadDto.qotr.equals(activity.getString(R.string.unknown)) ? "-" : onOffLoadDto.qotr);
+        holder.textViewSiphon.setText(onOffLoadDto.sifoonQotr.equals(activity.getString(R.string.unknown)) ? "-" : onOffLoadDto.sifoonQotr);
 
-        if (onOffLoadDtos.get(position).counterNumberShown) {
-            holder.textViewPreNumber.setText(String.valueOf(onOffLoadDtos.get(position).preNumber));
+        if (onOffLoadDto.counterNumberShown) {
+            holder.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber));
         }
         holder.textViewPreNumber.setOnClickListener(v -> {
-            if (onOffLoadDtos.get(position).hasPreNumber) {
+            if (onOffLoadDto.hasPreNumber) {
                 activity.runOnUiThread(() ->
-                        holder.textViewPreNumber.setText(String.valueOf(onOffLoadDtos.get(position).preNumber)));
-                new UpdateOnOffLoadByIsShown(onOffLoadDtos.get(position)).execute(activity);
+                        holder.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber)));
+                new UpdateOnOffLoadByIsShown(onOffLoadDto).execute(activity);
             } else {
                 new CustomToast().warning(activity.getString(R.string.can_not_show_pre));
             }
         });
         holder.textViewAddress.setOnLongClickListener(v -> {
             FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
-            PossibleFragment possibleFragment = PossibleFragment.newInstance(onOffLoadDtos.get(position),
-                    position, true);
+            PossibleFragment possibleFragment = PossibleFragment.newInstance(onOffLoadDto, position,
+                    true);
             possibleFragment.show(fragmentManager, activity.getString(R.string.dynamic_navigation));
             return false;
         });
     }
 
-    private void initializeSpinner(ViewHolderReading holder, int position) {
+    private void initializeSpinner(ViewHolderReading holder,OnOffLoadDto onOffLoadDto) {
         holder.spinner.setAdapter(adapter);
         boolean found = false;
         int i;
         for (i = 0; i < counterStateDtos.size() && !found; i++)
-            if (counterStateDtos.get(i).id == onOffLoadDtos.get(position).counterStateId) {
+            if (counterStateDtos.get(i).id == onOffLoadDto.counterStateId) {
                 found = true;
             }
         holder.spinner.setSelection(found ? i - 1 : 0);
@@ -225,7 +225,6 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
         isMane = counterStateDtos.get(counterStatePosition).isMane;
         isMakoos = counterStateDtos.get(counterStatePosition).title.equals("معکوس");
         boolean canBeEmpty = !counterStateDtos.get(counterStatePosition).shouldEnterNumber;
-
         if (canBeEmpty) {
             canBeEmpty(holder, position);
         } else {
@@ -233,7 +232,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
         }
     }
 
-    private void canBeEmpty(ViewHolderReading holder, int position) {//TODO
+    private void canBeEmpty(ViewHolderReading holder, int position) {
         if (holder.editTextNumber.getText().toString().isEmpty() || isMane) {
             ((ReadingActivity) activity).updateOnOffLoadWithoutCounterNumber(position,
                     counterStateCode, counterStatePosition);
@@ -302,7 +301,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
                     break;
             }
         }
-        if (type != 1000) {
+        if (type != -1000) {
             FragmentManager fragmentManager = ((AppCompatActivity) activity).getSupportFragmentManager();
             AreYouSureFragment areYouSureFragment = AreYouSureFragment.newInstance(position,
                     currentNumber, type, counterStateCode, counterStatePosition);
