@@ -12,14 +12,15 @@ public class DepthPageTransformer2 implements ViewPager2.PageTransformer {
 
         if (position < -1) { // [-Infinity,-1)
             // This page is way off-screen to the left.
-            view.setAlpha(0);
+            view.setAlpha(0f);
 
         } else if (position <= 0) { // [-1,0]
             // Use the default slide transition when moving to the left page
-            view.setAlpha(1);
-            view.setTranslationX(0);
-            view.setScaleX(1);
-            view.setScaleY(1);
+            view.setAlpha(1f);
+            view.setTranslationX(0f);
+            view.setTranslationZ(0f);
+            view.setScaleX(1f);
+            view.setScaleY(1f);
 
         } else if (position <= 1) { // (0,1]
             // Fade the page out.
@@ -27,6 +28,8 @@ public class DepthPageTransformer2 implements ViewPager2.PageTransformer {
 
             // Counteract the default slide transition
             view.setTranslationX(pageWidth * -position);
+            // Move it behind the left page
+            view.setTranslationZ(-1f);
 
             // Scale the page down (between MIN_SCALE and 1)
             float scaleFactor = MIN_SCALE
@@ -36,7 +39,7 @@ public class DepthPageTransformer2 implements ViewPager2.PageTransformer {
 
         } else { // (1,+Infinity]
             // This page is way off-screen to the right.
-            view.setAlpha(0);
+            view.setAlpha(0f);
         }
     }
 }

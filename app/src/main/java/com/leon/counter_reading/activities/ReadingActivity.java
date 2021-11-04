@@ -246,7 +246,7 @@ public class ReadingActivity extends BaseActivity {
             readingData.onOffLoadDtos.addAll(readingDataTemp.onOffLoadDtos);
             runOnUiThread(this::setupViewPager);
         } else {
-            new Search(type, key, goToPage).execute(activity);
+            new Search(readingData.onOffLoadDtos, readingDataTemp.onOffLoadDtos, type, key, goToPage).execute(activity);
         }
     }
 
@@ -267,14 +267,15 @@ public class ReadingActivity extends BaseActivity {
             setOnPageChangeListener();
         });
         setupViewPagerAdapter(0);
+
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (FOCUS_ON_EDIT_TEXT)
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         isReading = true;
     }
 
-    private void setReadingDataOnOffload(ArrayList<OnOffLoadDto> onOffLoadDtos,
-                                         ArrayList<OnOffLoadDto> onOffLoadDtosTemp) {
+    public void setReadingDataOnOffload(ArrayList<OnOffLoadDto> onOffLoadDtos,
+                                        ArrayList<OnOffLoadDto> onOffLoadDtosTemp) {
         this.readingData.onOffLoadDtos.clear();
         this.readingData.onOffLoadDtos.addAll(onOffLoadDtos);
         this.readingDataTemp.onOffLoadDtos.clear();
@@ -313,16 +314,19 @@ public class ReadingActivity extends BaseActivity {
     @SuppressLint("NotifyDataSetChanged")
     public void dataChanged(ArrayList<OnOffLoadDto> onOffLoadDtos, ArrayList<OnOffLoadDto> onOffLoadDtosTemp) {
         setReadingDataOnOffload(onOffLoadDtos, onOffLoadDtosTemp);
-        setupViewPagerAdapter(0);
+//        setupViewPagerAdapter(0);
+        setupViewPager();
     }
 
     public void setupViewPagerAdapter(int currentItem) {
         runOnUiThread(() -> {
             viewPagerAdapterReading = new ViewPagerAdapterReading2(readingData,
-                    readingDataTemp.onOffLoadDtos ,activity);
+                    readingDataTemp.onOffLoadDtos, activity);
             try {
                 binding.viewPager.setOffscreenPageLimit(1);
                 binding.viewPager.setAdapter(viewPagerAdapterReading);
+
+                binding.viewPager.setRotationY(180);
                 if (currentItem > 0)
                     binding.viewPager.setCurrentItem(currentItem);
             } catch (Exception e) {
@@ -384,10 +388,11 @@ public class ReadingActivity extends BaseActivity {
             if (isShowing) {
                 isShowing = false;
                 makeRing(activity, NotificationType.SAVE);
-                new Update(position, getLocationTracker(activity).getCurrentLocation())
+                new Update(readingData.onOffLoadDtos.get(position), getLocationTracker(activity).getCurrentLocation())
                         .execute(activity);
-                new PrepareToSend(sharedPreferenceManager
-                        .getStringData(SharedReferenceKeys.TOKEN.getValue())).execute(activity);
+                new PrepareToSend(readingData.onOffLoadDtos, readingDataTemp.onOffLoadDtos,
+                        sharedPreferenceManager.getStringData(SharedReferenceKeys.TOKEN.getValue()))
+                        .execute(activity);
                 changePage(binding.viewPager.getCurrentItem() + 1);
             }
         }
@@ -447,8 +452,8 @@ public class ReadingActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.reading_menu, menu);
-        menu.getItem(5).setChecked(FOCUS_ON_EDIT_TEXT);
-        menu.getItem(6).setChecked(MyApplication.getApplicationComponent()
+        menu.getItem(6).setChecked(FOCUS_ON_EDIT_TEXT);
+        menu.getItem(7).setChecked(MyApplication.getApplicationComponent()
                 .SharedPreferenceModel().getBoolData(SharedReferenceKeys.SORT_TYPE.getValue()));
         return super.onCreateOptionsMenu(menu);
     }
@@ -548,7 +553,7 @@ public class ReadingActivity extends BaseActivity {
         if ((requestCode == REPORT || requestCode == NAVIGATION ||
                 requestCode == DESCRIPTION ||
                 requestCode == COUNTER_LOCATION) && resultCode == RESULT_OK) {
-            new Result(data).execute(activity);
+            new Result(data, readingData.onOffLoadDtos, readingDataTemp.onOffLoadDtos).execute(activity);
 
         } else if (requestCode == CAMERA && resultCode == RESULT_OK) {
             int position = data.getExtras().getInt(BundleEnum.POSITION.getValue());

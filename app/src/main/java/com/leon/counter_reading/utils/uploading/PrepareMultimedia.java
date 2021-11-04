@@ -5,12 +5,12 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.fragments.UploadFragment;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
@@ -130,7 +130,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
             Call<MultimediaUploadResponse> call = iAbfaService.fileUploadMultiple(
                     imageMultiples.File, imageMultiples.OnOffLoadId, imageMultiples.Description);
             HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW_CANCELABLE.getValue(), activity,
-                    new UploadImages(images, activity, uploadFragment), new UploadImagesIncomplete(), new UploadMultimediaError());
+                    new UploadImages(images, activity, uploadFragment), new UploadImagesIncomplete(),
+                    new UploadMultimediaError());
         } else {
             activity.runOnUiThread(() ->
                     new CustomToast().info(activity.getString(R.string.there_is_no_images),
@@ -215,9 +216,11 @@ class UploadVoicesIncomplete implements ICallbackIncomplete<MultimediaUploadResp
 class UploadMultimediaError implements ICallbackError {
     @Override
     public void executeError(Throwable t) {
-        CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(MyApplication.getContext());
-        String error = customErrorHandlingNew.getErrorMessageTotal(t);
-        new CustomToast().error(error, Toast.LENGTH_LONG);
+        if (!HttpClientWrapper.cancel) {
+            CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(MyApplication.getContext());
+            String error = customErrorHandlingNew.getErrorMessageTotal(t);
+            new CustomToast().error(error, Toast.LENGTH_LONG);
+        }
     }
 }
 

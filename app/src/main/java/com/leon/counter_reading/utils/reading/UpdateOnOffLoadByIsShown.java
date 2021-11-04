@@ -1,26 +1,25 @@
 package com.leon.counter_reading.utils.reading;
 
-import static com.leon.counter_reading.helpers.Constants.readingData;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 
 import com.leon.counter_reading.helpers.MyApplication;
+import com.leon.counter_reading.tables.OnOffLoadDto;
 
 public class UpdateOnOffLoadByIsShown extends AsyncTask<Activity, Void, Void> {
-    private final int position;
+    private final OnOffLoadDto onOffLoadDto;
 
-    public UpdateOnOffLoadByIsShown(int position) {
+    public UpdateOnOffLoadByIsShown(OnOffLoadDto onOffLoadDto) {
         super();
-        this.position = position;
+        this.onOffLoadDto = onOffLoadDto;
     }
 
     @Override
     protected Void doInBackground(Activity... activities) {
-        readingData.onOffLoadDtos.get(position).isBazdid = true;
-        readingData.onOffLoadDtos.get(position).counterNumberShown = true;
+        onOffLoadDto.isBazdid = true;
+        onOffLoadDto.counterNumberShown = true;
         MyApplication.getApplicationComponent().MyDatabase()
-                .onOffLoadDao().updateOnOffLoad(readingData.onOffLoadDtos.get(position));
+                .onOffLoadDao().updateOnOffLoad(onOffLoadDto);
         return null;
     }
 }

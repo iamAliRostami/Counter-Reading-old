@@ -108,11 +108,13 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
     @Override
     public ViewHolderReading onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(activity).inflate(R.layout.fragment_reading, parent, false);
+        view.setRotationY(180);
         return new ViewHolderReading(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderReading holder, int position) {
+
         holder.editTextNumber.setOnLongClickListener(view -> {
             holder.editTextNumber.setText("");
             return false;
@@ -163,11 +165,13 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
         holder.textViewBranch.setText(onOffLoadDtos.get(position).qotr.equals("مشخص نشده") ? "-" : onOffLoadDtos.get(position).qotr);
         holder.textViewSiphon.setText(onOffLoadDtos.get(position).sifoonQotr.equals("مشخص نشده") ? "-" : onOffLoadDtos.get(position).sifoonQotr);
 
+        if (onOffLoadDtos.get(position).counterNumberShown)
+            holder.textViewPreNumber.setText(String.valueOf(onOffLoadDtos.get(position).preNumber));
         holder.textViewPreNumber.setOnClickListener(v -> {
             if (onOffLoadDtos.get(position).hasPreNumber) {
                 activity.runOnUiThread(() ->
                         holder.textViewPreNumber.setText(String.valueOf(onOffLoadDtos.get(position).preNumber)));
-                new UpdateOnOffLoadByIsShown(position).execute(activity);
+                new UpdateOnOffLoadByIsShown(onOffLoadDtos.get(position)).execute(activity);
             } else {
                 new CustomToast().warning(activity.getString(R.string.can_not_show_pre));
             }
@@ -405,7 +409,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
                             onOffLoadDtos.get(position).trackNumber, onOffLoadDtos.get(position).id)
                             .execute(activity);
                 } else {
-//                    attemptSend(holder, position);
+                    attemptSend(holder, position);
                 }
             }
     }

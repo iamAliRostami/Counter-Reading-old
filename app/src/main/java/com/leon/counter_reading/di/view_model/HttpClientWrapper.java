@@ -65,15 +65,22 @@ public class HttpClientWrapper {
 
                 @Override
                 public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
-                    if (!cancel) {
-                        ((Activity) context).runOnUiThread(() -> callbackError.executeError(t));
-                        if (progressBar.getDialog() != null)
-                            try {
-                                progressBar.getDialog().dismiss();
-                            } catch (Exception e) {
-                                new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
-                            }
-                    }
+//                    if (!cancel) {
+//                        ((Activity) context).runOnUiThread(() -> callbackError.executeError(t));
+//                        if (progressBar.getDialog() != null)
+//                            try {
+//                                progressBar.getDialog().dismiss();
+//                            } catch (Exception e) {
+//                                new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+//                            }
+//                    }
+                    ((Activity) context).runOnUiThread(() -> callbackError.executeError(t));
+                    if (progressBar.getDialog() != null)
+                        try {
+                            progressBar.getDialog().dismiss();
+                        } catch (Exception e) {
+                            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+                        }
                 }
             });
             HttpClientWrapper.call = call;

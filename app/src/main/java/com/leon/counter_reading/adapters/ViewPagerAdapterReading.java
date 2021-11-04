@@ -124,10 +124,10 @@ public class ViewPagerAdapterReading extends FragmentStatePagerAdapter implement
 
     @Override
     public void destroyItem(@NotNull ViewGroup container, int position, @NotNull Object object) {
-        FragmentManager manager = ((Fragment) object).getParentFragmentManager();
-        FragmentTransaction trans = manager.beginTransaction();
-        trans.remove((Fragment) object);
-        trans.commit();
+//        FragmentManager manager = ((Fragment) object).getParentFragmentManager();
+//        FragmentTransaction trans = manager.beginTransaction();
+//        trans.remove((Fragment) object);
+//        trans.commit();
         super.destroyItem(container, position, object);
     }
 }

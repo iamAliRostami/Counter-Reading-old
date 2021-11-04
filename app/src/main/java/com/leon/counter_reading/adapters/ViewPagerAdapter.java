@@ -190,7 +190,7 @@ public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter 
             if (onOffLoadDtos.get(position).hasPreNumber) {
                 activity.runOnUiThread(() ->
                         holder.textViewPreNumber.setText(String.valueOf(onOffLoadDtos.get(position).preNumber)));
-                new UpdateOnOffLoadByIsShown(position).execute(activity);
+//                new UpdateOnOffLoadByIsShown(position).execute(activity);
             } else {
                 new CustomToast().warning(activity.getString(R.string.can_not_show_pre));
             }

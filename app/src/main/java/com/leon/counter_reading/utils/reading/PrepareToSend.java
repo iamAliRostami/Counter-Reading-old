@@ -3,13 +3,13 @@ package com.leon.counter_reading.utils.reading;
 import android.app.Activity;
 import android.os.AsyncTask;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.enums.OffloadStateEnum;
 import com.leon.counter_reading.enums.ProgressType;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
@@ -27,11 +27,16 @@ import retrofit2.Retrofit;
 
 public class PrepareToSend extends AsyncTask<Activity, Integer, Integer> {
     private final OnOffLoadDto.OffLoadData offLoadData;
+    private final ArrayList<OnOffLoadDto> onOffLoadDtos;
+    private final ArrayList<OnOffLoadDto> onOffLoadDtosTemp;
     private final String token;
 
-    public PrepareToSend(String token) {
+    public PrepareToSend(ArrayList<OnOffLoadDto> onOffLoadDtos,
+                         ArrayList<OnOffLoadDto> onOffLoadDtosTemp, String token) {
         super();
         this.token = token;
+        this.onOffLoadDtos = new ArrayList<>(onOffLoadDtos);
+        this.onOffLoadDtosTemp = new ArrayList<>(onOffLoadDtosTemp);
         offLoadData = new OnOffLoadDto.OffLoadData();
     }
 
@@ -57,23 +62,29 @@ public class PrepareToSend extends AsyncTask<Activity, Integer, Integer> {
         }
         activities[0].runOnUiThread(() ->
                 HttpClientWrapper.callHttpAsync(call, ProgressType.NOT_SHOW.getValue(), activities[0],
-                        new offLoadData(activities[0]), new offLoadDataIncomplete(activities[0]), new offLoadError(activities[0])));
+                        new offLoadData(onOffLoadDtos, onOffLoadDtosTemp, activities[0]),
+                        new offLoadDataIncomplete(activities[0]), new offLoadError(activities[0])));
         return null;
     }
 
 }
 
 class offLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
-    Activity activity;
+    private final Activity activity;
+    private final ArrayList<OnOffLoadDto> onOffLoadDtos;
+    private final ArrayList<OnOffLoadDto> onOffLoadDtosTemp;
 
-    public offLoadData(Activity activity) {
+    public offLoadData(ArrayList<OnOffLoadDto> onOffLoadDtos,
+                       ArrayList<OnOffLoadDto> onOffLoadDtosTemp, Activity activity) {
         this.activity = activity;
+        this.onOffLoadDtos = new ArrayList<>(onOffLoadDtos);
+        this.onOffLoadDtosTemp = new ArrayList<>(onOffLoadDtosTemp);
     }
 
     @Override
     public void execute(Response<OnOffLoadDto.OffLoadResponses> response) {
         if (response.body() != null && response.body().status == 200) {
-            new Sent().execute(response.body());
+            new Sent(onOffLoadDtos,onOffLoadDtosTemp, response.body()).execute(activity);
         } else if (response.body() != null) {
             try {
                 MyApplication.setErrorCounter(MyApplication.getErrorCounter() + 1);

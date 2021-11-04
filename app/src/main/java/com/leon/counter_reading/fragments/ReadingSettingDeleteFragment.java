@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.gson.Gson;
 import com.leon.counter_reading.R;
@@ -86,7 +88,7 @@ public class ReadingSettingDeleteFragment extends Fragment {
                 deleteFragment = DeleteFragment.newInstance(
                         trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id);
             }
-            deleteFragment.show(getParentFragmentManager(), "");
+            deleteFragment.show(((AppCompatActivity) activity).getSupportFragmentManager(), "");
         });
     }
 

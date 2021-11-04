@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/relative_layout"
     tools:context="com.leon.counter_reading.activities.ReadingActivity">
 
     <LinearLayout
@@ -74,6 +75,7 @@
 <!--        android:layout_below="@id/linear_layout_above" />-->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
+        android:layoutDirection="rtl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/linear_layout_above" />
