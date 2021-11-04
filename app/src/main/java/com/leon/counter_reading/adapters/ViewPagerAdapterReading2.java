@@ -5,6 +5,7 @@ import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.Manifest;
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,14 +108,14 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
     @NonNull
     @Override
     public ViewHolderReading onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(activity).inflate(R.layout.fragment_reading, parent, false);
+        final View view = LayoutInflater.from(activity).inflate(R.layout.fragment_reading, parent, false);
         view.setRotationY(180);
         return new ViewHolderReading(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderReading holder, int position) {
-
+        holder.setIsRecyclable(false);
         holder.editTextNumber.setOnLongClickListener(view -> {
             holder.editTextNumber.setText("");
             return false;
@@ -126,6 +127,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
             holder.editTextNumber.setFocusable(false);
             holder.editTextNumber.setEnabled(false);
         }
+
         initializeViews(holder, position);
         initializeSpinner(holder, position);
         holder.buttonSubmit.setOnClickListener(v -> checkPermissions(holder, position));
@@ -151,9 +153,10 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
         else holder.textViewRadif.setVisibility(View.GONE);
 
         holder.textViewAhad1.setText(String.valueOf(onOffLoadDtos.get(position).ahadMaskooniOrAsli));
-
-        if (onOffLoadDtos.get(position).counterNumber != null)
+        Log.e("position", String.valueOf(position));
+        if (onOffLoadDtos.get(position).counterNumber != null) {
             holder.editTextNumber.setText(String.valueOf(onOffLoadDtos.get(position).counterNumber));
+        }
         holder.textViewAhad2.setText(String.valueOf(onOffLoadDtos.get(position).ahadTejariOrFari));
         holder.textViewAhadTotal.setText(String.valueOf(onOffLoadDtos.get(position).ahadSaierOrAbBaha));
 
@@ -162,11 +165,12 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
         } else holder.textViewCode.setText(onOffLoadDtos.get(position).eshterak);
 
         holder.textViewKarbari.setText(karbariDtos.get(position).title);
-        holder.textViewBranch.setText(onOffLoadDtos.get(position).qotr.equals("مشخص نشده") ? "-" : onOffLoadDtos.get(position).qotr);
-        holder.textViewSiphon.setText(onOffLoadDtos.get(position).sifoonQotr.equals("مشخص نشده") ? "-" : onOffLoadDtos.get(position).sifoonQotr);
+        holder.textViewBranch.setText(onOffLoadDtos.get(position).qotr.equals(activity.getString(R.string.unknown)) ? "-" : onOffLoadDtos.get(position).qotr);
+        holder.textViewSiphon.setText(onOffLoadDtos.get(position).sifoonQotr.equals(activity.getString(R.string.unknown)) ? "-" : onOffLoadDtos.get(position).sifoonQotr);
 
-        if (onOffLoadDtos.get(position).counterNumberShown)
+        if (onOffLoadDtos.get(position).counterNumberShown) {
             holder.textViewPreNumber.setText(String.valueOf(onOffLoadDtos.get(position).preNumber));
+        }
         holder.textViewPreNumber.setOnClickListener(v -> {
             if (onOffLoadDtos.get(position).hasPreNumber) {
                 activity.runOnUiThread(() ->

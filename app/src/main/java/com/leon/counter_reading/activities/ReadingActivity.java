@@ -340,7 +340,8 @@ public class ReadingActivity extends BaseActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                final String number = (position + 1) + "/" + readingData.onOffLoadDtos.size();
+//                final String number = (position + 1) + "/" + readingData.onOffLoadDtos.size();
+                final String number = (binding.viewPager.getCurrentItem() + 1) + "/" + readingData.onOffLoadDtos.size();
                 runOnUiThread(() -> binding.textViewPageNumber.setText(number));
                 setAboveIconsSrc(position);
             }
