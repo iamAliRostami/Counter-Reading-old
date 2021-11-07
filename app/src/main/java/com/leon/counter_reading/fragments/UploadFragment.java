@@ -1,16 +1,15 @@
 package com.leon.counter_reading.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.UploadActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
@@ -18,6 +17,7 @@ import com.leon.counter_reading.databinding.FragmentUploadBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.DialogType;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.MyDatabase;
@@ -30,16 +30,13 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class UploadFragment extends Fragment {
-    private int[] imageSrc = {
-            R.drawable.img_upload_on,
-            R.drawable.img_upload_off,
-            R.drawable.img_multimedia};
-    private int type;
     private FragmentUploadBinding binding;
     private Activity activity;
+    private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
+    private int[] imageSrc = {R.drawable.img_upload_on, R.drawable.img_upload_off,
+            R.drawable.img_multimedia};
+    private int type;
     private String[] items;
-    private ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
-//    private TextView textView;
 
     public static UploadFragment newInstance(int type) {
         UploadFragment fragment = new UploadFragment();
@@ -57,7 +54,8 @@ public class UploadFragment extends Fragment {
     }
 
     private void getBundle() {
-        trackingDtos = new ArrayList<>(((UploadActivity) activity).getTrackingDtos());
+        trackingDtos.clear();
+        trackingDtos.addAll(((UploadActivity) activity).getTrackingDtos());
         if (getArguments() != null) {
             type = getArguments().getInt(BundleEnum.TYPE.getValue());
             getArguments().clear();
@@ -76,7 +74,6 @@ public class UploadFragment extends Fragment {
         if (type == 3) {
             binding.spinner.setVisibility(View.GONE);
             binding.textViewMultimedia.setVisibility(View.VISIBLE);
-//            textView = binding.getRoot().findViewById(R.id.text_view_multimedia);
             setMultimediaInfo(activity);
         } else {
             items = TrackingDto.getTrackingDtoItems(trackingDtos, getString(R.string.select_one));
@@ -106,7 +103,6 @@ public class UploadFragment extends Fragment {
             trackNumber = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber;
             total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackNumber);
             unread = myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackNumber);
-            //TODO
             ArrayList<Integer> isManes = new ArrayList<>(myDatabase.counterStateDao().
                     getCounterStateDtosIsMane(true,
                             trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId));
@@ -153,17 +149,17 @@ public class UploadFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding.imageViewUpload.setImageDrawable(null);
-    }
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//        binding.imageViewUpload.setImageDrawable(null);
+//    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         imageSrc = null;
-        trackingDtos = null;
+        trackingDtos.clear();
         items = null;
     }
 

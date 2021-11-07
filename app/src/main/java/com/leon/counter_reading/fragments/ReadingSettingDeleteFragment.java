@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.google.gson.Gson;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingSettingDeleteBinding;
 import com.leon.counter_reading.enums.BundleEnum;
+import com.leon.counter_reading.fragments.dialog.DeleteFragment;
 import com.leon.counter_reading.tables.TrackingDto;
 
 import org.jetbrains.annotations.NotNull;

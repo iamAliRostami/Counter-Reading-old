@@ -26,6 +26,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.tables.ReadingData;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -76,7 +77,7 @@ public class CustomFile {
             e.printStackTrace();
         }
 //        long startTime = Calendar.getInstance().getTimeInMillis();
-        byte[] bitmapData = compressBitmap(bitmap/*, MyApplication.MAX_IMAGE_SIZE*/);
+        byte[] bitmapData = compressBitmapToByte(bitmap/*, MyApplication.MAX_IMAGE_SIZE*/);
 //        long endTime = Calendar.getInstance().getTimeInMillis();
 //        Log.e("Time 2", String.valueOf(endTime - startTime));
         FileOutputStream fos;
@@ -92,63 +93,41 @@ public class CustomFile {
         return MultipartBody.Part.createFormData("File", f.getName(), requestBody);
     }
 
-    public static byte[] compressBitmap(Bitmap bitmap) {
+    public static byte[] compressBitmapToByte(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        Log.e("size 3", String.valueOf(stream.toByteArray().length));
+//        if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
+//            int qualityPercent = Math.max((int) ((double)
+//                    stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
+//            bitmap = Bitmap.createScaledBitmap(bitmap
+//                    , (int) ((double) bitmap.getWidth() * qualityPercent / 100)
+//                    , (int) ((double) bitmap.getHeight() * qualityPercent / 100), false);
+//            stream = new ByteArrayOutputStream();
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+//        }
+//        Log.e("size 4", String.valueOf(stream.toByteArray().length));
+        return stream.toByteArray();
+    }
+
+    public static Bitmap compressBitmap(Bitmap original) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        Log.e("size 1", String.valueOf(stream.toByteArray().length));
         if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
-//            int qualityPercent = (int) (100 * ((double) MAX_IMAGE_SIZE / stream.toByteArray().length));
-//            int qualityPercent = Math.max((int)
-//                            (100 * ((double) MAX_IMAGE_SIZE / stream.toByteArray().length))
-//                    , 20);
             int qualityPercent = Math.max((int) ((double)
                     stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
-
-            bitmap = Bitmap.createScaledBitmap(bitmap
-                    , (int) ((double) bitmap.getWidth() * qualityPercent / 100)
-                    , (int) ((double) bitmap.getHeight() * qualityPercent / 100), false);
+            original = Bitmap.createScaledBitmap(original
+                    , (int) ((double) original.getWidth() * qualityPercent / 100)
+                    , (int) ((double) original.getHeight() * qualityPercent / 100), false);
             stream = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, Math.max(qualityPercent, 20), stream);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, /*qualityPercent*/100, stream);
+            original.compress(Bitmap.CompressFormat.JPEG, /*qualityPercent*/100, stream);
         }
-        return stream.toByteArray();
+        Log.e("size 2", String.valueOf(stream.toByteArray().length));
+        return original;
+
     }
 
-    public static Bitmap rotateImage(Bitmap source, float angle) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
-                matrix, true);
-    }
-
-    public static byte[] compressBitmap(String file, int width, int height, int maxSizeBytes) {
-        BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
-        bmpFactoryOptions.inJustDecodeBounds = true;
-        Bitmap bitmap;
-
-        int heightRatio = (int) Math.ceil(bmpFactoryOptions.outHeight / (float) height);
-        int widthRatio = (int) Math.ceil(bmpFactoryOptions.outWidth / (float) width);
-
-        if (heightRatio > 1 || widthRatio > 1) {
-            bmpFactoryOptions.inSampleSize = Math.max(heightRatio, widthRatio);
-        }
-
-        bmpFactoryOptions.inJustDecodeBounds = false;
-        bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        int currSize;
-        int currQuality = 100;
-
-        do {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, currQuality, stream);
-            currSize = stream.toByteArray().length;
-            // limit quality by 5 percent every time
-            currQuality -= 5;
-
-        } while (currSize >= maxSizeBytes);
-
-        return stream.toByteArray();
-    }
 
     public static String bitmapToBinary(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -196,6 +175,12 @@ public class CustomFile {
         return fileNameToSave;
     }
 
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
     @SuppressLint({"SimpleDateFormat"})
     public static File createImageFileOld(Context context) throws IOException {
         String timeStamp = (new SimpleDateFormat(context.getString(R.string.save_format_name))).format(new Date());

@@ -1,11 +1,11 @@
 package com.leon.counter_reading.activities;
 
-import static com.leon.counter_reading.helpers.Constants.BITMAP_SELECTED_IMAGE;
 import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GALLERY_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
+import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
 
 import android.Manifest;
 import android.app.Activity;
@@ -46,7 +46,7 @@ public class TakePhotoActivity extends AppCompatActivity {
     private int position, trackNumber;
     private Activity activity;
     private ActivityTakePhotoBinding binding;
-    private ArrayList<Image> images;
+    private final ArrayList<Image> images = new ArrayList<>();
     private ImageViewAdapter imageViewAdapter;
 
     @Override
@@ -82,7 +82,7 @@ public class TakePhotoActivity extends AppCompatActivity {
     }
 
     private void imageSetup() {
-        images = new ArrayList<>();
+        images.clear();
         if (!result) {
             images.addAll(getApplicationComponent().MyDatabase()
                     .imageDao().getImagesByOnOffLoadId(uuid));
@@ -131,49 +131,60 @@ public class TakePhotoActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        BITMAP_SELECTED_IMAGE = null;
         if (resultCode == RESULT_OK) {
             if (requestCode == GALLERY_REQUEST && data != null) {
-                Uri uri = data.getData();
-                try {
-                    InputStream inputStream = this.getContentResolver().openInputStream(uri);
-                    BITMAP_SELECTED_IMAGE = BitmapFactory.decodeStream(inputStream);
-                    prepareImage();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                prepareImage(data);
             } else if (requestCode == CAMERA_REQUEST) {
                 if (PHOTO_URI != null) {
-                    try {
-                        BITMAP_SELECTED_IMAGE = MediaStore.Images.Media.getBitmap(getContentResolver(), PHOTO_URI);
-                        prepareImage();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    prepareImage();
                 }
             }
         }
     }
 
-    private void prepareImage() {
-        Image image = new Image();
-        image.bitmap = BITMAP_SELECTED_IMAGE;
-        BITMAP_SELECTED_IMAGE = null;
-        image.OnOffLoadId = uuid;
-        image.trackNumber = trackNumber;
-        if (replace > 0) {
-            getApplicationComponent().MyDatabase()
-                    .imageDao().deleteImage(images.get(replace - 1).id);
-            images.set(replace - 1, image);
-        } else {
-            images.add(image);
+    private void prepareImage(Intent data) {
+        final Image image = new Image();
+        final Uri uri = data.getData();
+        try {
+            final InputStream inputStream = this.getContentResolver().openInputStream(uri);
+            image.bitmap = compressBitmap(BitmapFactory.decodeStream(inputStream));
+            image.OnOffLoadId = uuid;
+            image.trackNumber = trackNumber;
+            if (replace > 0) {
+                getApplicationComponent().MyDatabase()
+                        .imageDao().deleteImage(images.get(replace - 1).id);
+                images.set(replace - 1, image);
+            } else {
+                images.add(image);
+            }
+            imageViewAdapter.notifyDataSetChanged();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        imageViewAdapter.notifyDataSetChanged();
+    }
+
+    private void prepareImage() {
+        final Image image = new Image();
+        try {
+            image.bitmap = compressBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), PHOTO_URI));
+            PHOTO_URI = null;
+            image.OnOffLoadId = uuid;
+            image.trackNumber = trackNumber;
+            if (replace > 0) {
+                getApplicationComponent().MyDatabase()
+                        .imageDao().deleteImage(images.get(replace - 1).id);
+                images.set(replace - 1, image);
+            } else {
+                images.add(image);
+            }
+            imageViewAdapter.notifyDataSetChanged();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onStop() {
-        BITMAP_SELECTED_IMAGE = null;
         Debug.getNativeHeapAllocatedSize();
         System.runFinalization();
         Runtime.getRuntime().totalMemory();
@@ -186,7 +197,7 @@ public class TakePhotoActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        images = null;
+        images.clear();
         binding = null;
         Debug.getNativeHeapAllocatedSize();
         System.runFinalization();
@@ -197,4 +208,5 @@ public class TakePhotoActivity extends AppCompatActivity {
         System.gc();
         super.onDestroy();
     }
+
 }

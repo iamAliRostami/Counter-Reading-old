@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.dialog.RoadMapFragment">
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/medium_dp" />
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/medium_dp" />
+
+    <TextView
+        android:layout_margin="@dimen/medium_dp"
+        android:id="@+id/text_view_distance_title"
+        style="@style/TitlePossible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/progress_bar"
+        android:text="@string/distance" />
+
+    <TextView
+        android:layout_margin="@dimen/medium_dp"
+        android:id="@+id/text_view_distance"
+        style="@style/TitlePossible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/text_view_distance_title" />
+
+
+    <TextView
+        android:layout_margin="@dimen/medium_dp"
+        style="@style/TitlePossible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/text_view_distance"
+        android:text="@string/meter_fa" />
+</RelativeLayout>

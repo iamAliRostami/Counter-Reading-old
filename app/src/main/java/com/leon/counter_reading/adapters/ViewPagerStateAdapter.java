@@ -1,21 +1,15 @@
 package com.leon.counter_reading.adapters;
 
-import android.app.Activity;
-import android.os.Parcelable;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.fragments.ReadingFragment;
 import com.leon.counter_reading.helpers.MyApplication;
-import com.leon.counter_reading.infrastructure.IViewPagerAdapter;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
@@ -23,28 +17,18 @@ import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.utils.CustomToast;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 
-public class ViewPagerAdapterReading extends FragmentStatePagerAdapter implements IViewPagerAdapter {
-    private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
+public class ViewPagerStateAdapter extends FragmentStateAdapter {
     private final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
-    private final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
     private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
-    private final SpinnerCustomAdapter adapter;
-    public ViewPagerAdapterReading(@NonNull FragmentManager fm, ReadingData readingData,
-                                   Activity activity) {
-        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        fm.getFragments();
-        fm.getFragments().clear();
-        //    private final SpinnerCustomAdapter adapter;
+    private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
+    private final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
+
+    public ViewPagerStateAdapter(@NonNull FragmentActivity fragmentActivity,
+                                 ReadingData readingData) {
+        super(fragmentActivity);
         onOffLoadDtos.addAll(readingData.onOffLoadDtos);
-        final String[] items = new String[readingData.counterStateDtos.size()];
-        for (int i = 0; i < readingData.counterStateDtos.size(); i++) {
-            items[i] = readingData.counterStateDtos.get(i).title;
-        }
-        adapter = new SpinnerCustomAdapter(activity, items);
         counterStateDtos.addAll(readingData.counterStateDtos);
         for (int i = 0; i < readingData.onOffLoadDtos.size(); i++) {
             int k = 0;
@@ -85,49 +69,21 @@ public class ViewPagerAdapterReading extends FragmentStatePagerAdapter implement
         }
     }
 
+    @NonNull
     @Override
-    public void restoreState(@Nullable Parcelable state, @Nullable ClassLoader loader) {
-        super.restoreState(state, loader);
-    }
-
-
-    @NotNull
-    @Override
-    public Fragment getItem(int position) {
+    public Fragment createFragment(int i) {
         try {
-
-            return ReadingFragment.newInstance(onOffLoadDtos.get(position),
-                    readingConfigDefaultDtos.get(position), karbariDtos.get(position),
-                    counterStateDtos,/*adapter,*/ position);
+            return ReadingFragment.newInstance(onOffLoadDtos.get(i), readingConfigDefaultDtos.get(i),
+                    karbariDtos.get(i), counterStateDtos, i);
         } catch (Exception e) {
             new CustomToast().error(MyApplication.getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
         }
         return null;
     }
 
-    @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
-
-        return super.instantiateItem(container, position);
-    }
-
-    @Override
-    public int getCount() {
+    public int getItemCount() {
         return onOffLoadDtos.size();
     }
-
-    @Override
-    public int getItemPosition(@NotNull Object object) {
-        return POSITION_NONE;
-    }
-
-    @Override
-    public void destroyItem(@NotNull ViewGroup container, int position, @NotNull Object object) {
-//        FragmentManager manager = ((Fragment) object).getParentFragmentManager();
-//        FragmentTransaction trans = manager.beginTransaction();
-//        trans.remove((Fragment) object);
-//        trans.commit();
-        super.destroyItem(container, position, object);
-    }
 }
+

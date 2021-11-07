@@ -29,7 +29,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.TakePhotoActivity;
-import com.leon.counter_reading.fragments.HighQualityFragment;
+import com.leon.counter_reading.fragments.dialog.HighQualityFragment;
 import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 
@@ -105,6 +105,29 @@ public class ImageViewAdapter extends BaseAdapter {
     }
 
     private void imagePicker() {
+//        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (cameraIntent.resolveActivity(context.getPackageManager()) != null) {
+//            // Create the File where the photo should go
+//            File photoFile = null;
+//            try {
+//                photoFile = createImageFile(context);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            // Continue only if the File was successfully created
+//            if (photoFile != null) {
+//                PHOTO_URI = FileProvider.getUriForFile(context,
+//                        BuildConfig.APPLICATION_ID.concat(".provider"),
+//                        photoFile);
+//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, PHOTO_URI);
+//                try {
+//                    ((TakePhotoActivity) (context)).startActivityForResult(cameraIntent, CAMERA_REQUEST);
+//                } catch (ActivityNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
         builder.setTitle(R.string.choose_document);
         builder.setMessage(R.string.select_source);

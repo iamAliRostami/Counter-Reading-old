@@ -28,6 +28,8 @@ public enum BundleEnum {
     ZONE_ID("zone_id"),
     SENT("sent"),
     DESCRIPTION("description"),
+    LATITUDE("latitude"),
+    LONGITUDE("longitude"),
     TYPE("type");
 
     private final String value;

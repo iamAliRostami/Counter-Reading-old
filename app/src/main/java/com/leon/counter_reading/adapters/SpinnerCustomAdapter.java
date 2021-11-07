@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.leon.counter_reading.R;
 
-public class SpinnerCustomAdapter extends BaseAdapter {
+import java.io.Serializable;
+
+public class SpinnerCustomAdapter extends BaseAdapter implements Serializable {
     private final String[] items;
     private final LayoutInflater inflater;
 

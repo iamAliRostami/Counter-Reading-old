@@ -1,4 +1,4 @@
-package com.leon.counter_reading.fragments;
+package com.leon.counter_reading.fragments.dialog;
 
 import android.content.Intent;
 import android.os.Bundle;

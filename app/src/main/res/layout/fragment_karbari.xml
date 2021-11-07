@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/FragmentStyle"
-    tools:context=".fragments.KarbariFragment">
+    tools:context=".fragments.dialog.KarbariFragment">
 
     <View
         android:id="@+id/view_1"

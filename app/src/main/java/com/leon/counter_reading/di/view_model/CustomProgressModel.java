@@ -12,19 +12,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.utils.CustomToast;
 
 public final class CustomProgressModel {
     private Dialog dialog;
-    private static CustomProgressModel instance = null;
+//    private static CustomProgressModel instance = null;
 
     public static CustomProgressModel getInstance() {
-        if (instance == null) {
-            instance = new CustomProgressModel();
-        }
-        return instance;
+//        if (instance == null) {
+//            instance = new CustomProgressModel();
+//        }
+//        return instance;
+        return new CustomProgressModel();
     }
 
     public Dialog show(Context context) {
@@ -58,7 +59,7 @@ public final class CustomProgressModel {
     @SuppressLint("InflateParams")
     public Dialog show(Context context, CharSequence title, boolean cancelable,
                        DialogInterface.OnCancelListener cancelListener) {
-        LayoutInflater inflater = (LayoutInflater) context
+        final LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View view = inflater.inflate(R.layout.progress_bar, null);
         dialog = new Dialog(context, R.style.NewDialog);
@@ -66,8 +67,8 @@ public final class CustomProgressModel {
         dialog.setContentView(view);
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT);
-        final TextView tv = view.findViewById(R.id.text_view_title);
-        tv.setText(title);
+        final TextView textView = view.findViewById(R.id.text_view_title);
+        textView.setText(title);
         if (!((Activity) context).isFinishing()) {
             //show dialog
             try {

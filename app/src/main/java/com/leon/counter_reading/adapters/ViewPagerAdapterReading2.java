@@ -22,8 +22,8 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.enums.HighLowStateEnum;
 import com.leon.counter_reading.enums.NotificationType;
-import com.leon.counter_reading.fragments.AreYouSureFragment;
-import com.leon.counter_reading.fragments.PossibleFragment;
+import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
+import com.leon.counter_reading.fragments.dialog.PossibleFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.KarbariDto;
@@ -107,27 +107,34 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
     @NonNull
     @Override
     public ViewHolderReading onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(activity).inflate(R.layout.fragment_reading, parent, false);
+        View view = LayoutInflater.from(activity).inflate(R.layout.fragment_reading, parent, false);
         view.setRotationY(180);
         return new ViewHolderReading(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderReading holder, int position) {
-        holder.setIsRecyclable(false);
+//        holder.setIsRecyclable(false);
         holder.editTextNumber.setOnLongClickListener(view -> {
             holder.editTextNumber.setText("");
             return false;
         });
         final OnOffLoadDto onOffLoadDto = onOffLoadDtos.get(position);
+
+        if (onOffLoadDto.counterNumber != null) {
+            holder.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
+        }
+
+        holder.editTextNumber.setFocusable(true);
+        holder.editTextNumber.setEnabled(true);
         if (onOffLoadDto.isLocked) {
             new CustomToast().error(activity.getString(R.string.by_mistakes)
                     .concat(onOffLoadDto.eshterak).concat(activity
                             .getString(R.string.is_locked)), Toast.LENGTH_SHORT);
             holder.editTextNumber.setFocusable(false);
             holder.editTextNumber.setEnabled(false);
+            holder.buttonSubmit.setText("false");
         }
-
         initializeViews(holder, onOffLoadDto, position);
         initializeSpinner(holder, onOffLoadDto);
         holder.buttonSubmit.setOnClickListener(v -> checkPermissions(holder, position));
@@ -154,9 +161,6 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
 
         holder.textViewAhad1.setText(String.valueOf(onOffLoadDto.ahadMaskooniOrAsli));
 
-        if (onOffLoadDto.counterNumber != null) {
-            holder.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
-        }
         holder.textViewAhad2.setText(String.valueOf(onOffLoadDto.ahadTejariOrFari));
         holder.textViewAhadTotal.setText(String.valueOf(onOffLoadDto.ahadSaierOrAbBaha));
 
@@ -171,6 +175,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
         if (onOffLoadDto.counterNumberShown) {
             holder.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber));
         }
+
         holder.textViewPreNumber.setOnClickListener(v -> {
             if (onOffLoadDto.hasPreNumber) {
                 activity.runOnUiThread(() ->
@@ -189,7 +194,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
         });
     }
 
-    private void initializeSpinner(ViewHolderReading holder,OnOffLoadDto onOffLoadDto) {
+    private void initializeSpinner(ViewHolderReading holder, OnOffLoadDto onOffLoadDto) {
         holder.spinner.setAdapter(adapter);
         boolean found = false;
         int i;
@@ -421,4 +426,9 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
     public int getItemCount() {
         return onOffLoadDtos.size();
     }
+
+//    @Override
+//    public int getItemViewType(int position) {
+//        return position;
+//    }
 }

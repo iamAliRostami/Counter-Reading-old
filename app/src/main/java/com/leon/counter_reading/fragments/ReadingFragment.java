@@ -6,7 +6,6 @@ import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import android.Manifest;
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,8 @@ import com.leon.counter_reading.databinding.FragmentReadingBinding;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.HighLowStateEnum;
 import com.leon.counter_reading.enums.NotificationType;
+import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
+import com.leon.counter_reading.fragments.dialog.PossibleFragment;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
@@ -36,23 +37,21 @@ import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.reading.Counting;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByAttemptNumber;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByIsShown;
-import com.leon.counter_reading.utils.reading.UpdateOnOffLoadDtoByLock;
-import static com.leon.counter_reading.helpers.Constants.adapter;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 public class ReadingFragment extends Fragment {
-//    private static SpinnerCustomAdapter adapter;
     private FragmentReadingBinding binding;
-    private ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
+    private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
+    private Activity activity;
+
     private OnOffLoadDto onOffLoadDto;
     private ReadingConfigDefaultDto readingConfigDefaultDto;
     private KarbariDto karbariDto;
     private int position, counterStateCode, counterStatePosition;
     private boolean canBeEmpty, canLessThanPre, isMakoos, isMane;
-    private Activity activity;
 
     public static ReadingFragment newInstance(
             OnOffLoadDto onOffLoadDto,
@@ -69,25 +68,22 @@ public class ReadingFragment extends Fragment {
     private static Bundle putBundle(OnOffLoadDto onOffLoadDto,
                                     ReadingConfigDefaultDto readingConfigDefaultDto,
                                     KarbariDto karbariDto,
-                                    ArrayList<CounterStateDto> counterStateDtos,
-                                    int position) {
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-        String json1 = gson.toJson(onOffLoadDto);
+                                    ArrayList<CounterStateDto> counterStateDtos, int position) {
+        final Bundle args = new Bundle();
+        final Gson gson = new Gson();
+        final String json1 = gson.toJson(onOffLoadDto);
         args.putString(BundleEnum.ON_OFF_LOAD.getValue(), json1);
-        String json2 = gson.toJson(readingConfigDefaultDto);
+        final String json2 = gson.toJson(readingConfigDefaultDto);
         args.putString(BundleEnum.READING_CONFIG.getValue(), json2);
-        String json3 = gson.toJson(karbariDto);
+        final String json3 = gson.toJson(karbariDto);
         args.putString(BundleEnum.KARBARI_DICTONARY.getValue(), json3);
-
-        ArrayList<String> json7 = new ArrayList<>();
+        final ArrayList<String> json7 = new ArrayList<>();
         for (int i = 0, counterStateDtosSize = counterStateDtos.size(); i < counterStateDtosSize; i++) {
             CounterStateDto s = counterStateDtos.get(i);
             String json = gson.toJson(s);
             json7.add(json);
         }
         args.putStringArrayList(BundleEnum.COUNTER_STATE.getValue(), json7);
-//        adapter = adapterTemp;
         args.putInt(BundleEnum.POSITION.getValue(), position);
         return args;
     }
@@ -96,7 +92,6 @@ public class ReadingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
-
         getBundle();
     }
 
@@ -104,6 +99,7 @@ public class ReadingFragment extends Fragment {
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentReadingBinding.inflate(inflater, container, false);
+        binding.scrollViewReading.setRotationY(180);
         initialize();
         return binding.getRoot();
     }
@@ -158,11 +154,14 @@ public class ReadingFragment extends Fragment {
         binding.textViewBranch.setText(onOffLoadDto.qotr.equals("مشخص نشده") ? "-" : onOffLoadDto.qotr);
         binding.textViewSiphon.setText(onOffLoadDto.sifoonQotr.equals("مشخص نشده") ? "-" : onOffLoadDto.sifoonQotr);
 
+        if (onOffLoadDto.counterNumberShown) {
+            binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber));
+        }
         binding.textViewPreNumber.setOnClickListener(v -> {
             if (onOffLoadDto.hasPreNumber) {
                 activity.runOnUiThread(() ->
                         binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber)));
-//                new UpdateOnOffLoadByIsShown(position).execute(activity);
+                new UpdateOnOffLoadByIsShown(onOffLoadDto).execute(activity);
             } else {
                 new CustomToast().warning(getString(R.string.can_not_show_pre));
             }
@@ -176,6 +175,11 @@ public class ReadingFragment extends Fragment {
     }
 
     private void initializeSpinner() {
+        final String[] items = new String[counterStateDtos.size()];
+        for (int i = 0; i < counterStateDtos.size(); i++) {
+            items[i] = counterStateDtos.get(i).title;
+        }
+        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(activity, items);
         binding.spinner.setAdapter(adapter);
         boolean found = false;
         int i;
@@ -196,22 +200,12 @@ public class ReadingFragment extends Fragment {
                 CounterStateDto counterStateDto = counterStateDtos.get(counterStatePosition);
                 binding.editTextNumber.setEnabled(counterStateDto.canEnterNumber
                         || counterStateDto.shouldEnterNumber);
-                //TODO
                 if (!(counterStateDto.canEnterNumber || counterStateDto.shouldEnterNumber))
                     binding.editTextNumber.setText("");
                 isMane = counterStateDto.isMane;
                 canBeEmpty = !counterStateDto.shouldEnterNumber;
                 canLessThanPre = counterStateDto.canNumberBeLessThanPre;
                 isMakoos = counterStateDto.title.equals("معکوس");
-//                if (onOffLoadDto.counterStatePosition == null ||
-//                        onOffLoadDto.counterStatePosition != binding.spinner.getSelectedItemPosition()) {
-//                    if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
-//                            counterStateDto.moshtarakinId != onOffLoadDto.preCounterStateCode) {
-//                        SerialFragment serialFragment = SerialFragment.newInstance(position,
-//                                counterStateDto.id, counterStatePosition);
-//                        serialFragment.show(getChildFragmentManager(), getString(R.string.counter_serial));
-//                    }
-//                }
             }
 
             @Override
@@ -280,7 +274,6 @@ public class ReadingFragment extends Fragment {
             } else if (PermissionManager.checkStoragePermission(getContext())) {
                 askStoragePermission();
             } else {
-                //TODO
                 onOffLoadDto.attemptCount++;
                 if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount + 1 == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
                     new CustomToast().warning(getString(R.string.mistakes_error), Toast.LENGTH_LONG);
@@ -289,7 +282,8 @@ public class ReadingFragment extends Fragment {
                             concat(onOffLoadDto.eshterak).concat(getString(R.string.is_locked)), Toast.LENGTH_LONG);
                 new UpdateOnOffLoadByAttemptNumber(position, onOffLoadDto.attemptCount).execute(activity);
                 if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName())) {
-//                    new UpdateOnOffLoadDtoByLock(position, onOffLoadDto.trackNumber, onOffLoadDto.id).execute(activity);
+                    ((ReadingActivity) activity).updateOnOffLoadByLock(position);
+//                    binding.editTextNumber.setEnabled(false);
                 } else {
                     attemptSend();
                 }
@@ -304,7 +298,7 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-    private void canBeEmpty() {//TODO
+    private void canBeEmpty() {
         if (binding.editTextNumber.getText().toString().isEmpty() || isMane) {
             ((ReadingActivity) activity).updateOnOffLoadWithoutCounterNumber(position,
                     counterStateCode, counterStatePosition);
@@ -353,29 +347,18 @@ public class ReadingFragment extends Fragment {
     }
 
     private void notEmptyIsMakoos(int currentNumber) {
-        FragmentTransaction fragmentTransaction = requireActivity().
-                getSupportFragmentManager().beginTransaction();
-        AreYouSureFragment areYouSureFragment;
+        Integer type = null;
         if (currentNumber == onOffLoadDto.preNumber) {
-            areYouSureFragment = AreYouSureFragment.newInstance(
-                    position, currentNumber, HighLowStateEnum.ZERO.getValue(),
-                    counterStateCode, counterStatePosition);
-            areYouSureFragment.show(fragmentTransaction, getString(R.string.use_out_of_range));
+            type = HighLowStateEnum.ZERO.getValue();
         } else {
-            int status = Counting.checkHighLowMakoos(onOffLoadDto, karbariDto, readingConfigDefaultDto,
-                    currentNumber);
+            int status = Counting.checkHighLowMakoos(onOffLoadDto, karbariDto,
+                    readingConfigDefaultDto, currentNumber);
             switch (status) {
                 case 1:
-                    areYouSureFragment = AreYouSureFragment.newInstance(
-                            position, currentNumber, HighLowStateEnum.HIGH.getValue(),
-                            counterStateCode, counterStatePosition);
-                    areYouSureFragment.show(fragmentTransaction, getString(R.string.use_out_of_range));
+                    type = HighLowStateEnum.HIGH.getValue();
                     break;
                 case -1:
-                    areYouSureFragment = AreYouSureFragment.newInstance(
-                            position, currentNumber, HighLowStateEnum.LOW.getValue(),
-                            counterStateCode, counterStatePosition);
-                    areYouSureFragment.show(fragmentTransaction, getString(R.string.use_out_of_range));
+                    type = HighLowStateEnum.LOW.getValue();
                     break;
                 case 0:
                     ((ReadingActivity) activity).updateOnOffLoadByCounterNumber(position,
@@ -384,32 +367,28 @@ public class ReadingFragment extends Fragment {
                     break;
             }
         }
+        if (type != null) {
+            FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager()
+                    .beginTransaction();
+            AreYouSureFragment areYouSureFragment = AreYouSureFragment.newInstance(position,
+                    currentNumber, type, counterStateCode, counterStatePosition);
+            areYouSureFragment.show(fragmentTransaction, activity.getString(R.string.use_out_of_range));
+        }
     }
 
     private void notEmpty(int currentNumber) {
-        FragmentTransaction fragmentTransaction = requireActivity().
-                getSupportFragmentManager().beginTransaction();
-        AreYouSureFragment areYouSureFragment;
+        Integer type = null;
         if (currentNumber == onOffLoadDto.preNumber) {
-            areYouSureFragment = AreYouSureFragment.newInstance(
-                    position, currentNumber, HighLowStateEnum.ZERO.getValue(),
-                    counterStateCode, counterStatePosition);
-            areYouSureFragment.show(fragmentTransaction, getString(R.string.use_out_of_range));
+            type = HighLowStateEnum.ZERO.getValue();
         } else {
             int status = Counting.checkHighLow(onOffLoadDto, karbariDto, readingConfigDefaultDto,
                     currentNumber);
             switch (status) {
                 case 1:
-                    areYouSureFragment = AreYouSureFragment.newInstance(
-                            position, currentNumber, HighLowStateEnum.HIGH.getValue(),
-                            counterStateCode, counterStatePosition);
-                    areYouSureFragment.show(fragmentTransaction, getString(R.string.use_out_of_range));
+                    type = HighLowStateEnum.HIGH.getValue();
                     break;
                 case -1:
-                    areYouSureFragment = AreYouSureFragment.newInstance(
-                            position, currentNumber, HighLowStateEnum.LOW.getValue(),
-                            counterStateCode, counterStatePosition);
-                    areYouSureFragment.show(fragmentTransaction, getString(R.string.use_out_of_range));
+                    type = HighLowStateEnum.LOW.getValue();
                     break;
                 case 0:
                     ((ReadingActivity) activity).updateOnOffLoadByCounterNumber(position,
@@ -417,14 +396,20 @@ public class ReadingFragment extends Fragment {
                             HighLowStateEnum.NORMAL.getValue());
                     break;
             }
+        }
+        if (type != null) {
+            FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager()
+                    .beginTransaction();
+            AreYouSureFragment areYouSureFragment = AreYouSureFragment.newInstance(position,
+                    currentNumber, type, counterStateCode, counterStatePosition);
+            areYouSureFragment.show(fragmentTransaction, activity.getString(R.string.use_out_of_range));
         }
     }
 
     private void getBundle() {
         if (getArguments() != null) {
             position = getArguments().getInt(BundleEnum.POSITION.getValue());
-
-            Gson gson = new Gson();
+            final Gson gson = new Gson();
             onOffLoadDto = gson.fromJson(getArguments().getString(BundleEnum.ON_OFF_LOAD.getValue()),
                     OnOffLoadDto.class);
             readingConfigDefaultDto = gson.fromJson(getArguments()
@@ -438,7 +423,6 @@ public class ReadingFragment extends Fragment {
             for (String s : json1) {
                 counterStateDtos.add(gson.fromJson(s, CounterStateDto.class));
             }
-//            getArguments().clear();
         }
     }
 
@@ -455,7 +439,6 @@ public class ReadingFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        Log.e("here","onDestroyView");
     }
 
     @Override
@@ -463,8 +446,7 @@ public class ReadingFragment extends Fragment {
         super.onDestroy();
         karbariDto = null;
         readingConfigDefaultDto = null;
-        counterStateDtos = null;
+        counterStateDtos.clear();
         binding = null;
-        Log.e("here","onDestroy");
     }
 }

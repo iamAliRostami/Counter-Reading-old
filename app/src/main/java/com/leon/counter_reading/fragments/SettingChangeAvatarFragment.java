@@ -13,7 +13,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -42,9 +41,6 @@ import java.io.InputStream;
 public class SettingChangeAvatarFragment extends Fragment {
     private FragmentSettingChangeAvatarBinding binding;
     private Activity activity;
-
-    public SettingChangeAvatarFragment() {
-    }
 
     public static SettingChangeAvatarFragment newInstance() {
         return new SettingChangeAvatarFragment();
@@ -144,24 +140,28 @@ public class SettingChangeAvatarFragment extends Fragment {
         BITMAP_SELECTED_IMAGE = null;
         if (resultCode == RESULT_OK) {
             if (requestCode == GALLERY_REQUEST && data != null) {
-                Uri uri = data.getData();
-                Bitmap bitmap;
                 try {
-                    InputStream inputStream = activity.getContentResolver().openInputStream(uri);
-                    bitmap = BitmapFactory.decodeStream(inputStream);
+                    final InputStream inputStream = activity.getContentResolver().openInputStream(data.getData());
+                    final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                     prepareImage(bitmap);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else if (requestCode == CAMERA_REQUEST) {
                 if (PHOTO_URI != null) {
-                    try {
-                        prepareImage(CustomFile.rotateImage(MediaStore.Images.Media.getBitmap(activity.getContentResolver(), PHOTO_URI), 90));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    prepareImage();
                 }
             }
+        }
+    }
+
+    private void prepareImage() {
+        try {
+            BITMAP_SELECTED_IMAGE = CustomFile.rotateImage(MediaStore.Images.Media.getBitmap(activity.getContentResolver(), PHOTO_URI), 90);
+            binding.imageViewAvatar.setImageBitmap(BITMAP_SELECTED_IMAGE);
+            binding.buttonChangeDelete.setVisibility(View.VISIBLE);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

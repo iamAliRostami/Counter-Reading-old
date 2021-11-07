@@ -88,6 +88,7 @@
     <string name="cm">cm</string>
     <string name="slash">/</string>
     <string name="meter">m</string>
+    <string name="meter_fa">متر</string>
     <string name="distance_from_left">فاصله از دیوار سمت چپ</string>
     <string name="pre_date">تاریخ قبلی</string>
     <string name="branch_radius">قطر انشعاب</string>
@@ -259,4 +260,6 @@
     <string name="mane">مانع</string>
     <string name="karbari_search">جستجوی کاربری</string>
     <string name="unknown">مشخص نشده</string>
+    <string name="location_not_found">محل این مسیر در نقشه قابل شناسایی نیست.</string>
+    <string name="distance">فاصله تا مسیر: </string>
 </resources>

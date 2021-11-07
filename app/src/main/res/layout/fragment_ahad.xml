@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/border_white_3"
-    tools:context=".fragments.AhadFragment">
+    tools:context=".fragments.dialog.AhadFragment">
 
     <View
         android:id="@+id/view_1"

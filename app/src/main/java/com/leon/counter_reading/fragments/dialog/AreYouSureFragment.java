@@ -1,4 +1,4 @@
-package com.leon.counter_reading.fragments;
+package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 

@@ -6,22 +6,16 @@ import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -31,9 +25,8 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.enums.HighLowStateEnum;
 import com.leon.counter_reading.enums.NotificationType;
-import com.leon.counter_reading.fragments.AreYouSureFragment;
-import com.leon.counter_reading.fragments.PossibleFragment;
-import com.leon.counter_reading.infrastructure.IViewPagerAdapter;
+import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
+import com.leon.counter_reading.fragments.dialog.PossibleFragment;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
@@ -44,12 +37,10 @@ import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.reading.Counting;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByAttemptNumber;
-import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByIsShown;
-import com.leon.counter_reading.utils.reading.UpdateOnOffLoadDtoByLock;
 
 import java.util.ArrayList;
 
-public class ViewPagerAdapter extends PagerAdapter implements IViewPagerAdapter {
+public class ViewPagerAdapter extends PagerAdapter {
     private final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
     private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
     private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();

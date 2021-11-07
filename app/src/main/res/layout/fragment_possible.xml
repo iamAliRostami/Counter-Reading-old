@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/FragmentStyle"
     android:background="@color/transparent"
-    tools:context=".fragments.PossibleFragment">
+    tools:context=".fragments.dialog.PossibleFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

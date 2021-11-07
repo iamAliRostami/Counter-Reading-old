@@ -2,16 +2,23 @@ package com.leon.counter_reading.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.leon.counter_reading.helpers.MyApplication;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.leon.counter_reading.R;
+import com.leon.counter_reading.fragments.dialog.RoadMapFragment;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.CustomToast;
 
@@ -21,9 +28,11 @@ public class ReadingSettingCustomAdapter extends BaseAdapter {
     private final ArrayList<TrackingDto> trackingDtos;
     private final LayoutInflater inflater;
     private int zoneId;
+    private final Context context;
 
     public ReadingSettingCustomAdapter(Context context, ArrayList<TrackingDto> trackingDtos) {
         this.trackingDtos = trackingDtos;
+        this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -61,14 +70,15 @@ public class ReadingSettingCustomAdapter extends BaseAdapter {
             else
                 convertView = inflater.inflate(R.layout.item_reading_setting_2, null);
         }
+        final TrackingDto trackingDto = trackingDtos.get(position);
         ReadingSettingCheckBoxViewHolder holder = new ReadingSettingCheckBoxViewHolder(convertView);
-        holder.textViewTrackNumber.setText(String.valueOf(trackingDtos.get(position).trackNumber));
-        holder.textViewZoneTitle.setText(trackingDtos.get(position).zoneTitle);
-        holder.textViewStartEshterak.setText(trackingDtos.get(position).fromEshterak);
-        holder.textViewEndEshterak.setText(trackingDtos.get(position).toEshterak);
-        holder.textViewStartDate.setText(trackingDtos.get(position).fromDate);
-        holder.textViewEndDate.setText(trackingDtos.get(position).toDate);
-        holder.textViewNumber.setText(String.valueOf(trackingDtos.get(position).itemQuantity));
+        holder.textViewTrackNumber.setText(String.valueOf(trackingDto.trackNumber));
+        holder.textViewZoneTitle.setText(trackingDto.zoneTitle);
+        holder.textViewStartEshterak.setText(trackingDto.fromEshterak);
+        holder.textViewEndEshterak.setText(trackingDto.toEshterak);
+        holder.textViewStartDate.setText(trackingDto.fromDate);
+        holder.textViewEndDate.setText(trackingDto.toDate);
+        holder.textViewNumber.setText(String.valueOf(trackingDto.itemQuantity));
 
         //TODO
         if (zoneId > 0 && trackingDtos.get(position).zoneId != zoneId && trackingDtos.get(position).isActive) {
@@ -90,8 +100,32 @@ public class ReadingSettingCustomAdapter extends BaseAdapter {
                 notifyDataSetChanged();
             }
         });
+        holder.imageViewMap1.setOnClickListener(v -> {
+            if (checkLocation(trackingDto)) {
+                FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
+                RoadMapFragment roadMapFragment = RoadMapFragment.
+                        newInstance(trackingDtos.get(position).x,  trackingDtos.get(position).y);
+                roadMapFragment.show(fragmentManager, "");
+            }
+        });
+        holder.imageViewMap2.setOnClickListener(v -> {
+            if (checkLocation(trackingDto)) {
+                String uriString = "geo:" +  trackingDtos.get(position).y + "," + trackingDtos.get(position).x + "?q=" +
+                        Uri.encode(trackingDtos.get(position).y+ "," + trackingDtos.get(position).x + "(label)") + "&z=19";
+                Uri uri = Uri.parse(uriString);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                context.startActivity(intent);
+            }
+        });
         holder.checkBox.setChecked(trackingDtos.get(position).isActive);
         return convertView;
+    }
+
+    private boolean checkLocation(TrackingDto trackingDto) {
+        if (trackingDto.x != null && trackingDto.x.length() > 0 && !trackingDto.x.equals("0"))
+            return true;
+        new CustomToast().warning(context.getString(R.string.location_not_found));
+        return false;
     }
 }
 
@@ -105,6 +139,8 @@ class ReadingSettingCheckBoxViewHolder {
     final TextView textViewStartEshterak;
     final TextView textViewEndEshterak;
     final TextView textViewNumber;
+    final ImageView imageViewMap1;
+    final ImageView imageViewMap2;
 
     ReadingSettingCheckBoxViewHolder(View view) {
         checkBox = view.findViewById(android.R.id.text1);
@@ -116,5 +152,7 @@ class ReadingSettingCheckBoxViewHolder {
         textViewTrackNumber = view.findViewById(R.id.text_view_track_number);
         textViewZoneTitle = view.findViewById(R.id.text_view_zone_title);
         textViewNumber = view.findViewById(R.id.text_view_number);
+        imageViewMap1 = view.findViewById(R.id.image_view_map_1);
+        imageViewMap2 = view.findViewById(R.id.image_view_map_2);
     }
 }

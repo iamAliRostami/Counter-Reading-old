@@ -12,9 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.fragments.AhadFragment;
-import com.leon.counter_reading.fragments.KarbariFragment;
-import com.leon.counter_reading.fragments.TaviziFragment;
+import com.leon.counter_reading.fragments.dialog.AhadFragment;
+import com.leon.counter_reading.fragments.dialog.KarbariFragment;
+import com.leon.counter_reading.fragments.dialog.TaviziFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.OffLoadReport;

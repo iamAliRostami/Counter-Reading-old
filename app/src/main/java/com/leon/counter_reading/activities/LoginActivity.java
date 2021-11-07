@@ -21,12 +21,12 @@ import androidx.core.content.ContextCompat;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.BuildConfig;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityLoginBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.utils.Crypto;
 import com.leon.counter_reading.utils.CustomFile;
@@ -222,7 +222,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(activity, HomeActivity.class);
             startActivity(intent);
             finish();
-        } else if (!sharedPreferenceManager.checkIsNotEmpty(SharedReferenceKeys.USERNAME.getValue())||
+        } else if (!sharedPreferenceManager.checkIsNotEmpty(SharedReferenceKeys.USERNAME.getValue()) ||
                 !sharedPreferenceManager.checkIsNotEmpty(SharedReferenceKeys.PASSWORD.getValue())
         ) {
             new CustomToast().warning(getString(R.string.offline_error_empty), Toast.LENGTH_LONG);

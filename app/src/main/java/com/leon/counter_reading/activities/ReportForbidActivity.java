@@ -1,6 +1,5 @@
 package com.leon.counter_reading.activities;
 
-import static com.leon.counter_reading.helpers.Constants.BITMAP_SELECTED_IMAGE;
 import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GALLERY_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
@@ -8,6 +7,7 @@ import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_WIFI_CODE;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
+import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
 
@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Debug;
 import android.provider.MediaStore;
@@ -41,7 +40,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityReportForbidBinding;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.fragments.HighQualityFragment;
+import com.leon.counter_reading.fragments.dialog.HighQualityFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.ForbiddenDto;
 import com.leon.counter_reading.utils.CustomFile;
@@ -232,7 +231,7 @@ public class ReportForbidActivity extends AppCompatActivity {
         });
     }
 
-    private  void setOnButtonSubmitClickListener() {
+    private void setOnButtonSubmitClickListener() {
         binding.buttonSubmit.setOnClickListener(v -> {
             View view = null;
             boolean cancel = false;
@@ -353,31 +352,29 @@ public class ReportForbidActivity extends AppCompatActivity {
                 else PermissionManager.enableNetwork(this);
             }
         }
-
-        BITMAP_SELECTED_IMAGE = null;
+        Bitmap bitmap = null;
         if (resultCode == RESULT_OK) {
             if (requestCode == GALLERY_REQUEST && data != null) {
-                Uri selectedImage = data.getData();
-                Bitmap bitmap;
                 try {
-                    InputStream inputStream = this.getContentResolver().openInputStream(selectedImage);
-                    bitmap = BitmapFactory.decodeStream(inputStream);
-                    BITMAP_SELECTED_IMAGE = bitmap;
+                    final InputStream inputStream = this.getContentResolver().openInputStream(data.getData());
+                    bitmap = compressBitmap(BitmapFactory.decodeStream(inputStream));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else if (requestCode == CAMERA_REQUEST) {
                 try {
-                    BITMAP_SELECTED_IMAGE =
-                            MediaStore.Images.Media.getBitmap(getContentResolver(), PHOTO_URI);
+                    bitmap = compressBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), PHOTO_URI));
+                    PHOTO_URI = null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            forbiddenDto.bitmaps.add(BITMAP_SELECTED_IMAGE);
-            binding.relativeLayoutImage.setVisibility(View.VISIBLE);
-            binding.imageViewTaken.setImageBitmap(BITMAP_SELECTED_IMAGE);
-            forbiddenDto.File.add(CustomFile.bitmapToFile(BITMAP_SELECTED_IMAGE, activity));
+            if (bitmap != null) {
+                forbiddenDto.bitmaps.add(bitmap);
+                binding.relativeLayoutImage.setVisibility(View.VISIBLE);
+                binding.imageViewTaken.setImageBitmap(bitmap);
+                forbiddenDto.File.add(CustomFile.bitmapToFile(bitmap, activity));
+            }
         }
     }
 

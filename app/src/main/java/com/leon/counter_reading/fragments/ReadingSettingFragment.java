@@ -70,7 +70,7 @@ public class ReadingSettingFragment extends Fragment {
 
     private void setupListView() {
         if (trackingDtos.size() > 0) {
-            ReadingSettingCustomAdapter readingSettingCustomAdapter =
+            final ReadingSettingCustomAdapter readingSettingCustomAdapter =
                     new ReadingSettingCustomAdapter(context, trackingDtos);
             binding.listViewRead.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
             binding.listViewRead.setAdapter(readingSettingCustomAdapter);

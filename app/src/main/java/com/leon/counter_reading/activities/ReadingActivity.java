@@ -9,7 +9,6 @@ import static com.leon.counter_reading.helpers.Constants.REPORT;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Debug;
@@ -29,7 +28,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.gson.Gson;
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.ViewPagerAdapterReading2;
+import com.leon.counter_reading.adapters.ViewPagerStateAdapter;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReadingBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
@@ -39,9 +38,9 @@ import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.enums.OffloadStateEnum;
 import com.leon.counter_reading.enums.SearchTypeEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.fragments.PossibleFragment;
-import com.leon.counter_reading.fragments.SearchFragment;
-import com.leon.counter_reading.fragments.SerialFragment;
+import com.leon.counter_reading.fragments.dialog.PossibleFragment;
+import com.leon.counter_reading.fragments.dialog.SearchFragment;
+import com.leon.counter_reading.fragments.dialog.SerialFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IFlashLightManager;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
@@ -68,7 +67,6 @@ public class ReadingActivity extends BaseActivity {
     private ActivityReadingBinding binding;
     private Activity activity;
     private IFlashLightManager flashLightManager;
-    private ViewPagerAdapterReading2 viewPagerAdapterReading;
     private ISharedPreferenceManager sharedPreferenceManager;
     private int readStatus = 0, highLow = 1;
     private boolean isReading = false, isShowing = false;
@@ -102,72 +100,74 @@ public class ReadingActivity extends BaseActivity {
     private void setOnImageViewsClickListener() {
         flashLightManager = MyApplication.getApplicationComponent().FlashViewModel();
         ImageView imageViewFlash = findViewById(R.id.image_view_flash);
-        imageViewFlash.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
-                R.drawable.img_flash_off));
-        imageViewFlash.setOnClickListener(v -> {
-            boolean isOn = flashLightManager.toggleFlash();
-            makeRing(activity, isOn ? NotificationType.LIGHT_ON : NotificationType.LIGHT_OFF);
+        if (imageViewFlash != null) {
             imageViewFlash.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
-                    isOn ? R.drawable.img_flash_on : R.drawable.img_flash_off));
-        });
+                    R.drawable.img_flash_off));
+            imageViewFlash.setOnClickListener(v -> {
+                boolean isOn = flashLightManager.toggleFlash();
+                makeRing(activity, isOn ? NotificationType.LIGHT_ON : NotificationType.LIGHT_OFF);
+                imageViewFlash.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
+                        isOn ? R.drawable.img_flash_on : R.drawable.img_flash_off));
+            });
 
-        ImageView imageViewReverse = findViewById(R.id.image_view_reverse);
-        imageViewReverse.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
-                R.drawable.img_inverse));
-        imageViewReverse.setOnClickListener(v ->
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode() < 2 ?
-                        AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO));
+            ImageView imageViewReverse = findViewById(R.id.image_view_reverse);
+            imageViewReverse.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
+                    R.drawable.img_inverse));
+            imageViewReverse.setOnClickListener(v ->
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode() < 2 ?
+                            AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO));
 
-        ImageView imageViewCamera = findViewById(R.id.image_view_camera);
-        imageViewCamera.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
-                R.drawable.img_camera));
-        imageViewCamera.setOnClickListener(v -> {
-            if (readingDataTemp.onOffLoadDtos.isEmpty()) {
-                showNoEshterakFound();
-            } else {
-                Intent intent = new Intent(activity, TakePhotoActivity.class);
-                intent.putExtra(BundleEnum.SENT.getValue(),
-                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0);
-                intent.putExtra(BundleEnum.BILL_ID.getValue(),
-                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-                intent.putExtra(BundleEnum.TRACKING.getValue(),
-                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
-                startActivity(intent);
-            }
-        });
+            ImageView imageViewCamera = findViewById(R.id.image_view_camera);
+            imageViewCamera.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
+                    R.drawable.img_camera));
+            imageViewCamera.setOnClickListener(v -> {
+                if (readingDataTemp.onOffLoadDtos.isEmpty()) {
+                    showNoEshterakFound();
+                } else {
+                    Intent intent = new Intent(activity, TakePhotoActivity.class);
+                    intent.putExtra(BundleEnum.SENT.getValue(),
+                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0);
+                    intent.putExtra(BundleEnum.BILL_ID.getValue(),
+                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
+                    intent.putExtra(BundleEnum.TRACKING.getValue(),
+                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
+                    startActivity(intent);
+                }
+            });
 
-        ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
-        imageViewCheck.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
-                R.drawable.img_checked));
-        imageViewCheck.setOnClickListener(v -> {
-            if (readingDataTemp.onOffLoadDtos.isEmpty()) {
-                showNoEshterakFound();
-            } else {
-                Intent intent = new Intent(activity, ReadingReportActivity.class);
-                intent.putExtra(BundleEnum.BILL_ID.getValue(),
-                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-                intent.putExtra(BundleEnum.TRACKING.getValue(),
-                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
-                intent.putExtra(BundleEnum.POSITION.getValue(), binding.viewPager.getCurrentItem());
-                intent.putExtra(BundleEnum.ZONE_ID.getValue(),
-                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).zoneId);
-                startActivityForResult(intent, REPORT);
-            }
-        });
+            ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
+            imageViewCheck.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
+                    R.drawable.img_checked));
+            imageViewCheck.setOnClickListener(v -> {
+                if (readingDataTemp.onOffLoadDtos.isEmpty()) {
+                    showNoEshterakFound();
+                } else {
+                    Intent intent = new Intent(activity, ReadingReportActivity.class);
+                    intent.putExtra(BundleEnum.BILL_ID.getValue(),
+                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
+                    intent.putExtra(BundleEnum.TRACKING.getValue(),
+                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
+                    intent.putExtra(BundleEnum.POSITION.getValue(), binding.viewPager.getCurrentItem());
+                    intent.putExtra(BundleEnum.ZONE_ID.getValue(),
+                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).zoneId);
+                    startActivityForResult(intent, REPORT);
+                }
+            });
 
-        ImageView imageViewSearch = findViewById(R.id.image_view_search);
-        imageViewSearch.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
-                R.drawable.img_search));
-        imageViewSearch.setOnClickListener(v -> {
-            if (readingDataTemp.onOffLoadDtos.isEmpty()) {
-                showNoEshterakFound();
-            } else {
-                FragmentTransaction fragmentTransaction =
-                        getSupportFragmentManager().beginTransaction();
-                SearchFragment searchFragment = new SearchFragment();
-                searchFragment.show(fragmentTransaction, "");
-            }
-        });
+            ImageView imageViewSearch = findViewById(R.id.image_view_search);
+            imageViewSearch.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
+                    R.drawable.img_search));
+            imageViewSearch.setOnClickListener(v -> {
+                if (readingDataTemp.onOffLoadDtos.isEmpty()) {
+                    showNoEshterakFound();
+                } else {
+                    FragmentTransaction fragmentTransaction =
+                            getSupportFragmentManager().beginTransaction();
+                    SearchFragment searchFragment = new SearchFragment();
+                    searchFragment.show(fragmentTransaction, "");
+                }
+            });
+        }
     }
 
     private void updateOnOffLoad(int position, int counterStateCode, int counterStatePosition) {
@@ -175,6 +175,31 @@ public class ReadingActivity extends BaseActivity {
         readingData.onOffLoadDtos.get(position).offLoadStateId = OffloadStateEnum.INSERTED.getValue();
         readingData.onOffLoadDtos.get(position).counterStatePosition = counterStatePosition;
         readingData.onOffLoadDtos.get(position).counterStateId = counterStateCode;
+    }
+
+    public void updateOnOffLoadByLock(int position) {
+        final OnOffLoadDto onOffLoadDto = readingData.onOffLoadDtos.get(position);
+        try {
+            int i = 0;
+            boolean found = false;
+            while (!found && i < readingDataTemp.onOffLoadDtos.size()) {
+                if (readingDataTemp.onOffLoadDtos.get(i).id.equals(onOffLoadDto.id)) {
+                    readingDataTemp.onOffLoadDtos.get(i).isLocked = true;
+                    found = true;
+                }
+                i++;
+            }
+            readingData.onOffLoadDtos.get(position).isLocked = true;
+            setupViewPager();
+            MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao()
+                    .updateOnOffLoadByLock(onOffLoadDto.id, onOffLoadDto.trackNumber, true);
+        } catch (Exception e) {
+            runOnUiThread(() -> new CustomDialogModel(DialogType.Red,
+                    activity, e.getMessage(),
+                    getString(R.string.dear_user),
+                    getString(R.string.take_screen_shot),
+                    getString(R.string.accepted)));
+        }
     }
 
     public void updateOnOffLoadWithoutCounterNumber(int position, int counterStateCode,
@@ -311,17 +336,14 @@ public class ReadingActivity extends BaseActivity {
         this.readingDataTemp.counterStateDtos.addAll(readingDataTemp.counterStateDtos);
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     public void dataChanged(ArrayList<OnOffLoadDto> onOffLoadDtos, ArrayList<OnOffLoadDto> onOffLoadDtosTemp) {
         setReadingDataOnOffload(onOffLoadDtos, onOffLoadDtosTemp);
-//        setupViewPagerAdapter(0);
         setupViewPager();
     }
 
     public void setupViewPagerAdapter(int currentItem) {
         runOnUiThread(() -> {
-            viewPagerAdapterReading = new ViewPagerAdapterReading2(readingData,
-                    readingDataTemp.onOffLoadDtos, activity);
+            final ViewPagerStateAdapter viewPagerAdapterReading = new ViewPagerStateAdapter(this, readingData);
             try {
                 binding.viewPager.setOffscreenPageLimit(1);
                 binding.viewPager.setAdapter(viewPagerAdapterReading);
@@ -378,7 +400,8 @@ public class ReadingActivity extends BaseActivity {
             showImage(position);
         } else {
             if (!isShowing) {
-                CounterStateDto counterStateDto = readingData.counterStateDtos.get(readingData.onOffLoadDtos.get(position).counterStatePosition);
+                CounterStateDto counterStateDto = readingData.counterStateDtos.get(readingData
+                        .onOffLoadDtos.get(position).counterStatePosition);
                 if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
                         counterStateDto.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {
                     SerialFragment serialFragment = SerialFragment.newInstance(position,
@@ -407,14 +430,12 @@ public class ReadingActivity extends BaseActivity {
     }
 
     private void setAboveIconsSrc(int position) {
-        if (readingData.onOffLoadDtos != null) {
-            runOnUiThread(() -> {
-                setHighLowImage(position);
-                setReadStatusImage(position);
-                setExceptionImage(position);
-                setIsBazdidImage(position);
-            });
-        }
+        runOnUiThread(() -> {
+            setHighLowImage(position);
+            setReadStatusImage(position);
+            setExceptionImage(position);
+            setIsBazdidImage(position);
+        });
     }
 
     private void setExceptionImage(int position) {
@@ -604,17 +625,18 @@ public class ReadingActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        viewPagerAdapterReading = null;
         ImageView imageViewFlash = findViewById(R.id.image_view_flash);
-        imageViewFlash.setImageDrawable(null);
-        ImageView imageViewReverse = findViewById(R.id.image_view_reverse);
-        imageViewReverse.setImageDrawable(null);
-        ImageView imageViewCamera = findViewById(R.id.image_view_camera);
-        imageViewCamera.setImageDrawable(null);
-        ImageView imageViewSearch = findViewById(R.id.image_view_search);
-        imageViewSearch.setImageDrawable(null);
-        ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
-        imageViewCheck.setImageDrawable(null);
+        if (imageViewFlash != null) {
+            imageViewFlash.setImageDrawable(null);
+            ImageView imageViewReverse = findViewById(R.id.image_view_reverse);
+            imageViewReverse.setImageDrawable(null);
+            ImageView imageViewCamera = findViewById(R.id.image_view_camera);
+            imageViewCamera.setImageDrawable(null);
+            ImageView imageViewSearch = findViewById(R.id.image_view_search);
+            imageViewSearch.setImageDrawable(null);
+            ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
+            imageViewCheck.setImageDrawable(null);
+        }
         binding.imageViewHighLowState.setImageDrawable(null);
         binding.imageViewOffLoadState.setImageDrawable(null);
         binding.imageViewReadingType.setImageDrawable(null);

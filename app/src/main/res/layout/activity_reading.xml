@@ -67,15 +67,9 @@
         android:textColor="@color/red"
         android:textSize="@dimen/text_size_large"
         android:visibility="gone" />
-
-<!--    <androidx.viewpager.widget.ViewPager-->
-<!--        android:id="@+id/view_pager"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_below="@id/linear_layout_above" />-->
-    <androidx.viewpager2.widget.ViewPager2
+ <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
-        android:layoutDirection="rtl"
+        android:layoutDirection="locale"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/linear_layout_above" />

@@ -1,6 +1,7 @@
 package com.leon.counter_reading.tables;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -33,6 +34,8 @@ public class TrackingDto {
     public boolean isActive;
     public boolean isArchive;
     public boolean isLocked;
+    public String x;
+    public String y;
 
     public static ArrayList<String> getTrackingDtoItems(ArrayList<TrackingDto> trackingDtos) {
         ArrayList<String> items = new ArrayList<>();

@@ -57,4 +57,31 @@ public class ViewHolderReading extends RecyclerView.ViewHolder {
 
         buttonSubmit = itemView.findViewById(R.id.button_submit);
     }
+
+    public ViewHolderReading(@NonNull View itemView,int position) {
+        super(itemView);
+        spinner = itemView.findViewById(R.id.spinner);
+        editTextNumber = itemView.findViewById(R.id.edit_text_number);
+        editTextNumber.setTag("editTextNumber".concat(String.valueOf(position)));
+        textViewAhad1Title = itemView.findViewById(R.id.text_view_ahad_1_title);
+        textViewAhad2Title = itemView.findViewById(R.id.text_view_ahad_2_title);
+        textViewAhadTotalTitle = itemView.findViewById(R.id.text_view_ahad_total_title);
+        textViewPreNumber = itemView.findViewById(R.id.text_view_pre_number);
+        textViewPreDate = itemView.findViewById(R.id.text_view_pre_date);
+
+        textViewAddress = itemView.findViewById(R.id.text_view_address);
+        textViewRadif = itemView.findViewById(R.id.text_view_radif);
+        textViewAhad1 = itemView.findViewById(R.id.text_view_ahad_1);
+        textViewAhad2 = itemView.findViewById(R.id.text_view_ahad_2);
+        textViewAhadTotal = itemView.findViewById(R.id.text_view_ahad_total);
+
+        textViewCode = itemView.findViewById(R.id.text_view_code);
+        textViewKarbari = itemView.findViewById(R.id.text_view_karbari);
+        textViewBranch = itemView.findViewById(R.id.text_view_branch);
+        textViewSiphon = itemView.findViewById(R.id.text_view_siphon);
+        textViewName = itemView.findViewById(R.id.text_view_name);
+        textViewSerial = itemView.findViewById(R.id.text_view_serial);
+
+        buttonSubmit = itemView.findViewById(R.id.button_submit);
+    }
 }
