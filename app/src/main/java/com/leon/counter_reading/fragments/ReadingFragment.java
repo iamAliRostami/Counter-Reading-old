@@ -161,7 +161,8 @@ public class ReadingFragment extends Fragment {
             if (onOffLoadDto.hasPreNumber) {
                 activity.runOnUiThread(() ->
                         binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber)));
-                new UpdateOnOffLoadByIsShown(onOffLoadDto).execute(activity);
+//                new UpdateOnOffLoadByIsShown(onOffLoadDto).execute(activity);
+                ((ReadingActivity)activity).updateOnOffLoadByPreNumber(position);
             } else {
                 new CustomToast().warning(getString(R.string.can_not_show_pre));
             }

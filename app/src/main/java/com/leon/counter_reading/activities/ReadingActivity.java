@@ -58,6 +58,7 @@ import com.leon.counter_reading.utils.reading.ReadingUtils;
 import com.leon.counter_reading.utils.reading.Result;
 import com.leon.counter_reading.utils.reading.Search;
 import com.leon.counter_reading.utils.reading.Update;
+import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByIsShown;
 
 import java.util.ArrayList;
 
@@ -177,6 +178,11 @@ public class ReadingActivity extends BaseActivity {
         readingData.onOffLoadDtos.get(position).counterStateId = counterStateCode;
     }
 
+    public void updateOnOffLoadByPreNumber(int position) {
+        readingData.onOffLoadDtos.get(position).counterNumberShown = true;
+        new UpdateOnOffLoadByIsShown(readingData.onOffLoadDtos.get(position)).execute(activity);
+    }
+
     public void updateOnOffLoadByLock(int position) {
         final OnOffLoadDto onOffLoadDto = readingData.onOffLoadDtos.get(position);
         try {
@@ -190,7 +196,8 @@ public class ReadingActivity extends BaseActivity {
                 i++;
             }
             readingData.onOffLoadDtos.get(position).isLocked = true;
-            setupViewPager();
+//            setupViewPager();
+            setupViewPagerAdapter(position);
             MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao()
                     .updateOnOffLoadByLock(onOffLoadDto.id, onOffLoadDto.trackNumber, true);
         } catch (Exception e) {
