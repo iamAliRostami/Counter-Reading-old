@@ -180,7 +180,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
             if (onOffLoadDto.hasPreNumber) {
                 activity.runOnUiThread(() ->
                         holder.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber)));
-                new UpdateOnOffLoadByIsShown(onOffLoadDto).execute(activity);
+//                new UpdateOnOffLoadByIsShown(onOffLoadDto).execute(activity);
             } else {
                 new CustomToast().warning(activity.getString(R.string.can_not_show_pre));
             }
@@ -413,9 +413,9 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
                         updateOnOffLoadByAttemptNumber(onOffLoadDtos.get(position).id,
                                 onOffLoadDtos.get(position).attemptCount);
                 if (!onOffLoadDtos.get(position).isLocked && onOffLoadDtos.get(position).attemptCount >= DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName())) {
-                    new UpdateOnOffLoadDtoByLock(onOffLoadDtos, onOffLoadDtosTemp, position,
-                            onOffLoadDtos.get(position).trackNumber, onOffLoadDtos.get(position).id)
-                            .execute(activity);
+//                    new UpdateOnOffLoadDtoByLock(onOffLoadDtos, onOffLoadDtosTemp, position,
+//                            onOffLoadDtos.get(position).trackNumber, onOffLoadDtos.get(position).id)
+//                            .execute(activity);
                 } else {
                     attemptSend(holder, position);
                 }

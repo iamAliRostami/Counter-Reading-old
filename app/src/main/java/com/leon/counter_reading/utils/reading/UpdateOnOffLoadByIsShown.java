@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 
-public class UpdateOnOffLoadByIsShown extends AsyncTask<Activity, Void, Void> {
+public class UpdateOnOffLoadByIsShown extends AsyncTask<Void, Void, Void> {
     private final OnOffLoadDto onOffLoadDto;
 
     public UpdateOnOffLoadByIsShown(OnOffLoadDto onOffLoadDto) {
@@ -15,11 +15,8 @@ public class UpdateOnOffLoadByIsShown extends AsyncTask<Activity, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Activity... activities) {
-        onOffLoadDto.isBazdid = true;
-        onOffLoadDto.counterNumberShown = true;
-        MyApplication.getApplicationComponent().MyDatabase()
-                .onOffLoadDao().updateOnOffLoad(onOffLoadDto);
+    protected Void doInBackground(Void... voids) {
+        MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
         return null;
     }
 }

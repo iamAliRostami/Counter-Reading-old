@@ -330,16 +330,6 @@ public class PossibleFragment extends DialogFragment {
             if (cancel)
                 view.requestFocus();
             else {
-                //TODO
-//                if (sharedPreferenceManager.getBoolData(SharedReferenceKeys.READING_REPORT.getValue())
-//                        && binding.spinnerReadingReport.getSelectedItemPosition() != 0) {
-//                    OffLoadReport offLoadReport = new OffLoadReport();
-//                    offLoadReport.reportId = counterReportDtos.get(binding.spinnerReadingReport.getSelectedItemPosition() - 1).id;
-//                    offLoadReport.onOffLoadId = onOffLoadDto.id;
-//                    offLoadReport.trackNumber = onOffLoadDto.trackNumber;
-//                    MyApplication.getApplicationComponent().MyDatabase()
-//                            .offLoadReportDao().insertOffLoadReport(offLoadReport);
-//                }
                 ((ReadingActivity) activity).updateOnOffLoadByNavigation(position, onOffLoadDto, justMobile);
                 dismiss();
 

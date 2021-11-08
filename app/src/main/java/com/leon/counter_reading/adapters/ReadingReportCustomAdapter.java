@@ -8,12 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.fragments.dialog.AhadFragment;
 import com.leon.counter_reading.fragments.dialog.KarbariFragment;
+import com.leon.counter_reading.fragments.dialog.ShowFragmentDialog;
 import com.leon.counter_reading.fragments.dialog.TaviziFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterReportDto;
@@ -74,18 +72,17 @@ public class ReadingReportCustomAdapter extends BaseAdapter {
                 MyApplication.getApplicationComponent().MyDatabase()
                         .offLoadReportDao().insertOffLoadReport(offLoadReport);
                 offLoadReports.add(offLoadReport);
-                FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
                 if (counterReportDtos.get(position).isAhad) {
-                    AhadFragment ahadFragment = AhadFragment.newInstance(uuid);
-                    ahadFragment.show(fragmentManager, context.getString(R.string.number).concat(DifferentCompanyManager.getAhad(DifferentCompanyManager.getActiveCompanyName())));
+                    ShowFragmentDialog.ShowFragmentDialogOnce(context, "AHAD_DIALOG",
+                            AhadFragment.newInstance(uuid));
                 }
                 if (counterReportDtos.get(position).isTavizi) {
-                    TaviziFragment taviziFragment = TaviziFragment.newInstance(uuid);
-                    taviziFragment.show(fragmentManager, context.getString(R.string.counter_serial));
+                    ShowFragmentDialog.ShowFragmentDialogOnce(context, "TAVIZ_DIALOG",
+                            TaviziFragment.newInstance(uuid));
                 }
                 if (counterReportDtos.get(position).isKarbari) {
-                    KarbariFragment karbariFragment = KarbariFragment.newInstance(uuid);
-                    karbariFragment.show(fragmentManager, context.getString(R.string.karbari));
+                    ShowFragmentDialog.ShowFragmentDialogOnce(context, "KARBARI_DIALOG",
+                            KarbariFragment.newInstance(uuid));
                 }
             } else {
                 for (int i = 0; i < offLoadReports.size(); i++) {

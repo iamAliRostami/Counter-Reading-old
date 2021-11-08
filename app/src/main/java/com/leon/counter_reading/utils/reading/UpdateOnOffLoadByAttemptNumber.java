@@ -1,36 +1,21 @@
 package com.leon.counter_reading.utils.reading;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 
-import com.leon.counter_reading.R;
-import com.leon.counter_reading.di.view_model.CustomDialogModel;
-import com.leon.counter_reading.enums.DialogType;
+import com.leon.counter_reading.helpers.MyApplication;
+import com.leon.counter_reading.tables.OnOffLoadDto;
 
-public class UpdateOnOffLoadByAttemptNumber extends AsyncTask<Activity, Void, Void> {
-    private final int position;
-    private final int attemptNumber;
+public class UpdateOnOffLoadByAttemptNumber extends AsyncTask<Void, Void, Void> {
+    private final OnOffLoadDto onOffLoadDto;
 
-    public UpdateOnOffLoadByAttemptNumber(int position, int attemptNumber) {
+    public UpdateOnOffLoadByAttemptNumber(OnOffLoadDto onOffLoadDto) {
         super();
-        this.position = position;
-        this.attemptNumber = attemptNumber;
+        this.onOffLoadDto = onOffLoadDto;
     }
 
     @Override
-    protected Void doInBackground(Activity... activities) {
-        try {
-//            MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao()
-//                    .updateOnOffLoadByAttemptNumber(readingData.onOffLoadDtos.get(position).id,
-//                            attemptNumber);
-//            readingData.onOffLoadDtos.get(position).attemptCount = attemptNumber;
-        } catch (Exception e) {
-            activities[0].runOnUiThread(() -> new CustomDialogModel(DialogType.Red,
-                    activities[0], e.getMessage(),
-                    activities[0].getString(R.string.dear_user),
-                    activities[0].getString(R.string.take_screen_shot),
-                    activities[0].getString(R.string.accepted)));
-        }
+    protected Void doInBackground(Void... voids) {
+        MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
         return null;
     }
 }

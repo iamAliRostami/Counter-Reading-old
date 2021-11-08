@@ -23,13 +23,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class AhadFragment extends DialogFragment {
-
     private FragmentAhadBinding binding;
     private String uuid;
     private Context context;
-
-    public AhadFragment() {
-    }
 
     public static AhadFragment newInstance(String uuid) {
         AhadFragment fragment = new AhadFragment();

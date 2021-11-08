@@ -238,7 +238,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                 if (!onOffLoadDtos.get(position).isLocked && onOffLoadDtos.get(position).attemptCount == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
                     new CustomToast().error(activity.getString(R.string.by_mistakes).
                             concat(onOffLoadDtos.get(position).eshterak).concat(activity.getString(R.string.is_locked)), Toast.LENGTH_LONG);
-                new UpdateOnOffLoadByAttemptNumber(position, onOffLoadDtos.get(position).attemptCount).execute(activity);
+//                new UpdateOnOffLoadByAttemptNumber(position, onOffLoadDtos.get(position).attemptCount).execute(activity);
                 if (!onOffLoadDtos.get(position).isLocked && onOffLoadDtos.get(position).attemptCount >= DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName())) {
 //                    new UpdateOnOffLoadDtoByLock(position, onOffLoadDtos.get(position).trackNumber, onOffLoadDtos.get(position).id).execute(activity);
                 } else {

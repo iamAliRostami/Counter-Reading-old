@@ -122,6 +122,7 @@
     <string name="up">بالا </string>
     <string name="zero">صفر </string>
     <string name="total_number">تعداد کل</string>
+    <string name="normal_total_number">تعداد کل عادی</string>
     <string name="not_reading_number">تعداد قرائت نشده</string>
     <string name="continue_reading">ادامه قرائت</string>
     <string name="temporary_number">تعداد علی الحساب</string>
@@ -221,6 +222,7 @@
     <string name="mistakes_error">برای ثبت، تنها یک فرصت دیگر دارید.</string>
     <string name="by_mistakes">به علت اشتباه مکرر، اشتراک شماره&#160;</string>
     <string name="is_locked">&#160;قفل شده است.</string>
+    <string name="lock_warning">خطر قفل شدن</string>
     <string name="you_are_updated">نسخه نرم افزاری شما به روز است.</string>
     <string name="set_point">نقطه زنی لحظه ای</string>
     <string name="can_not_show_pre">رقم قبلی قابل نمایش نمیباشد.</string>
@@ -262,4 +264,5 @@
     <string name="unknown">مشخص نشده</string>
     <string name="location_not_found">محل این مسیر در نقشه قابل شناسایی نیست.</string>
     <string name="distance">فاصله تا مسیر: </string>
+    <string name="show_all">نمایش همه</string>
 </resources>

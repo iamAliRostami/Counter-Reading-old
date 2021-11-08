@@ -27,6 +27,7 @@ import com.leon.counter_reading.enums.HighLowStateEnum;
 import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
+import com.leon.counter_reading.fragments.dialog.ShowFragmentDialog;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
@@ -35,8 +36,6 @@ import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.reading.Counting;
-import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByAttemptNumber;
-import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByIsShown;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -44,14 +43,13 @@ import java.util.ArrayList;
 
 public class ReadingFragment extends Fragment {
     private FragmentReadingBinding binding;
-    private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
     private Activity activity;
-
     private OnOffLoadDto onOffLoadDto;
     private ReadingConfigDefaultDto readingConfigDefaultDto;
     private KarbariDto karbariDto;
     private int position, counterStateCode, counterStatePosition;
     private boolean canBeEmpty, canLessThanPre, isMakoos, isMane;
+    private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
 
     public static ReadingFragment newInstance(
             OnOffLoadDto onOffLoadDto,
@@ -105,18 +103,16 @@ public class ReadingFragment extends Fragment {
     }
 
     private void initialize() {
+        initializeViews();
+        initializeSpinner();
         binding.editTextNumber.setOnLongClickListener(view -> {
             binding.editTextNumber.setText("");
             return false;
         });
         if (onOffLoadDto.isLocked) {
-            new CustomToast().error(getString(R.string.by_mistakes).concat(onOffLoadDto.eshterak).
-                    concat(getString(R.string.is_locked)), Toast.LENGTH_SHORT);
             binding.editTextNumber.setFocusable(false);
             binding.editTextNumber.setEnabled(false);
         }
-        initializeViews();
-        initializeSpinner();
         onButtonSubmitClickListener();
     }
 
@@ -161,16 +157,19 @@ public class ReadingFragment extends Fragment {
             if (onOffLoadDto.hasPreNumber) {
                 activity.runOnUiThread(() ->
                         binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber)));
-//                new UpdateOnOffLoadByIsShown(onOffLoadDto).execute(activity);
-                ((ReadingActivity)activity).updateOnOffLoadByPreNumber(position);
+                ((ReadingActivity) activity).updateOnOffLoadByPreNumber(position);
             } else {
                 new CustomToast().warning(getString(R.string.can_not_show_pre));
             }
         });
         binding.textViewAddress.setOnLongClickListener(v -> {
-            PossibleFragment possibleFragment = PossibleFragment.newInstance(onOffLoadDto,
-                    position, true);
-            possibleFragment.show(getChildFragmentManager(), getString(R.string.dynamic_navigation));
+
+        ShowFragmentDialog.ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG",
+                PossibleFragment.newInstance(onOffLoadDto,
+                        position, true));
+//            PossibleFragment possibleFragment = PossibleFragment.newInstance(onOffLoadDto,
+//                    position, true);
+//            possibleFragment.show(getChildFragmentManager(), getString(R.string.dynamic_navigation));
             return false;
         });
     }
@@ -275,24 +274,30 @@ public class ReadingFragment extends Fragment {
             } else if (PermissionManager.checkStoragePermission(getContext())) {
                 askStoragePermission();
             } else {
-                onOffLoadDto.attemptCount++;
-                if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount + 1 == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
-                    new CustomToast().warning(getString(R.string.mistakes_error), Toast.LENGTH_LONG);
-                if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
-                    new CustomToast().error(getString(R.string.by_mistakes).
-                            concat(onOffLoadDto.eshterak).concat(getString(R.string.is_locked)), Toast.LENGTH_LONG);
-                new UpdateOnOffLoadByAttemptNumber(position, onOffLoadDto.attemptCount).execute(activity);
-                if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName())) {
-                    ((ReadingActivity) activity).updateOnOffLoadByLock(position);
-//                    binding.editTextNumber.setEnabled(false);
-                } else {
-                    attemptSend();
-                }
+                attemptSend();
             }
     }
 
+    private boolean lockProcess(boolean canBeEmpty) {
+        onOffLoadDto.attemptCount++;
+        if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount + 1 == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
+            new CustomToast().error(getString(R.string.mistakes_error), Toast.LENGTH_LONG);
+        if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
+            new CustomToast().error(getString(R.string.by_mistakes).
+                    concat(onOffLoadDto.eshterak).concat(getString(R.string.is_locked)), Toast.LENGTH_SHORT);
+        ((ReadingActivity) activity).updateOnOffLoadByAttempt(position);
+        if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName())) {
+            ((ReadingActivity) activity).updateOnOffLoadByLock(position);
+            binding.editTextNumber.setText("");
+            binding.editTextNumber.setFocusable(false);
+            binding.editTextNumber.setEnabled(false);
+            return canBeEmpty;
+        }
+        return true;
+    }
+
     public void attemptSend() {
-        if (canBeEmpty) {
+        if (canBeEmpty && lockProcess(canBeEmpty)) {
             canBeEmpty();
         } else {
             canNotBeEmpty();
@@ -323,7 +328,7 @@ public class ReadingFragment extends Fragment {
             makeRing(activity, NotificationType.NOT_SAVE);
             binding.editTextNumber.setError(getString(R.string.counter_empty));
             view.requestFocus();
-        } else {
+        } else if (lockProcess(canBeEmpty)) {
             int currentNumber = Integer.parseInt(binding.editTextNumber.getText().toString());
             int use = currentNumber - onOffLoadDto.preNumber;
             if (canLessThanPre) {
@@ -369,11 +374,9 @@ public class ReadingFragment extends Fragment {
             }
         }
         if (type != null) {
-            FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager()
-                    .beginTransaction();
-            AreYouSureFragment areYouSureFragment = AreYouSureFragment.newInstance(position,
-                    currentNumber, type, counterStateCode, counterStatePosition);
-            areYouSureFragment.show(fragmentTransaction, activity.getString(R.string.use_out_of_range));
+            ShowFragmentDialog.ShowFragmentDialogOnce(activity, "ARE_YOU_SURE_DIALOG",
+                    AreYouSureFragment.newInstance(position,currentNumber, type, counterStateCode,
+                            counterStatePosition));
         }
     }
 
@@ -399,11 +402,9 @@ public class ReadingFragment extends Fragment {
             }
         }
         if (type != null) {
-            FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager()
-                    .beginTransaction();
-            AreYouSureFragment areYouSureFragment = AreYouSureFragment.newInstance(position,
-                    currentNumber, type, counterStateCode, counterStatePosition);
-            areYouSureFragment.show(fragmentTransaction, activity.getString(R.string.use_out_of_range));
+            ShowFragmentDialog.ShowFragmentDialogOnce(activity, "ARE_YOU_SURE_DIALOG",
+                    AreYouSureFragment.newInstance(position,currentNumber, type, counterStateCode,
+                            counterStatePosition));
         }
     }
 

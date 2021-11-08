@@ -3,56 +3,20 @@ package com.leon.counter_reading.utils.reading;
 import android.app.Activity;
 import android.os.AsyncTask;
 
-import com.leon.counter_reading.R;
-import com.leon.counter_reading.activities.ReadingActivity;
-import com.leon.counter_reading.di.view_model.CustomDialogModel;
-import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 
-import java.util.ArrayList;
+public class UpdateOnOffLoadDtoByLock extends AsyncTask<Void, Void, Void> {
+    private final OnOffLoadDto onOffLoadDto;
 
-public class UpdateOnOffLoadDtoByLock extends AsyncTask<Activity, Void, Void> {
-    private final int position;
-    private final int trackNumber;
-    private final String id;
-    private final ArrayList<OnOffLoadDto> onOffLoadDtos;
-    private final ArrayList<OnOffLoadDto> onOffLoadDtosTemp;
-
-    public UpdateOnOffLoadDtoByLock(ArrayList<OnOffLoadDto> onOffLoadDtos,
-                                    ArrayList<OnOffLoadDto> onOffLoadDtosTemp, int position,
-                                    int trackNumber, String id) {
+    public UpdateOnOffLoadDtoByLock(OnOffLoadDto onOffLoadDto) {
         super();
-        this.onOffLoadDtos = new ArrayList<>(onOffLoadDtos);
-        this.onOffLoadDtosTemp = new ArrayList<>(onOffLoadDtosTemp);
-        this.position = position;
-        this.trackNumber = trackNumber;
-        this.id = id;
+        this.onOffLoadDto = onOffLoadDto;
     }
 
     @Override
-    protected Void doInBackground(Activity... activities) {
-        try {
-            int i = 0;
-            boolean found = false;
-            while (!found && i < onOffLoadDtosTemp.size()) {
-                if (onOffLoadDtosTemp.get(i).id.equals(id)) {
-                    onOffLoadDtosTemp.get(i).isLocked = true;
-                    found = true;
-                }
-                i++;
-            }
-            onOffLoadDtos.get(position).isLocked = true;
-            ((ReadingActivity) (activities[0])).dataChanged(onOffLoadDtos, onOffLoadDtosTemp);
-            MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao()
-                    .updateOnOffLoadByLock(id, trackNumber, true);
-        } catch (Exception e) {
-            activities[0].runOnUiThread(() -> new CustomDialogModel(DialogType.Red,
-                    activities[0], e.getMessage(),
-                    activities[0].getString(R.string.dear_user),
-                    activities[0].getString(R.string.take_screen_shot),
-                    activities[0].getString(R.string.accepted)));
-        }
+    protected Void doInBackground(Void... voids) {
+        MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
         return null;
     }
 }

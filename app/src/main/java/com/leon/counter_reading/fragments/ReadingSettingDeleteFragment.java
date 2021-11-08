@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -16,6 +15,7 @@ import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingSettingDeleteBinding;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.fragments.dialog.DeleteFragment;
+import com.leon.counter_reading.fragments.dialog.ShowFragmentDialog;
 import com.leon.counter_reading.tables.TrackingDto;
 
 import org.jetbrains.annotations.NotNull;
@@ -81,14 +81,13 @@ public class ReadingSettingDeleteFragment extends Fragment {
 
     void setOnButtonDeleteClickListener() {
         binding.buttonDelete.setOnClickListener(v -> {
-            DeleteFragment deleteFragment;
             if (binding.spinner.getSelectedItemPosition() == 0) {
-                deleteFragment = DeleteFragment.newInstance("");
+                ShowFragmentDialog.ShowFragmentDialogOnce(activity, "DELETE_DIALOG",
+                        DeleteFragment.newInstance(""));
             } else {
-                deleteFragment = DeleteFragment.newInstance(
-                        trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id);
+                ShowFragmentDialog.ShowFragmentDialogOnce(activity, "DELETE_DIALOG",
+                        DeleteFragment.newInstance(trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id));
             }
-            deleteFragment.show(((AppCompatActivity) activity).getSupportFragmentManager(), "");
         });
     }
 

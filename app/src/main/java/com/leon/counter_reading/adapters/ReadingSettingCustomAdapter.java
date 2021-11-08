@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.fragments.dialog.RoadMapFragment;
+import com.leon.counter_reading.fragments.dialog.ShowFragmentDialog;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.CustomToast;
@@ -102,16 +103,14 @@ public class ReadingSettingCustomAdapter extends BaseAdapter {
         });
         holder.imageViewMap1.setOnClickListener(v -> {
             if (checkLocation(trackingDto)) {
-                FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
-                RoadMapFragment roadMapFragment = RoadMapFragment.
-                        newInstance(trackingDtos.get(position).x,  trackingDtos.get(position).y);
-                roadMapFragment.show(fragmentManager, "");
+                ShowFragmentDialog.ShowFragmentDialogOnce(context, "ROAD_MAP_DIALOG", RoadMapFragment
+                        .newInstance(trackingDtos.get(position).x, trackingDtos.get(position).y));
             }
         });
         holder.imageViewMap2.setOnClickListener(v -> {
             if (checkLocation(trackingDto)) {
-                String uriString = "geo:" +  trackingDtos.get(position).y + "," + trackingDtos.get(position).x + "?q=" +
-                        Uri.encode(trackingDtos.get(position).y+ "," + trackingDtos.get(position).x + "(label)") + "&z=19";
+                String uriString = "geo:" + trackingDtos.get(position).y + "," + trackingDtos.get(position).x + "?q=" +
+                        Uri.encode(trackingDtos.get(position).y + "," + trackingDtos.get(position).x + "(label)") + "&z=19";
                 Uri uri = Uri.parse(uriString);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 context.startActivity(intent);

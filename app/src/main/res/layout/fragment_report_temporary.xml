@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_above="@id/relative_layout_info"
+        android:layout_centerInParent="true"
         android:layout_margin="@dimen/low_dp"
         android:src="@drawable/img_temporary_report"
         tools:ignore="ContentDescription" />
