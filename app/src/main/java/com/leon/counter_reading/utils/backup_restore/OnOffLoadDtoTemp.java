@@ -40,7 +40,7 @@ public class OnOffLoadDtoTemp {
     public int ahadSaierOrAbBaha;
     public int qotrCode;
     public int sifoonQotrCode;
-    public int preNumber;
+//    public int preNumber;
     public int preCounterStateCode;
     public int trackNumber;
     public int zarfiat;
@@ -116,7 +116,7 @@ public class OnOffLoadDtoTemp {
         onOffLoadDto.ahadSaierOrAbBaha = ahadSaierOrAbBaha;
         onOffLoadDto.qotrCode = qotrCode;
         onOffLoadDto.sifoonQotrCode = sifoonQotrCode;
-        onOffLoadDto.preNumber = preNumber;
+//        onOffLoadDto.preNumber = preNumber;
         onOffLoadDto.preCounterStateCode = preCounterStateCode;
         onOffLoadDto.trackNumber = trackNumber;
         onOffLoadDto.zarfiat = zarfiat;

@@ -127,6 +127,7 @@
             android:label="@string/download_information" />
         <activity
             android:name=".activities.ReadingActivity"
+            android:screenOrientation="fullSensor"
             android:label="" />
         <activity
             android:name=".activities.LocationActivity"

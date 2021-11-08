@@ -342,7 +342,9 @@ public class ReadingActivity extends BaseActivity {
                 || sharedPreferenceManager.getBoolData(SharedReferenceKeys.ACCOUNT.getValue())
                 || sharedPreferenceManager.getBoolData(SharedReferenceKeys.READING_REPORT.getValue())
                 || sharedPreferenceManager.getBoolData(SharedReferenceKeys.MOBILE.getValue()))) {
-            showPossible(position);
+            ShowFragmentDialog.ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG",
+                    PossibleFragment.newInstance(readingData.onOffLoadDtos.get(position), position, false));
+//            showPossible(position);
         } else if (isImage && sharedPreferenceManager.getBoolData(SharedReferenceKeys.IMAGE.getValue())) {
             showImage(position);
         } else {
@@ -371,13 +373,13 @@ public class ReadingActivity extends BaseActivity {
 
     private void showPossible(int position) {
 
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        PossibleFragment possibleFragment = PossibleFragment.newInstance(
-                readingData.onOffLoadDtos.get(position), position, false);
-        possibleFragment.show(fragmentTransaction, getString(R.string.dynamic_navigation));
+//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        PossibleFragment possibleFragment = PossibleFragment.newInstance(
+//                readingData.onOffLoadDtos.get(position), position, false);
+//        possibleFragment.show(fragmentTransaction, getString(R.string.dynamic_navigation));
 
-//        ShowFragmentDialog.ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG",
-//                PossibleFragment.newInstance(readingData.onOffLoadDtos.get(position), position, false));
+        ShowFragmentDialog.ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG",
+                PossibleFragment.newInstance(readingData.onOffLoadDtos.get(position), position, false));
     }
 
     private void showNoEshterakFound() {

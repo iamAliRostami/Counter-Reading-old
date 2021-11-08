@@ -22,6 +22,7 @@ import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.CustomToast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -185,7 +186,8 @@ public class Restore extends AsyncTask<Activity, Integer, Void> {
         CSVReader csvReader;
         ArrayList<String> value = new ArrayList<>();
         try {
-            csvReader = new CSVReader(new FileReader(importDir + "/" + tableName + "_" + BuildConfig.BUILD_TYPE + ".csv"));
+            csvReader = new CSVReader(new FileReader(importDir + "/" + tableName + "_"
+                    + BuildConfig.BUILD_TYPE + "_" + BuildConfig.VERSION_CODE + ".csv"));
             String[] nextLine;
             String[] headerLine = null;
             while ((nextLine = csvReader.readNext()) != null) {
@@ -209,6 +211,11 @@ public class Restore extends AsyncTask<Activity, Integer, Void> {
             }
             activity.runOnUiThread(() ->
                     new CustomToast().success("بازیابی اطلاعات با موفقیت انجام شد.", Toast.LENGTH_SHORT));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            activity.runOnUiThread(() ->
+                    new CustomToast().error("خطا بازیابی اطلاعات\n پوشه ی دانلود دستگاه خود را تخلیه کنید.", Toast.LENGTH_SHORT));
+            ;
         } catch (IOException e) {
             e.printStackTrace();
             activity.runOnUiThread(() ->

@@ -288,7 +288,7 @@ public class ReadingFragment extends Fragment {
         ((ReadingActivity) activity).updateOnOffLoadByAttempt(position);
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName())) {
             ((ReadingActivity) activity).updateOnOffLoadByLock(position);
-            binding.editTextNumber.setText("");
+//            binding.editTextNumber.setText("");
             binding.editTextNumber.setFocusable(false);
             binding.editTextNumber.setEnabled(false);
             return canBeEmpty;
@@ -296,7 +296,7 @@ public class ReadingFragment extends Fragment {
         return true;
     }
 
-    public void attemptSend() {
+    private void attemptSend() {
         if (canBeEmpty && lockProcess(canBeEmpty)) {
             canBeEmpty();
         } else {

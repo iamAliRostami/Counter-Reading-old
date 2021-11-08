@@ -96,7 +96,7 @@ public class SearchFragment extends DialogFragment {
     }
 
     private void scanFromFragment() {
-        IntentIntegrator.forSupportFragment(this).initiateScan();
+        IntentIntegrator.forSupportFragment(this).setOrientationLocked(false).initiateScan();
     }
 
     @Override
