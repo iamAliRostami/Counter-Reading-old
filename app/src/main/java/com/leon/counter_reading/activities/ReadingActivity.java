@@ -13,6 +13,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Debug;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,9 +22,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -342,9 +346,7 @@ public class ReadingActivity extends BaseActivity {
                 || sharedPreferenceManager.getBoolData(SharedReferenceKeys.ACCOUNT.getValue())
                 || sharedPreferenceManager.getBoolData(SharedReferenceKeys.READING_REPORT.getValue())
                 || sharedPreferenceManager.getBoolData(SharedReferenceKeys.MOBILE.getValue()))) {
-            ShowFragmentDialog.ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG",
-                    PossibleFragment.newInstance(readingData.onOffLoadDtos.get(position), position, false));
-//            showPossible(position);
+            showPossible(position);
         } else if (isImage && sharedPreferenceManager.getBoolData(SharedReferenceKeys.IMAGE.getValue())) {
             showImage(position);
         } else {
@@ -353,6 +355,7 @@ public class ReadingActivity extends BaseActivity {
                         .onOffLoadDtos.get(position).counterStatePosition);
                 if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
                         counterStateDto.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {
+
                     ShowFragmentDialog.ShowFragmentDialogOnce(activity, "SERIAL_DIALOG",
                             SerialFragment.newInstance(position, counterStateDto.id,
                                     readingData.onOffLoadDtos.get(position).counterStatePosition));

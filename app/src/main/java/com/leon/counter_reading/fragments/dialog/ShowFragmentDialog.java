@@ -1,6 +1,7 @@
 package com.leon.counter_reading.fragments.dialog;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;

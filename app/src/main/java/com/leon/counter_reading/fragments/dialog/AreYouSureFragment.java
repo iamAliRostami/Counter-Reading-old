@@ -82,10 +82,10 @@ public class AreYouSureFragment extends DialogFragment {
 
     private void setOnButtonsClickListener() {
         binding.buttonSubmit.setOnClickListener(v -> {
+            dismiss();
             ((ReadingActivity) requireActivity()).
                     updateOnOffLoadByCounterNumber(position, currentNumber, counterStateCode,
                             counterStatePosition, type);
-            dismiss();
         });
         binding.buttonClose.setOnClickListener(v -> dismiss());
     }
