@@ -32,6 +32,7 @@ public enum SharedReferenceKeys {
     PERSONAL_CODE("personal_number"),
     AVATAR("avatar"),
     LAST_BACK_UP("last_back_up"),
+    PROXY("proxy"),
     THEME_TEMPORARY("theme_temporary");
 
     private final String value;

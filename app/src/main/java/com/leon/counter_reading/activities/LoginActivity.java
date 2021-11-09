@@ -35,6 +35,7 @@ import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.login.AttemptLogin;
 import com.leon.counter_reading.utils.login.AttemptRegister;
+import com.leon.counter_reading.utils.login.SetProxy;
 import com.leon.counter_reading.utils.login.TwoStepVerification;
 
 import java.util.ArrayList;
@@ -91,10 +92,7 @@ public class LoginActivity extends AppCompatActivity {
     void initialize() {
         binding.textViewVersion.setText(getString(R.string.version).concat(" ").concat(getAndroidVersion())
                 .concat(" *** ").concat(BuildConfig.VERSION_NAME));
-
-        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
-
+        initializeTextViewCompanyName();
         loadPreference();
         binding.imageViewPassword.setImageResource(R.drawable.img_password);
         binding.imageViewLogo.setImageResource(R.drawable.img_login_logo);
@@ -113,7 +111,14 @@ public class LoginActivity extends AppCompatActivity {
         setEditTextPasswordOnFocusChangeListener();
     }
 
-    void setEditTextUsernameOnFocusChangeListener() {
+    private void initializeTextViewCompanyName() {
+
+        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
+        textViewCompanyName.setOnClickListener(v -> SetProxy.insertProxy(activity));
+    }
+
+    private void setEditTextUsernameOnFocusChangeListener() {
         binding.editTextUsername.setOnFocusChangeListener((view, b) -> {
             binding.editTextUsername.setHint("");
             if (b) {

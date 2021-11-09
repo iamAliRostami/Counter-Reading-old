@@ -265,4 +265,6 @@
     <string name="location_not_found">محل این مسیر در نقشه قابل شناسایی نیست.</string>
     <string name="distance">فاصله تا مسیر: </string>
     <string name="show_all">نمایش همه</string>
+    <string name="proxy">پروکسی</string>
+    <string name="enter_proxy">پروکسی را وارد کنید</string>
 </resources>

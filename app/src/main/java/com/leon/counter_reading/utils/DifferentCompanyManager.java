@@ -3,6 +3,8 @@ package com.leon.counter_reading.utils;
 
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.enums.CompanyNames;
+import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 
 public class DifferentCompanyManager {
 
@@ -12,6 +14,11 @@ public class DifferentCompanyManager {
     }
 
     public static String getBaseUrl(CompanyNames companyNames) {
+        if (MyApplication.getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(SharedReferenceKeys.PROXY.getValue())) {
+            String proxy = MyApplication.getApplicationComponent().SharedPreferenceModel().getStringData(SharedReferenceKeys.PROXY.getValue());
+            if (proxy.startsWith("http://") || proxy.startsWith("https://"))
+                return proxy;
+        }
         switch (companyNames) {
             case ESF:
                 return "https://37.191.92.157/";
