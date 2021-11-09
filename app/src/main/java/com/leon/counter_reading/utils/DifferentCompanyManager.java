@@ -16,7 +16,9 @@ public class DifferentCompanyManager {
     public static String getBaseUrl(CompanyNames companyNames) {
         if (MyApplication.getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(SharedReferenceKeys.PROXY.getValue())) {
             String proxy = MyApplication.getApplicationComponent().SharedPreferenceModel().getStringData(SharedReferenceKeys.PROXY.getValue());
-            if (proxy.startsWith("http://") || proxy.startsWith("https://"))
+            if (proxy.startsWith("http://") && proxy.length() > 7)
+                return proxy;
+            if (proxy.startsWith("https://") && proxy.length() > 8)
                 return proxy;
         }
         switch (companyNames) {
