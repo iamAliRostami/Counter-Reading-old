@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
+import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.CounterStateDto;
@@ -182,7 +183,9 @@ public class Restore extends AsyncTask<Activity, Integer, Void> {
 
     public static ArrayList<String> importTableFromCSVFile(String tableName, Activity activity) {
         File importDir = new File(String.valueOf(Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)) +
+                MyApplication.getApplicationComponent().SharedPreferenceModel()
+                        .getStringData(SharedReferenceKeys.LAST_BACK_UP.getValue()));
         CSVReader csvReader;
         ArrayList<String> value = new ArrayList<>();
         try {

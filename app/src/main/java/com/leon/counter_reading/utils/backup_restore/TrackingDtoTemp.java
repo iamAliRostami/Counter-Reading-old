@@ -28,6 +28,8 @@ public class TrackingDtoTemp {
     public int isArchive;
     public int isLocked;
 
+    public String x;
+    public String y;
     public TrackingDto getTrackingDto() {
         TrackingDto trackingDto = new TrackingDto();
         trackingDto.id = id;
@@ -45,6 +47,8 @@ public class TrackingDtoTemp {
         trackingDto.itemQuantity = itemQuantity;
         trackingDto.alalHesabPercent = alalHesabPercent;
         trackingDto.imagePercent = imagePercent;
+        trackingDto.x = x;
+        trackingDto.y = y;
 
         trackingDto.isRoosta = isRoosta == 1;
         trackingDto.isBazdid = isBazdid == 1;

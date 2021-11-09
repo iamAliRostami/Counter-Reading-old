@@ -128,7 +128,6 @@ public class CustomFile {
 
     }
 
-
     public static String bitmapToBinary(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);

@@ -21,6 +21,7 @@ import com.leon.counter_reading.fragments.SettingChangeAvatarFragment;
 import com.leon.counter_reading.fragments.SettingChangePasswordFragment;
 import com.leon.counter_reading.fragments.SettingChangeThemeFragment;
 import com.leon.counter_reading.fragments.SettingUpdateFragment;
+import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DepthPageTransformer;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.backup_restore.BackUp;
@@ -171,6 +172,7 @@ public class SettingActivity extends BaseActivity {
             new BackUp(activity).execute(activity);
         } else if (id == R.id.menu_restore) {
             new Restore(activity).execute(activity);
+//            new CustomToast().success("این بخش به زودی تکمیل خواهد شد.");
         }
         return super.onOptionsItemSelected(item);
     }

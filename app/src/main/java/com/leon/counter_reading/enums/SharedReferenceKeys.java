@@ -31,6 +31,7 @@ public enum SharedReferenceKeys {
     SORT_TYPE("sort_type"),
     PERSONAL_CODE("personal_number"),
     AVATAR("avatar"),
+    LAST_BACK_UP("last_back_up"),
     THEME_TEMPORARY("theme_temporary");
 
     private final String value;
