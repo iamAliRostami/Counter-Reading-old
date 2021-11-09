@@ -29,9 +29,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Restore extends AsyncTask<Activity, Integer, Void> {
-
-
     private final CustomProgressModel customProgressModel;
+    private final ArrayList<String> trackIds = new ArrayList<>();
+    private final ArrayList<Integer> trackNumbers = new ArrayList<>();
 
     public Restore(Activity activity) {
         super();
@@ -52,15 +52,17 @@ public class Restore extends AsyncTask<Activity, Integer, Void> {
 
     @Override
     protected Void doInBackground(Activity... activities) {
-        restoreOnOffLoadDto(activities[0]);
-        restoreReadingConfigDefaultDto(activities[0]);
-        restoreTrackingDto(activities[0]);
-        restoreCounterStateDto(activities[0]);
-        restoreQotrDictionary(activities[0]);
-        restoreKarbariDto(activities[0]);
-        restoreCounterReportDto(activities[0]);
-        restoreOffLoadReport(activities[0]);
-        restoreForbiddenDto(activities[0]);
+        if (restoreTrackingDto(activities[0]).size() > 0) {
+            if (restoreOnOffLoadDto(activities[0]).size() > 0) {
+                restoreReadingConfigDefaultDto(activities[0]);
+                restoreCounterStateDto(activities[0]);
+                restoreQotrDictionary(activities[0]);
+                restoreKarbariDto(activities[0]);
+                restoreCounterReportDto(activities[0]);
+                restoreOffLoadReport(activities[0]);
+                restoreForbiddenDto(activities[0]);
+            }
+        }
         return null;
     }
 
@@ -129,30 +131,51 @@ public class Restore extends AsyncTask<Activity, Integer, Void> {
         MyApplication.getApplicationComponent().MyDatabase().readingConfigDefaultDao().insertAllReadingConfigDefault(readingConfigDefaultDtos);
     }
 
-    private void restoreOnOffLoadDto(Activity activity) {
+    private ArrayList<OnOffLoadDto> restoreOnOffLoadDto(Activity activity) {
         ArrayList<String> onOffLoadDtoString = importTableFromCSVFile("OnOffLoadDto", activity);
         ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
+//        ArrayList<OnOffLoadDto> onOffLoadDtosTemp = new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao().getAllOnOffLoad());
         Gson gson = new Gson();
         for (int i = 0; i < onOffLoadDtoString.size(); i++) {
+            boolean found = false;
             OnOffLoadDtoTemp onOffLoadDtoTemp = gson
                     .fromJson(onOffLoadDtoString.get(i), OnOffLoadDtoTemp.class);
-            onOffLoadDtos.add(onOffLoadDtoTemp.getOnOffLoadDto());
+            for (int j = 0; j < trackIds.size() && !found; j++) {
+                if (trackIds.get(j).equals(onOffLoadDtoTemp.id) && trackNumbers.get(j) == onOffLoadDtoTemp.trackNumber) {
+                    found = true;
+                }
+            }
+            if (!found)
+                onOffLoadDtos.add(onOffLoadDtoTemp.getOnOffLoadDto());
         }
         Log.e("size", String.valueOf(onOffLoadDtos.size()));
         MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao().insertAllOnOffLoad(onOffLoadDtos);
+        return onOffLoadDtos;
     }
 
-    private void restoreTrackingDto(Activity activity) {
+    private ArrayList<TrackingDto> restoreTrackingDto(Activity activity) {
         ArrayList<String> trackingDtoString = importTableFromCSVFile("TrackingDto", activity);
         ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
+        ArrayList<TrackingDto> trackingDtosTemp = new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase().trackingDao().getTrackingDto());
         Gson gson = new Gson();
         for (int i = 0; i < trackingDtoString.size(); i++) {
+            boolean found = false;
             TrackingDtoTemp trackingDtoTemp = gson
                     .fromJson(trackingDtoString.get(i), TrackingDtoTemp.class);
-            trackingDtos.add(trackingDtoTemp.getTrackingDto());
+            for (int j = 0; j < trackingDtosTemp.size() && !found; j++) {
+                if (trackingDtoTemp.trackNumber == trackingDtosTemp.get(j).trackNumber &&
+                        trackingDtoTemp.id.equals(trackingDtosTemp.get(j).id)) {
+                    found = true;
+                    trackIds.add(trackingDtoTemp.id);
+                    trackNumbers.add(trackingDtoTemp.trackNumber);
+                }
+            }
+            if (!found) {
+                trackingDtos.add(trackingDtoTemp.getTrackingDto());
+            }
         }
-        Log.e("size", String.valueOf(trackingDtos.size()));
         MyApplication.getApplicationComponent().MyDatabase().trackingDao().insertAllTrackingDtos(trackingDtos);
+        return trackingDtos;
     }
 
     private void restoreCounterStateDto(Activity activity) {
@@ -182,8 +205,7 @@ public class Restore extends AsyncTask<Activity, Integer, Void> {
     }
 
     public static ArrayList<String> importTableFromCSVFile(String tableName, Activity activity) {
-        File importDir = new File(String.valueOf(Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)) +
+        File importDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +
                 MyApplication.getApplicationComponent().SharedPreferenceModel()
                         .getStringData(SharedReferenceKeys.LAST_BACK_UP.getValue()));
         CSVReader csvReader;

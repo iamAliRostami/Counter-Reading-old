@@ -10,6 +10,10 @@ import java.util.List;
 
 @Dao
 public interface OnOffLoadDao {
+
+    @Query("select * From OnOffLoadDto")
+    List<OnOffLoadDto>  getAllOnOffLoad();
+
     @Query("select * From OnOffLoadDto WHERE id = :id AND trackNumber = :trackNumber ORDER BY eshterak")
     OnOffLoadDto getAllOnOffLoadById(String id, int trackNumber);
 
