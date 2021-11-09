@@ -5,7 +5,6 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 import android.app.Activity;
 import android.content.Context;
 import android.text.InputType;
-import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 import com.leon.counter_reading.R;
@@ -13,7 +12,6 @@ import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.helpers.MyApplication;
-import com.leon.counter_reading.utils.CalendarTool;
 import com.leon.counter_reading.utils.custom_dialog.LovelyTextInputDialog;
 
 public class SetProxy {
@@ -51,13 +49,9 @@ public class SetProxy {
     public static void showProxy(Activity activity) {
         if (MyApplication.getApplicationComponent().SharedPreferenceModel()
                 .getIntData(SharedReferenceKeys.PROXY.getValue()) > 0) {
-            CalendarTool calendarTool = new CalendarTool();
-            String verificationCode = //TODO concat or plus
-                    String.valueOf(MyApplication.getApplicationComponent().SharedPreferenceModel()
-                            .getIntData(SharedReferenceKeys.PROXY.getValue()) + 1313 *
-                            calendarTool.getIranianMonth() * calendarTool.getIranianDay());
             CustomDialogModel customDialogModel = new CustomDialogModel(DialogType.Green, activity,
-                    verificationCode,
+                    MyApplication.getApplicationComponent().SharedPreferenceModel()
+                            .getStringData(SharedReferenceKeys.PROXY.getValue()),
                     MyApplication.getContext().getString(R.string.proxy),
                     MyApplication.getContext().getString(R.string.dear_user),
                     MyApplication.getContext().getString(R.string.accepted));

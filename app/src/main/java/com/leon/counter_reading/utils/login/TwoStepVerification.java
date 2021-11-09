@@ -5,13 +5,12 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 import android.app.Activity;
 import android.content.Context;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.utils.CalendarTool;
 import com.leon.counter_reading.utils.custom_dialog.LovelyTextInputDialog;
 
@@ -24,10 +23,8 @@ public class TwoStepVerification {
                 .setTitle(R.string.dear_user)
                 .setMessage(context.getString(R.string.enter_personal_code))
                 .setCancelable(false)
-                .setInputFilter(R.string.error_empty, text -> {
-                    EditText editTextNumber = lovelyTextInputDialog.getEditTextNumber();
-                    return editTextNumber.getText().length() >= 1;
-                })
+                .setInputFilter(R.string.error_empty, text ->
+                        lovelyTextInputDialog.getEditTextNumber().getText().length() >= 1)
                 .setConfirmButton(R.string.confirm, text -> {
                     InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
@@ -38,8 +35,6 @@ public class TwoStepVerification {
                 .setNegativeButton(R.string.close, v -> {
                     InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-//                        new CustomToast().warning(context.getString(R.string.canceled), Toast.LENGTH_LONG);
-
                 });
         lovelyTextInputDialog.show();
     }
