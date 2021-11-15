@@ -22,11 +22,11 @@ import androidx.core.content.ContextCompat;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityLocationBinding;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.tables.SavedLocation;
 import com.leon.counter_reading.utils.CustomToast;
@@ -42,12 +42,12 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
 
 public class LocationActivity extends BaseActivity {
-    private static ArrayList<SavedLocation.LocationOnMap> savedLocations;
+    private final ArrayList<SavedLocation.LocationOnMap> savedLocations = new ArrayList<>();
     private ActivityLocationBinding binding;
     private Activity activity;
     private ISharedPreferenceManager sharedPreferenceManager;
     private ShowOnMap showOnMap;
-    private ArrayList<Marker> markers = new ArrayList<>();
+    private final ArrayList<Marker> markers = new ArrayList<>();
 
     @Override
     protected void initialize() {
@@ -75,13 +75,17 @@ public class LocationActivity extends BaseActivity {
         });
     }
 
-    void clearMap() {
-        showOnMap.cancel(true);
-        binding.mapView.getOverlayManager().removeAll(markers);
-        markers.clear();
+    private void clearMap() {
+        try {
+            showOnMap.cancel(true);
+            binding.mapView.getOverlayManager().removeAll(markers);
+            markers.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    void checkPermissions() {
+    private void checkPermissions() {
         if (PermissionManager.gpsEnabled(this))
             if (PermissionManager.checkLocationPermission(getApplicationContext())) {
                 askLocationPermission();
@@ -94,7 +98,7 @@ public class LocationActivity extends BaseActivity {
             }
     }
 
-    void askStoragePermission() {
+    private void askStoragePermission() {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -121,7 +125,7 @@ public class LocationActivity extends BaseActivity {
                 ).check();
     }
 
-    void askLocationPermission() {
+    private void askLocationPermission() {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -147,7 +151,7 @@ public class LocationActivity extends BaseActivity {
                 ).check();
     }
 
-    void initializeMapView() {
+    private void initializeMapView() {
         binding.mapView.getZoomController().
                 setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
         binding.mapView.setMultiTouchControls(true);
@@ -187,7 +191,11 @@ public class LocationActivity extends BaseActivity {
     @Override
     protected void onStop() {
         if (showOnMap != null)
-            showOnMap.cancel(true);
+            try {
+                showOnMap.cancel(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         Debug.getNativeHeapAllocatedSize();
         System.runFinalization();
         Runtime.getRuntime().totalMemory();
@@ -201,9 +209,9 @@ public class LocationActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         clearMap();
-        savedLocations = null;
+        savedLocations.clear();
         binding = null;
-        markers = null;
+        markers.clear();
         Debug.getNativeHeapAllocatedSize();
         System.runFinalization();
         Runtime.getRuntime().totalMemory();
@@ -214,7 +222,8 @@ public class LocationActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    static class GetDBLocation extends AsyncTask<Void, Void, Void> {
+    @SuppressLint("StaticFieldLeak")
+    class GetDBLocation extends AsyncTask<Void, Void, Void> {
 
         public GetDBLocation() {
             super();
@@ -223,7 +232,8 @@ public class LocationActivity extends BaseActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                savedLocations = new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase()
+                savedLocations.clear();
+                savedLocations.addAll(MyApplication.getApplicationComponent().MyDatabase()
                         .savedLocationDao().getSavedLocationsXY());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -250,12 +260,11 @@ public class LocationActivity extends BaseActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            if (savedLocations == null || savedLocations.isEmpty()) {
-                savedLocations = new ArrayList<>(
-                        MyApplication.getApplicationComponent().MyDatabase().
-                                savedLocationDao().getSavedLocationsXY());
+            if (savedLocations.isEmpty()) {
+                savedLocations.addAll(MyApplication.getApplicationComponent().MyDatabase().
+                        savedLocationDao().getSavedLocationsXY());
             }
-            markers = new ArrayList<>();
+            markers.clear();
             int i = 0;
             while (i < savedLocations.size() && !isCancelled()) {
                 addPlace(new GeoPoint(savedLocations.get(i).latitude, savedLocations.get(i).longitude));

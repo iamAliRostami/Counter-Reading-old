@@ -5,18 +5,22 @@ import static com.leon.counter_reading.helpers.Constants.MIN_TIME_BW_UPDATES;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ILocationTracking;
 import com.leon.counter_reading.tables.SavedLocation;
+import com.leon.counter_reading.utils.CustomToast;
 
 public class LocationTrackingGps extends Service implements LocationListener, ILocationTracking {
     private static LocationTrackingGps instance = null;
@@ -30,7 +34,7 @@ public class LocationTrackingGps extends Service implements LocationListener, IL
         getLocation();
     }
 
-//    public static LocationTrackingGps getInstance() {
+    //    public static LocationTrackingGps getInstance() {
 //        return instance;
 //    }
     public static synchronized LocationTrackingGps getInstance() {
@@ -103,6 +107,7 @@ public class LocationTrackingGps extends Service implements LocationListener, IL
         return location;
     }
 
+    @Override
     public double getLatitude() {
         if (location != null) {
             latitude = location.getLatitude();
@@ -110,6 +115,7 @@ public class LocationTrackingGps extends Service implements LocationListener, IL
         return latitude;
     }
 
+    @Override
     public double getLongitude() {
         if (location != null) {
             longitude = location.getLongitude();
@@ -144,7 +150,29 @@ public class LocationTrackingGps extends Service implements LocationListener, IL
 
     @Override
     public void onLocationChanged(Location location) {
-        instance.addLocation(location);
+        if (location != null)
+            try {
+                instance.addLocation(location);
+            } catch (Exception e) {
+                Log.e("error", e.getMessage());
+            }
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.e("onStatusChanged", String.valueOf(status));
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+        new CustomToast().error("مکانیابی شما با مشکل مواجه شده است. \nپیش از ادامه ی کار موضوع را به پشتیبان اطلاع دهید.", Toast.LENGTH_LONG);
+        Log.e("onStatusChanged", provider);
     }
 
     public void stopListener() {
@@ -152,7 +180,6 @@ public class LocationTrackingGps extends Service implements LocationListener, IL
             locationManager.removeUpdates(LocationTrackingGps.this);
         }
     }
-
 
     public static void setInstance(LocationTrackingGps instance) {
         LocationTrackingGps.instance = instance;

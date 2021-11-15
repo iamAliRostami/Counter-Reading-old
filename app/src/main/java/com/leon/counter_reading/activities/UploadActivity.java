@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class UploadActivity extends BaseActivity {
     private ActivityUploadBinding binding;
     private int previousState, currentState;
-    private ArrayList<TrackingDto> trackingDtos;
+    private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
 
     public ArrayList<TrackingDto> getTrackingDtos() {
         return trackingDtos;
@@ -81,7 +81,8 @@ public class UploadActivity extends BaseActivity {
     }
 
     public void setupUI(ArrayList<TrackingDto> trackingDtos) {
-        this.trackingDtos = new ArrayList<>(trackingDtos);
+        this.trackingDtos.clear();
+        this.trackingDtos.addAll(trackingDtos);
         runOnUiThread(() -> {
             setupViewPager();
             initializeTextViews();

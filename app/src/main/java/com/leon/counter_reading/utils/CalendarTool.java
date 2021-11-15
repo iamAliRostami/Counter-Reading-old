@@ -88,7 +88,6 @@ public class CalendarTool {
         }
         Date date1 = new Date();
         long difference = Math.abs(date1.getTime() - Objects.requireNonNull(convertedDate).getTime());
-        Log.e("difference date", String.valueOf(difference / (24 * 60 * 60 * 1000)));
         return difference / (24 * 60 * 60 * 1000);
     }
 

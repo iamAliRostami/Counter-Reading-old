@@ -29,7 +29,6 @@ public class Counting {
         double average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate);
         double preAverage = onOffLoadDto.preAverage;
         int difference = currentNumber - onOffLoadDto.preNumber;
-        Log.e("difference ", String.valueOf(difference));
         /**
          * if (karbariDto.isMaskooni && karbariDto.isTejari) {
          // فرمول میانگین گیری عجیب احتمالا
@@ -39,18 +38,15 @@ public class Counting {
              * ضرایب
              */
             average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate, onOffLoadDto.ahadMaskooniOrAsli);
-            Log.e("averageMaskooni", String.valueOf(average));
 
             if (readingConfigDefaultDto.highConstBoundMaskooni < difference)
                 return 1;
             else if (readingConfigDefaultDto.lowConstBoundMaskooni > difference)
                 return -1;
             double highBoundMaskooni = (preAverage + ((double) readingConfigDefaultDto.highPercentBoundMaskooni / 100) * preAverage);
-            Log.e("highBoundMaskooni", String.valueOf(highBoundMaskooni));
             if (highBoundMaskooni < average)
                 return 1;
             double lowBoundMaskooni = (preAverage - ((double) readingConfigDefaultDto.lowPercentBoundMaskooni / 100) * preAverage);
-            Log.e("lowBoundMaskooni", String.valueOf(lowBoundMaskooni));
             if (lowBoundMaskooni > average)
                 return -1;
 //            else if ((100 + readingConfigDefaultDto.highPercentBoundMaskooni) * preAverage < (average * 100))
@@ -62,17 +58,14 @@ public class Counting {
              * محاسبه فقط تجاری ساده با ظرفیت
              */
             average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate/*, onOffLoadDto.ahadTejariOrFari*/);
-            Log.e("averageTejari", String.valueOf(average));
             double lowBoundRate = onOffLoadDto.zarfiat -
                     ((double) readingConfigDefaultDto.lowPercentZarfiatBound / 100) * onOffLoadDto.zarfiat;
-            Log.e("lowBoundRateTejari", String.valueOf(lowBoundRate));
 
             if (average < lowBoundRate)
                 return -1;
             double highBoundRate = onOffLoadDto.zarfiat +
                     ((double) readingConfigDefaultDto.highPercentZarfiatBound / 100) * onOffLoadDto.zarfiat;
 
-            Log.e("highBoundRate", String.valueOf(highBoundRate));
             if (average > highBoundRate)
                 return 1;
 

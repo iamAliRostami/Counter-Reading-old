@@ -3,9 +3,6 @@ package com.leon.counter_reading.helpers;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
-import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
-import com.leon.counter_reading.tables.ReadingData;
-
 import java.util.ArrayList;
 
 public class Constants {
@@ -37,6 +34,4 @@ public class Constants {
 
     public static boolean FOCUS_ON_EDIT_TEXT;
     public static final ArrayList<Integer> IS_MANE = new ArrayList<>();
-//    public static ReadingData readingData, readingDataTemp;
-//    public static SpinnerCustomAdapter adapter;
 }

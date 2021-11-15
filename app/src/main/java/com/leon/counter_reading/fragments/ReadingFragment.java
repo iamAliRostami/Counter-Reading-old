@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
@@ -164,9 +163,9 @@ public class ReadingFragment extends Fragment {
         });
         binding.textViewAddress.setOnLongClickListener(v -> {
 
-        ShowFragmentDialog.ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG",
-                PossibleFragment.newInstance(onOffLoadDto,
-                        position, true));
+            ShowFragmentDialog.ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG",
+                    PossibleFragment.newInstance(onOffLoadDto,
+                            position, true));
 //            PossibleFragment possibleFragment = PossibleFragment.newInstance(onOffLoadDto,
 //                    position, true);
 //            possibleFragment.show(getChildFragmentManager(), getString(R.string.dynamic_navigation));
@@ -375,7 +374,7 @@ public class ReadingFragment extends Fragment {
         }
         if (type != null) {
             ShowFragmentDialog.ShowFragmentDialogOnce(activity, "ARE_YOU_SURE_DIALOG",
-                    AreYouSureFragment.newInstance(position,currentNumber, type, counterStateCode,
+                    AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
                             counterStatePosition));
         }
     }
@@ -403,7 +402,7 @@ public class ReadingFragment extends Fragment {
         }
         if (type != null) {
             ShowFragmentDialog.ShowFragmentDialogOnce(activity, "ARE_YOU_SURE_DIALOG",
-                    AreYouSureFragment.newInstance(position,currentNumber, type, counterStateCode,
+                    AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
                             counterStatePosition));
         }
     }
@@ -419,7 +418,7 @@ public class ReadingFragment extends Fragment {
                     ReadingConfigDefaultDto.class);
             karbariDto = gson.fromJson(getArguments()
                     .getString(BundleEnum.KARBARI_DICTONARY.getValue()), KarbariDto.class);
-            ArrayList<String> json1 = getArguments()
+            final ArrayList<String> json1 = getArguments()
                     .getStringArrayList(BundleEnum.COUNTER_STATE.getValue());
             counterStateDtos.clear();
             for (String s : json1) {

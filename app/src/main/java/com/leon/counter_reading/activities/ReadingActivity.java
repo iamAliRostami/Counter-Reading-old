@@ -13,7 +13,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Debug;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,13 +21,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.gson.Gson;
@@ -68,11 +63,13 @@ import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByAttemptNumber;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByIsShown;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadDtoByLock;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.util.ArrayList;
 
 public class ReadingActivity extends BaseActivity {
     private final ReadingData readingData = new ReadingData(), readingDataTemp = new ReadingData();
-    private int[] imageSrc = new int[15];
+    private int[] imageSrc;
     private ActivityReadingBinding binding;
     private Activity activity;
     private IFlashLightManager flashLightManager;
@@ -89,7 +86,7 @@ public class ReadingActivity extends BaseActivity {
         parentLayout.addView(childLayout);
         activity = this;
         sharedPreferenceManager = MyApplication.getApplicationComponent().SharedPreferenceModel();
-        imageSrc = ReadingUtils.setAboveIcons();
+        imageSrc = ArrayUtils.clone(ReadingUtils.setAboveIcons());
         getBundle();
         setOnImageViewsClickListener();
         new GetReadingDBData(activity, readStatus, highLow, sharedPreferenceManager.
@@ -305,6 +302,7 @@ public class ReadingActivity extends BaseActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                getIntent().getExtras();
                 final String number = (binding.viewPager.getCurrentItem() + 1) + "/" + readingData.onOffLoadDtos.size();
                 runOnUiThread(() -> binding.textViewPageNumber.setText(number));
                 setAboveIconsSrc(position);
@@ -402,36 +400,52 @@ public class ReadingActivity extends BaseActivity {
 
     private void setExceptionImage(int position) {
         int src = ReadingUtils.setExceptionImage(readingData, position);
-        binding.imageViewExceptionState.setVisibility(View.GONE);
-        if (src > -1) {
-            binding.imageViewExceptionState.setVisibility(View.VISIBLE);
-            binding.imageViewExceptionState.setImageResource(imageSrc[src]);
+        try {
+            binding.imageViewExceptionState.setVisibility(View.GONE);
+            if (src > -1) {
+                binding.imageViewExceptionState.setVisibility(View.VISIBLE);
+                binding.imageViewExceptionState.setImageResource(imageSrc[src]);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void setIsBazdidImage(int position) {
-        if (readingData.onOffLoadDtos.get(position).isBazdid)
-            binding.imageViewReadingType.setImageResource(imageSrc[6]);
-        else binding.imageViewReadingType.setImageResource(imageSrc[7]);
+        try {
+            if (readingData.onOffLoadDtos.get(position).isBazdid)
+                binding.imageViewReadingType.setImageResource(imageSrc[6]);
+            else binding.imageViewReadingType.setImageResource(imageSrc[7]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setReadStatusImage(int position) {
-        binding.imageViewOffLoadState.setImageResource(imageSrc[readingData.onOffLoadDtos
-                .get(position).offLoadStateId]);
-        if (readingData.onOffLoadDtos.get(position).offLoadStateId == 0)
-            binding.imageViewOffLoadState.setImageResource(imageSrc[8]);
+        try {
+            binding.imageViewOffLoadState.setImageResource(imageSrc[readingData.onOffLoadDtos
+                    .get(position).offLoadStateId]);
+            if (readingData.onOffLoadDtos.get(position).offLoadStateId == 0)
+                binding.imageViewOffLoadState.setImageResource(imageSrc[8]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setHighLowImage(int position) {
-        binding.imageViewHighLowState.setImageResource(imageSrc[readingData.onOffLoadDtos
-                .get(position).highLowStateId]);
+        try {
+            binding.imageViewHighLowState.setImageResource(imageSrc[readingData.onOffLoadDtos
+                    .get(position).highLowStateId]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void getBundle() {
         if (getIntent().getExtras() != null) {
             readStatus = getIntent().getIntExtra(BundleEnum.READ_STATUS.getValue(), 0);
             highLow = getIntent().getIntExtra(BundleEnum.TYPE.getValue(), 1);
-            ArrayList<String> json = getIntent().getExtras().getStringArrayList(
+            final ArrayList<String> json = getIntent().getExtras().getStringArrayList(
                     BundleEnum.IS_MANE.getValue());
             getIntent().getExtras().clear();
             new GetBundle(json).execute();

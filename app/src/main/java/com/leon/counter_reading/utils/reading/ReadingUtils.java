@@ -10,7 +10,7 @@ public class ReadingUtils {
      * Create above image icons resource
      **/
     static public int[] setAboveIcons() {
-        int[] imageSrc = new int[15];
+        final int[] imageSrc = new int[15];
         imageSrc[0] = R.drawable.img_default_level;
         imageSrc[1] = R.drawable.img_normal_level;
         imageSrc[2] = R.drawable.img_high_level;
@@ -30,27 +30,31 @@ public class ReadingUtils {
     }
 
     static public int setExceptionImage(ReadingData readingData, int position) {
-        for (int i = 0; i < readingData.counterStateDtos.size(); i++) {
-            if (readingData.counterStateDtos.get(i).moshtarakinId ==
-                    readingData.onOffLoadDtos.get(position).preCounterStateCode &&
-                    readingData.counterStateDtos.get(i).isXarab) {
-                return 14;
+        try {
+            for (int i = 0; i < readingData.counterStateDtos.size(); i++) {
+                if (readingData.counterStateDtos.get(i).moshtarakinId ==
+                        readingData.onOffLoadDtos.get(position).preCounterStateCode &&
+                        readingData.counterStateDtos.get(i).isXarab) {
+                    return 14;
+                }
             }
-        }
 
-        for (int i = 0; i < readingData.karbariDtos.size(); i++) {
-            if (readingData.karbariDtos.get(i).moshtarakinId ==
-                    readingData.onOffLoadDtos.get(position).karbariCode &&
-                    readingData.karbariDtos.get(i).isSaxt) {
+            for (int i = 0; i < readingData.karbariDtos.size(); i++) {
+                if (readingData.karbariDtos.get(i).moshtarakinId ==
+                        readingData.onOffLoadDtos.get(position).karbariCode &&
+                        readingData.karbariDtos.get(i).isSaxt) {
+                    return 13;
+                }
+            }
+            if (readingData.onOffLoadDtos.get(position).noeVagozariId == 4) {
                 return 13;
             }
-        }
-        if (readingData.onOffLoadDtos.get(position).noeVagozariId == 4) {
-            return 13;
-        }
 
-        if (readingData.onOffLoadDtos.get(position).hazf > 0) {
-            return 12;
+            if (readingData.onOffLoadDtos.get(position).hazf > 0) {
+                return 12;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return -1;
     }
