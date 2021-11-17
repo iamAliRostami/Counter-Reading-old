@@ -25,8 +25,9 @@ import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.tables.ReadingData;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,6 +42,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Random;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -64,7 +67,6 @@ public class CustomFile {
             return null;
         }
     }
-
 
     @SuppressLint("SimpleDateFormat")
     public static MultipartBody.Part bitmapToFile(Bitmap bitmap, Context context) {
@@ -96,24 +98,12 @@ public class CustomFile {
     public static byte[] compressBitmapToByte(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        Log.e("size 3", String.valueOf(stream.toByteArray().length));
-//        if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
-//            int qualityPercent = Math.max((int) ((double)
-//                    stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
-//            bitmap = Bitmap.createScaledBitmap(bitmap
-//                    , (int) ((double) bitmap.getWidth() * qualityPercent / 100)
-//                    , (int) ((double) bitmap.getHeight() * qualityPercent / 100), false);
-//            stream = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-//        }
-//        Log.e("size 4", String.valueOf(stream.toByteArray().length));
         return stream.toByteArray();
     }
 
     public static Bitmap compressBitmap(Bitmap original) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        Log.e("size 1", String.valueOf(stream.toByteArray().length));
         if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
             int qualityPercent = Math.max((int) ((double)
                     stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
@@ -121,9 +111,8 @@ public class CustomFile {
                     , (int) ((double) original.getWidth() * qualityPercent / 100)
                     , (int) ((double) original.getHeight() * qualityPercent / 100), false);
             stream = new ByteArrayOutputStream();
-            original.compress(Bitmap.CompressFormat.JPEG, /*qualityPercent*/100, stream);
+            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         }
-        Log.e("size 2", String.valueOf(stream.toByteArray().length));
         return original;
 
     }
@@ -180,6 +169,7 @@ public class CustomFile {
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
     }
+
     @SuppressLint({"SimpleDateFormat"})
     public static File createImageFileOld(Context context) throws IOException {
         String timeStamp = (new SimpleDateFormat(context.getString(R.string.save_format_name))).format(new Date());
@@ -224,43 +214,6 @@ public class CustomFile {
         return MultipartBody.Part.createFormData("FILE", file.getName(), requestFile);
     }
 
-    static File findFile(File dir, String name) {
-        File[] children = dir.listFiles();
-        if (children != null) {
-            for (File child : children) {
-                if (child.isDirectory()) {
-                    File found = findFile(child, name);
-                    if (found != null) return found;
-                } else {
-                    if (name.equals(child.getName())) return child;
-                }
-            }
-        }
-        return null;
-    }
-
-    public static ReadingData readData() {
-        File root = Environment.getExternalStorageDirectory();
-        File file = findFile(root, "json.txt");
-
-        StringBuilder text = new StringBuilder();
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = br.readLine()) != null) {
-                text.append(line);
-                text.append('\n');
-            }
-            br.close();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
-        String json = text.toString();
-//        Log.e("json", json);
-
-        Gson gson = new GsonBuilder().create();
-        return gson.fromJson(json, ReadingData.class);
-    }
 
     @SuppressLint({"SimpleDateFormat", "SetTextI18n"})
     public static boolean writeResponseApkToDisk(ResponseBody body, Activity activity) {
@@ -279,9 +232,6 @@ public class CustomFile {
                         DifferentCompanyManager.getActiveCompanyName().toString() +
                         "_" + timeStamp + ".apk";
                 File futureStudioIconFile = new File(storageDir, fileName);
-//                String root = Environment.getExternalStorageDirectory().toString();
-//                File futureStudioIconFile = new File(root +
-//                        File.separator + "Download" + File.separator + fileName);
                 InputStream inputStream = null;
                 OutputStream outputStream = null;
                 try {
@@ -344,5 +294,40 @@ public class CustomFile {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         activity.startActivity(intent);
+    }
+    public static File findFile(File dir, String name) {
+        File[] children = dir.listFiles();
+        if (children != null) {
+            for (File child : children) {
+                if (child.isDirectory()) {
+                    File found = findFile(child, name);
+                    if (found != null) return found;
+                } else {
+                    if (name.equals(child.getName())) return child;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static ReadingData readData() {
+        File root = Environment.getExternalStorageDirectory();
+        File file = findFile(root, "json.txt");
+
+        StringBuilder text = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+            }
+            br.close();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        String json = text.toString();
+        Gson gson = new GsonBuilder().create();
+        return gson.fromJson(json, ReadingData.class);
     }
 }

@@ -1,8 +1,11 @@
 package com.leon.counter_reading.fragments;
 
+import static com.leon.counter_reading.utils.OfflineUtils.getStorageDirectories;
+import static com.leon.counter_reading.utils.OfflineUtils.writeOnSdCard;
+
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import com.leon.counter_reading.databinding.FragmentUploadBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.DialogType;
+import com.leon.counter_reading.enums.UploadType;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.CustomToast;
@@ -33,7 +37,7 @@ public class UploadFragment extends Fragment {
     private FragmentUploadBinding binding;
     private Activity activity;
     private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
-    private int[] imageSrc = {R.drawable.img_upload_on, R.drawable.img_upload_off,
+    private final int[] imageSrc = {R.drawable.img_upload_on, R.drawable.img_upload_off,
             R.drawable.img_multimedia};
     private int type;
     private String[] items;
@@ -71,7 +75,7 @@ public class UploadFragment extends Fragment {
     }
 
     private void initialize() {
-        if (type == 3) {
+        if (type == UploadType.MULTIMEDIA.getValue()) {
             binding.spinner.setVisibility(View.GONE);
             binding.textViewMultimedia.setVisibility(View.VISIBLE);
             setMultimediaInfo(activity);
@@ -79,7 +83,7 @@ public class UploadFragment extends Fragment {
             items = TrackingDto.getTrackingDtoItems(trackingDtos, getString(R.string.select_one));
             setupSpinner();
         }
-        binding.imageViewUpload.setImageResource(imageSrc[type - 1]);
+        binding.imageViewUpload.setImageResource(imageSrc[type]);
         setOnButtonUploadClickListener();
     }
 
@@ -137,28 +141,31 @@ public class UploadFragment extends Fragment {
 
     private void setOnButtonUploadClickListener() {
         binding.buttonUpload.setOnClickListener(v -> {
-            if (type == 1 || type == 2) {
+            if (type == UploadType.NORMAL.getValue()) {
                 if (checkOnOffLoad())
                     new PrepareOffLoad(activity,
                             trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
                             trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id).
                             execute(activity);
-            } else if (type == 3) {
+            } else if (type == UploadType.OFFLINE.getValue()) {
+                String[] retArray = getStorageDirectories();
+                if (retArray.length == 0) {
+                    Log.e("state", "Sdcard not Exists");
+                } else {
+                    for (String s : retArray) {
+                        Log.e("path ", s);
+                        writeOnSdCard(s);
+                    }
+                }
+            } else if (type == UploadType.MULTIMEDIA.getValue()) {
                 new PrepareMultimedia(activity, this, false).execute(activity);
             }
         });
     }
 
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//        binding.imageViewUpload.setImageDrawable(null);
-//    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        imageSrc = null;
         trackingDtos.clear();
         items = null;
     }

@@ -1,6 +1,8 @@
 package com.leon.counter_reading.base_items;
 
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
+import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
+import static com.leon.counter_reading.helpers.Constants.PHOTO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.POSITION;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_WIFI_CODE;
@@ -9,7 +11,6 @@ import static com.leon.counter_reading.utils.PermissionManager.checkCameraPermis
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -63,8 +64,8 @@ import com.leon.counter_reading.utils.PermissionManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class BaseActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener {
     private Activity activity;
     private Toolbar toolbar;
     private ActivityBaseBinding binding;
@@ -98,7 +99,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     private void checkPermissions() {
         if (PermissionManager.gpsEnabled(this))
-            if (checkLocationPermission(getApplicationContext())) {
+            if (!checkLocationPermission(getApplicationContext())) {
                 askLocationPermission();
             } else if (!checkCameraPermission(getApplicationContext())) {
                 askStoragePermission();
@@ -127,11 +128,7 @@ public abstract class BaseActivity extends AppCompatActivity
                 .setDeniedMessage(getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(getString(R.string.close))
                 .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).check();
+                .setPermissions(PHOTO_PERMISSIONS).check();
     }
 
     private void askLocationPermission() {
@@ -147,7 +144,6 @@ public abstract class BaseActivity extends AppCompatActivity
 
             @Override
             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-
                 PermissionManager.forceClose(activity);
             }
         };
@@ -158,10 +154,7 @@ public abstract class BaseActivity extends AppCompatActivity
                 .setDeniedMessage(getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(getString(R.string.close))
                 .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                ).check();
+                .setPermissions(LOCATION_PERMISSIONS).check();
     }
 
     @Override
@@ -318,13 +311,6 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
         if (exit)
             android.os.Process.killProcess(android.os.Process.myPid());
         super.onDestroy();

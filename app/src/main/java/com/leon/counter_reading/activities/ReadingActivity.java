@@ -12,6 +12,7 @@ import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Debug;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -302,7 +303,8 @@ public class ReadingActivity extends BaseActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                getIntent().getExtras();
+                if (getIntent().getExtras() != null)
+                    getIntent().getExtras().clear();
                 final String number = (binding.viewPager.getCurrentItem() + 1) + "/" + readingData.onOffLoadDtos.size();
                 runOnUiThread(() -> binding.textViewPageNumber.setText(number));
                 setAboveIconsSrc(position);
@@ -362,8 +364,13 @@ public class ReadingActivity extends BaseActivity {
             if (isShowing) {
                 isShowing = false;
                 makeRing(activity, NotificationType.SAVE);
-                new Update(readingData.onOffLoadDtos.get(position), getLocationTracker(activity).getCurrentLocation())
-                        .execute(activity);
+                Location location = null;
+                try {
+                    location = getLocationTracker(activity).getCurrentLocation();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                new Update(readingData.onOffLoadDtos.get(position), location).execute(activity);
                 new PrepareToSend(readingData.onOffLoadDtos, readingDataTemp.onOffLoadDtos,
                         sharedPreferenceManager.getStringData(SharedReferenceKeys.TOKEN.getValue()))
                         .execute(activity);

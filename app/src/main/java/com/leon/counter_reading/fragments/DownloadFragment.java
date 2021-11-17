@@ -1,7 +1,11 @@
 package com.leon.counter_reading.fragments;
 
-import android.content.Context;
+import static com.leon.counter_reading.utils.OfflineUtils.getStorageDirectories;
+import static com.leon.counter_reading.utils.OfflineUtils.readFromSdCard;
+import static com.leon.counter_reading.utils.OfflineUtils.writeOnSdCard;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentDownloadBinding;
 import com.leon.counter_reading.enums.BundleEnum;
+import com.leon.counter_reading.enums.DownloadType;
 import com.leon.counter_reading.utils.downloading.Download;
 
 import org.jetbrains.annotations.NotNull;
@@ -46,12 +51,26 @@ public class DownloadFragment extends Fragment {
     }
 
     void initialize() {
-        binding.imageViewDownload.setImageResource(imageSrc[type - 1]);
+        binding.imageViewDownload.setImageResource(imageSrc[type]);
         setOnButtonDownloadClickListener();
     }
 
     void setOnButtonDownloadClickListener() {
-        binding.buttonDownload.setOnClickListener(v -> new Download().execute(requireActivity()));
+        binding.buttonDownload.setOnClickListener(v -> {
+            if (type == DownloadType.OFFLINE.getValue()) {
+                String[] retArray = getStorageDirectories();
+                if (retArray.length == 0) {
+                    Log.e("state", "Sdcard not Exists");
+                } else {
+                    for (String s : retArray) {
+                        Log.e("path ", s);
+                        readFromSdCard(s);
+                    }
+                }
+            } else {
+                new Download().execute(requireActivity());
+            }
+        });
     }
 
     @Override

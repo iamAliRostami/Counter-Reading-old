@@ -13,6 +13,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ViewPagerAdapterTab;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityDownloadBinding;
+import com.leon.counter_reading.enums.DownloadType;
 import com.leon.counter_reading.fragments.DownloadFragment;
 import com.leon.counter_reading.utils.DepthPageTransformer;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
@@ -31,7 +32,7 @@ public class DownloadActivity extends BaseActivity {
         initializeTextViews();
     }
 
-    void initializeTextViews() {
+    private void initializeTextViews() {
         TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
 
@@ -41,43 +42,43 @@ public class DownloadActivity extends BaseActivity {
         textViewDownloadRetry();
     }
 
-    void textViewDownloadOff() {
-        binding.textViewDownloadOff.setOnClickListener(view -> {
-            setColor();
-            binding.textViewDownloadOff.setBackground(
-                    ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_white_2));
-            setPadding();
-            binding.viewPager.setCurrentItem(2);
-        });
-    }
-
-    void textViewDownloadRetry() {
-        binding.textViewDownloadRetry.setOnClickListener(view -> {
-            setColor();
-            binding.textViewDownloadRetry.setBackground(
-                    ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_white_2));
-            setPadding();
-            binding.viewPager.setCurrentItem(1);
-        });
-    }
-
-    void textViewDownloadSpecial() {
-        binding.textViewDownloadSpecial.setOnClickListener(view -> {
-            setColor();
-            binding.textViewDownloadSpecial.setBackground(ContextCompat.getDrawable(
-                    getApplicationContext(), R.drawable.border_white_2));
-            setPadding();
-            binding.viewPager.setCurrentItem(3);
-        });
-    }
-
-    void textViewDownloadNormal() {
+    private void textViewDownloadNormal() {
         binding.textViewDownloadNormal.setOnClickListener(view -> {
             setColor();
             binding.textViewDownloadNormal.setBackground(ContextCompat.getDrawable(
                     getApplicationContext(), R.drawable.border_white_2));
             setPadding();
-            binding.viewPager.setCurrentItem(0);
+            binding.viewPager.setCurrentItem(DownloadType.NORMAL.getValue());
+        });
+    }
+
+    private void textViewDownloadRetry() {
+        binding.textViewDownloadRetry.setOnClickListener(view -> {
+            setColor();
+            binding.textViewDownloadRetry.setBackground(
+                    ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_white_2));
+            setPadding();
+            binding.viewPager.setCurrentItem(DownloadType.RETRY.getValue());
+        });
+    }
+
+    private void textViewDownloadOff() {
+        binding.textViewDownloadOff.setOnClickListener(view -> {
+            setColor();
+            binding.textViewDownloadOff.setBackground(
+                    ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_white_2));
+            setPadding();
+            binding.viewPager.setCurrentItem(DownloadType.OFFLINE.getValue());
+        });
+    }
+
+    private void textViewDownloadSpecial() {
+        binding.textViewDownloadSpecial.setOnClickListener(view -> {
+            setColor();
+            binding.textViewDownloadSpecial.setBackground(ContextCompat.getDrawable(
+                    getApplicationContext(), R.drawable.border_white_2));
+            setPadding();
+            binding.viewPager.setCurrentItem(DownloadType.SPECIAL.getValue());
         });
     }
 
@@ -112,12 +113,11 @@ public class DownloadActivity extends BaseActivity {
     }
 
     private void setupViewPager() {
-        ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager()
-        );
-        adapter.addFragment(DownloadFragment.newInstance(1));
-        adapter.addFragment(DownloadFragment.newInstance(2));
-        adapter.addFragment(DownloadFragment.newInstance(3));
-        adapter.addFragment(DownloadFragment.newInstance(4));
+        ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
+        adapter.addFragment(DownloadFragment.newInstance(DownloadType.NORMAL.getValue()));
+        adapter.addFragment(DownloadFragment.newInstance(DownloadType.RETRY.getValue()));
+        adapter.addFragment(DownloadFragment.newInstance(DownloadType.OFFLINE.getValue()));
+        adapter.addFragment(DownloadFragment.newInstance(DownloadType.SPECIAL.getValue()));
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

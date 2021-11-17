@@ -13,7 +13,6 @@ import dagger.Component;
 @Singleton
 @Component(modules = {CustomDialogModule.class, LocationTrackingModule.class})
 public interface ActivityComponent {
-
     LovelyStandardDialog LovelyStandardDialog();
 
     LocationTrackingGps LocationTrackingGps();

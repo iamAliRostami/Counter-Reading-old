@@ -3,6 +3,8 @@ package com.leon.counter_reading.activities;
 import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GALLERY_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
+import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
+import static com.leon.counter_reading.helpers.Constants.PHOTO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_WIFI_CODE;
@@ -74,7 +76,7 @@ public class ReportForbidActivity extends AppCompatActivity {
 
     private void checkPermissions() {
         if (PermissionManager.gpsEnabled(this))
-            if (PermissionManager.checkLocationPermission(getApplicationContext())) {
+            if (!PermissionManager.checkLocationPermission(getApplicationContext())) {
                 askLocationPermission();
             } else if (!PermissionManager.checkCameraPermission(getApplicationContext())) {
                 askCameraPermission();
@@ -103,10 +105,7 @@ public class ReportForbidActivity extends AppCompatActivity {
                 .setDeniedMessage(getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(getString(R.string.close))
                 .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                ).check();
+                .setPermissions(LOCATION_PERMISSIONS).check();
     }
 
     private void askCameraPermission() {
@@ -129,11 +128,7 @@ public class ReportForbidActivity extends AppCompatActivity {
                 .setDeniedMessage(getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(getString(R.string.close))
                 .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).check();
+                .setPermissions(PHOTO_PERMISSIONS).check();
     }
 
     private void initialize() {

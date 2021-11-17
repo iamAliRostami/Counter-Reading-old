@@ -5,6 +5,7 @@ import static android.os.Build.UNKNOWN;
 import static com.leon.counter_reading.helpers.Constants.CARRIER_PRIVILEGE_STATUS;
 import static com.leon.counter_reading.helpers.Constants.FONT_NAME;
 import static com.leon.counter_reading.helpers.Constants.TOAST_TEXT_SIZE;
+import static com.leon.counter_reading.utils.PermissionManager.hasCarrierPrivileges;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -122,7 +123,7 @@ public class MyApplication extends Application {
     }
 
     public static void setActivityComponent(Activity activity) {
-        MyApplication.activityComponent = DaggerActivityComponent
+        activityComponent = DaggerActivityComponent
                 .builder()
                 .customDialogModule(new CustomDialogModule(activity))
                 .locationTrackingModule(new LocationTrackingModule(activity))
@@ -196,23 +197,6 @@ public class MyApplication extends Application {
             serial = Settings.Secure.getString(new ContextWrapper(activity).getContentResolver(),
                     Settings.Secure.ANDROID_ID);
         return serial;
-    }
-
-    private static boolean hasCarrierPrivileges(Activity activity) {
-        TelephonyManager tm = (TelephonyManager)
-                new ContextWrapper(activity).getSystemService(TELEPHONY_SERVICE);
-        boolean isCarrier = tm.hasCarrierPrivileges();
-        if (!isCarrier) {
-            int hasPermission = ActivityCompat.checkSelfPermission(activity,
-                    "android.permission.READ_PRIVILEGED_PHONE_STATE");
-            if (hasPermission != PackageManager.PERMISSION_GRANTED) {
-                if (!activity.shouldShowRequestPermissionRationale("android.permission.READ_PRIVILEGED_PHONE_STATE")) {
-                    ActivityCompat.requestPermissions(activity, new String[]{
-                            "android.permission.READ_PRIVILEGED_PHONE_STATE"}, CARRIER_PRIVILEGE_STATUS);
-                }
-            }
-        }
-        return isCarrier;
     }
 
 

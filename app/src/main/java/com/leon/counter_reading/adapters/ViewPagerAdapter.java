@@ -1,7 +1,12 @@
 package com.leon.counter_reading.adapters;
 
+import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
+import static com.leon.counter_reading.helpers.Constants.STORAGE_PERMISSIONS;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
+import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
+import static com.leon.counter_reading.utils.PermissionManager.checkStoragePermission;
+import static com.leon.counter_reading.utils.PermissionManager.gpsEnabledNew;
 
 import android.Manifest;
 import android.app.Activity;
@@ -225,10 +230,10 @@ public class ViewPagerAdapter extends PagerAdapter {
     }
 
     private void checkPermissions(ViewHolderReading holder, int position) {
-        if (PermissionManager.gpsEnabledNew(activity))
-            if (PermissionManager.checkLocationPermission(getContext())) {
+        if (gpsEnabledNew(activity))
+            if (!checkLocationPermission(getContext())) {
                 askLocationPermission(holder, position);
-            } else if (PermissionManager.checkStoragePermission(getContext())) {
+            } else if (!checkStoragePermission(getContext())) {
                 askStoragePermission(holder, position);
             } else {
                 //TODO
@@ -267,8 +272,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                 .setDeniedMessage(activity.getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(activity.getString(R.string.close))
                 .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION).check();
+                .setPermissions(LOCATION_PERMISSIONS).check();
     }
 
     private void askStoragePermission(ViewHolderReading holder, int position) {
@@ -291,9 +295,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                 .setDeniedMessage(activity.getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(activity.getString(R.string.close))
                 .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(Manifest.permission.CAMERA,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
+                .setPermissions(STORAGE_PERMISSIONS).check();
     }
 
     public void attemptSend(ViewHolderReading holder, int position) {

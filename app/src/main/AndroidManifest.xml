@@ -23,20 +23,19 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.STORAGE" />
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage"
-        tools:remove="android:maxSdkVersion" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.Manifest.permission.READ_PRIVILEGED_PHONE_STATE" />
     <uses-permission
         android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
         tools:ignore="ProtectedPermissions" />
+<!--    <uses-permission android:name="android.Manifest.permission.READ_PRIVILEGED_PHONE_STATE" />-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.STORAGE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
     <uses-feature android:name="android.hardware.camera.flash" />
     <uses-feature
@@ -124,11 +123,14 @@
             android:label="@string/upload_information" />
         <activity
             android:name=".activities.DownloadActivity"
-            android:label="@string/download_information" />
+            android:exported="true"
+            android:label="@string/download_information">
+
+        </activity>
         <activity
             android:name=".activities.ReadingActivity"
-            android:screenOrientation="fullSensor"
-            android:label="" />
+            android:label=""
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.LocationActivity"
             android:label="@string/location" />
@@ -152,7 +154,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
 
         <meta-data
             android:name="io.sentry.debug"
@@ -165,7 +167,7 @@
             android:value="https://f65129b578e14ab78eb8054e4f497c51@o1017694.ingest.sentry.io/5983684" />
         <meta-data
             android:name="com.bugsnag.android.API_KEY"
-            android:value="59d371febd1113dd4863e3f8bcac9ddd"/>
+            android:value="59d371febd1113dd4863e3f8bcac9ddd" />
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
             android:value="true" />
@@ -185,6 +187,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />

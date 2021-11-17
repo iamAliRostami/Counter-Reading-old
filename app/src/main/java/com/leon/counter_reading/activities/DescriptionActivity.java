@@ -1,6 +1,10 @@
 package com.leon.counter_reading.activities;
 
-import android.Manifest;
+import static com.leon.counter_reading.helpers.Constants.RECORD_AUDIO_PERMISSIONS;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
+import static com.leon.counter_reading.utils.PermissionManager.checkRecorderPermission;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -20,11 +24,11 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityDescriptionBinding;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.Voice;
 import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
@@ -48,22 +52,22 @@ public class DescriptionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MyApplication.onActivitySetTheme(this, MyApplication.getApplicationComponent()
+        MyApplication.onActivitySetTheme(this, getApplicationComponent()
                         .SharedPreferenceModel().getIntData(SharedReferenceKeys.THEME_STABLE.getValue()),
                 true);
         super.onCreate(savedInstanceState);
         binding = ActivityDescriptionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
+        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        textViewCompanyName.setText(getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
 
         activity = this;
-        if (PermissionManager.checkRecorderPermission(getApplicationContext()))
+        if (checkRecorderPermission(getApplicationContext()))
             initialize();
         else askRecorderPermission();
     }
 
-    void initialize() {
+    private void initialize() {
         if (getIntent().getExtras() != null) {
             uuid = getIntent().getExtras().getString(BundleEnum.BILL_ID.getValue());
             position = getIntent().getExtras().getInt(BundleEnum.POSITION.getValue());
@@ -71,8 +75,8 @@ public class DescriptionActivity extends AppCompatActivity {
             description = getIntent().getExtras().getString(BundleEnum.DESCRIPTION.getValue());
             getIntent().getExtras().clear();
         }
-        binding.imageViewRecord.setImageDrawable(AppCompatResources.
-                getDrawable(activity, R.drawable.img_record));
+        binding.imageViewRecord.setImageDrawable(AppCompatResources.getDrawable(activity,
+                R.drawable.img_record));
         checkMultimediaAndToggle();
         setImageViewRecordClickListener();
         setImageViewPausePlayClickListener();
@@ -81,7 +85,7 @@ public class DescriptionActivity extends AppCompatActivity {
     }
 
     @SuppressLint({"ClickableViewAccessibility"})
-    void setImageViewRecordClickListener() {
+    private void setImageViewRecordClickListener() {
         binding.imageViewRecord.setLongClickable(true);
         binding.imageViewRecord.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -132,7 +136,7 @@ public class DescriptionActivity extends AppCompatActivity {
         });
     }
 
-    void stopPlaying() {
+    private void stopPlaying() {
         play = false;
         if (voice.id == 0)
             binding.imageViewRecord.setEnabled(true);
@@ -148,16 +152,15 @@ public class DescriptionActivity extends AppCompatActivity {
         }
     }
 
-    void setupMediaRecorder() {
+    private void setupMediaRecorder() {
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-//        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         mediaRecorder.setOutputFile(voice.address);
     }
 
-    void setSeekBarChangeListener() {
+    private void setSeekBarChangeListener() {
         binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChangedValue = 0;
 
@@ -184,7 +187,7 @@ public class DescriptionActivity extends AppCompatActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    void setImageViewPausePlayClickListener() {
+    private void setImageViewPausePlayClickListener() {
         binding.imageViewPlay.setOnClickListener(v -> {
             if (!play) {
                 try {
@@ -235,8 +238,8 @@ public class DescriptionActivity extends AppCompatActivity {
         });
     }
 
-    void checkMultimediaAndToggle() {
-        voice = MyApplication.getApplicationComponent().MyDatabase().voiceDao().
+    private void checkMultimediaAndToggle() {
+        voice = getApplicationComponent().MyDatabase().voiceDao().
                 getVoicesByOnOffLoadId(uuid);
         if (voice == null) {
             voice = new Voice();
@@ -255,7 +258,7 @@ public class DescriptionActivity extends AppCompatActivity {
         }
     }
 
-    void setOnButtonSendClickListener() {
+    private void setOnButtonSendClickListener() {
         binding.buttonSend.setOnClickListener(v -> {
             voice.OnOffLoadId = uuid;
             voice.trackNumber = trackNumber;
@@ -272,9 +275,8 @@ public class DescriptionActivity extends AppCompatActivity {
         });
     }
 
-    void finishDescription(String message) {
-        MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao().
-                updateOnOffLoadDescription(uuid, message);
+    private void finishDescription(String message) {
+        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoadDescription(uuid, message);
         Intent intent = new Intent();
         intent.putExtra(BundleEnum.POSITION.getValue(), position);
         intent.putExtra(BundleEnum.BILL_ID.getValue(), uuid);
@@ -282,7 +284,7 @@ public class DescriptionActivity extends AppCompatActivity {
         finish();
     }
 
-    void askRecorderPermission() {
+    private void askRecorderPermission() {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -302,11 +304,7 @@ public class DescriptionActivity extends AppCompatActivity {
                 .setDeniedMessage(getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(getString(R.string.close))
                 .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).check();
+                .setPermissions(RECORD_AUDIO_PERMISSIONS).check();
     }
 
 
@@ -332,13 +330,6 @@ public class DescriptionActivity extends AppCompatActivity {
     protected void onDestroy() {
         binding.imageViewPlay.setImageDrawable(null);
         binding.imageViewRecord.setImageDrawable(null);
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
         super.onDestroy();
     }
 }

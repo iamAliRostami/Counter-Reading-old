@@ -1,5 +1,6 @@
 package com.leon.counter_reading.helpers;
 
+import android.Manifest;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
@@ -34,4 +35,15 @@ public class Constants {
 
     public static boolean FOCUS_ON_EDIT_TEXT;
     public static final ArrayList<Integer> IS_MANE = new ArrayList<>();
+
+    public static final String[] STORAGE_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE};
+    public static final String[] PHOTO_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+    public static final String[] RECORD_AUDIO_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
+
+    public static final String[] LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION};
+    public static final String PHONE_PERMISSIONS = "android.permission.READ_PRIVILEGED_PHONE_STATE";
 }

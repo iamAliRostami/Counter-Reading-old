@@ -1,18 +1,27 @@
 package com.leon.counter_reading.utils;
 
+import static android.content.Context.TELEPHONY_SERVICE;
+import static com.leon.counter_reading.helpers.Constants.CARRIER_PRIVILEGE_STATUS;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
+import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
+import static com.leon.counter_reading.helpers.Constants.PHONE_PERMISSIONS;
+import static com.leon.counter_reading.helpers.Constants.PHOTO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.POSITION;
+import static com.leon.counter_reading.helpers.Constants.RECORD_AUDIO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_WIFI_CODE;
+import static com.leon.counter_reading.helpers.Constants.STORAGE_PERMISSIONS;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
@@ -24,26 +33,22 @@ import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class PermissionManager {
     public static boolean checkRecorderPermission(Context context) {
-        return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        for (String s : RECORD_AUDIO_PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(context, s) != PackageManager.PERMISSION_GRANTED)
+                return false;
+        }
+        return true;
     }
 
     public static void checkRecorderPermission(Activity activity) {
-        if (ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(activity,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(activity,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            askRecorderPermission(activity);
+        for (String s : RECORD_AUDIO_PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(activity, s) != PackageManager.PERMISSION_GRANTED)
+                askRecorderPermission(activity);
         }
     }
 
@@ -67,30 +72,21 @@ public class PermissionManager {
                 .setDeniedMessage(activity.getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(activity.getString(R.string.close))
                 .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).check();
+                .setPermissions(RECORD_AUDIO_PERMISSIONS).check();
     }
 
     public static boolean checkCameraPermission(Context context) {
-        return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        for (String s : PHOTO_PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(context, s) != PackageManager.PERMISSION_GRANTED)
+                return false;
+        }
+        return true;
     }
 
     public static void checkCameraPermission(Activity activity) {
-        if (ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(activity,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(activity,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            askCameraPermission(activity);
+        for (String s : PHOTO_PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(activity, s) != PackageManager.PERMISSION_GRANTED)
+                askCameraPermission(activity);
         }
     }
 
@@ -114,25 +110,21 @@ public class PermissionManager {
                 .setDeniedMessage(activity.getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(activity.getString(R.string.close))
                 .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).check();
+                .setPermissions(PHOTO_PERMISSIONS).check();
     }
 
     public static boolean checkStoragePermission(Context context) {
-        return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
+        for (String s : STORAGE_PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(context, s) != PackageManager.PERMISSION_GRANTED)
+                return false;
+        }
+        return true;
     }
 
     public static void checkStoragePermission(Activity activity) {
-        if (ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            askStoragePermission(activity);
+        for (String s : STORAGE_PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(activity, s) != PackageManager.PERMISSION_GRANTED)
+                askStoragePermission(activity);
         }
     }
 
@@ -156,27 +148,22 @@ public class PermissionManager {
                 .setDeniedMessage(activity.getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(activity.getString(R.string.close))
                 .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).check();
+                .setPermissions(STORAGE_PERMISSIONS).check();
     }
 
     public static boolean checkLocationPermission(Context context) {
-        return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+        for (String s : LOCATION_PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(context, s) != PackageManager.PERMISSION_GRANTED)
+                return false;
+        }
+        return true;
     }
 
-    public static boolean checkLocationPermission(Activity activity) {
-        if (ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(activity,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            return true;
-        else askLocationPermission(activity);
-        return false;
+    public static void checkLocationPermission(Activity activity) {
+        for (String s : LOCATION_PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(activity, s) != PackageManager.PERMISSION_GRANTED)
+                askLocationPermission(activity);
+        }
     }
 
     public static void askLocationPermission(Activity activity) {
@@ -184,6 +171,7 @@ public class PermissionManager {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(activity.getString(R.string.access_granted));
+                checkLocationPermission(activity);
             }
 
             @Override
@@ -198,10 +186,7 @@ public class PermissionManager {
                 .setDeniedMessage(activity.getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(activity.getString(R.string.close))
                 .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                ).check();
+                .setPermissions(LOCATION_PERMISSIONS).check();
     }
 
     public static boolean gpsEnabled(Activity activity) {
@@ -209,7 +194,6 @@ public class PermissionManager {
                 activity.getSystemService(Context.LOCATION_SERVICE);
         boolean enabled =
                 LocationManagerCompat.isLocationEnabled(Objects.requireNonNull(locationManager));
-//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
         androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
         if (!enabled) {
             alertDialog.setCancelable(false);
@@ -232,7 +216,6 @@ public class PermissionManager {
         LocationManager locationManager = (LocationManager)
                 activity.getSystemService(Context.LOCATION_SERVICE);
         boolean enabled = LocationManagerCompat.isLocationEnabled(locationManager);
-//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
         if (!enabled) {
             alertDialog.setCancelable(false);
@@ -259,8 +242,7 @@ public class PermissionManager {
     }
 
     public static void enableNetwork(Activity activity) {
-//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
-        androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
         alertDialog.setCancelable(false);
         alertDialog.setTitle(activity.getString(R.string.network_setting));
         alertDialog.setMessage(R.string.active_network);
@@ -286,5 +268,20 @@ public class PermissionManager {
         new CustomToast().error(activity.getString(R.string.permission_not_completed));
         POSITION = -1;
         activity.finish();
+    }
+
+    public static boolean hasCarrierPrivileges(Activity activity) {
+        TelephonyManager tm = (TelephonyManager) new ContextWrapper(activity).getSystemService(TELEPHONY_SERVICE);
+        boolean isCarrier = tm.hasCarrierPrivileges();
+        if (!isCarrier) {
+            if (ActivityCompat.checkSelfPermission(activity,
+                    PHONE_PERMISSIONS) != PackageManager.PERMISSION_GRANTED) {
+                if (!activity.shouldShowRequestPermissionRationale(PHONE_PERMISSIONS)) {
+                    ActivityCompat.requestPermissions(activity, new String[]{
+                            PHONE_PERMISSIONS}, CARRIER_PRIVILEGE_STATUS);
+                }
+            }
+        }
+        return isCarrier;
     }
 }

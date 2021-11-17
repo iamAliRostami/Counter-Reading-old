@@ -1,12 +1,16 @@
 package com.leon.counter_reading.activities;
 
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
+import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_WIFI_CODE;
+import static com.leon.counter_reading.helpers.Constants.STORAGE_PERMISSIONS;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
+import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
+import static com.leon.counter_reading.utils.PermissionManager.checkStoragePermission;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -87,12 +91,12 @@ public class LocationActivity extends BaseActivity {
 
     private void checkPermissions() {
         if (PermissionManager.gpsEnabled(this))
-            if (PermissionManager.checkLocationPermission(getApplicationContext())) {
+            if (!checkLocationPermission(getApplicationContext())) {
                 askLocationPermission();
-            } else if (PermissionManager.checkStoragePermission(getApplicationContext())) {
+            } else if (!checkStoragePermission(getApplicationContext())) {
                 askStoragePermission();
             } else {
-                sharedPreferenceManager = MyApplication.getApplicationComponent().SharedPreferenceModel();
+                sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
                 initializeMapView();
                 initializeCheckBoxPoint();
             }
@@ -118,11 +122,7 @@ public class LocationActivity extends BaseActivity {
                 .setDeniedMessage(getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(getString(R.string.close))
                 .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).check();
+                .setPermissions(STORAGE_PERMISSIONS).check();
     }
 
     private void askLocationPermission() {
@@ -145,10 +145,7 @@ public class LocationActivity extends BaseActivity {
                 .setDeniedMessage(getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(getString(R.string.close))
                 .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                ).check();
+                .setPermissions(LOCATION_PERMISSIONS).check();
     }
 
     private void initializeMapView() {
@@ -233,7 +230,7 @@ public class LocationActivity extends BaseActivity {
         protected Void doInBackground(Void... voids) {
             try {
                 savedLocations.clear();
-                savedLocations.addAll(MyApplication.getApplicationComponent().MyDatabase()
+                savedLocations.addAll(getApplicationComponent().MyDatabase()
                         .savedLocationDao().getSavedLocationsXY());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -261,7 +258,7 @@ public class LocationActivity extends BaseActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             if (savedLocations.isEmpty()) {
-                savedLocations.addAll(MyApplication.getApplicationComponent().MyDatabase().
+                savedLocations.addAll(getApplicationComponent().MyDatabase().
                         savedLocationDao().getSavedLocationsXY());
             }
             markers.clear();

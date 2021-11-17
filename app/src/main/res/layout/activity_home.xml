@@ -16,46 +16,46 @@
 
             <LinearLayout
                 android:id="@+id/linear_layout_upload"
-                style="@style/home_items">
+                style="@style/HomeItems">
 
                 <ImageView
                     android:id="@+id/image_view_upload"
-                    style="@style/home_icons"
+                    style="@style/HomeIcons"
                     android:src="@drawable/img_upload"
                     tools:ignore="ContentDescription" />
 
                 <TextView
-                    style="@style/home_titles"
+                    style="@style/HomeTitles"
                     android:text="@string/upload" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linear_layout_reading"
-                style="@style/home_items">
+                style="@style/HomeItems">
 
                 <ImageView
                     android:id="@+id/image_view_reading"
-                    style="@style/home_icons"
+                    style="@style/HomeIcons"
                     android:src="@drawable/img_readings"
                     tools:ignore="ContentDescription" />
 
                 <TextView
-                    style="@style/home_titles"
+                    style="@style/HomeTitles"
                     android:text="@string/reading" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linear_layout_download"
-                style="@style/home_items">
+                style="@style/HomeItems">
 
                 <ImageView
                     android:id="@+id/image_view_download"
-                    style="@style/home_icons"
+                    style="@style/HomeIcons"
                     android:src="@drawable/img_download_information"
                     tools:ignore="ContentDescription" />
 
                 <TextView
-                    style="@style/home_titles"
+                    style="@style/HomeTitles"
                     android:text="@string/download" />
             </LinearLayout>
         </TableRow>
@@ -64,46 +64,46 @@
 
             <LinearLayout
                 android:id="@+id/linear_layout_report"
-                style="@style/home_items">
+                style="@style/HomeItems">
 
                 <ImageView
                     android:id="@+id/image_view_report"
-                    style="@style/home_icons"
+                    style="@style/HomeIcons"
                     android:src="@drawable/img_reading_report"
                     tools:ignore="ContentDescription" />
 
                 <TextView
-                    style="@style/home_titles"
+                    style="@style/HomeTitles"
                     android:text="@string/reports" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linear_layout_location"
-                style="@style/home_items">
+                style="@style/HomeItems">
 
                 <ImageView
                     android:id="@+id/image_view_location"
-                    style="@style/home_icons"
+                    style="@style/HomeIcons"
                     android:src="@drawable/img_location"
                     tools:ignore="ContentDescription" />
 
                 <TextView
-                    style="@style/home_titles"
+                    style="@style/HomeTitles"
                     android:text="@string/location" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linear_layout_reading_setting"
-                style="@style/home_items">
+                style="@style/HomeItems">
 
                 <ImageView
                     android:id="@+id/image_view_reading_setting"
-                    style="@style/home_icons"
+                    style="@style/HomeIcons"
                     android:src="@drawable/img_reading_settings"
                     tools:ignore="ContentDescription" />
 
                 <TextView
-                    style="@style/home_titles"
+                    style="@style/HomeTitles"
                     android:text="@string/reading_setting" />
             </LinearLayout>
         </TableRow>
@@ -112,46 +112,46 @@
 
             <LinearLayout
                 android:id="@+id/linear_layout_help"
-                style="@style/home_items">
+                style="@style/HomeItems">
 
                 <ImageView
                     android:id="@+id/image_view_help"
-                    style="@style/home_icons"
+                    style="@style/HomeIcons"
                     android:src="@drawable/img_help"
                     tools:ignore="ContentDescription" />
 
                 <TextView
-                    style="@style/home_titles"
+                    style="@style/HomeTitles"
                     android:text="@string/help" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linear_layout_app_setting"
-                style="@style/home_items">
+                style="@style/HomeItems">
 
                 <ImageView
                     android:id="@+id/image_view_app_setting"
-                    style="@style/home_icons"
+                    style="@style/HomeIcons"
                     android:src="@drawable/img_app_settings"
                     tools:ignore="ContentDescription" />
 
                 <TextView
-                    style="@style/home_titles"
+                    style="@style/HomeTitles"
                     android:text="@string/app_setting" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linear_layout_exit"
-                style="@style/home_items">
+                style="@style/HomeItems">
 
                 <ImageView
                     android:id="@+id/image_view_exit"
-                    style="@style/home_icons"
+                    style="@style/HomeIcons"
                     android:src="@drawable/img_exit"
                     tools:ignore="ContentDescription" />
 
                 <TextView
-                    style="@style/home_titles"
+                    style="@style/HomeTitles"
                     android:text="@string/exit" />
             </LinearLayout>
         </TableRow>

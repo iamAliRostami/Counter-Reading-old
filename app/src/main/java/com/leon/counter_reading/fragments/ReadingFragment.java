@@ -1,7 +1,12 @@
 package com.leon.counter_reading.fragments;
 
 import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
+import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
+import static com.leon.counter_reading.helpers.Constants.STORAGE_PERMISSIONS;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
+import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
+import static com.leon.counter_reading.utils.PermissionManager.checkStoragePermission;
+import static com.leon.counter_reading.utils.PermissionManager.gpsEnabledNew;
 
 import android.Manifest;
 import android.app.Activity;
@@ -237,8 +242,7 @@ public class ReadingFragment extends Fragment {
                 .setDeniedMessage(getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(getString(R.string.close))
                 .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION).check();
+                .setPermissions(LOCATION_PERMISSIONS).check();
     }
 
     private void askStoragePermission() {
@@ -261,16 +265,14 @@ public class ReadingFragment extends Fragment {
                 .setDeniedMessage(getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(getString(R.string.close))
                 .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(Manifest.permission.CAMERA,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
+                .setPermissions(STORAGE_PERMISSIONS).check();
     }
 
     private void checkPermissions() {
-        if (PermissionManager.gpsEnabledNew(activity))
-            if (PermissionManager.checkLocationPermission(getContext())) {
+        if (gpsEnabledNew(activity))
+            if (!checkLocationPermission(getContext())) {
                 askLocationPermission();
-            } else if (PermissionManager.checkStoragePermission(getContext())) {
+            } else if (!checkStoragePermission(getContext())) {
                 askStoragePermission();
             } else {
                 attemptSend();

@@ -13,6 +13,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ViewPagerAdapterTab;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityUploadBinding;
+import com.leon.counter_reading.enums.UploadType;
 import com.leon.counter_reading.fragments.UploadFragment;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.DepthPageTransformer;
@@ -44,9 +45,9 @@ public class UploadActivity extends BaseActivity {
 
     private void setupViewPager() {
         ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
-        adapter.addFragment(UploadFragment.newInstance(1));
-        adapter.addFragment(UploadFragment.newInstance(2));
-        adapter.addFragment(UploadFragment.newInstance(3));
+        adapter.addFragment(UploadFragment.newInstance(UploadType.NORMAL.getValue()));
+        adapter.addFragment(UploadFragment.newInstance(UploadType.OFFLINE.getValue()));
+        adapter.addFragment(UploadFragment.newInstance(UploadType.MULTIMEDIA.getValue()));
         binding.viewPager.setAdapter(adapter);
 
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
