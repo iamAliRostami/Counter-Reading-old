@@ -267,4 +267,5 @@
     <string name="show_all">نمایش همه</string>
     <string name="proxy">پروکسی</string>
     <string name="enter_proxy">پروکسی را وارد کنید</string>
+    <string name="all_file_permission">شما دسترسی کافی برای ادامه ندارید. \n برای ارائه ی دسترسی کلیک کنید.</string>
 </resources>

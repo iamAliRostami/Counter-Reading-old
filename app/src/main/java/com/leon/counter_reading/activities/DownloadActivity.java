@@ -1,10 +1,18 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.helpers.Constants.ALL_FILES_ACCESS_REQUEST;
+
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Debug;
+import android.os.Environment;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
@@ -28,9 +36,37 @@ public class DownloadActivity extends BaseActivity {
         View childLayout = binding.getRoot();
         ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
-        setupViewPager();
-        initializeTextViews();
+        checkAllFilePermission();
     }
+
+    private void checkAllFilePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Environment.isExternalStorageManager()) {
+                binding.textViewNoRight.setVisibility(View.GONE);
+                binding.linearLayoutHeader.setVisibility(View.VISIBLE);
+                setupViewPager();
+                initializeTextViews();
+            } else {
+                initializeTextViewNoRight();
+            }
+        }
+    }
+
+    private void initializeTextViewNoRight() {
+        binding.textViewNoRight.setVisibility(View.VISIBLE);
+        binding.linearLayoutHeader.setVisibility(View.GONE);
+        binding.textViewNoRight.setOnClickListener(v -> askAllFilePermission());
+    }
+
+    private void askAllFilePermission() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+            Uri uri = Uri.fromParts("package", getPackageName(), null);
+            intent.setData(uri);
+            startActivityForResult(intent, ALL_FILES_ACCESS_REQUEST);
+        }
+    }
+
 
     private void initializeTextViews() {
         TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
@@ -45,8 +81,8 @@ public class DownloadActivity extends BaseActivity {
     private void textViewDownloadNormal() {
         binding.textViewDownloadNormal.setOnClickListener(view -> {
             setColor();
-            binding.textViewDownloadNormal.setBackground(ContextCompat.getDrawable(
-                    getApplicationContext(), R.drawable.border_white_2));
+            binding.textViewDownloadNormal.setBackground(ContextCompat
+                    .getDrawable(getApplicationContext(), R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(DownloadType.NORMAL.getValue());
         });
@@ -55,8 +91,8 @@ public class DownloadActivity extends BaseActivity {
     private void textViewDownloadRetry() {
         binding.textViewDownloadRetry.setOnClickListener(view -> {
             setColor();
-            binding.textViewDownloadRetry.setBackground(
-                    ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_white_2));
+            binding.textViewDownloadRetry.setBackground(ContextCompat
+                    .getDrawable(getApplicationContext(), R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(DownloadType.RETRY.getValue());
         });
@@ -152,6 +188,15 @@ public class DownloadActivity extends BaseActivity {
         binding.viewPager.setPageTransformer(true, new DepthPageTransformer());
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ALL_FILES_ACCESS_REQUEST) {
+            checkAllFilePermission();
+        }
+    }
+
     @Override
     protected void onStop() {
         Debug.getNativeHeapAllocatedSize();
@@ -162,17 +207,5 @@ public class DownloadActivity extends BaseActivity {
         Runtime.getRuntime().gc();
         System.gc();
         super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
-        super.onDestroy();
     }
 }

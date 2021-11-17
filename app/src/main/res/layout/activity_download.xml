@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context="com.leon.counter_reading.activities.DownloadActivity">
 
+    <TextView
+        android:id="@+id/text_view_no_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/all_file_permission"
+        android:textColor="@color/red"
+        android:textSize="@dimen/text_size_large"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/linear_layout_header"
         style="@style/ViewPagerMenu"

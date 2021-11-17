@@ -2,12 +2,15 @@ package com.leon.counter_reading.activities;
 
 import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GALLERY_REQUEST;
+import static com.leon.counter_reading.helpers.Constants.PHOTO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
+import static com.leon.counter_reading.utils.PermissionManager.checkCameraPermission;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -31,7 +34,6 @@ import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.photo.PrepareMultimedia;
 
@@ -58,11 +60,10 @@ public class TakePhotoActivity extends AppCompatActivity {
         binding = ActivityTakePhotoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(DifferentCompanyManager.
-                getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
+        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
 
         activity = this;
-        if (PermissionManager.checkCameraPermission(getApplicationContext()))
+        if (checkCameraPermission(getApplicationContext()))
             initialize();
         else askCameraPermission();
     }
@@ -121,11 +122,7 @@ public class TakePhotoActivity extends AppCompatActivity {
                 .setDeniedMessage(getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(getString(R.string.close))
                 .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).check();
+                .setPermissions(PHOTO_PERMISSIONS).check();
     }
 
     @Override
@@ -199,14 +196,6 @@ public class TakePhotoActivity extends AppCompatActivity {
     protected void onDestroy() {
         images.clear();
         binding = null;
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
         super.onDestroy();
     }
-
 }

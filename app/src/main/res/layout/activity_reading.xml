@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/relative_layout"
     tools:context="com.leon.counter_reading.activities.ReadingActivity">
 
     <LinearLayout
@@ -60,17 +60,18 @@
 
     <TextView
         android:id="@+id/text_view_not_found"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:text="@string/data_not_found"
         android:textColor="@color/red"
         android:textSize="@dimen/text_size_large"
         android:visibility="gone" />
- <androidx.viewpager2.widget.ViewPager2
+
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
-        android:layoutDirection="locale"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/linear_layout_above" />
+        android:layout_below="@id/linear_layout_above"
+        android:layoutDirection="locale" />
 </RelativeLayout>
