@@ -1,10 +1,12 @@
 package com.leon.counter_reading.utils;
 
+import android.annotation.SuppressLint;
 import android.os.Environment;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.leon.counter_reading.R;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.ReadingData;
 
@@ -17,7 +19,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -46,9 +50,13 @@ public class OfflineUtils {
         return storageDirectories;
     }
 
-    public static void writeOnSdCard(String path) {
+    @SuppressLint("SimpleDateFormat")
+    public static void writeOnSdCard(String path, int trackNumber) {
+        String filePostName = (new SimpleDateFormat(MyApplication.getContext()
+                .getString(R.string.save_format_name_melli))).format(new Date()).concat("_")
+                .concat(String.valueOf(trackNumber)).concat(".txt");
         try {
-            File file = new File(path.concat("/Download/mySdFile10.txt"));
+            File file = new File(path.concat("/Download/".concat(filePostName)));
             file.createNewFile();
             FileOutputStream fOut = new FileOutputStream(file);
             OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
@@ -96,7 +104,7 @@ public class OfflineUtils {
 
     public static ReadingData readFromSdCard(String path) {
         File root = new File(path.concat("/Download"));
-        File file = findFile(root, "125776.txt");
+        File file = findFile(root, "125776_.txt");
         StringBuilder text = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -111,7 +119,6 @@ public class OfflineUtils {
         }
         String json = text.toString();
         Log.e("json", json);
-
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(json, ReadingData.class);
     }

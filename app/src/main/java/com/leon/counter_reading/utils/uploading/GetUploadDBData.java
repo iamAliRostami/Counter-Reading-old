@@ -15,7 +15,6 @@ public class GetUploadDBData extends AsyncTask<Activity, Integer, Integer> {
 
     public GetUploadDBData(Activity activity) {
         super();
-
         customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
     }

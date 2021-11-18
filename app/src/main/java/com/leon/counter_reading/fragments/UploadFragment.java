@@ -141,26 +141,40 @@ public class UploadFragment extends Fragment {
 
     private void setOnButtonUploadClickListener() {
         binding.buttonUpload.setOnClickListener(v -> {
-            if (type == UploadType.NORMAL.getValue()) {
-                if (checkOnOffLoad())
-                    new PrepareOffLoad(activity,
-                            trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
-                            trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id).
-                            execute(activity);
-            } else if (type == UploadType.OFFLINE.getValue()) {
-                String[] retArray = getStorageDirectories();
-                if (retArray.length == 0) {
-                    Log.e("state", "Sdcard not Exists");
-                } else {
-                    for (String s : retArray) {
-                        Log.e("path ", s);
-                        writeOnSdCard(s);
-                    }
-                }
-            } else if (type == UploadType.MULTIMEDIA.getValue()) {
+            if (type == UploadType.MULTIMEDIA.getValue()) {
                 new PrepareMultimedia(activity, this, false).execute(activity);
+            } else {
+                if (checkOnOffLoad()) {
+                    sendOnOffLoad();
+                }
             }
         });
+    }
+
+    private class Inline implements CustomDialogModel.Inline {
+        @Override
+        public void inline() {
+            sendOnOffLoad();
+        }
+    }
+
+    private void sendOnOffLoad() {
+        if (type == UploadType.NORMAL.getValue()) {
+            new PrepareOffLoad(activity,
+                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
+                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id).
+                    execute(activity);
+        } else if (type == UploadType.OFFLINE.getValue()) {
+            String[] retArray = getStorageDirectories();
+            if (retArray.length == 0) {
+                new CustomToast().error("کارت حافظه نصب نشده است.", Toast.LENGTH_LONG);
+            } else {
+                for (String s : retArray) {
+                    Log.e("path ", s);
+                    writeOnSdCard(s, trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber);
+                }
+            }
+        }
     }
 
     @Override
@@ -170,13 +184,5 @@ public class UploadFragment extends Fragment {
         items = null;
     }
 
-    private class Inline implements CustomDialogModel.Inline {
-        @Override
-        public void inline() {
-            new PrepareOffLoad(activity,
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id).
-                    execute(activity);
-        }
-    }
+
 }
