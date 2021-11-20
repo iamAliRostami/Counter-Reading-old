@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_margin="@dimen/large_dp"
         android:text="@string/all_file_permission"
         android:textColor="@color/red"
         android:textSize="@dimen/text_size_large"

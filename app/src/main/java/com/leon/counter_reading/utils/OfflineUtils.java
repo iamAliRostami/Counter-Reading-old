@@ -1,13 +1,13 @@
 package com.leon.counter_reading.utils;
 
+import static com.leon.counter_reading.helpers.MyApplication.getContext;
+
 import android.annotation.SuppressLint;
 import android.os.Environment;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.leon.counter_reading.R;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.ReadingData;
 
 import java.io.BufferedInputStream;
@@ -19,10 +19,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -31,8 +31,11 @@ public class OfflineUtils {
     public static String[] getStorageDirectories() {
         String[] storageDirectories;
         String rawSecondaryStoragesStr = System.getenv("SECONDARY_STORAGE");
+//        String rawSecondaryStoragesStr = System.getenv("EMULATED_STORAGE_TARGET");
+//        String rawSecondaryStoragesStr = System.getenv("EXTERNAL_STORAGE");
+//        String rawSecondaryStoragesStr = System.getenv("EXTERNAL_SDCARD_STORAGE");
         List<String> results = new ArrayList<>();
-        File[] externalDirs = MyApplication.getContext().getExternalFilesDirs(null);
+        File[] externalDirs = getContext().getExternalFilesDirs(null);
         for (File file : externalDirs) {
             String path = null;
             try {
@@ -51,51 +54,20 @@ public class OfflineUtils {
     }
 
     @SuppressLint("SimpleDateFormat")
-    public static void writeOnSdCard(String path, int trackNumber) {
-        String filePostName = (new SimpleDateFormat(MyApplication.getContext()
-                .getString(R.string.save_format_name_melli))).format(new Date()).concat("_")
-                .concat(String.valueOf(trackNumber)).concat(".txt");
+    public static void writeOnSdCard(String json, String name, int trackNumber) {
+        String filePostName = name.concat(".txt");
         try {
-            File file = new File(path.concat("/Download/".concat(filePostName)));
+            File root = new File(Environment
+                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + trackNumber);
+            root.mkdirs();
+            File file = new File(root + "/" + filePostName);
+            Log.e("address", file.getAbsolutePath());
             file.createNewFile();
             FileOutputStream fOut = new FileOutputStream(file);
             OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-            myOutWriter.append("{\n" +
-                    "    \"trackingDtos\": [\n" +
-                    "        {\n" +
-                    "            \"id\": \"d93f0702-09a1-4693-9a39-f79b4c00a712\",\n" +
-                    "            \"trackNumber\": 125776,\n" +
-                    "            \"listNumber\": null,\n" +
-                    "            \"insertDateJalali\": \"1400/08/26\",\n" +
-                    "            \"insertTime\": \"09:39\",\n" +
-                    "            \"zoneId\": 131301,\n" +
-                    "            \"zoneTitle\": \"1  - منطقه يک\",\n" +
-                    "            \"isBazdid\": false,\n" +
-                    "            \"year\": 1400,\n" +
-                    "            \"isRoosta\": false,\n" +
-                    "            \"fromEshterak\": \"105010500 \",\n" +
-                    "            \"toEshterak\": \"105468800 \",\n" +
-                    "            \"fromDate\": \"1400/08/01\",\n" +
-                    "            \"toDate\": \"1400/08/01\",\n" +
-                    "            \"itemQuantity\": 2110,\n" +
-                    "            \"alalHesabPercent\": 50,\n" +
-                    "            \"imagePercent\": 50,\n" +
-                    "            \"hasPreNumber\": true,\n" +
-                    "            \"displayBillId\": true,\n" +
-                    "            \"displayRadif\": false,\n" +
-                    "            \"counterReaderId\": \"9dcbdd6a-c68c-4fa5-99f8-654bf62b6775\",\n" +
-                    "            \"counterReaderName\": \"مامور قرائت\",\n" +
-                    "            \"stateTitle\": null,\n" +
-                    "            \"hasMap\": false,\n" +
-                    "            \"description\": null,\n" +
-                    "            \"x\": \"51.6678892\",\n" +
-                    "            \"y\": \"32.6581116\"\n" +
-                    "        }\n" +
-                    "    ]" +
-                    "}");
+            myOutWriter.append(json);
             myOutWriter.close();
             fOut.close();
-            new CustomToast().success("Writing SD 'mySdFile.txt' Done");
         } catch (Exception e) {
             new CustomToast().error(e.getMessage());
             e.printStackTrace();
@@ -104,6 +76,7 @@ public class OfflineUtils {
 
     public static ReadingData readFromSdCard(String path) {
         File root = new File(path.concat("/Download"));
+
         File file = findFile(root, "125776_.txt");
         StringBuilder text = new StringBuilder();
         try {
@@ -137,34 +110,35 @@ public class OfflineUtils {
         }
         return null;
     }
+
     /*
      * Zips a file at a location and places the resulting zip file at the toLocation
      * Example: zipFileAtPath("downloads/myFolder", "downloads/myFolder.zip");
      */
-
-    public boolean zipFileAtPath(String sourcePath, String toLocation) {
+    public static boolean zipFileAtPath(int trackNumber) {
         final int BUFFER = 2048;
-
-        File sourceFile = new File(sourcePath);
+        final File root = new File(Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
+        final String sourcePath = root + "/" + trackNumber, toLocation = root + "/" + trackNumber + ".zip";
+        final File sourceFile = new File(sourcePath);
         try {
-            BufferedInputStream origin;
-            FileOutputStream dest = new FileOutputStream(toLocation);
-            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
-                    dest));
-            /*if (sourceFile.isDirectory()) {
+            final BufferedInputStream origin;
+            final FileOutputStream dest = new FileOutputStream(toLocation);
+            final ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+            if (sourceFile.isDirectory() && sourceFile.getParent() != null) {
                 zipSubFolder(out, sourceFile, sourceFile.getParent().length());
-            } else {*/
-            byte[] data = new byte[BUFFER];
-            FileInputStream fi = new FileInputStream(sourcePath);
-            origin = new BufferedInputStream(fi, BUFFER);
-            ZipEntry entry = new ZipEntry(getLastPathComponent(sourcePath));
-            entry.setTime(sourceFile.lastModified()); // to keep modification time after unzipping
-            out.putNextEntry(entry);
-            int count;
-            while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                out.write(data, 0, count);
+            } else {
+                final byte[] data = new byte[BUFFER];
+                final FileInputStream fi = new FileInputStream(sourcePath);
+                origin = new BufferedInputStream(fi, BUFFER);
+                final ZipEntry entry = new ZipEntry(getLastPathComponent(sourcePath));
+                entry.setTime(sourceFile.lastModified());// to keep modification time after unzipping
+                out.putNextEntry(entry);
+                int count;
+                while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                    out.write(data, 0, count);
+                }
             }
-//            }
             out.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -176,30 +150,32 @@ public class OfflineUtils {
     /*
      * Zips a subfolder
      */
-    private void zipSubFolder(ZipOutputStream out, File folder,
-                              int basePathLength) throws IOException {
+    private static void zipSubFolder(ZipOutputStream out, File folder, int basePathLength) {
         final int BUFFER = 2048;
-        File[] fileList = folder.listFiles();
-        BufferedInputStream origin;
+        final File[] fileList = folder.listFiles();
         if (fileList != null) {
             for (File file : fileList) {
                 if (file.isDirectory()) {
                     zipSubFolder(out, file, basePathLength);
                 } else {
-                    byte[] data = new byte[BUFFER];
-                    String unmodifiedFilePath = file.getPath();
-                    String relativePath = unmodifiedFilePath
+                    final byte[] data = new byte[BUFFER];
+                    final String unmodifiedFilePath = file.getPath();
+                    final String relativePath = unmodifiedFilePath
                             .substring(basePathLength);
-                    FileInputStream fi = new FileInputStream(unmodifiedFilePath);
-                    origin = new BufferedInputStream(fi, BUFFER);
-                    ZipEntry entry = new ZipEntry(relativePath);
-                    entry.setTime(file.lastModified()); // to keep modification time after unzipping
-                    out.putNextEntry(entry);
-                    int count;
-                    while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                        out.write(data, 0, count);
+                    try {
+                        final FileInputStream fi = new FileInputStream(unmodifiedFilePath);
+                        final BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);
+                        final ZipEntry entry = new ZipEntry(relativePath);
+                        entry.setTime(file.lastModified()); // to keep modification time after unzipping
+                        out.putNextEntry(entry);
+                        int count;
+                        while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                            out.write(data, 0, count);
+                        }
+                        origin.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    origin.close();
                 }
             }
         }
@@ -210,11 +186,85 @@ public class OfflineUtils {
      * Example: getLastPathComponent("downloads/example/fileToZip");
      * Result: "fileToZip"
      */
-    public String getLastPathComponent(String filePath) {
+    public static String getLastPathComponent(String filePath) {
         String[] segments = filePath.split("/");
         if (segments.length == 0)
             return "";
         return segments[segments.length - 1];
     }
 
+    public static void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory()) {
+            File[] files = fileOrDirectory.listFiles();
+            if (files != null) {
+                for (File child : files)
+                    deleteRecursive(child);
+            }
+        }
+        fileOrDirectory.delete();
+    }
+
+    public static String isRemovableSDCardAvailable() {
+        final String FLAG = "mnt";
+        final String SECONDARY_STORAGE = System.getenv("SECONDARY_STORAGE");
+        final String EXTERNAL_STORAGE_DOCOMO = System.getenv("EXTERNAL_STORAGE_DOCOMO");
+        final String EXTERNAL_SDCARD_STORAGE = System.getenv("EXTERNAL_SDCARD_STORAGE");
+        final String EXTERNAL_SD_STORAGE = System.getenv("EXTERNAL_SD_STORAGE");
+        final String EXTERNAL_STORAGE = System.getenv("EXTERNAL_STORAGE");
+
+        Map<Integer, String> listEnvironmentVariableStoreSDCardRootDirectory = new HashMap<Integer, String>();
+        listEnvironmentVariableStoreSDCardRootDirectory.put(0, SECONDARY_STORAGE);
+        listEnvironmentVariableStoreSDCardRootDirectory.put(1, EXTERNAL_STORAGE_DOCOMO);
+        listEnvironmentVariableStoreSDCardRootDirectory.put(2, EXTERNAL_SDCARD_STORAGE);
+        listEnvironmentVariableStoreSDCardRootDirectory.put(3, EXTERNAL_SD_STORAGE);
+        listEnvironmentVariableStoreSDCardRootDirectory.put(4, EXTERNAL_STORAGE);
+
+        File[] externalStorageList;
+        externalStorageList = getContext().getExternalFilesDirs(null);
+        String directory;
+        int size = listEnvironmentVariableStoreSDCardRootDirectory.size();
+        for (int i = 0; i < size; i++) {
+            if (externalStorageList != null && externalStorageList.length > 1 && externalStorageList[1] != null)
+                directory = externalStorageList[1].getAbsolutePath();
+            else
+                directory = listEnvironmentVariableStoreSDCardRootDirectory.get(i);
+
+            directory = canCreateFile(directory);
+            if (directory != null && directory.length() != 0) {
+                if (i == size - 1) {
+                    if (directory.contains(FLAG)) {
+                        Log.e("getClass().getSimpleName()", "SD Card's directory: " + directory);
+                        return directory;
+                    } else {
+                        return null;
+                    }
+                }
+                Log.e("getClass().getSimpleName()", "SD Card's directory: " + directory);
+                return directory;
+            }
+        }
+        return null;
+    }
+
+    public static String canCreateFile(String directory) {
+        final String FILE_DIR = directory + File.separator + "hoang.txt";
+        File tempFile = null;
+        try {
+            tempFile = new File(FILE_DIR);
+            FileOutputStream fos = new FileOutputStream(tempFile);
+            fos.write(new byte[1024]);
+            fos.flush();
+            fos.close();
+            Log.e("getClass().getSimpleName()", "Can write file on this directory: " + FILE_DIR);
+        } catch (Exception e) {
+            Log.e("getClass().getSimpleName()", "Write file error: " + e.getMessage());
+            return null;
+        } finally {
+            if (tempFile != null && tempFile.exists() && tempFile.isFile()) {
+                // tempFlie.delete();
+                tempFile = null;
+            }
+        }
+        return directory;
+    }
 }

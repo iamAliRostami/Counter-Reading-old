@@ -82,7 +82,9 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
 //        long endTime = Calendar.getInstance().getTimeInMillis();
 //        Log.e("Time 4", String.valueOf(endTime - startTime));
         for (int i = 0; i < voice.size(); i++) {
-            voice.get(i).File = CustomFile.prepareVoiceToSend(voice.get(i).address);
+            voice.get(i).File = CustomFile.prepareVoiceToSend(
+                    activities[0].getExternalFilesDir(null).getAbsolutePath() +
+                            activities[0].getString(R.string.audio_folder) + voice.get(i).address);
             if (voice.get(i).File != null) {
                 voiceMultiples.OnOffLoadId.add(RequestBody.create(voice.get(i).OnOffLoadId,
                         MediaType.parse("text/plain")));

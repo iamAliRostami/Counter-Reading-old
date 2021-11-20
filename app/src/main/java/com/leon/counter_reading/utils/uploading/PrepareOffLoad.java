@@ -1,5 +1,7 @@
 package com.leon.counter_reading.utils.uploading;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -42,21 +44,21 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
         super();
         this.trackNumber = trackNumber;
         this.id = id;
-        customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
+        customProgressModel = getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
     }
 
     @Override
     protected Activity doInBackground(Activity... activities) {
         forbiddenDtos.clear();
-        forbiddenDtos.addAll(MyApplication.getApplicationComponent().MyDatabase().
+        forbiddenDtos.addAll(getApplicationComponent().MyDatabase().
                 forbiddenDao().getAllForbiddenDto(false));
         onOffLoadDtos.clear();
-        onOffLoadDtos.addAll(MyApplication.getApplicationComponent().MyDatabase().
+        onOffLoadDtos.addAll(getApplicationComponent().MyDatabase().
                 onOffLoadDao().getOnOffLoadReadByTrackingAndOffLoad(trackNumber,
                 OffloadStateEnum.INSERTED.getValue()));
         offLoadReports.clear();
-        offLoadReports.addAll(MyApplication.getApplicationComponent().MyDatabase().
+        offLoadReports.addAll(getApplicationComponent().MyDatabase().
                 offLoadReportDao().getAllOffLoadReport(false));
         return activities[0];
     }
@@ -74,7 +76,7 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
     void uploadForbid(Activity activity) {
         ForbiddenDtoRequestMultiple forbiddenDtoRequestMultiple =
                 new ForbiddenDtoRequestMultiple();
-        Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
+        Retrofit retrofit = getApplicationComponent().Retrofit();
         IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
         for (ForbiddenDto forbiddenDto : forbiddenDtos) {
             /*  TODO */
@@ -100,15 +102,15 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
         if (onOffLoadDtos.size() <= 0) {
             thankYou(activity);
             onOffLoadDtos.clear();
-            onOffLoadDtos.add(MyApplication.getApplicationComponent().MyDatabase().
+            onOffLoadDtos.add(getApplicationComponent().MyDatabase().
                     onOffLoadDao().getOnOffLoadReadByTrackingAndOffLoad(trackNumber));
         }
         if (onOffLoadDtos.size() == 0 || onOffLoadDtos.get(0) == null) {
-            MyApplication.getApplicationComponent().MyDatabase().
+            getApplicationComponent().MyDatabase().
                     trackingDao().updateTrackingDtoByArchive(id, true, false);
             return;
         }
-        Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
+        Retrofit retrofit = getApplicationComponent().Retrofit();
         IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
         OnOffLoadDto.OffLoadData offLoadData = new OnOffLoadDto.OffLoadData();
         offLoadData.isFinal = true;
@@ -131,7 +133,7 @@ class Forbidden implements ICallback<ForbiddenDtoResponses> {
     @Override
     public void execute(Response<ForbiddenDtoResponses> response) {
         if (response.isSuccessful()) {
-            MyApplication.getApplicationComponent().MyDatabase().forbiddenDao().
+            getApplicationComponent().MyDatabase().forbiddenDao().
                     updateAllForbiddenDtoBySent(true);
             if (response.body() != null) {
                 new CustomToast().success(MyApplication.getContext().
@@ -166,11 +168,11 @@ class OffLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
         if (response.body() != null && response.body().status == 200) {
             int state = response.body().isValid ? OffloadStateEnum.SENT.getValue() :
                     OffloadStateEnum.SENT_WITH_ERROR.getValue();
-            MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao().
+            getApplicationComponent().MyDatabase().onOffLoadDao().
                     updateOnOffLoad(state, response.body().targetObject);
-            MyApplication.getApplicationComponent().MyDatabase().trackingDao().
+            getApplicationComponent().MyDatabase().trackingDao().
                     updateTrackingDtoByArchive(id, true, false);
-            MyApplication.getApplicationComponent().MyDatabase().offLoadReportDao().
+            getApplicationComponent().MyDatabase().offLoadReportDao().
                     updateOffLoadReportByIsSent(true);
             new CustomToast().success(response.body().message, Toast.LENGTH_LONG);
         }

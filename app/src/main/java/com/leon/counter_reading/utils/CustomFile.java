@@ -23,10 +23,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
+import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.tables.ReadingData;
+import com.leon.counter_reading.tables.Voice;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,12 +38,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Random;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -74,14 +72,12 @@ public class CustomFile {
         String fileNameToSave = "JPEG_" + new Random().nextInt() + "_" + timeStamp + ".jpg";
         File f = new File(context.getCacheDir(), fileNameToSave);
         try {
-            f.createNewFile();
+            if (!f.createNewFile()) return null;
         } catch (IOException e) {
             e.printStackTrace();
         }
 //        long startTime = Calendar.getInstance().getTimeInMillis();
-        byte[] bitmapData = compressBitmapToByte(bitmap/*, MyApplication.MAX_IMAGE_SIZE*/);
-//        long endTime = Calendar.getInstance().getTimeInMillis();
-//        Log.e("Time 2", String.valueOf(endTime - startTime));
+        byte[] bitmapData = compressBitmapToByte(bitmap);
         FileOutputStream fos;
         try {
             fos = new FileOutputStream(f);
@@ -141,19 +137,15 @@ public class CustomFile {
     @SuppressLint("SimpleDateFormat")
     static String saveImage(Bitmap bitmapImage, Context context) {
         File mediaStorageDir = new File(context.getExternalFilesDir(null) + context.getString(R.string.camera_folder));
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                return null;
-            }
-        }
+        if (!mediaStorageDir.exists()) if (!mediaStorageDir.mkdirs()) return null;
         String timeStamp = (new SimpleDateFormat(
                 context.getString(R.string.save_format_name_melli))).format(new Date());
         String fileNameToSave = "JPEG_" + timeStamp + ".jpg";
         File file = new File(mediaStorageDir, fileNameToSave);
-        if (file.exists()) file.delete();
+        if (file.exists()) if (!file.delete()) return null;
         try {
             FileOutputStream out = new FileOutputStream(file);
-            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 40, out);
+            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.flush();
             out.close();
         } catch (Exception e) {
@@ -163,25 +155,70 @@ public class CustomFile {
         return fileNameToSave;
     }
 
+    public static boolean copyImages(final ArrayList<Image> images, final int trackNumber, final Context context) {
+        if (isExternalStorageWritable()) {
+            File storageDir = new File(Environment
+                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + trackNumber + "/images");
+            if (!storageDir.exists()) if (!storageDir.mkdirs()) return false;
+            boolean saved = false;
+            for (Image image : images) {
+                File from = new File(context.getExternalFilesDir(null).getAbsolutePath() +
+                        context.getString(R.string.camera_folder) + image.address);
+                File to = new File(storageDir + "/" + image.address);
+                saved = from.renameTo(to);
+//                final Bitmap bitmapImage = CustomFile.loadImage(context, image.address);
+//                final File file = new File(storageDir, image.address);
+//                if (file.exists()) if (!file.delete()) return;
+//                try {
+//                    FileOutputStream out = new FileOutputStream(file);
+//                    if (bitmapImage != null) {
+//                        bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//                    }
+//                    out.flush();
+//                    out.close();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                MediaScannerConnection.scanFile(context, new String[]{file.getPath()}, new String[]{"image/jpeg"}, null);
+            }
+            return saved;
+        } else {
+            new CustomToast().warning(context.getString(R.string.error_external_storage_is_not_writable));
+            return false;
+        }
+    }
+
+    @SuppressLint({"SimpleDateFormat"})
+    public static boolean copyAudios(final ArrayList<Voice> voices, final int trackNumber, final Context context) {
+        if (isExternalStorageWritable()) {
+            File storageDir = new File(Environment
+                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + trackNumber + "/voices/");
+            if (!storageDir.exists()) if (!storageDir.mkdirs()) return false;
+            boolean saved = false;
+            for (Voice voice : voices) {
+                File from = new File(context.getExternalFilesDir(null).getAbsolutePath() +
+                        context.getString(R.string.audio_folder) + voice.address);
+                File to = new File(storageDir + "/" + voice.address);
+                saved = from.renameTo(to);
+            }
+            return saved;
+        } else {
+            new CustomToast().warning(context.getString(R.string.error_external_storage_is_not_writable));
+            return false;
+        }
+    }
+
+    public static boolean copyFile(String inputPath, String outputPath) {
+        File from = new File(inputPath);
+        File to = new File(outputPath);
+        return from.renameTo(to);
+    }
+
     public static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
-    }
-
-    @SuppressLint({"SimpleDateFormat"})
-    public static File createImageFileOld(Context context) throws IOException {
-        String timeStamp = (new SimpleDateFormat(context.getString(R.string.save_format_name))).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-//        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File storageDir = new File(String.valueOf(context.getExternalFilesDir(
-                Environment.DIRECTORY_PICTURES)));
-        storageDir.mkdirs();
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        StringBuilder stringBuilder = (new StringBuilder()).append("file:");
-        Objects.requireNonNull(image);
-        return image;
     }
 
     @SuppressLint({"SimpleDateFormat"})
@@ -200,12 +237,10 @@ public class CustomFile {
     @SuppressLint({"SimpleDateFormat"})
     public static String createAudioFile(Context context) {
         File storageDir = new File(context.getExternalFilesDir(null).getAbsolutePath() + context.getString(R.string.audio_folder));
-        storageDir.mkdirs();
-        String timeStamp = (new SimpleDateFormat(
-                context.getString(R.string.save_format_name))).format(new Date());
-        String audioFileName = "audio_" + timeStamp;
-        return context.getExternalFilesDir(null).getAbsolutePath() +
-                context.getString(R.string.audio_folder) + audioFileName + ".ogg";
+        if (!storageDir.exists())
+            if (!storageDir.mkdirs()) return null;
+        String timeStamp = (new SimpleDateFormat(context.getString(R.string.save_format_name))).format(new Date());
+        return "audio_" + timeStamp + ".ogg";
     }
 
     public static MultipartBody.Part prepareVoiceToSend(String fileName) {
@@ -295,6 +330,7 @@ public class CustomFile {
         }
         activity.startActivity(intent);
     }
+
     public static File findFile(File dir, String name) {
         File[] children = dir.listFiles();
         if (children != null) {

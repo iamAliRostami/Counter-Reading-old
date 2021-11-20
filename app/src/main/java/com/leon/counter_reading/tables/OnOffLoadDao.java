@@ -6,14 +6,12 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Dao
 public interface OnOffLoadDao {
-
-    @Query("select * From OnOffLoadDto")
-    List<OnOffLoadDto>  getAllOnOffLoad();
-
     @Query("select * From OnOffLoadDto WHERE id = :id AND trackNumber = :trackNumber ORDER BY eshterak")
     OnOffLoadDto getAllOnOffLoadById(String id, int trackNumber);
 
@@ -56,29 +54,6 @@ public interface OnOffLoadDao {
             "WHERE OnOffLoadDto.offLoadStateId = :offLoadStateId AND TrackingDto.isActive = :isActive")
     List<OnOffLoadDto.OffLoad> getAllOnOffLoadInsert(int offLoadStateId, boolean isActive);
 
-
-    @Query("select id, counterNumber, counterStateId, possibleAddress, possibleCounterSerial, " +
-            "possibleEshterak, possibleMobile, possiblePhoneNumber, possibleAhadMaskooniOrAsli, " +
-            "possibleAhadTejariOrFari, possibleAhadSaierOrAbBaha, possibleEmpty, possibleKarbariCode, " +
-            "description, counterNumberShown, attemptCount, isLocked, gisAccuracy, x , y, d1, d2 From OnOffLoadDto " +
-            "WHERE offLoadStateId = :offLoadStateId AND trackNumber = :trackNumber")
-    List<OnOffLoadDto.OffLoad> getAllOnOffLoadInsert(int offLoadStateId, int trackNumber);
-
-    @Query("select id, counterNumber, counterStateId, possibleAddress, possibleCounterSerial, " +
-            "possibleEshterak, possibleMobile, possiblePhoneNumber, possibleAhadMaskooniOrAsli, " +
-            "possibleAhadTejariOrFari, possibleAhadSaierOrAbBaha, possibleEmpty, possibleKarbariCode, " +
-            "description, counterNumberShown, attemptCount, isLocked, gisAccuracy, x , y, d1, d2 From OnOffLoadDto " +
-            "WHERE offLoadStateId = :offLoadStateId AND trackNumber IN (:trackNumber)")
-    List<OnOffLoadDto.OffLoad> getAllOnOffLoadInsert(int offLoadStateId, List<Integer> trackNumber);
-
-
-    @Query("select * From OnOffLoadDto WHERE offLoadStateId = :offLoadStateId")
-    List<OnOffLoadDto> getOnOffLoadReadByOffLoad(int offLoadStateId);
-
-    @Query("select * From OnOffLoadDto WHERE counterStateId = :counterStateId AND " +
-            "trackNumber = :trackNumber AND hazf = 0 ORDER BY eshterak")
-    List<OnOffLoadDto> getOnOffLoadReadByIsMane(int counterStateId, int trackNumber);
-
     @Query("select * From OnOffLoadDto WHERE counterStateId in (:counterStateId) AND hazf = 0 AND " +
             "trackNumber = :trackNumber  ORDER BY eshterak")
     List<OnOffLoadDto> getOnOffLoadReadByIsMane(List<Integer> counterStateId, int trackNumber);
@@ -86,17 +61,11 @@ public interface OnOffLoadDao {
     @Query("select COUNT(*) From OnOffLoadDto WHERE trackNumber = :trackNumber AND highLowStateId =:highLowStateId")
     int getOnOffLoadReadCountByStatus(int trackNumber, int highLowStateId);
 
-    @Query("select COUNT(*) From OnOffLoadDto WHERE offLoadStateId = :offLoadStateId")
-    int getAllOnOffLoadReadCount(int offLoadStateId);
-
     @Query("select COUNT(*) From OnOffLoadDto WHERE offLoadStateId == :offLoadStateId AND trackNumber = :trackNumber")
     int getOnOffLoadReadCount(int offLoadStateId, int trackNumber);
 
     @Query("select COUNT(*) From OnOffLoadDto WHERE offLoadStateId = :offLoadStateId AND trackNumber = :trackNumber")
     int getOnOffLoadUnreadCount(int offLoadStateId, int trackNumber);
-
-    @Query("select COUNT(*) From OnOffLoadDto")
-    int getAllOnOffLoadCount();
 
     @Query("select COUNT(*) From OnOffLoadDto WHERE trackNumber = :trackNumber")
     int getOnOffLoadCount(int trackNumber);
@@ -105,17 +74,14 @@ public interface OnOffLoadDao {
             "trackNumber = :trackNumber AND hazf = 0")
     int getOnOffLoadIsManeCount(int counterStateId, int trackNumber);
 
-    @Query("select COUNT(*) From OnOffLoadDto WHERE counterStateId = :counterStateId")
-    int getAllOnOffLoadIsManeCount(int counterStateId);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertOnOffLoad(OnOffLoadDto onOffLoadDto);
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAllOnOffLoad(List<OnOffLoadDto> onOffLoadDtos);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateOnOffLoad(OnOffLoadDto onOffLoadDto);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void updateOnOffLoads(List<OnOffLoadDto> onOffLoadDtos);
 
     @Query("UPDATE OnOffLoadDto set offLoadStateId = :offLoadStateId WHERE id = :id")
     void updateOnOffLoad(int offLoadStateId, String id);
@@ -145,7 +111,6 @@ public interface OnOffLoadDao {
     @Query("UPDATE OnOffLoadDto set d1 = :d1, d2 = :d2 WHERE id = :id")
     void updateOnOffLoadLocation(String id, String d1, String d2);
 
-
     @Query("UPDATE OnOffLoadDto set possibleAddress = :address, possibleCounterSerial = :serialNumber," +
             " possibleMobile = :possibleMobile, possibleEshterak = :possibleEshterak," +
             " possiblePhoneNumber = :phoneNumber, possibleEmpty = :possibleEmpty WHERE id = :id")
@@ -163,7 +128,4 @@ public interface OnOffLoadDao {
 
     @Query("DELETE FROM OnOffLoadDto WHERE trackNumber = :trackNumber")
     void deleteOnOffLoad(int trackNumber);
-
-    @Query("DELETE FROM OnOffLoadDto")
-    void deleteOnOffLoad();
 }

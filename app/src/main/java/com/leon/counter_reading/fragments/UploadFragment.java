@@ -1,7 +1,8 @@
 package com.leon.counter_reading.fragments;
 
+//import static com.leon.counter_reading.utils.ExternalStorage.getAllStorageLocations;
+
 import static com.leon.counter_reading.utils.OfflineUtils.getStorageDirectories;
-import static com.leon.counter_reading.utils.OfflineUtils.writeOnSdCard;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.MyDatabase;
 import com.leon.counter_reading.utils.uploading.PrepareMultimedia;
 import com.leon.counter_reading.utils.uploading.PrepareOffLoad;
+import com.leon.counter_reading.utils.uploading.PrepareOffLoadOffline;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -162,16 +164,20 @@ public class UploadFragment extends Fragment {
         if (type == UploadType.NORMAL.getValue()) {
             new PrepareOffLoad(activity,
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id).
-                    execute(activity);
+                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
+                    .execute(activity);
         } else if (type == UploadType.OFFLINE.getValue()) {
+            new PrepareOffLoadOffline(activity,
+                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
+                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
+                    .execute(activity);
             String[] retArray = getStorageDirectories();
             if (retArray.length == 0) {
                 new CustomToast().error("کارت حافظه نصب نشده است.", Toast.LENGTH_LONG);
             } else {
                 for (String s : retArray) {
                     Log.e("path ", s);
-                    writeOnSdCard(s, trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber);
+//                    writeOnSdCard(s, trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber);
                 }
             }
         }

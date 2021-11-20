@@ -13,6 +13,7 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
@@ -111,7 +112,8 @@ public class DescriptionActivity extends AppCompatActivity {
                 mediaRecorder.stop();
                 try {
                     mediaPlayer = new MediaPlayer();
-                    mediaPlayer.setDataSource(voice.address);
+                    mediaPlayer.setDataSource(getExternalFilesDir(null).getAbsolutePath() +
+                            getString(R.string.audio_folder) + voice.address);
                     mediaPlayer.prepare();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -157,7 +159,8 @@ public class DescriptionActivity extends AppCompatActivity {
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        mediaRecorder.setOutputFile(voice.address);
+        mediaRecorder.setOutputFile(getExternalFilesDir(null).getAbsolutePath() +
+                getString(R.string.audio_folder) + voice.address);
     }
 
     private void setSeekBarChangeListener() {
@@ -194,7 +197,8 @@ public class DescriptionActivity extends AppCompatActivity {
                     binding.linearLayoutSeek.setVisibility(View.VISIBLE);
                     play = true;
                     mediaPlayer = new MediaPlayer();
-                    mediaPlayer.setDataSource(voice.address);
+                    mediaPlayer.setDataSource(getExternalFilesDir(null).getAbsolutePath() +
+                            getString(R.string.audio_folder) + voice.address);
                     mediaPlayer.prepare();
                     mediaPlayer.start();
                     finalTime = mediaPlayer.getDuration();

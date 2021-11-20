@@ -2,7 +2,7 @@ package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GALLERY_REQUEST;
-import static com.leon.counter_reading.utils.CustomFile.createImageFileOld;
+import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -22,10 +22,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentImageBinding;
 import com.leon.counter_reading.enums.BundleEnum;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.Image;
 
 import org.jetbrains.annotations.NotNull;
@@ -253,7 +253,7 @@ public class ImageFragment extends DialogFragment {
             if (cameraIntent.resolveActivity(activity.getPackageManager()) != null) {
                 File photoFile = null;
                 try {
-                    photoFile = createImageFileOld(activity);
+                    photoFile = createImageFile(activity);
                 } catch (IOException e) {
                     Log.e("Main", e.toString());
                 }

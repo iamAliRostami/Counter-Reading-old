@@ -1,6 +1,7 @@
 package com.leon.counter_reading.activities;
 
 import static com.leon.counter_reading.helpers.Constants.ALL_FILES_ACCESS_REQUEST;
+import static com.leon.counter_reading.helpers.Constants.SETTING_REQUEST;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -41,7 +42,7 @@ public class DownloadActivity extends BaseActivity {
 
     private void checkAllFilePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (Environment.isExternalStorageManager()) {
+            if (Environment.isExternalStorageManager() && Settings.System.canWrite(this)) {
                 binding.textViewNoRight.setVisibility(View.GONE);
                 binding.linearLayoutHeader.setVisibility(View.VISIBLE);
                 setupViewPager();
@@ -55,7 +56,15 @@ public class DownloadActivity extends BaseActivity {
     private void initializeTextViewNoRight() {
         binding.textViewNoRight.setVisibility(View.VISIBLE);
         binding.linearLayoutHeader.setVisibility(View.GONE);
-        binding.textViewNoRight.setOnClickListener(v -> askAllFilePermission());
+        binding.textViewNoRight.setOnClickListener(v -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (!Environment.isExternalStorageManager()) {
+                    askAllFilePermission();
+                } else if (!Settings.System.canWrite(getApplicationContext())) {
+                    askSettingPermission();
+                }
+            }
+        });
     }
 
     private void askAllFilePermission() {
@@ -67,6 +76,14 @@ public class DownloadActivity extends BaseActivity {
         }
     }
 
+    private void askSettingPermission() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+            Uri uri = Uri.fromParts("package", getPackageName(), null);
+            intent.setData(uri);
+            startActivityForResult(intent, SETTING_REQUEST);
+        }
+    }
 
     private void initializeTextViews() {
         TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
@@ -188,11 +205,13 @@ public class DownloadActivity extends BaseActivity {
         binding.viewPager.setPageTransformer(true, new DepthPageTransformer());
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ALL_FILES_ACCESS_REQUEST) {
+            if (!Settings.System.canWrite(getApplicationContext()))askSettingPermission();
+            else checkAllFilePermission();
+        } else if (requestCode == SETTING_REQUEST) {
             checkAllFilePermission();
         }
     }

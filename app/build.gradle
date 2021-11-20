@@ -155,4 +155,5 @@ dependencies {
 
     implementation 'com.yandex.android:mobmetricalib:4.0.0'
     implementation 'com.yandex.android:mobmetricalib-ndk-crashes:1.1.0'
+
 }

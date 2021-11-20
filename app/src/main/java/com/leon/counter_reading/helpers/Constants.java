@@ -18,6 +18,7 @@ public class Constants {
     public static final int GALLERY_REQUEST = 1889;
     public static final int CARRIER_PRIVILEGE_STATUS = 901;
     public static final int ALL_FILES_ACCESS_REQUEST = 921;
+    public static final int SETTING_REQUEST = 922;
 
     public static final int CAMERA = 1446;
     public static final int REPORT = 1445;

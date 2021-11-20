@@ -11,9 +11,6 @@ import java.util.List;
 
 @Dao
 public interface ImageDao {
-    @Query("SELECT * FROM Image")
-    List<Image> getAllImages();
-
     @Query("SELECT * FROM Image WHERE OnOffLoadId = :OnOffLoadId")
     List<Image> getImagesByOnOffLoadId(String OnOffLoadId);
 
@@ -22,6 +19,9 @@ public interface ImageDao {
 
     @Query("SELECT * FROM Image WHERE isSent = :isSent LIMIT 10")
     List<Image> getImagesByBySent(boolean isSent);
+
+    @Query("SELECT * FROM Image WHERE isSent = :isSent AND trackNumber = :trackNumber")
+    List<Image> getImagesByBySentAndTrack(int trackNumber, boolean isSent);
 
     @Query("SELECT COUNT(*) FROM Image WHERE isSent = :isSent AND trackNumber = :trackNumber")
     int getUnsentImageCountByTrackNumber(int trackNumber, boolean isSent);
@@ -32,11 +32,11 @@ public interface ImageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertImage(Image image);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAllImage(ArrayList<Image> images);
-
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateImage(Image image);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void updateImage(List<Image> images);
 
     @Query("DELETE FROM Image WHERE id = :id")
     void deleteImage(int id);

@@ -7,11 +7,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
+import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.ProgressType;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
@@ -21,7 +22,6 @@ import com.leon.counter_reading.tables.Voice;
 import com.leon.counter_reading.tables.VoiceGrouped;
 import com.leon.counter_reading.utils.CustomErrorHandling;
 import com.leon.counter_reading.utils.CustomFile;
-import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.utils.CustomToast;
 
 import okhttp3.MediaType;
@@ -50,7 +50,9 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
 
     @Override
     protected Activity doInBackground(Activity... activities) {
-        voice.File = CustomFile.prepareVoiceToSend(voice.address);
+        voice.File = CustomFile.prepareVoiceToSend(
+                activities[0].getExternalFilesDir(null).getAbsolutePath() +
+                        activities[0].getString(R.string.audio_folder) + voice.address);
         voiceGrouped.File.clear();
         voiceGrouped.File.add(voice.File);
         return activities[0];
