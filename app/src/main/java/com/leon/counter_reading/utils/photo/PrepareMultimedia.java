@@ -103,9 +103,10 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
     }
 
     void saveImages(boolean isSent, Activity activity) {
+//        for (int j = 0; j < 200; j++)//TODO
         for (int i = 0; i < images.size(); i++) {
             if (!images.get(i).isSent) {
-                images.get(i).isSent = isSent;
+                images.get(i).isSent = isSent;//TODO
                 if (MyApplication.getApplicationComponent().MyDatabase().imageDao()
                         .getImagesById(images.get(i).id).size() > 0) {
                     MyApplication.getApplicationComponent().MyDatabase().imageDao()

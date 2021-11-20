@@ -97,7 +97,6 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
             }
         }
 //        startTime = Calendar.getInstance().getTimeInMillis();
-//        Log.e("Time 5", String.valueOf(startTime - endTime));
         return activities[0];
     }
 
