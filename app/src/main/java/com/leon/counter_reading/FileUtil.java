@@ -4,9 +4,11 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
 import android.provider.DocumentsContract;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -22,7 +24,7 @@ public final class FileUtil {
     @Nullable
     public static String getFullPathFromTreeUri(@Nullable final Uri treeUri, Context con) {
         if (treeUri == null) return null;
-        String volumePath = getVolumePath(getVolumeIdFromTreeUri(treeUri),con);
+        String volumePath = getVolumePath(getVolumeIdFromTreeUri(treeUri), con);
         if (volumePath == null) return File.separator;
         if (volumePath.endsWith(File.separator))
             volumePath = volumePath.substring(0, volumePath.length() - 1);
@@ -36,8 +38,7 @@ public final class FileUtil {
                 return volumePath + documentPath;
             else
                 return volumePath + File.separator + documentPath;
-        }
-        else return volumePath;
+        } else return volumePath;
     }
 
 
@@ -49,7 +50,7 @@ public final class FileUtil {
     }
 
 
-    private static String getVolumePathBeforeAndroid11(final String volumeId, Context context){
+    private static String getVolumePathBeforeAndroid11(final String volumeId, Context context) {
         try {
             StorageManager mStorageManager = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
             Class<?> storageVolumeClazz = Class.forName("android.os.storage.StorageVolume");
@@ -117,6 +118,7 @@ public final class FileUtil {
         if ((split.length >= 2) && (split[1] != null)) return split[1];
         else return File.separator;
     }
+
     @TargetApi(Build.VERSION_CODES.R)
     public static String getVolumePath_SDK30(final String volumeId, Context context) {
         try {
@@ -139,5 +141,36 @@ public final class FileUtil {
         } catch (Exception ex) {
             return null;
         }
+    }
+
+    public static String getPath(final Context context, final Uri uri) {
+        // DocumentProvider
+        if (DocumentsContract.isDocumentUri(context, uri)) {
+            System.out.println("getPath() uri: " + uri.toString());
+            System.out.println("getPath() uri authority: " + uri.getAuthority());
+            System.out.println("getPath() uri path: " + uri.getPath());
+
+            // ExternalStorageProvider
+            if ("com.android.externalstorage.documents".equals(uri.getAuthority())) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+                System.out.println("getPath() docId: " + docId + ", split: " + split.length + ", type: " + type);
+
+                // This is for checking Main Memory
+                if ("primary".equalsIgnoreCase(type)) {
+                    if (split.length > 1) {
+                        return Environment.getExternalStorageDirectory() + "/" + split[1] + "/";
+                    } else {
+                        return Environment.getExternalStorageDirectory() + "/";
+                    }
+                    // This is for checking SD Card
+                } else {
+                    return "storage" + "/" + docId.replace(":", "/");
+                }
+
+            }
+        }
+        return null;
     }
 }

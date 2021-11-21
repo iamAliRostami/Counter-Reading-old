@@ -53,7 +53,6 @@ public class OfflineUtils {
         return storageDirectories;
     }
 
-    @SuppressLint("SimpleDateFormat")
     public static void writeOnSdCard(String json, String name, int trackNumber) {
         String filePostName = name.concat(".txt");
         try {
@@ -119,7 +118,19 @@ public class OfflineUtils {
         final int BUFFER = 2048;
         final File root = new File(Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
-        final String sourcePath = root + "/" + trackNumber, toLocation = root + "/" + trackNumber + ".zip";
+//        final File root1 = new File(Environment.getRootDirectory().getAbsolutePath());
+//        /storage/emulated/D661-5964/Android/data/com.leon.counter_reading/files
+        final File root1 = new File("/storage/D661-5964/Android/data/com.leon.counter_reading/files");
+//        final File root1 = new File("/storage/emulated/0/");
+        if (root1.isDirectory())
+            Log.e("here", "root1.isDirectory()");
+        if (root1.exists())
+            Log.e("here", "root1.exists()");
+        if (root1.mkdirs())
+            Log.e("here", "root1.mkdirs()");
+        if (root1.canRead())
+            Log.e("here", "root1.canRead()");
+        final String sourcePath = root + "/" + trackNumber, toLocation = root1 + "/" + trackNumber + ".zip";
         final File sourceFile = new File(sourcePath);
         try {
             final BufferedInputStream origin;

@@ -3,17 +3,16 @@ package com.leon.counter_reading.fragments;
 
 import static android.app.Activity.RESULT_OK;
 import static com.leon.counter_reading.utils.OfflineUtils.getStorageDirectories;
-import static com.leon.counter_reading.utils.OfflineUtils.readFromSdCard;
-import static com.leon.counter_reading.utils.OfflineUtils.writeOnSdCard;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,10 +34,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,7 +101,7 @@ public class DownloadFragment extends Fragment {
                 new Download().execute(requireActivity());
             }
         });
-//        getExternalStorageDirectories();
+        getExternalStorageDirectories();
     }
 
     public void getExternalStorageDirectories() {
@@ -176,30 +178,28 @@ public class DownloadFragment extends Fragment {
                 Log.e("Address", uri.getPath());
                 Log.e("File", uri.toString());
 
-                Uri treeUri = data.getData();
-                String path = FileUtil.getFullPathFromTreeUri(treeUri, activity);
-                Log.e("address", path);
+                Log.e("address", FileUtil.getPath(getContext(), uri));
 
-                String filePostName = "test.txt";
+
+
+
+
                 try {
-                    File root = new File(uri.getPath() + "/" + 121212);
-                    root.mkdirs();
-                    File file = new File(root + "/" + filePostName);
-                    Log.e("address", file.getAbsolutePath());
-                    file.createNewFile();
-                    FileOutputStream fOut = new FileOutputStream(file);
-                    OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-                    myOutWriter.append("json");
-                    myOutWriter.close();
-                    fOut.close();
+                    InputStream in = getContext().getContentResolver().openInputStream(uri);
+                    BufferedReader r = new BufferedReader(new InputStreamReader(in));
+                    StringBuilder total = new StringBuilder();
+                    for (String line; (line = r.readLine()) != null; ) {
+                        total.append(line).append('\n');
+                    }
+
+                    String content = total.toString();
+                    Log.e("content", content);
+
+
                 } catch (Exception e) {
-                    new CustomToast().error(e.getMessage());
                     e.printStackTrace();
                 }
-
-
-
-
+///storage/emulated/0/
             }
 //            File fileToCopy = new File("/storage/emulated/0/Download/test.txt");
 //            if (data != null) {

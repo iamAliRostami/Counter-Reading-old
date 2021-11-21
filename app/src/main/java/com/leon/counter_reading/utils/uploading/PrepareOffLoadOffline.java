@@ -61,18 +61,18 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
             uploadVoices(activities[0]);
             if (zipFileAtPath(trackNumber)) {
                 //TODO after zip and sent
-                for (int i = 0; i < onOffLoadDtos.size(); i++)
-                    onOffLoadDtos.get(i).offLoadStateId = OffloadStateEnum.SENT.getValue();
-//                getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoads(onOffLoadDtos);
-                getApplicationComponent().MyDatabase().trackingDao().updateTrackingDtoByArchive(id, true, false);
-                for (int i = 0; i < offLoadReports.size(); i++) offLoadReports.get(i).isSent = true;
-                getApplicationComponent().MyDatabase().offLoadReportDao().updateOffLoadReport(offLoadReports);
-
-                activities[0].runOnUiThread(() -> {
-                    String message = "تعداد %d اشتراک با موفقیت بارگذاری شد.";
-                    message = String.format(message, onOffLoadDtos.size());
-                    new CustomToast().success(message, Toast.LENGTH_LONG);
-                });
+//                for (int i = 0; i < onOffLoadDtos.size(); i++)
+//                    onOffLoadDtos.get(i).offLoadStateId = OffloadStateEnum.SENT.getValue();
+////                getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoads(onOffLoadDtos);
+//                getApplicationComponent().MyDatabase().trackingDao().updateTrackingDtoByArchive(id, true, false);
+//                for (int i = 0; i < offLoadReports.size(); i++) offLoadReports.get(i).isSent = true;
+//                getApplicationComponent().MyDatabase().offLoadReportDao().updateOffLoadReport(offLoadReports);
+//
+//                activities[0].runOnUiThread(() -> {
+//                    String message = "تعداد %d اشتراک با موفقیت بارگذاری شد.";
+//                    message = String.format(message, onOffLoadDtos.size());
+//                    new CustomToast().success(message, Toast.LENGTH_LONG);
+//                });
             }
         }
         return activities[0];
