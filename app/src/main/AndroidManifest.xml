@@ -131,7 +131,9 @@
         <activity
             android:name=".activities.DownloadActivity"
             android:exported="true"
-            android:label="@string/download_information" />
+            android:label="@string/download_information" >
+
+        </activity>
         <activity
             android:name=".activities.ReadingActivity"
             android:label=""

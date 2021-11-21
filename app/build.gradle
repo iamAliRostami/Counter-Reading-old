@@ -57,7 +57,15 @@ android {
             buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
                     "com.leon.counter_reading.enums.CompanyNames.ESF"
         }
-
+        ksh {
+            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.config
+            applicationIdSuffix ".ksh"
+//            buildConfigField 'type', 'var_name', "\"value\""
+            buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
+                    "com.leon.counter_reading.enums.CompanyNames.KSH"
+        }
         zone_4 {
             debuggable true
             minifyEnabled false
@@ -155,5 +163,9 @@ dependencies {
 
     implementation 'com.yandex.android:mobmetricalib:4.0.0'
     implementation 'com.yandex.android:mobmetricalib-ndk-crashes:1.1.0'
+
+
+//    implementation 'net.rdrei.android.dirchooser:library:3.2@aar'
+//    implementation 'lib.kashif:folderpicker:2.4'
 
 }

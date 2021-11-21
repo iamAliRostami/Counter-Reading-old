@@ -3,6 +3,7 @@ package com.leon.counter_reading.activities;
 import static com.leon.counter_reading.helpers.Constants.ALL_FILES_ACCESS_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.SETTING_REQUEST;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.os.Build;
 import android.os.Debug;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,6 +32,7 @@ import com.leon.counter_reading.utils.DifferentCompanyManager;
 public class DownloadActivity extends BaseActivity {
     private ActivityDownloadBinding binding;
     private int previousState, currentState;
+    private Activity activity;
 
     @Override
     protected void initialize() {
@@ -51,6 +54,7 @@ public class DownloadActivity extends BaseActivity {
                 initializeTextViewNoRight();
             }
         }
+        activity = this;
     }
 
     private void initializeTextViewNoRight() {
@@ -209,7 +213,7 @@ public class DownloadActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ALL_FILES_ACCESS_REQUEST) {
-            if (!Settings.System.canWrite(getApplicationContext()))askSettingPermission();
+            if (!Settings.System.canWrite(getApplicationContext())) askSettingPermission();
             else checkAllFilePermission();
         } else if (requestCode == SETTING_REQUEST) {
             checkAllFilePermission();

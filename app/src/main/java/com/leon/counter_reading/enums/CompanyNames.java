@@ -16,7 +16,8 @@ public enum CompanyNames {
     TOWNS_WEST(10),
     ESF(11),
     DEBUG(12),
-    ESF_MAP(13);
+    ESF_MAP(13),
+    KSH(14);
 
     private final int value;
 

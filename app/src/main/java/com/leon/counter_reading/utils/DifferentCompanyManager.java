@@ -44,6 +44,8 @@ public class DifferentCompanyManager {
                 return "http://5.160.85.228:9098/";
             case TOWNS_WEST:
                 return "http://217.66.195.75/";
+            case KSH:
+                return "http://46.209.219.36:90";
             case DEBUG:
                 return "http://192.168.43.185:45458/";
             default:
@@ -77,6 +79,8 @@ public class DifferentCompanyManager {
                 return "http://172.28.5.40/";
             case TOWNS_WEST:
                 return "http://172.28.5.41/";
+            case KSH:
+                return "http://46.209.219.36:90";
             default:
                 throw new UnsupportedOperationException();
         }
@@ -90,6 +94,8 @@ public class DifferentCompanyManager {
                 return "t4ww.tpww.ir";
             case TSE:
                 return "swest.tpww.ir";
+            case KSH:
+                return "abfaksh.ir/";
             default:
                 throw new UnsupportedOperationException();
         }
@@ -101,6 +107,7 @@ public class DifferentCompanyManager {
                 return "واحد";
             case ZONE4:
             case TSE:
+            case KSH:
                 return "آحاد";
             default:
                 throw new UnsupportedOperationException();
@@ -111,6 +118,7 @@ public class DifferentCompanyManager {
         switch (companyNames) {
             case ESF:
                 return "واحد مسکونی";
+            case KSH:
             case ZONE4:
             case TSE:
                 return "آحاد اصلی";
@@ -123,6 +131,7 @@ public class DifferentCompanyManager {
         switch (companyNames) {
             case ESF:
                 return "واحد تجاری";
+            case KSH:
             case ZONE4:
             case TSE:
                 return "آحاد فرعی";
@@ -136,6 +145,7 @@ public class DifferentCompanyManager {
             case ESF:
                 return "واحد کل";
             case ZONE4:
+            case KSH:
             case TSE:
                 return "آحاد مصرف";
             default:
@@ -146,43 +156,43 @@ public class DifferentCompanyManager {
     public static int getImageNumber(CompanyNames companyNames) {
         switch (companyNames) {
             case ESF:
-                return 4;
             case ZONE4:
             case TSE:
+            case KSH:
                 return 4;
             default:
-                return 4;
+                return 6;
         }
     }
 
     public static int getShowError(CompanyNames companyNames) {
         switch (companyNames) {
             case ESF:
-                return 3;
             case ZONE4:
             case TSE:
+            case KSH:
                 return 3;
             default:
-                return 3;
+                return 5;
         }
     }
 
     public static int getLockNumber(CompanyNames companyNames) {
         switch (companyNames) {
             case ESF:
-                return 6;
             case ZONE4:
             case TSE:
+            case KSH:
                 return 6;
             default:
-                throw new UnsupportedOperationException();
+                return 5;
         }
     }
 
     public static int getEshterakMinLength(CompanyNames companyNames) {
         switch (companyNames) {
             case ESF:
-                return 5;
+            case KSH:
             case ZONE4:
             case TSE:
                 return 5;
@@ -194,7 +204,7 @@ public class DifferentCompanyManager {
     public static int getEshterakMaxLength(CompanyNames companyNames) {
         switch (companyNames) {
             case ESF:
-                return 15;
+            case KSH:
             case ZONE4:
             case TSE:
                 return 15;
@@ -209,6 +219,7 @@ public class DifferentCompanyManager {
                 return "ردیف";
             case ZONE4:
             case TSE:
+            case KSH:
                 return "شماره پرونده";
             default:
                 return "دیگر";
@@ -268,6 +279,8 @@ public class DifferentCompanyManager {
                 return "آبفا شهرک های غرب";
             case ESF:
                 return "آبفا استان اصفهان";
+            case KSH:
+                return "آبفا استان کرمانشاه";
             default:
                 throw new UnsupportedOperationException();
         }
