@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Debug;
 import android.os.Environment;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -41,6 +40,7 @@ public class DownloadActivity extends BaseActivity {
         ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
         checkAllFilePermission();
+
     }
 
     private void checkAllFilePermission() {
@@ -53,6 +53,9 @@ public class DownloadActivity extends BaseActivity {
             } else {
                 initializeTextViewNoRight();
             }
+        } else {
+            setupViewPager();
+            initializeTextViews();
         }
         activity = this;
     }
