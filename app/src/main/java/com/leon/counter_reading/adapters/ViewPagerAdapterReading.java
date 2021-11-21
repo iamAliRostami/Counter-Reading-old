@@ -32,19 +32,14 @@ public class ViewPagerAdapterReading extends FragmentStatePagerAdapter implement
     private final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
     private final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
     private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
-    private final SpinnerCustomAdapter adapter;
-    public ViewPagerAdapterReading(@NonNull FragmentManager fm, ReadingData readingData,
-                                   Activity activity) {
+
+    //    private final SpinnerCustomAdapter adapter;
+    public ViewPagerAdapterReading(@NonNull FragmentManager fm, ReadingData readingData) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         fm.getFragments();
         fm.getFragments().clear();
         //    private final SpinnerCustomAdapter adapter;
         onOffLoadDtos.addAll(readingData.onOffLoadDtos);
-        final String[] items = new String[readingData.counterStateDtos.size()];
-        for (int i = 0; i < readingData.counterStateDtos.size(); i++) {
-            items[i] = readingData.counterStateDtos.get(i).title;
-        }
-        adapter = new SpinnerCustomAdapter(activity, items);
         counterStateDtos.addAll(readingData.counterStateDtos);
         for (int i = 0; i < readingData.onOffLoadDtos.size(); i++) {
             int k = 0;
@@ -124,10 +119,13 @@ public class ViewPagerAdapterReading extends FragmentStatePagerAdapter implement
 
     @Override
     public void destroyItem(@NotNull ViewGroup container, int position, @NotNull Object object) {
-//        FragmentManager manager = ((Fragment) object).getParentFragmentManager();
-//        FragmentTransaction trans = manager.beginTransaction();
-//        trans.remove((Fragment) object);
-//        trans.commit();
+        FragmentManager manager = ((Fragment) object).getFragmentManager();
+        FragmentTransaction trans = null;
+        if (manager != null) {
+            trans = manager.beginTransaction();
+            trans.remove((Fragment) object);
+            trans.commit();
+        }
         super.destroyItem(container, position, object);
     }
 }
