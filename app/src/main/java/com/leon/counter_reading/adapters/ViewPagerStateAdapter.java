@@ -80,7 +80,6 @@ public class ViewPagerStateAdapter extends FragmentStateAdapter {
         }
         return null;
     }
-
     @Override
     public int getItemCount() {
         return onOffLoadDtos.size();

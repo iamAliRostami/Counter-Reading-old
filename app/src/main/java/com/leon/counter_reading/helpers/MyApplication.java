@@ -1,8 +1,6 @@
 package com.leon.counter_reading.helpers;
 
 import static android.os.Build.UNKNOWN;
-
-import static com.leon.counter_reading.helpers.Constants.CARRIER_PRIVILEGE_STATUS;
 import static com.leon.counter_reading.helpers.Constants.FONT_NAME;
 import static com.leon.counter_reading.helpers.Constants.TOAST_TEXT_SIZE;
 import static com.leon.counter_reading.utils.PermissionManager.hasCarrierPrivileges;
@@ -12,18 +10,12 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import androidx.core.app.ActivityCompat;
 import androidx.multidex.MultiDex;
 
 import com.leon.counter_reading.BuildConfig;
@@ -41,12 +33,7 @@ import com.leon.counter_reading.di.module.NetworkModule;
 import com.leon.counter_reading.di.module.SharedPreferenceModule;
 import com.leon.counter_reading.enums.SharedReferenceNames;
 import com.leon.counter_reading.infrastructure.ILocationTracking;
-import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.utils.locating.CheckSensor;
-import com.yandex.metrica.YandexMetrica;
-import com.yandex.metrica.YandexMetricaConfig;
-
-import java.util.ArrayList;
 
 import es.dmoral.toasty.Toasty;
 
@@ -112,6 +99,7 @@ public class MyApplication extends Application {
         com.yandex.metrica.YandexMetrica.enableActivityAutoTracking(this);
         com.yandex.metrica.YandexMetrica.activate(getApplicationContext(), config);
     }
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);

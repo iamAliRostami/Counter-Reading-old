@@ -65,8 +65,8 @@
         android:gravity="center"
         android:text="@string/data_not_found"
         android:textColor="@color/red"
-        android:textSize="@dimen/text_size_large"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:textSize="@dimen/text_size_large" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
@@ -74,4 +74,5 @@
         android:layout_height="match_parent"
         android:layout_below="@id/linear_layout_above"
         android:layoutDirection="locale" />
+
 </RelativeLayout>

@@ -1,5 +1,7 @@
 package com.leon.counter_reading.fragments;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import com.google.gson.Gson;
 import com.leon.counter_reading.adapters.ReadingSettingCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingSettingBinding;
 import com.leon.counter_reading.enums.BundleEnum;
+import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.tables.TrackingDto;
 
 import org.jetbrains.annotations.NotNull;
@@ -66,6 +69,7 @@ public class ReadingSettingFragment extends Fragment {
             trackingDtos.add(gson.fromJson(s, TrackingDto.class));
         }
         setupListView();
+        initializeCheckbox();
     }
 
     private void setupListView() {
@@ -78,6 +82,14 @@ public class ReadingSettingFragment extends Fragment {
             binding.listViewRead.setVisibility(View.GONE);
             binding.textViewNotFound.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void initializeCheckbox() {
+        binding.checkBoxPagingRotation.setChecked(getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(SharedReferenceKeys.RTL_PAGING.getValue()));
+        binding.checkBoxPagingRotation.setOnClickListener(v -> getApplicationComponent()
+                .SharedPreferenceModel().putData(SharedReferenceKeys.RTL_PAGING.getValue(),
+                        binding.checkBoxPagingRotation.isChecked()));
     }
 
     @Override
