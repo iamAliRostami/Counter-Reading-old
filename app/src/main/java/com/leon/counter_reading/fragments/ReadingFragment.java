@@ -3,12 +3,12 @@ package com.leon.counter_reading.fragments;
 import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.STORAGE_PERMISSIONS;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
 import static com.leon.counter_reading.utils.PermissionManager.checkStoragePermission;
 import static com.leon.counter_reading.utils.PermissionManager.gpsEnabledNew;
 
-import android.Manifest;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,6 +29,7 @@ import com.leon.counter_reading.databinding.FragmentReadingBinding;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.HighLowStateEnum;
 import com.leon.counter_reading.enums.NotificationType;
+import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
 import com.leon.counter_reading.fragments.dialog.ShowFragmentDialog;
@@ -101,7 +102,9 @@ public class ReadingFragment extends Fragment {
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentReadingBinding.inflate(inflater, container, false);
-        binding.scrollViewReading.setRotationY(180);
+        if (getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(SharedReferenceKeys.RTL_PAGING.getValue()))
+            binding.scrollViewReading.setRotationY(180);
         initialize();
         return binding.getRoot();
     }

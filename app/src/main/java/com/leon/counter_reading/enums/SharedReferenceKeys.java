@@ -33,6 +33,7 @@ public enum SharedReferenceKeys {
     AVATAR("avatar"),
     LAST_BACK_UP("last_back_up"),
     PROXY("proxy"),
+    RTL_PAGING("paging_rtl"),
     THEME_TEMPORARY("theme_temporary");
 
     private final String value;

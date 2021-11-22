@@ -6,6 +6,7 @@ import static com.leon.counter_reading.helpers.Constants.DESCRIPTION;
 import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
 import static com.leon.counter_reading.helpers.Constants.NAVIGATION;
 import static com.leon.counter_reading.helpers.Constants.REPORT;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
@@ -289,7 +290,9 @@ public class ReadingActivity extends BaseActivity {
             try {
                 binding.viewPager.setOffscreenPageLimit(1);
                 binding.viewPager.setAdapter(viewPagerAdapterReading);
-                binding.viewPager.setRotationY(180);
+                if (getApplicationComponent().SharedPreferenceModel()
+                        .getBoolData(SharedReferenceKeys.RTL_PAGING.getValue()))
+                    binding.viewPager.setRotationY(180);
                 if (currentItem > 0)
                     binding.viewPager.setCurrentItem(currentItem);
             } catch (Exception e) {
