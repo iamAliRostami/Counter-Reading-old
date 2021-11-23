@@ -1,4 +1,4 @@
-package com.leon.counter_reading;
+package com.leon.counter_reading.utils;
 
 import android.annotation.TargetApi;
 import android.content.Context;

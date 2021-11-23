@@ -7,12 +7,10 @@ import static com.leon.counter_reading.utils.OfflineUtils.getStorageDirectories;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +20,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.leon.counter_reading.FileUtil;
+import com.github.mjdev.libaums.UsbMassStorageDevice;
+import com.github.mjdev.libaums.fs.FileSystem;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentDownloadBinding;
 import com.leon.counter_reading.enums.BundleEnum;
@@ -32,16 +31,11 @@ import com.leon.counter_reading.utils.downloading.Download;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -101,13 +95,39 @@ public class DownloadFragment extends Fragment {
                 new Download().execute(requireActivity());
             }
         });
-        getExternalStorageDirectories();
+//        getExternalStorageDirectories();
+//        test();
     }
 
+
+    private void test() {
+
+        UsbMassStorageDevice[] devices = UsbMassStorageDevice.getMassStorageDevices(requireContext() /* Context or Activity */);
+
+        for (UsbMassStorageDevice device : devices) {
+
+            // before interacting with a device you need to call init()!
+            try {
+                device.init();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // Only uses the first partition on the device
+            FileSystem currentFs = device.getPartitions().get(0).getFileSystem();
+            Log.e("Capacity: ", String.valueOf(currentFs.getCapacity()));
+            Log.e("Occupied Space: ", String.valueOf(currentFs.getOccupiedSpace()));
+            Log.e("Free Space: ", String.valueOf(currentFs.getFreeSpace()));
+            Log.e("Chunk size: ", String.valueOf(currentFs.getChunkSize()));
+        }
+    }
+
+
     public void getExternalStorageDirectories() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        intent.setType("text/*");
+//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+//        intent.setType("text/*");
+//        intent.setType("file/*");
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         startActivityForResult(intent, 134);
 
@@ -174,19 +194,29 @@ public class DownloadFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 134) {
             if (data != null) {
+                String FilePath = data.getData().getPath();
+                String FileName = data.getData().getLastPathSegment();
+                int lastPos = FilePath.length() - FileName.length();
+                String Folder = FilePath.substring(0, lastPos);
+
+                Log.e("Full Path:", FilePath);
+                Log.e("Folder:", Folder);
+                Log.e("FILE NAME:", FileName);
+
+
                 Uri uri = data.getData();
                 Log.e("Address", uri.getPath());
                 Log.e("File", uri.toString());
 
-                Log.e("address", FileUtil.getPath(getContext(), uri));
+//                Log.e("address", FileUtil.getPath(getContext(), uri));
 
-
-
+                Log.e("address 12", new File(uri.getPath()).getPath());
 
 
                 try {
                     InputStream in = getContext().getContentResolver().openInputStream(uri);
                     BufferedReader r = new BufferedReader(new InputStreamReader(in));
+//                    BufferedReader r = new BufferedReader(new FileReader(uri.getPath()));
                     StringBuilder total = new StringBuilder();
                     for (String line; (line = r.readLine()) != null; ) {
                         total.append(line).append('\n');
@@ -199,37 +229,29 @@ public class DownloadFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+
+//                try {
+//                    OutputStream outputStream = getContext().getContentResolver().openOutputStream(uri);
+//                    OutputStreamWriter r = new OutputStreamWriter(new BufferedOutputStream(outputStream));
+//
+//                    r.append("json");
+//                    r.close();
+//                    outputStream.close();
+//
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+
+
 ///storage/emulated/0/
             }
-//            File fileToCopy = new File("/storage/emulated/0/Download/test.txt");
-//            if (data != null) {
-//                copyFile(fileToCopy, data.getData());
-//            }
         }
     }
 
-    private void copyFile(File src, Uri destUri) {
-        BufferedInputStream bis = null;
-        BufferedOutputStream bos = null;
+    public void updateUI() {
 
-        try {
-            bis = new BufferedInputStream(new FileInputStream(src));
-            bos = new BufferedOutputStream(requireActivity().getContentResolver().openOutputStream(destUri));
-            byte[] buf = new byte[1024];
-            bis.read(buf);
-            do {
-                bos.write(buf);
-            } while (bis.read(buf) != -1);
-        } catch (NullPointerException | IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (bis != null) bis.close();
-                if (bos != null) bos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override

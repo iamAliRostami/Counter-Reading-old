@@ -10,8 +10,8 @@
         android:id="@+id/image_view_download"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/button_download"
         android:src="@drawable/img_download"
+        android:layout_above="@id/button_download"
         tools:ignore="ContentDescription" />
 
     <Button

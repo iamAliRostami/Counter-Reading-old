@@ -102,6 +102,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.4.0'
 //    implementation 'androidx.appcompat:appcompat:1.3.1'
 //    implementation 'androidx.annotation:annotation:1.2.0'
 //    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
@@ -167,5 +168,8 @@ dependencies {
 
 //    implementation 'net.rdrei.android.dirchooser:library:3.2@aar'
 //    implementation 'lib.kashif:folderpicker:2.4'
+
+    implementation 'me.jahnen:libaums:0.8.0'
+
 
 }

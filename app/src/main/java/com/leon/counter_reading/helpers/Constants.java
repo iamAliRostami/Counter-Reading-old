@@ -48,4 +48,24 @@ public class Constants {
     public static final String[] LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION};
     public static final String PHONE_PERMISSIONS = "android.permission.READ_PRIVILEGED_PHONE_STATE";
+
+    public static final String ACTION_USB_PERMISSION = "com.leon.counter_reading.activities.USB_PERMISSION";
+
+    public static final int INTERFACE_SUBCLASS = 6;
+
+    /**
+     * protocol 80 means the communication happens only via bulk transfers
+     */
+    public static final int INTERFACE_PROTOCOL = 80;
+
+    public final static String SORT_FILTER_PREF = "SORT_FILTER_PREF";
+    public final static String SORT_ASC_KEY = "SORT_ASC_KEY";
+    public final static String SORT_FILTER_KEY = "SORT_FILTER_KEY";
+
+    public final static int SORTBY_NAME = 0;
+    public final static int SORTBY_DATE = 1;
+    public final static int SORTBY_SIZE = 2;
+
+    public final static int CACHE_THRESHOLD = 20 * 1024 * 1024; // 20 MB
+
 }
