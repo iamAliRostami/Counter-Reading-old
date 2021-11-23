@@ -12,7 +12,6 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentOfflineDownloadBinding;
-import com.leon.counter_reading.enums.DownloadType;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class DownloadOfflineFragment extends Fragment {
+public class DownloadOfflineFragment extends Fragment implements HomeFragment.HomeCallback {
     private FragmentOfflineDownloadBinding binding;
     private UsbMassStorageDevice mUsbMSDevice;
     private final List<UsbDevice> mDetectedDevices = new ArrayList<>();
@@ -56,6 +54,7 @@ public class DownloadOfflineFragment extends Fragment {
     }
 
     void initialize() {
+        mPermissionIntent = PendingIntent.getBroadcast(requireContext(), 0, new Intent(ACTION_USB_PERMISSION), 0);
         binding.imageViewDownload.setImageResource(R.drawable.img_download_off);
     }
 
@@ -65,7 +64,8 @@ public class DownloadOfflineFragment extends Fragment {
             binding.buttonDownload.setVisibility(View.GONE);
             binding.imageViewDownload.setVisibility(View.GONE);
             binding.containerBody.setVisibility(View.VISIBLE);
-            Fragment fragment = DownloadFragment.newInstance(DownloadType.RETRY.getValue());
+            binding.imageViewBack.setVisibility(View.VISIBLE);
+            Fragment fragment = HomeFragment.newInstance(this);
             FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
             fragmentTransaction.replace(binding.containerBody.getId(), fragment).commit();
 //            fragmentTransaction.replace(binding.containerBody.getId(), fragment).addToBackStack("").commit();
@@ -139,6 +139,11 @@ public class DownloadOfflineFragment extends Fragment {
 
     private void setupDevice() {
         Log.e("here", "setupDevice");
+
+        Fragment fragment = ExplorerFragment.newInstance();
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.replace(binding.containerBody.getId(), fragment).commit();
+
     }
 
     private void removedUSB() {
@@ -146,6 +151,7 @@ public class DownloadOfflineFragment extends Fragment {
         binding.buttonDownload.setVisibility(View.VISIBLE);
         binding.imageViewDownload.setVisibility(View.VISIBLE);
         binding.containerBody.setVisibility(View.GONE);
+        binding.imageViewBack.setVisibility(View.GONE);
     }
 
     @Override
@@ -169,5 +175,15 @@ public class DownloadOfflineFragment extends Fragment {
         super.onDestroyView();
         requireContext().unregisterReceiver(usbReceiver);
         binding.imageViewDownload.setImageDrawable(null);
+    }
+
+    @Override
+    public void requestPermission(int pos) {
+        mUsbManager.requestPermission(mDetectedDevices.get(pos), mPermissionIntent);
+    }
+
+    @Override
+    public List<UsbDevice> getUsbDevices() {
+        return mDetectedDevices;
     }
 }
