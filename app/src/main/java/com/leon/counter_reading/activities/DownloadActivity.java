@@ -36,6 +36,7 @@ import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityDownloadBinding;
 import com.leon.counter_reading.enums.DownloadType;
 import com.leon.counter_reading.fragments.DownloadFragment;
+import com.leon.counter_reading.fragments.DownloadOfflineFragment;
 import com.leon.counter_reading.utils.DepthPageTransformer;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 
@@ -49,11 +50,11 @@ public class DownloadActivity extends BaseActivity {
     private int previousState, currentState;
     private Activity activity;
 
-    private final List<UsbDevice> mDetectedDevices = new ArrayList<>();
-    private UsbManager mUsbManager;
-    private UsbMassStorageDevice mUsbMSDevice;
-    private PendingIntent mPermissionIntent;
-    private DownloadFragment downloadFragmentOffline;
+//    private final List<UsbDevice> mDetectedDevices = new ArrayList<>();
+//    private UsbManager mUsbManager;
+//    private UsbMassStorageDevice mUsbMSDevice;
+//    private PendingIntent mPermissionIntent;
+    private DownloadOfflineFragment downloadFragmentOffline;
 
     @Override
     protected void initialize() {
@@ -62,9 +63,6 @@ public class DownloadActivity extends BaseActivity {
         ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
         checkAllFilePermission();
-
-        mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
-
     }
 
 
@@ -150,12 +148,10 @@ public class DownloadActivity extends BaseActivity {
     private void textViewDownloadOff() {
         binding.textViewDownloadOff.setOnClickListener(view -> {
             setColor();
-            binding.textViewDownloadOff.setBackground(
-                    ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_white_2));
+            binding.textViewDownloadOff.setBackground(ContextCompat
+                    .getDrawable(getApplicationContext(), R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(DownloadType.OFFLINE.getValue());
-
-            mUsbManager.requestPermission(mDetectedDevices.get(0), mPermissionIntent);
         });
     }
 
@@ -203,7 +199,7 @@ public class DownloadActivity extends BaseActivity {
         ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
         adapter.addFragment(DownloadFragment.newInstance(DownloadType.NORMAL.getValue()));
         adapter.addFragment(DownloadFragment.newInstance(DownloadType.RETRY.getValue()));
-        downloadFragmentOffline = DownloadFragment.newInstance(DownloadType.OFFLINE.getValue());
+        downloadFragmentOffline = DownloadOfflineFragment.newInstance();
         adapter.addFragment(downloadFragmentOffline);
         adapter.addFragment(DownloadFragment.newInstance(DownloadType.SPECIAL.getValue()));
         binding.viewPager.setAdapter(adapter);
@@ -273,78 +269,6 @@ public class DownloadActivity extends BaseActivity {
         }
     }
 
-    BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-
-            checkUSBStatus();
-
-            if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action))
-                removedUSB();
-
-            if (ACTION_USB_PERMISSION.equals(action)) {
-                synchronized (this) {
-                    UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-
-                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-                        if (device != null) {
-                            //call method to set up device communication
-                            connectDevice(device);
-                        }
-                    } else {
-                        Log.e("tag", "permission denied for device " + device);
-                    }
-                }
-            }
-        }
-    };
-
-    private void connectDevice(UsbDevice device) {
-
-        if (mUsbManager.hasPermission(device))
-            Log.d("TAG", "got permission!");
-
-        UsbMassStorageDevice[] devices = UsbMassStorageDevice.getMassStorageDevices(this);
-        if (devices.length > 0) {
-            mUsbMSDevice = devices[0];
-//            setupDevice();
-        }
-    }
-
-    private void checkUSBStatus() {
-        mDetectedDevices.clear();
-        mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
-        if (mUsbManager != null) {
-            HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
-
-            if (!deviceList.isEmpty()) {
-                for (UsbDevice device : deviceList.values()) {
-                    if (isMassStorageDevice(device))
-                        mDetectedDevices.add(device);
-                }
-            }
-        }
-    }
-
-
-    private void removedUSB() {
-        Intent intent = getIntent();
-        finish();
-        startActivity(intent);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
-        filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
-        filter.addAction(ACTION_USB_PERMISSION);
-        registerReceiver(mUsbReceiver, filter);
-        checkUSBStatus();
-
-    }
 
     @Override
     protected void onStop() {
@@ -361,6 +285,5 @@ public class DownloadActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mUsbReceiver);
     }
 }

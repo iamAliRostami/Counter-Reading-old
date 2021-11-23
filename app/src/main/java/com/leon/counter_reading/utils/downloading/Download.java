@@ -79,12 +79,15 @@ class DownloadCompleted implements ICallback<ReadingData> {
                 if (myDatabase.trackingDao().getTrackingDtoArchiveCountByTrackNumber(readingData
                         .trackingDtos.get(i).trackNumber, true) > 0) {
                     downloadArchive(readingData, i, myDatabase);
+                    myDatabase.counterReportDao().deleteAllCounterReport(readingData.trackingDtos.get(i).zoneId);
                 } else if (myDatabase.trackingDao().getTrackingDtoActivesCountByTracking(readingData
                         .trackingDtos.get(i).trackNumber) > 0) {
                     String message = String.format(activity.getString(R.string.download_message_error),
                             readingData.trackingDtos.get(i).trackNumber);
                     showMessage(message, DialogType.Yellow);
                     return;
+                }else{
+                    myDatabase.counterReportDao().deleteAllCounterReport(readingData.counterReportDtos.get(0).zoneId);
                 }
             }
             if (readingData.trackingDtos.size() > 0 &&
@@ -131,7 +134,7 @@ class DownloadCompleted implements ICallback<ReadingData> {
                     readingData.readingConfigDefaultDtos);
 
             if (readingData.counterReportDtos.size() > 0) {
-                myDatabase.counterReportDao().deleteAllCounterReport();
+//                myDatabase.counterReportDao().deleteAllCounterReport(readingData.counterReportDtos.get(0).zoneId);
                 myDatabase.counterReportDao().insertAllCounterStateReport(readingData.counterReportDtos);
             }
             String message = String.format(MyApplication.getContext().getString(R.string.download_message),

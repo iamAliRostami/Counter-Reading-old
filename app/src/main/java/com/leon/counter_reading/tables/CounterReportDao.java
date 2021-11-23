@@ -26,4 +26,7 @@ public interface CounterReportDao {
 
     @Query("DELETE FROM CounterReportDto")
     void deleteAllCounterReport();
+
+    @Query("DELETE FROM CounterReportDto WHERE zoneId = :zoneId")
+    void deleteAllCounterReport(int zoneId);
 }

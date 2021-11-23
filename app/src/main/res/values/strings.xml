@@ -269,4 +269,5 @@
     <string name="enter_proxy">پروکسی را وارد کنید</string>
     <string name="all_file_permission">شما دسترسی کافی برای ادامه ندارید. \n برای ارائه ی دسترسی کلیک کنید.</string>
     <string name="paging_rtl">ورق زدن از راست به چپ</string>
+    <string name="no_usb_found">No USB found</string>
 </resources>
