@@ -1,5 +1,6 @@
 package com.leon.counter_reading.adapters;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -73,6 +74,7 @@ public class ViewPagerStateAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int i) {
         try {
+            Log.e("here", "createFragment");
             return ReadingFragment.newInstance(onOffLoadDtos.get(i), readingConfigDefaultDtos.get(i),
                     karbariDtos.get(i), counterStateDtos, i);
         } catch (Exception e) {
@@ -80,6 +82,7 @@ public class ViewPagerStateAdapter extends FragmentStateAdapter {
         }
         return null;
     }
+
     @Override
     public int getItemCount() {
         return onOffLoadDtos.size();
