@@ -171,15 +171,15 @@ public class UploadFragment extends Fragment {
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
                     .execute(activity);
-            String[] retArray = getStorageDirectories();
-            if (retArray.length == 0) {
-                new CustomToast().error("کارت حافظه نصب نشده است.", Toast.LENGTH_LONG);
-            } else {
-                for (String s : retArray) {
-                    Log.e("path ", s);
-//                    writeOnSdCard(s, trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber);
-                }
-            }
+//            String[] retArray = getStorageDirectories();
+//            if (retArray.length == 0) {
+//                new CustomToast().error("کارت حافظه نصب نشده است.", Toast.LENGTH_LONG);
+//            } else {
+//                for (String s : retArray) {
+//                    Log.e("path ", s);
+////                    writeOnSdCard(s, trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber);
+//                }
+//            }
         }
     }
 

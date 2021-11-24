@@ -47,7 +47,7 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
         forbiddenDtos.addAll(MyApplication.getApplicationComponent().MyDatabase().
                 forbiddenDao().getAllForbiddenDto(false));
         if (forbiddenDtos.size() > 0) {
-            uploadForbid();
+            uploadForbid(activities[0]);
         }
         onOffLoadDtos.clear();
         onOffLoadDtos.addAll(MyApplication.getApplicationComponent().MyDatabase().
@@ -61,18 +61,18 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
             uploadVoices(activities[0]);
             if (zipFileAtPath(trackNumber)) {
                 //TODO after zip and sent
-//                for (int i = 0; i < onOffLoadDtos.size(); i++)
-//                    onOffLoadDtos.get(i).offLoadStateId = OffloadStateEnum.SENT.getValue();
-////                getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoads(onOffLoadDtos);
-//                getApplicationComponent().MyDatabase().trackingDao().updateTrackingDtoByArchive(id, true, false);
-//                for (int i = 0; i < offLoadReports.size(); i++) offLoadReports.get(i).isSent = true;
-//                getApplicationComponent().MyDatabase().offLoadReportDao().updateOffLoadReport(offLoadReports);
-//
-//                activities[0].runOnUiThread(() -> {
-//                    String message = "تعداد %d اشتراک با موفقیت بارگذاری شد.";
-//                    message = String.format(message, onOffLoadDtos.size());
-//                    new CustomToast().success(message, Toast.LENGTH_LONG);
-//                });
+                for (int i = 0; i < onOffLoadDtos.size(); i++)
+                    onOffLoadDtos.get(i).offLoadStateId = OffloadStateEnum.SENT.getValue();
+//                getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoads(onOffLoadDtos);
+                getApplicationComponent().MyDatabase().trackingDao().updateTrackingDtoByArchive(id, true, false);
+                for (int i = 0; i < offLoadReports.size(); i++) offLoadReports.get(i).isSent = true;
+                getApplicationComponent().MyDatabase().offLoadReportDao().updateOffLoadReport(offLoadReports);
+
+                activities[0].runOnUiThread(() -> {
+                    String message = "تعداد %d اشتراک با موفقیت بارگذاری شد.";
+                    message = String.format(message, onOffLoadDtos.size());
+                    new CustomToast().success(message, Toast.LENGTH_LONG);
+                });
             }
         }
         return activities[0];
@@ -116,10 +116,21 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
         }
     }
 
-    private void uploadForbid() {
-        final Gson gson = new Gson();
-        final String onOffLoadDtoString = gson.toJson(forbiddenDtos);
-        writeOnSdCard(onOffLoadDtoString, "forbiddenDtos", trackNumber);
+    private void uploadForbid(Activity activity) {
+        if (forbiddenDtos.size() > 0) {
+            final Gson gson = new Gson();
+            final String forbiddenString = gson.toJson(forbiddenDtos);
+            writeOnSdCard(forbiddenString, "forbiddenDtos", trackNumber);
+            getApplicationComponent().MyDatabase().forbiddenDao().
+                    updateAllForbiddenDtoBySent(true);
+            for (ForbiddenDto forbiddenDto : forbiddenDtos) {
+                if (forbiddenDto.address != null) {
+                    final Image image = new Image();
+                    image.address = forbiddenDto.address;
+                    CustomFile.copyImages(image, trackNumber, activity);
+                }
+            }
+        }
     }
 
     private boolean uploadOffLoad(Activity activity) {

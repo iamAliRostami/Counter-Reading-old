@@ -130,7 +130,7 @@ public class OfflineUtils {
             Log.e("here", "root1.mkdirs()");
         if (root1.canRead())
             Log.e("here", "root1.canRead()");
-        final String sourcePath = root + "/" + trackNumber, toLocation = root1 + "/" + trackNumber + ".zip";
+        final String sourcePath = root + "/" + trackNumber, toLocation = root + "/" + trackNumber + ".zip";
         final File sourceFile = new File(sourcePath);
         try {
             final BufferedInputStream origin;

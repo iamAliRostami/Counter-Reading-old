@@ -156,7 +156,7 @@ public class CustomFile {
 
     public static boolean copyImages(final ArrayList<Image> images, final int trackNumber, final Context context) {
         if (isExternalStorageWritable()) {
-            File storageDir = new File(Environment
+            final File storageDir = new File(Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + trackNumber + "/images");
             if (!storageDir.exists()) if (!storageDir.mkdirs()) return false;
             boolean saved = false;
@@ -165,21 +165,24 @@ public class CustomFile {
                         context.getString(R.string.camera_folder) + image.address);
                 File to = new File(storageDir + "/" + image.address);
                 saved = from.renameTo(to);
-//                final Bitmap bitmapImage = CustomFile.loadImage(context, image.address);
-//                final File file = new File(storageDir, image.address);
-//                if (file.exists()) if (!file.delete()) return;
-//                try {
-//                    FileOutputStream out = new FileOutputStream(file);
-//                    if (bitmapImage != null) {
-//                        bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
-//                    }
-//                    out.flush();
-//                    out.close();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                MediaScannerConnection.scanFile(context, new String[]{file.getPath()}, new String[]{"image/jpeg"}, null);
             }
+            return saved;
+        } else {
+            new CustomToast().warning(context.getString(R.string.error_external_storage_is_not_writable));
+            return false;
+        }
+    }
+
+    public static boolean copyImages(final Image image, final int trackNumber, final Context context) {
+        if (isExternalStorageWritable()) {
+            final File storageDir = new File(Environment
+                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + trackNumber + "/images");
+            if (!storageDir.exists()) if (!storageDir.mkdirs()) return false;
+            boolean saved = false;
+            File from = new File(context.getExternalFilesDir(null).getAbsolutePath() +
+                    context.getString(R.string.camera_folder) + image.address);
+            File to = new File(storageDir + "/" + image.address);
+            saved = from.renameTo(to);
             return saved;
         } else {
             new CustomToast().warning(context.getString(R.string.error_external_storage_is_not_writable));
