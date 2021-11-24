@@ -136,6 +136,7 @@ public class ExplorerFragment extends Fragment {
 
     private void onListItemClick(int position) {
         final UsbFile entry = mAdapter.getItem(position);
+        Log.e("file",entry.getName());
         if (entry.isDirectory()) {
             dirs.push(mAdapter.getCurrentDir());
             doRefresh(entry);

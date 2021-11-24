@@ -1,12 +1,7 @@
 package com.leon.counter_reading.fragments;
 
-//import static com.leon.counter_reading.utils.ExternalStorage.getAllStorageLocations;
-
-import static com.leon.counter_reading.utils.OfflineUtils.getStorageDirectories;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -189,6 +184,4 @@ public class UploadFragment extends Fragment {
         trackingDtos.clear();
         items = null;
     }
-
-
 }

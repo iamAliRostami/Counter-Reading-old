@@ -6,7 +6,6 @@ import static com.leon.counter_reading.utils.USBUtils.loadMimeIcon;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +52,6 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             view.setOnKeyListener((view1, keyCode, keyEvent) -> {
                 boolean handled;
-                Log.d("onKey ", keyEvent.toString());
                 handled = mRecyclerItemClickListener.handleDPad(view1, keyCode, keyEvent);
                 return handled;
             });
@@ -72,9 +70,6 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @SuppressLint("NotifyDataSetChanged")
     public void refresh() throws IOException {
         mFiles = Arrays.asList(mCurrentDir.listFiles());
-        Log.e("files size: ", String.valueOf(mFiles.size()));
-        Log.e("REFRESH.  mSortByCurrent: ", ExplorerFragment.mSortByCurrent + ", mSortAsc: " + ExplorerFragment.mSortAsc);
-
         Collections.sort(mFiles, USBUtils.comparator);
 
         if (!ExplorerFragment.mSortAsc)
@@ -93,9 +88,6 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-
-        Log.e("onBindViewHolder. Position: ", String.valueOf(position));
-
         if (viewHolder instanceof USBViewHolder) {
             UsbFile file = mFiles.get(position);
 
@@ -108,7 +100,6 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if (index > 0) {
 //                    String prefix = file.getName().substring(0, index);
                     String ext = file.getName().substring(index + 1);
-                    Log.e("mimetype: ", getMimetype(ext.toLowerCase()) + ". ext is: " + ext);
                     holder.type.setImageResource(loadMimeIcon(getMimetype(ext.toLowerCase())));
                 }
             }
