@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
@@ -56,16 +57,31 @@ public class ReadingFragment extends Fragment {
     private boolean canBeEmpty, canLessThanPre, isMakoos, isMane;
     private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
 
-    public static ReadingFragment newInstance(
-            OnOffLoadDto onOffLoadDto,
-            ReadingConfigDefaultDto readingConfigDefaultDto,
-            KarbariDto karbariDto,
-            ArrayList<CounterStateDto> counterStateDtos,
-            int position) {
-        ReadingFragment fragment = new ReadingFragment();
-        fragment.setArguments(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto,
-                counterStateDtos, position));
-        return fragment;
+    public static ReadingFragment newInstance(OnOffLoadDto onOffLoadDto,
+                                              ReadingConfigDefaultDto readingConfigDefaultDto,
+                                              ArrayList<CounterStateDto> counterStateDtos,
+                                              KarbariDto karbariDto, int position) {
+        return new ReadingFragment(onOffLoadDto, readingConfigDefaultDto, karbariDto,
+                counterStateDtos, position);
+    }
+
+    public ReadingFragment() {
+    }
+
+    public ReadingFragment(OnOffLoadDto onOffLoadDto, ReadingConfigDefaultDto readingConfigDefaultDto,
+                           KarbariDto karbariDto, ArrayList<CounterStateDto> counterStateDtos, int position) {
+        this.onOffLoadDto = onOffLoadDto;
+        this.readingConfigDefaultDto = readingConfigDefaultDto;
+        this.karbariDto = karbariDto;
+        this.position = position;
+        this.counterStateDtos.clear();
+        this.counterStateDtos.addAll(counterStateDtos);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
+        super.onSaveInstanceState(outState);
     }
 
     private static Bundle putBundle(OnOffLoadDto onOffLoadDto,
@@ -94,8 +110,25 @@ public class ReadingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null)
+            getBundle(savedInstanceState);
+        else if (getArguments() != null)
+            getBundle(getArguments());
         activity = getActivity();
-        getBundle();
+    }
+
+    private void getBundle(Bundle bundle) {
+        position = bundle.getInt(BundleEnum.POSITION.getValue());
+        final Gson gson = new Gson();
+        onOffLoadDto = gson.fromJson(bundle.getString(BundleEnum.ON_OFF_LOAD.getValue()),
+                OnOffLoadDto.class);
+        readingConfigDefaultDto = gson.fromJson(bundle.getString(BundleEnum.READING_CONFIG.getValue()),
+                ReadingConfigDefaultDto.class);
+        karbariDto = gson.fromJson(bundle.getString(BundleEnum.KARBARI_DICTONARY.getValue()),
+                KarbariDto.class);
+        final ArrayList<String> json1 = bundle.getStringArrayList(BundleEnum.COUNTER_STATE.getValue());
+        counterStateDtos.clear();
+        for (String s : json1) counterStateDtos.add(gson.fromJson(s, CounterStateDto.class));
     }
 
     @Override
@@ -170,13 +203,9 @@ public class ReadingFragment extends Fragment {
             }
         });
         binding.textViewAddress.setOnLongClickListener(v -> {
-
             ShowFragmentDialog.ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG",
                     PossibleFragment.newInstance(onOffLoadDto,
                             position, true));
-//            PossibleFragment possibleFragment = PossibleFragment.newInstance(onOffLoadDto,
-//                    position, true);
-//            possibleFragment.show(getChildFragmentManager(), getString(R.string.dynamic_navigation));
             return false;
         });
     }
@@ -292,7 +321,6 @@ public class ReadingFragment extends Fragment {
         ((ReadingActivity) activity).updateOnOffLoadByAttempt(position);
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName())) {
             ((ReadingActivity) activity).updateOnOffLoadByLock(position);
-//            binding.editTextNumber.setText("");
             binding.editTextNumber.setFocusable(false);
             binding.editTextNumber.setEnabled(false);
             return canBeEmpty;
@@ -412,25 +440,6 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-    private void getBundle() {
-        if (getArguments() != null) {
-            position = getArguments().getInt(BundleEnum.POSITION.getValue());
-            final Gson gson = new Gson();
-            onOffLoadDto = gson.fromJson(getArguments().getString(BundleEnum.ON_OFF_LOAD.getValue()),
-                    OnOffLoadDto.class);
-            readingConfigDefaultDto = gson.fromJson(getArguments()
-                            .getString(BundleEnum.READING_CONFIG.getValue()),
-                    ReadingConfigDefaultDto.class);
-            karbariDto = gson.fromJson(getArguments()
-                    .getString(BundleEnum.KARBARI_DICTONARY.getValue()), KarbariDto.class);
-            final ArrayList<String> json1 = getArguments()
-                    .getStringArrayList(BundleEnum.COUNTER_STATE.getValue());
-            counterStateDtos.clear();
-            for (String s : json1) {
-                counterStateDtos.add(gson.fromJson(s, CounterStateDto.class));
-            }
-        }
-    }
 
     @Override
     public void onResume() {

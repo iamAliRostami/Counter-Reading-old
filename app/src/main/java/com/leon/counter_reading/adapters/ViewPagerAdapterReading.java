@@ -1,6 +1,5 @@
 package com.leon.counter_reading.adapters;
 
-import android.app.Activity;
 import android.os.Parcelable;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -92,8 +91,8 @@ public class ViewPagerAdapterReading extends FragmentStatePagerAdapter implement
         try {
 
             return ReadingFragment.newInstance(onOffLoadDtos.get(position),
-                    readingConfigDefaultDtos.get(position), karbariDtos.get(position),
-                    counterStateDtos,/*adapter,*/ position);
+                    readingConfigDefaultDtos.get(position), counterStateDtos,
+                    karbariDtos.get(position),/*adapter,*/ position);
         } catch (Exception e) {
             new CustomToast().error(MyApplication.getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
         }

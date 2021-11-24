@@ -74,7 +74,7 @@ public class ViewPagerStateAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int i) {
         try {
             return ReadingFragment.newInstance(onOffLoadDtos.get(i), readingConfigDefaultDtos.get(i),
-                    karbariDtos.get(i), counterStateDtos, i);
+                    counterStateDtos,karbariDtos.get(i),  i);
         } catch (Exception e) {
             new CustomToast().error(MyApplication.getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
         }
