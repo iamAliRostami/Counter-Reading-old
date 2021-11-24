@@ -2,7 +2,6 @@ package com.leon.counter_reading.utils.downloading;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.fragments.ExplorerFragment;
@@ -28,8 +27,7 @@ public class CopyTask extends AsyncTask<CopyTaskParam, Integer, Void> {
 
     @Override
     protected Void doInBackground(CopyTaskParam... params) {
-        long time = System.currentTimeMillis();
-        ByteBuffer buffer = ByteBuffer.allocate(4096);
+        final ByteBuffer buffer = ByteBuffer.allocate(4096);
         param = params[0];
         long length = params[0].from.getLength();
         try {

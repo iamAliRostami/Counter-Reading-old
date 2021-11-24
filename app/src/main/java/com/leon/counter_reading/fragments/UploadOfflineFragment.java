@@ -14,15 +14,11 @@ import com.leon.counter_reading.activities.UploadActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentUploadBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
-import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.DialogType;
-import com.leon.counter_reading.enums.UploadType;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.MyDatabase;
-import com.leon.counter_reading.utils.uploading.PrepareMultimedia;
-import com.leon.counter_reading.utils.uploading.PrepareOffLoad;
 import com.leon.counter_reading.utils.uploading.PrepareOffLoadOffline;
 
 import org.jetbrains.annotations.NotNull;
@@ -30,37 +26,22 @@ import org.jetbrains.annotations.NotNull;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class UploadFragment extends Fragment {
+public class UploadOfflineFragment extends Fragment {
     private FragmentUploadBinding binding;
     private Activity activity;
     private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
-    private final int[] imageSrc = {R.drawable.img_upload_on, R.drawable.img_upload_off,
-            R.drawable.img_multimedia};
-    private int type;
     private String[] items;
 
-    public static UploadFragment newInstance(int type) {
-        UploadFragment fragment = new UploadFragment();
-        Bundle args = new Bundle();
-        args.putInt(BundleEnum.TYPE.getValue(), type);
-        fragment.setArguments(args);
-        return fragment;
+    public static UploadOfflineFragment newInstance() {
+        return new UploadOfflineFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
-        getBundle();
-    }
-
-    private void getBundle() {
         trackingDtos.clear();
         trackingDtos.addAll(((UploadActivity) activity).getTrackingDtos());
-        if (getArguments() != null) {
-            type = getArguments().getInt(BundleEnum.TYPE.getValue());
-            getArguments().clear();
-        }
     }
 
     @Override
@@ -72,23 +53,10 @@ public class UploadFragment extends Fragment {
     }
 
     private void initialize() {
-        if (type == UploadType.MULTIMEDIA.getValue()) {
-            binding.spinner.setVisibility(View.GONE);
-            binding.textViewMultimedia.setVisibility(View.VISIBLE);
-            setMultimediaInfo(activity);
-        } else {
-            items = TrackingDto.getTrackingDtoItems(trackingDtos, getString(R.string.select_one));
-            setupSpinner();
-        }
-        binding.imageViewUpload.setImageResource(imageSrc[type]);
+        items = TrackingDto.getTrackingDtoItems(trackingDtos, getString(R.string.select_one));
+        setupSpinner();
+        binding.imageViewUpload.setImageResource(R.drawable.img_upload_off);
         setOnButtonUploadClickListener();
-    }
-
-    public void setMultimediaInfo(Activity activity) {
-        int imagesCount = MyApplication.getApplicationComponent().MyDatabase().imageDao().getUnsentImageCount(false);
-        int voicesCount = MyApplication.getApplicationComponent().MyDatabase().voiceDao().getUnsentVoiceCount(false);
-        String message = String.format(activity.getString(R.string.unuploaded_multimedia), imagesCount, voicesCount);
-        activity.runOnUiThread(() -> binding.textViewMultimedia.setText(message));
     }
 
     private void setupSpinner() {
@@ -138,13 +106,8 @@ public class UploadFragment extends Fragment {
 
     private void setOnButtonUploadClickListener() {
         binding.buttonUpload.setOnClickListener(v -> {
-            if (type == UploadType.MULTIMEDIA.getValue()) {
-                new PrepareMultimedia(activity, this, false).execute(activity);
-            } else {
-                if (checkOnOffLoad()) {
-                    sendOnOffLoad();
-                }
-            }
+            if (checkOnOffLoad())
+                sendOnOffLoad();
         });
     }
 
@@ -156,17 +119,10 @@ public class UploadFragment extends Fragment {
     }
 
     private void sendOnOffLoad() {
-        if (type == UploadType.NORMAL.getValue()) {
-            new PrepareOffLoad(activity,
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
-                    .execute(activity);
-        } else if (type == UploadType.OFFLINE.getValue()) {
-            new PrepareOffLoadOffline(activity,
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
-                    .execute(activity);
-        }
+        new PrepareOffLoadOffline(activity,
+                trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
+                trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
+                .execute(activity);
     }
 
     @Override

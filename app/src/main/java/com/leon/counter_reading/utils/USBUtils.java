@@ -367,7 +367,6 @@ public class USBUtils {
                 extension);
     }
 
-
     public static String getHumanSortBy(Context context) {
         switch (ExplorerFragment.mSortByCurrent) {
             case Constants.SORT_BY_DATE:
