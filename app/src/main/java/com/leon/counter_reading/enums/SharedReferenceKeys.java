@@ -34,7 +34,11 @@ public enum SharedReferenceKeys {
     LAST_BACK_UP("last_back_up"),
     PROXY("proxy"),
     RTL_PAGING("paging_rtl"),
-    THEME_TEMPORARY("theme_temporary");
+    THEME_TEMPORARY("theme_temporary"),
+
+    SORT_FILTER_PREF("SORT_FILTER_PREF"),
+    SORT_ASC_KEY("SORT_ASC_KEY"),
+    SORT_FILTER_KEY("SORT_FILTER_KEY");
 
     private final String value;
 

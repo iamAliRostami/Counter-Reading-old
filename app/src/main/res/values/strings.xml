@@ -270,4 +270,8 @@
     <string name="all_file_permission">شما دسترسی کافی برای ادامه ندارید. \n برای ارائه ی دسترسی کلیک کنید.</string>
     <string name="paging_rtl">ورق زدن از راست به چپ</string>
     <string name="no_usb_found">No USB found</string>
+    <string name="no_file">No files</string>
+    <string name="error_on_usb">Error reading USB. Check FAT32 format.</string>
+    <string name="size">سایز</string>
+    <string name="sort_by">مرتب سازی بر اساس</string>
 </resources>

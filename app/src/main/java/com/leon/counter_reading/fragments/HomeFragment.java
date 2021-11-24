@@ -18,9 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends ListFragment {
-    private FragmentHomeBinding binding;
-    private List<UsbDevice> mDetectedDevices;
-    private DownloadOfflineFragment downloadOfflineFragment;
+    private final DownloadOfflineFragment downloadOfflineFragment;
 
     public HomeFragment(DownloadOfflineFragment downloadOfflineFragment) {
         this.downloadOfflineFragment = downloadOfflineFragment;
@@ -38,33 +36,30 @@ public class HomeFragment extends ListFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        binding = FragmentHomeBinding.inflate(getLayoutInflater());
+        FragmentHomeBinding binding = FragmentHomeBinding.inflate(getLayoutInflater());
         initialize();
         return binding.getRoot();
     }
 
     private void initialize() {
-        mDetectedDevices = downloadOfflineFragment.getUsbDevices();
-        List<String> showDevices = new ArrayList<>();
+        final List<UsbDevice> mDetectedDevices = downloadOfflineFragment.getUsbDevices();
+        final List<String> showDevices = new ArrayList<>();
         for (int i = 0; i < mDetectedDevices.size(); i++) {
-            // API level 21
             showDevices.add(mDetectedDevices.get(i).getProductName());
         }
-        ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(getActivity(), R.layout.row_listdevices, R.id.listText, showDevices);
-        // assign the list adapter
-        setListAdapter(myAdapter);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.row_listdevices, R.id.listText, showDevices);
+        setListAdapter(adapter);
     }
 
     @Override
     public void onListItemClick(@NonNull ListView list, @NonNull View view, int position, long id) {
         super.onListItemClick(list, view, position, id);
-        String selectedDevice = (String) getListView().getItemAtPosition(position);
         downloadOfflineFragment.requestPermission(position);
     }
 
     public interface HomeCallback {
-        public List<UsbDevice> getUsbDevices();
-        public void requestPermission(int pos);
+        List<UsbDevice> getUsbDevices();
+
+        void requestPermission(int pos);
     }
 }

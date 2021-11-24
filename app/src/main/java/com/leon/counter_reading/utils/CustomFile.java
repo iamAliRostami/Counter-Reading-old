@@ -365,4 +365,22 @@ public class CustomFile {
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(json, ReadingData.class);
     }
+
+    public static String readData(File file) {
+        StringBuilder text = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+            }
+            br.close();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        return text.toString();
+//        Gson gson = new GsonBuilder().create();
+//        return gson.fromJson(json, ReadingData.class);
+    }
 }

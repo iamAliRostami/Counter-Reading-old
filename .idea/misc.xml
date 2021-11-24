@@ -3,12 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/cabinet.xml" value="0.42421875" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/line.xml" value="0.42421875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_base.xml" value="0.39375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_download.xml" value="0.536" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_help.xml" value="0.2625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_location.xml" value="0.2625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_login.xml" value="0.2625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_main.xml" value="0.39375" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_navigation.xml" value="0.18671875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_reading.xml" value="0.2625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_reading_report.xml" value="0.2625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_report.xml" value="0.26614583333333336" />
@@ -16,7 +19,7 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/dialog_text_input.xml" value="0.39375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_are_you_sure.xml" value="0.2625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_download.xml" value="0.536" />
-        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_explorer.xml" value="0.39375" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_explorer.xml" value="0.536" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_home.xml" value="0.39375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_offline_download.xml" value="0.4" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_possible.xml" value="0.4" />
@@ -30,7 +33,7 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_road_map.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/item_reading_setting_1.xml" value="0.4" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/item_reading_setting_2.xml" value="0.2625" />
-        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/list_item.xml" value="0.39375" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/list_item.xml" value="0.6" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/progress_bar.xml" value="0.24375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/progress_bar_new.xml" value="0.24375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/row_listdevices.xml" value="0.19375" />

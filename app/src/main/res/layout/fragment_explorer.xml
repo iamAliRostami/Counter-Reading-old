@@ -1,14 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.ExplorerFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <LinearLayout
+            android:id="@+id/linear_layout_sort_by"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/image_button_order_by"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/medium_dp"
+                android:paddingRight="@dimen/medium_dp"
+                android:src="@drawable/sort_order_asc"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/button_filter_by"
+                style="@style/HomeTitles"
+                android:layout_width="0dp"
+                android:layout_margin="@dimen/medium_dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|start"
+                android:text="@string/name" />
+
+            <ImageView
+                android:id="@+id/image_view_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_dp"
+                android:src="@drawable/ic_menu_undo_am_alpha"
+                android:visibility="visible"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/small_dp"
+            android:background="@color/white" />
+
+        <com.leon.counter_reading.adapters.recyclerview.EmptyRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            app:fastScrollEnabled="true"
+            app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
+            app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
+            app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
+            app:fastScrollVerticalTrackDrawable="@drawable/line_drawable">
+
+            <requestFocus />
+        </com.leon.counter_reading.adapters.recyclerview.EmptyRecyclerView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_empty"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/no_file"
+            android:textAllCaps="true"
+            android:textSize="@dimen/text_size_huge"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="250.0dip"
+            android:layout_marginBottom="25.0dip"
+            android:adjustViewBounds="true"
+            android:alpha="1.0"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/cabinet" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_view_error"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/error_on_usb"
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_size_huge"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+</RelativeLayout>

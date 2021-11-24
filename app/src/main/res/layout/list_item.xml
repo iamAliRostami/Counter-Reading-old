@@ -27,7 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textColor="?android:textColor" />
 
         <TextView
             android:id="@android:id/summary"
@@ -35,7 +36,6 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true" />
-
     </LinearLayout>
 
     <FrameLayout

@@ -6,15 +6,6 @@
     android:padding="@dimen/large_dp"
     tools:context="com.leon.counter_reading.fragments.DownloadOfflineFragment">
 
-
-    <ImageView
-        android:id="@+id/image_view_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/previous"
-        tools:ignore="ContentDescription" />
-
     <FrameLayout
         android:id="@+id/container_body"
         android:layout_width="match_parent"

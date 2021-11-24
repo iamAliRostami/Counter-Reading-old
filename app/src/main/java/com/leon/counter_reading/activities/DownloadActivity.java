@@ -1,25 +1,16 @@
 package com.leon.counter_reading.activities;
 
-import static com.leon.counter_reading.helpers.Constants.ACTION_USB_PERMISSION;
 import static com.leon.counter_reading.helpers.Constants.ALL_FILES_ACCESS_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.SETTING_REQUEST;
-import static com.leon.counter_reading.utils.USBUtils.isMassStorageDevice;
 
 import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Debug;
 import android.os.Environment;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -28,8 +19,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import com.github.mjdev.libaums.UsbMassStorageDevice;
-import com.github.mjdev.libaums.fs.FileSystem;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ViewPagerAdapterTab;
 import com.leon.counter_reading.base_items.BaseActivity;
@@ -40,21 +29,9 @@ import com.leon.counter_reading.fragments.DownloadOfflineFragment;
 import com.leon.counter_reading.utils.DepthPageTransformer;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 public class DownloadActivity extends BaseActivity {
     private ActivityDownloadBinding binding;
     private int previousState, currentState;
-    private Activity activity;
-
-//    private final List<UsbDevice> mDetectedDevices = new ArrayList<>();
-//    private UsbManager mUsbManager;
-//    private UsbMassStorageDevice mUsbMSDevice;
-//    private PendingIntent mPermissionIntent;
-    private DownloadOfflineFragment downloadFragmentOffline;
 
     @Override
     protected void initialize() {
@@ -80,7 +57,6 @@ public class DownloadActivity extends BaseActivity {
             setupViewPager();
             initializeTextViews();
         }
-        activity = this;
     }
 
     private void initializeTextViewNoRight() {
@@ -199,8 +175,7 @@ public class DownloadActivity extends BaseActivity {
         ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
         adapter.addFragment(DownloadFragment.newInstance(DownloadType.NORMAL.getValue()));
         adapter.addFragment(DownloadFragment.newInstance(DownloadType.RETRY.getValue()));
-        downloadFragmentOffline = DownloadOfflineFragment.newInstance();
-        adapter.addFragment(downloadFragmentOffline);
+        adapter.addFragment(DownloadOfflineFragment.newInstance());
         adapter.addFragment(DownloadFragment.newInstance(DownloadType.SPECIAL.getValue()));
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -246,29 +221,6 @@ public class DownloadActivity extends BaseActivity {
             checkAllFilePermission();
         }
     }
-
-    private void test() {
-
-        UsbMassStorageDevice[] devices = UsbMassStorageDevice.getMassStorageDevices(activity /* Context or Activity */);
-
-        for (UsbMassStorageDevice device : devices) {
-
-            // before interacting with a device you need to call init()!
-            try {
-                device.init();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            // Only uses the first partition on the device
-            FileSystem currentFs = device.getPartitions().get(0).getFileSystem();
-            Log.e("Capacity: ", String.valueOf(currentFs.getCapacity()));
-            Log.e("Occupied Space: ", String.valueOf(currentFs.getOccupiedSpace()));
-            Log.e("Free Space: ", String.valueOf(currentFs.getFreeSpace()));
-            Log.e("Chunk size: ", String.valueOf(currentFs.getChunkSize()));
-        }
-    }
-
 
     @Override
     protected void onStop() {
