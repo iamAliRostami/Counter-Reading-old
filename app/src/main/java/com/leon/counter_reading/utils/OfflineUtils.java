@@ -1,5 +1,6 @@
 package com.leon.counter_reading.utils;
 
+import static com.leon.counter_reading.helpers.Constants.zipAddress;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
 import android.os.Environment;
@@ -9,6 +10,7 @@ import com.github.mjdev.libaums.fs.UsbFile;
 import com.github.mjdev.libaums.fs.UsbFileOutputStream;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.leon.counter_reading.helpers.Constants;
 import com.leon.counter_reading.tables.ReadingData;
 
 import java.io.BufferedInputStream;
@@ -120,10 +122,10 @@ public class OfflineUtils {
         final File root = new File(Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
         final String sourcePath = root + "/" + trackNumber;
-        final String toLocation = sourcePath + ".zip";
+        zipAddress = sourcePath + ".zip";
         final File sourceFile = new File(sourcePath);
         try {
-            final FileOutputStream dest = new FileOutputStream(toLocation);
+            final FileOutputStream dest = new FileOutputStream(zipAddress);
             final ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
             if (sourceFile.isDirectory() && sourceFile.getParent() != null) {
                 zipSubFolder(out, sourceFile, sourceFile.getParent().length());

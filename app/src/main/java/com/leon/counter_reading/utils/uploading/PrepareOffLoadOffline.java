@@ -1,24 +1,21 @@
 package com.leon.counter_reading.utils.uploading;
 
+import static com.leon.counter_reading.helpers.Constants.ZIP_ROOT;
+import static com.leon.counter_reading.helpers.Constants.zipAddress;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.OfflineUtils.writeOnSdCard;
 import static com.leon.counter_reading.utils.OfflineUtils.zipFileAtPath;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.github.mjdev.libaums.UsbMassStorageDevice;
-import com.github.mjdev.libaums.fs.FileSystem;
-import com.github.mjdev.libaums.fs.UsbFile;
 import com.google.gson.Gson;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.enums.OffloadStateEnum;
-import com.leon.counter_reading.fragments.UploadOfflineFragment;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.ForbiddenDto;
 import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.tables.OffLoadReport;
@@ -27,7 +24,7 @@ import com.leon.counter_reading.tables.Voice;
 import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 
 public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activity> {
@@ -35,85 +32,54 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
     private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
     private final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
     private final ArrayList<ForbiddenDto> forbiddenDtos = new ArrayList<>();
-    private final UploadOfflineFragment fragment;
     private final int trackNumber;
     private final String id;
-    private boolean usb;
 
-    public PrepareOffLoadOffline(Activity activity, UploadOfflineFragment fragment, int trackNumber,
-                                 String id, boolean usb) {
+    public PrepareOffLoadOffline(Activity activity, int trackNumber, String id) {
         super();
-        customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
+        customProgressModel = getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
         this.trackNumber = trackNumber;
-        this.usb = usb;
         this.id = id;
-        this.fragment = fragment;
     }
 
     @SuppressLint("DefaultLocale")
     @Override
     protected Activity doInBackground(Activity... activities) {
         forbiddenDtos.clear();
-        forbiddenDtos.addAll(MyApplication.getApplicationComponent().MyDatabase().
+        forbiddenDtos.addAll(getApplicationComponent().MyDatabase().
                 forbiddenDao().getAllForbiddenDto(false));
-        if (forbiddenDtos.size() > 0) {
-            uploadForbid(activities[0]);
-        }
+        if (forbiddenDtos.size() > 0) uploadForbid(activities[0]);
         onOffLoadDtos.clear();
-        onOffLoadDtos.addAll(MyApplication.getApplicationComponent().MyDatabase().
-                onOffLoadDao().getOnOffLoadReadByTrackingAndOffLoad(trackNumber,
-                OffloadStateEnum.INSERTED.getValue()));
+        onOffLoadDtos.addAll(getApplicationComponent().MyDatabase().onOffLoadDao()
+                .getOnOffLoadReadByTrackingAndOffLoad(trackNumber,
+                        OffloadStateEnum.INSERTED.getValue()));
         offLoadReports.clear();
-        offLoadReports.addAll(MyApplication.getApplicationComponent().MyDatabase().
-                offLoadReportDao().getAllOffLoadReport(false));
+        offLoadReports.addAll(getApplicationComponent().MyDatabase().offLoadReportDao()
+                .getAllOffLoadReport(false));
         if (uploadOffLoad(activities[0])) {
             uploadImages(activities[0]);
             uploadVoices(activities[0]);
-            fragment.requestPermission();
-            if (!usb) {
-                zipFileAtPath(trackNumber);
-            } else {
-                final UsbMassStorageDevice[] devices = UsbMassStorageDevice.getMassStorageDevices(activities[0]);
-                try {
-                    devices[0].init();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                final FileSystem fs = devices[0].getPartitions().get(0).getFileSystem();
-                // we always use the first partition of the device
-                final UsbFile root = fs.getRootDirectory();
-//            UsbFile root = entry;
-//            try {
-//                UsbFile file = root.createFile("bar3.txt");
-//                // write to a file
-//                OutputStream os = new UsbFileOutputStream(file);
-//
-//                os.write("hello".getBytes());
-//                os.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-                zipFileAtPath(trackNumber, root);
-//            zipFileAtPath(trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber);
-//            File from = new File(Environment.getExternalStoragePublicDirectory(
-//                    Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()+ "/" + trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber + ".zip");
-//            File to = new File(root + "/" + trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber + ".zip");
-//            Log.e("change location", String.valueOf(from.renameTo(to)));
+            if (zipFileAtPath(trackNumber)) {
+                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                intent.setType("application/zip");
+                final File file = new File(zipAddress);
+                intent.putExtra(Intent.EXTRA_TITLE, file.getName());
+                activities[0].startActivityForResult(intent, ZIP_ROOT);
+                //TODO after zip and sent
+                for (int i = 0; i < onOffLoadDtos.size(); i++)
+                    onOffLoadDtos.get(i).offLoadStateId = OffloadStateEnum.SENT.getValue();
+                getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoads(onOffLoadDtos);
+                getApplicationComponent().MyDatabase().trackingDao().updateTrackingDtoByArchive(id,
+                        true, false);
+                for (int i = 0; i < offLoadReports.size(); i++) offLoadReports.get(i).isSent = true;
+                getApplicationComponent().MyDatabase().offLoadReportDao().updateOffLoadReport(offLoadReports);
+                activities[0].runOnUiThread(() -> {
+                    String message = "تعداد %d اشتراک با موفقیت بارگذاری شد.";
+                    message = String.format(message, onOffLoadDtos.size());
+                    new CustomToast().success(message, Toast.LENGTH_LONG);
+                });
             }
-//            if (/*zipFileAtPath(trackNumber)*/fragment.requestPermission()) {
-//                //TODO after zip and sent
-////                for (int i = 0; i < onOffLoadDtos.size(); i++)
-////                    onOffLoadDtos.get(i).offLoadStateId = OffloadStateEnum.SENT.getValue();
-////                getApplicationComponent().MyDatabase().trackingDao().updateTrackingDtoByArchive(id, true, false);
-////                for (int i = 0; i < offLoadReports.size(); i++) offLoadReports.get(i).isSent = true;
-////                getApplicationComponent().MyDatabase().offLoadReportDao().updateOffLoadReport(offLoadReports);
-////                activities[0].runOnUiThread(() -> {
-////                    String message = "تعداد %d اشتراک با موفقیت بارگذاری شد.";
-////                    message = String.format(message, onOffLoadDtos.size());
-////                    new CustomToast().success(message, Toast.LENGTH_LONG);
-////                });
-//            }
         }
         return activities[0];
     }
@@ -121,7 +87,6 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
     @Override
     protected void onPostExecute(Activity activity) {
         super.onPostExecute(activity);
-        Log.e("post", "done");
         customProgressModel.getDialog().dismiss();
     }
 
@@ -178,11 +143,11 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
         if (onOffLoadDtos.size() == 0) {
             thankYou(activity);
             onOffLoadDtos.clear();
-            onOffLoadDtos.add(MyApplication.getApplicationComponent().MyDatabase().
+            onOffLoadDtos.add(getApplicationComponent().MyDatabase().
                     onOffLoadDao().getOnOffLoadReadByTrackingAndOffLoad(trackNumber));
         }
         if (onOffLoadDtos.size() == 0 || onOffLoadDtos.get(0) == null) {
-            MyApplication.getApplicationComponent().MyDatabase().
+            getApplicationComponent().MyDatabase().
                     trackingDao().updateTrackingDtoByArchive(id, true, false);
             return false;
         }
@@ -198,15 +163,9 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
         return true;
     }
 
-
     private void thankYou(Activity activity) {
         activity.runOnUiThread(() ->
                 new CustomToast().info(activity.getString(R.string.thank_you), Toast.LENGTH_LONG));
-    }
-
-    public interface UploadCallback {
-        //        List<UsbDevice> getUsbDevices();
-        boolean requestPermission();
     }
 }
 

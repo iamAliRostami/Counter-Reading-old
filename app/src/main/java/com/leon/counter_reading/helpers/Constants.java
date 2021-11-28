@@ -55,13 +55,12 @@ public class Constants {
 
     public static final int INTERFACE_SUBCLASS = 6;
 
-    /**
-     * protocol 80 means the communication happens only via bulk transfers
-     */
     public static final int INTERFACE_PROTOCOL = 80;
     public final static int SORT_BY_NAME = 0;
     public final static int SORT_BY_DATE = 1;
     public final static int SORT_BY_SIZE = 2;
     public final static File otgViewerCachePath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/OTGViewer/cache");
     public final static File otgViewerPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/OTGViewer");
+    public static String zipAddress;
+    public final static int ZIP_ROOT = 7896;
 }

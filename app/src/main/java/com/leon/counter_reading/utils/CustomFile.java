@@ -27,6 +27,8 @@ import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.tables.Voice;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -214,6 +216,29 @@ public class CustomFile {
         File from = new File(inputPath);
         File to = new File(outputPath);
         return from.renameTo(to);
+    }
+
+    public static void copyFile(File src, Uri destUri, Context context) {
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        try {
+            bis = new BufferedInputStream(new FileInputStream(src));
+            bos = new BufferedOutputStream(context.getContentResolver().openOutputStream(destUri));
+            final byte[] buf = new byte[1024];
+            bis.read(buf);
+            do {
+                bos.write(buf);
+            } while (bis.read(buf) != -1);
+        } catch (NullPointerException | IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bis != null) bis.close();
+                if (bos != null) bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static Bitmap rotateImage(Bitmap source, float angle) {
