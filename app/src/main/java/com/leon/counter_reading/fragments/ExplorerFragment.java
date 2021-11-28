@@ -7,7 +7,6 @@ import static com.leon.counter_reading.helpers.Constants.otgViewerCachePath;
 import static com.leon.counter_reading.helpers.Constants.otgViewerPath;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.USBUtils.getHumanSortBy;
-import static com.leon.counter_reading.utils.USBUtils.getMimetype;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -23,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.github.mjdev.libaums.fs.FileSystem;
 import com.github.mjdev.libaums.fs.UsbFile;
+import com.github.mjdev.libaums.fs.UsbFileOutputStream;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.UsbFilesAdapter;
 import com.leon.counter_reading.adapters.recyclerview.RecyclerItemClickListener;
@@ -33,23 +33,20 @@ import com.leon.counter_reading.utils.downloading.DownloadOffline;
 import com.leon.counter_reading.utils.uploading.CopyTaskParam;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.NoSuchElementException;
 
 
 public class ExplorerFragment extends Fragment {
     private final DownloadOfflineFragment downloadOfflineFragment;
     private final Deque<UsbFile> dirs = new ArrayDeque<>();
-    public static int mSortByCurrent;
-    public static boolean mSortAsc;
-
+    public static int sortByCurrent;
+    public static boolean sortAsc;
     private FragmentExplorerBinding binding;
-    private UsbMassStorageDevice mSelectedDevice;
-    private UsbFilesAdapter mAdapter;
-    private boolean mIsShowcase = false;
-    private boolean mError = false;
-    private RecyclerItemClickListener mRecyclerItemClickListener;
+    private UsbFilesAdapter adapter;
+    private RecyclerItemClickListener listener;
 
     public ExplorerFragment(DownloadOfflineFragment downloadOfflineFragment) {
         this.downloadOfflineFragment = downloadOfflineFragment;
@@ -71,42 +68,48 @@ public class ExplorerFragment extends Fragment {
         initialize();
         return binding.getRoot();
     }
-//    private final int REQUEST_FOCUS = 0;
-//    private final int REQUEST_FOCUS_DELAY = 200; //ms
-//    private final Handler mHandler = new Handler() {
-//        public void handleMessage(Message msg) {
-//            switch (msg.what) {
-//                case REQUEST_FOCUS:
-//                    if (binding.recyclerView != null)
-//                        binding.recyclerView.requestFocus();
-//            }
-//        }
-//    };
 
     private void initialize() {
-        mSortAsc = getApplicationComponent().SharedPreferenceModel().getBoolData(SORT_ASC_KEY.getValue());
-        mSortByCurrent = getApplicationComponent().SharedPreferenceModel().getIntData(SORT_FILTER_KEY.getValue());
+        sortAsc = getApplicationComponent().SharedPreferenceModel().getBoolData(SORT_ASC_KEY.getValue());
+        sortByCurrent = getApplicationComponent().SharedPreferenceModel().getIntData(SORT_FILTER_KEY.getValue());
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.buttonFilterBy.setOnClickListener(v -> openFilterDialog());
         binding.imageButtonOrderBy.setOnClickListener(v -> orderByTrigger());
-        mSelectedDevice = null;
-        mError = false;
+        UsbMassStorageDevice selectedDevice = null;
+        boolean mError = false;
         final UsbMassStorageDevice[] devices = UsbMassStorageDevice.getMassStorageDevices(requireContext());
         if (devices.length > 0)
-            mSelectedDevice = devices[0];
-        try {
-            mSelectedDevice.init();
-            // we always use the first partition of the device
-            final FileSystem fs = mSelectedDevice.getPartitions().get(0).getFileSystem();
-            final UsbFile root = fs.getRootDirectory();
-            setupRecyclerView();
-            mAdapter = new UsbFilesAdapter(requireContext(), root, mRecyclerItemClickListener);
-            binding.recyclerView.setAdapter(mAdapter);
-            updateSortUI(false);
-            Log.d("root getCurrentDir: ", mAdapter.getCurrentDir().toString());
-        } catch (Exception e) {
-            binding.textViewError.setVisibility(View.VISIBLE);
-            mError = true;
+            selectedDevice = devices[0];
+        if (selectedDevice != null) {
+            try {
+                selectedDevice.init();
+                final FileSystem fs = selectedDevice.getPartitions().get(0).getFileSystem();
+                // we always use the first partition of the device
+                final UsbFile root = fs.getRootDirectory();
+
+
+                //            UsbFile root = currentFs.getRootDirectory();
+//            UsbFile root = entry;
+                try {
+                    UsbFile file = root.createFile("bar2.txt");
+                    // write to a file
+                    OutputStream os = new UsbFileOutputStream(file);
+
+                    os.write("hello".getBytes());
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                setupRecyclerView();
+                adapter = new UsbFilesAdapter(requireContext(), root, listener);
+                binding.recyclerView.setAdapter(adapter);
+                updateSortUI(false);
+            } catch (Exception e) {
+                binding.textViewError.setVisibility(View.VISIBLE);
+                mError = true;
+            }
         }
         if (mError) {
             binding.textViewError.setVisibility(View.VISIBLE);
@@ -120,7 +123,7 @@ public class ExplorerFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        mRecyclerItemClickListener = new RecyclerItemClickListener(
+        listener = new RecyclerItemClickListener(
                 getActivity(), binding.recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -131,26 +134,20 @@ public class ExplorerFragment extends Fragment {
             public void onLongItemClick(View view, int position) {
             }
         });
-        binding.recyclerView.addOnItemTouchListener(mRecyclerItemClickListener);
+        binding.recyclerView.addOnItemTouchListener(listener);
     }
 
     private void onListItemClick(int position) {
-        final UsbFile entry = mAdapter.getItem(position);
-        Log.e("file",entry.getName());
+        final UsbFile entry = adapter.getItem(position);
+        Log.e("file", entry.getName());
         if (entry.isDirectory()) {
-            dirs.push(mAdapter.getCurrentDir());
+            dirs.push(adapter.getCurrentDir());
             doRefresh(entry);
         } else if (UsbFilesAdapter.isText(entry)) {
-            mIsShowcase = false;
             copyFileToCache(entry);
         } else {
             new CustomToast().warning("فرمت  فایل انتخاب شده نادرست است.");
         }
-//        try {
-//
-//        } catch (IOException e) {
-//            new CustomToast().error(e.toString());
-//        }
     }
 
     private boolean popUsbFile() {
@@ -158,10 +155,8 @@ public class ExplorerFragment extends Fragment {
             UsbFile dir = dirs.pop();
             doRefresh(dir);
             return true;
-        } catch (NoSuchElementException e) {
-            Log.e(e.toString(), "we should remove this fragment!");
         } catch (Exception e) {
-            Log.e("error initializing mAdapter!", e.toString());
+            e.printStackTrace();
         }
         return false;
     }
@@ -177,7 +172,6 @@ public class ExplorerFragment extends Fragment {
             prefix = entry.getName().substring(0, index);
             ext = entry.getName().substring(index);
         }
-        Log.e("ext: ", ext);
         if (prefix.length() < 3) {
             prefix += "pad";
         }
@@ -196,7 +190,7 @@ public class ExplorerFragment extends Fragment {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle(getString(R.string.sort_by));
         alertDialogBuilder.setItems(R.array.sortby, (dialog, which) -> {
-            mSortByCurrent = which;
+            sortByCurrent = which;
             updateSortUI(true);
             dialog.dismiss();
         });
@@ -205,7 +199,7 @@ public class ExplorerFragment extends Fragment {
     }
 
     private void orderByTrigger() {
-        mSortAsc = !mSortAsc;
+        sortAsc = !sortAsc;
         updateSortUI(true);
     }
 
@@ -213,7 +207,7 @@ public class ExplorerFragment extends Fragment {
         binding.linearLayoutSortBy.setVisibility(View.VISIBLE);
         binding.buttonFilterBy.setText(getHumanSortBy(getActivity()));
 
-        if (mSortAsc)
+        if (sortAsc)
             binding.imageButtonOrderBy.setImageResource(R.drawable.sort_order_asc);
         else
             binding.imageButtonOrderBy.setImageResource(R.drawable.sort_order_desc);
@@ -228,40 +222,28 @@ public class ExplorerFragment extends Fragment {
     }
 
     private void doRefresh(UsbFile entry) {
-        mAdapter.setCurrentDir(entry);
+        adapter.setCurrentDir(entry);
         doRefresh();
     }
 
     private void doRefresh() {
         try {
-            if (mAdapter != null)
-                mAdapter.refresh();
+            if (adapter != null)
+                adapter.refresh();
         } catch (Exception e) {
             e.printStackTrace();
         }
         binding.recyclerView.scrollToPosition(0);
-//        mHandler.sendEmptyMessageDelayed(REQUEST_FOCUS, REQUEST_FOCUS_DELAY);
     }
 
     private void saveSortFilter() {
-        getApplicationComponent().SharedPreferenceModel().putData(SORT_FILTER_KEY.getValue(), mSortByCurrent);
-        getApplicationComponent().SharedPreferenceModel().putData(SORT_ASC_KEY.getValue(), mSortAsc);
+        getApplicationComponent().SharedPreferenceModel().putData(SORT_FILTER_KEY.getValue(), sortByCurrent);
+        getApplicationComponent().SharedPreferenceModel().putData(SORT_ASC_KEY.getValue(), sortAsc);
     }
 
     public void launchIntent(File f) {
         if (isText(f)) {
-            new DownloadOffline(requireActivity(),f).execute(requireActivity());
-//            if (mAdapter.getCurrentDir() == null) {
-//                final FileSystem fs = mSelectedDevice.getPartitions().get(0).getFileSystem();
-//                final UsbFile root = fs.getRootDirectory();
-////                ImageViewer.getInstance().setCurrentDirectory(root);
-//            } else {
-////                ImageViewer.getInstance().setCurrentDirectory(mAdapter.getCurrentDir());
-//            }
-////            Intent intent = new Intent(getActivity(), ImageViewerActivity.class);
-////            intent.putExtra("SHOWCASE", mIsShowcase);
-////            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-////            startActivityForResult(intent, REQUEST_IMAGEVIEWER);
+            new DownloadOffline(requireActivity(), f).execute(requireActivity());
         }
     }
 

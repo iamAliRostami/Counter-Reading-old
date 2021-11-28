@@ -162,10 +162,10 @@ public class UploadFragment extends Fragment {
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
                     .execute(activity);
         } else if (type == UploadType.OFFLINE.getValue()) {
-            new PrepareOffLoadOffline(activity,
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
-                    .execute(activity);
+//            new PrepareOffLoadOffline(activity,
+//                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
+//                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
+//                    .execute(activity);
         }
     }
 

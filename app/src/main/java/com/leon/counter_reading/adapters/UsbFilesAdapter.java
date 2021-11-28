@@ -33,47 +33,26 @@ import java.util.List;
 import java.util.Locale;
 
 public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<UsbFile> mFiles;
-    private UsbFile mCurrentDir;
-    private final RecyclerItemClickListener mRecyclerItemClickListener;
-    private final Context mContext;
+    private List<UsbFile> usbFiles;
+    private UsbFile currentDir;
+    private final RecyclerItemClickListener itemClickListener;
+    private final Context context;
 
-    public class USBViewHolder extends RecyclerView.ViewHolder {
-        final View globalView;
-        final TextView title, summary;
-        final ImageView type;
-
-        public USBViewHolder(View view) {
-            super(view);
-            globalView = view;
-            title = view.findViewById(android.R.id.title);
-            summary = view.findViewById(android.R.id.summary);
-            type = view.findViewById(android.R.id.icon);
-
-            view.setOnKeyListener((view1, keyCode, keyEvent) -> {
-                boolean handled;
-                handled = mRecyclerItemClickListener.handleDPad(view1, keyCode, keyEvent);
-                return handled;
-            });
-        }
-    }
-
-    public UsbFilesAdapter(Context context, UsbFile dir, RecyclerItemClickListener itemClickListener) throws IOException {
-        mContext = context;
-        mCurrentDir = dir;
-        mRecyclerItemClickListener = itemClickListener;
-        mFiles = new ArrayList<>();
+    public UsbFilesAdapter(Context context, UsbFile usbFile, RecyclerItemClickListener itemClickListener) throws IOException {
+        this.context = context;
+        this.itemClickListener = itemClickListener;
+        currentDir = usbFile;
+        usbFiles = new ArrayList<>();
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         refresh();
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void refresh() throws IOException {
-        mFiles = Arrays.asList(mCurrentDir.listFiles());
-        Collections.sort(mFiles, USBUtils.comparator);
-
-        if (!ExplorerFragment.mSortAsc)
-            Collections.reverse(mFiles);
+        usbFiles = Arrays.asList(currentDir.listFiles());
+        Collections.sort(usbFiles, USBUtils.comparator);
+        if (!ExplorerFragment.sortAsc)
+            Collections.reverse(usbFiles);
         notifyDataSetChanged();
     }
 
@@ -89,7 +68,7 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         if (viewHolder instanceof USBViewHolder) {
-            UsbFile file = mFiles.get(position);
+            UsbFile file = usbFiles.get(position);
 
             USBViewHolder holder = (USBViewHolder) viewHolder;
 
@@ -106,11 +85,10 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.title.setText(file.getName());
             DateFormat date_format = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, Locale.getDefault());
             String date = date_format.format(new Date(file.lastModified()));
-
             // If it's a directory, we can't get size info
             try {
                 holder.summary.setText("Last modified: " + date + " - " +
-                        Formatter.formatFileSize(mContext, file.getLength()));
+                        Formatter.formatFileSize(context, file.getLength()));
             } catch (Exception e) {
                 holder.summary.setText("Last modified: " + date);
             }
@@ -119,28 +97,28 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return mFiles.size();
+        return usbFiles.size();
     }
 
     public UsbFile getItem(int position) {
-        return mFiles.get(position);
+        return usbFiles.get(position);
     }
 
     public UsbFile getCurrentDir() {
-        return mCurrentDir;
+        return currentDir;
     }
 
     public void setCurrentDir(UsbFile dir) {
-        mCurrentDir = dir;
+        currentDir = dir;
     }
 
     public List<UsbFile> getFiles() {
-        return mFiles;
+        return usbFiles;
     }
 
     public ArrayList<UsbFile> getImageFiles() {
         ArrayList<UsbFile> result = new ArrayList<>();
-        for (UsbFile file : mFiles) {
+        for (UsbFile file : usbFiles) {
             if (isText(file))
                 result.add(file);
         }
@@ -172,5 +150,24 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         }
         return result;
+    }
+
+    public class USBViewHolder extends RecyclerView.ViewHolder {
+        final View globalView;
+        final TextView title, summary;
+        final ImageView type;
+
+        public USBViewHolder(View view) {
+            super(view);
+            globalView = view;
+            title = view.findViewById(android.R.id.title);
+            summary = view.findViewById(android.R.id.summary);
+            type = view.findViewById(android.R.id.icon);
+            view.setOnKeyListener((view1, keyCode, keyEvent) -> {
+                boolean handled;
+                handled = itemClickListener.handleDPad(view1, keyCode, keyEvent);
+                return handled;
+            });
+        }
     }
 }

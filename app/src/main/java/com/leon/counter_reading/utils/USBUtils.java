@@ -6,7 +6,6 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.net.Uri;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import com.github.mjdev.libaums.fs.UsbFile;
@@ -237,7 +236,7 @@ public class USBUtils {
     public static Comparator<UsbFile> comparator = new Comparator<UsbFile>() {
         @Override
         public int compare(UsbFile lhs, UsbFile rhs) {
-            switch (ExplorerFragment.mSortByCurrent) {
+            switch (ExplorerFragment.sortByCurrent) {
                 case Constants.SORT_BY_NAME:
                     return sortByName(lhs, rhs);
                 case Constants.SORT_BY_DATE:
@@ -368,7 +367,7 @@ public class USBUtils {
     }
 
     public static String getHumanSortBy(Context context) {
-        switch (ExplorerFragment.mSortByCurrent) {
+        switch (ExplorerFragment.sortByCurrent) {
             case Constants.SORT_BY_DATE:
                 return context.getString(R.string.date);
             case Constants.SORT_BY_SIZE:

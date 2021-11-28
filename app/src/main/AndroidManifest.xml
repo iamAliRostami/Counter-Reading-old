@@ -126,13 +126,19 @@
             android:label="@string/reading_report" />
         <activity
             android:name=".activities.UploadActivity"
-            android:label="@string/upload_information" />
+            android:label="@string/upload_information">
+
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />
+        </activity>
         <activity
             android:name=".activities.DownloadActivity"
             android:exported="true"
-            android:label="@string/download_information" >
+            android:label="@string/download_information">
 
-            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
         <activity
@@ -148,7 +154,7 @@
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

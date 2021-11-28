@@ -2,10 +2,11 @@ package com.leon.counter_reading.utils;
 
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
-import android.annotation.SuppressLint;
 import android.os.Environment;
 import android.util.Log;
 
+import com.github.mjdev.libaums.fs.UsbFile;
+import com.github.mjdev.libaums.fs.UsbFileOutputStream;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.leon.counter_reading.tables.ReadingData;
@@ -118,22 +119,10 @@ public class OfflineUtils {
         final int BUFFER = 2048;
         final File root = new File(Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
-//        final File root1 = new File(Environment.getRootDirectory().getAbsolutePath());
-//        /storage/emulated/D661-5964/Android/data/com.leon.counter_reading/files
-        final File root1 = new File("/storage/D661-5964/Android/data/com.leon.counter_reading/files");
-//        final File root1 = new File("/storage/emulated/0/");
-        if (root1.isDirectory())
-            Log.e("here", "root1.isDirectory()");
-        if (root1.exists())
-            Log.e("here", "root1.exists()");
-        if (root1.mkdirs())
-            Log.e("here", "root1.mkdirs()");
-        if (root1.canRead())
-            Log.e("here", "root1.canRead()");
-        final String sourcePath = root + "/" + trackNumber, toLocation = root + "/" + trackNumber + ".zip";
+        final String sourcePath = root + "/" + trackNumber;
+        final String toLocation = sourcePath + ".zip";
         final File sourceFile = new File(sourcePath);
         try {
-            final BufferedInputStream origin;
             final FileOutputStream dest = new FileOutputStream(toLocation);
             final ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
             if (sourceFile.isDirectory() && sourceFile.getParent() != null) {
@@ -141,7 +130,7 @@ public class OfflineUtils {
             } else {
                 final byte[] data = new byte[BUFFER];
                 final FileInputStream fi = new FileInputStream(sourcePath);
-                origin = new BufferedInputStream(fi, BUFFER);
+                final BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);
                 final ZipEntry entry = new ZipEntry(getLastPathComponent(sourcePath));
                 entry.setTime(sourceFile.lastModified());// to keep modification time after unzipping
                 out.putNextEntry(entry);
@@ -152,6 +141,42 @@ public class OfflineUtils {
             }
             out.close();
         } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+
+    public static boolean zipFileAtPath(int trackNumber, UsbFile toLocation) {
+        final int BUFFER = 2048;
+        final File root = new File(Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
+        final String sourcePath = root + "/" + trackNumber;
+        final File sourceFile = new File(sourcePath);
+        try {
+//            final FileOutputStream dest = new FileOutputStream(toLocation);
+//            final OutputStream dest = new UsbFileOutputStream(toLocation.createFile(trackNumber + ".zip"));
+            final UsbFileOutputStream dest = new UsbFileOutputStream(toLocation.createFile(trackNumber + ".zip"));
+            final ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+            if (sourceFile.isDirectory() && sourceFile.getParent() != null) {
+                zipSubFolder(out, sourceFile, sourceFile.getParent().length());
+            } else {
+                final byte[] data = new byte[BUFFER];
+                final FileInputStream fi = new FileInputStream(sourcePath);
+
+                final BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);
+                final ZipEntry entry = new ZipEntry(getLastPathComponent(sourcePath));
+                entry.setTime(sourceFile.lastModified());// to keep modification time after unzipping
+                out.putNextEntry(entry);
+                int count;
+                while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                    out.write(data, 0, count);
+                }
+            }
+            out.close();
+        } catch (Exception e) {
+            Log.e("error", e.toString());
             e.printStackTrace();
             return false;
         }
@@ -171,8 +196,7 @@ public class OfflineUtils {
                 } else {
                     final byte[] data = new byte[BUFFER];
                     final String unmodifiedFilePath = file.getPath();
-                    final String relativePath = unmodifiedFilePath
-                            .substring(basePathLength);
+                    final String relativePath = unmodifiedFilePath.substring(basePathLength);
                     try {
                         final FileInputStream fi = new FileInputStream(unmodifiedFilePath);
                         final BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);
@@ -186,6 +210,7 @@ public class OfflineUtils {
                         origin.close();
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Log.e("error", e.toString());
                     }
                 }
             }
