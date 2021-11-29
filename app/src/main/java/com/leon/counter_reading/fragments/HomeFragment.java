@@ -47,7 +47,7 @@ public class HomeFragment extends ListFragment {
         for (int i = 0; i < mDetectedDevices.size(); i++) {
             showDevices.add(mDetectedDevices.get(i).getProductName());
         }
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.row_listdevices, R.id.listText, showDevices);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.item_devices, R.id.text_view_device, showDevices);
         setListAdapter(adapter);
     }
 

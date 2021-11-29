@@ -21,7 +21,6 @@ import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityUploadBinding;
 import com.leon.counter_reading.enums.UploadType;
 import com.leon.counter_reading.fragments.UploadFragment;
-import com.leon.counter_reading.fragments.UploadOfflineFragment;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.DepthPageTransformer;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
@@ -54,7 +53,8 @@ public class UploadActivity extends BaseActivity {
     private void setupViewPager() {
         ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
         adapter.addFragment(UploadFragment.newInstance(UploadType.NORMAL.getValue()));
-        adapter.addFragment(UploadOfflineFragment.newInstance());
+        adapter.addFragment(UploadFragment.newInstance(UploadType.OFFLINE.getValue()));
+//        adapter.addFragment(UploadOfflineFragment.newInstance());
         adapter.addFragment(UploadFragment.newInstance(UploadType.MULTIMEDIA.getValue()));
         binding.viewPager.setAdapter(adapter);
 

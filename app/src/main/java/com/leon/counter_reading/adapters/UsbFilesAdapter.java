@@ -60,7 +60,7 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public USBViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView;
-        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_explore, parent, false);
         return new USBViewHolder(itemView);
     }
 

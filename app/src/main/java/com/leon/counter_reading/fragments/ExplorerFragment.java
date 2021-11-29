@@ -10,6 +10,9 @@ import static com.leon.counter_reading.utils.USBUtils.getHumanSortBy;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,7 +91,7 @@ public class ExplorerFragment extends Fragment {
                 final UsbFile root = fs.getRootDirectory();
 
 
-                //            UsbFile root = currentFs.getRootDirectory();
+//                UsbFile root = currentFs.getRootDirectory();
 //            UsbFile root = entry;
                 try {
                     UsbFile file = root.createFile("bar2.txt");
@@ -187,14 +190,18 @@ public class ExplorerFragment extends Fragment {
     }
 
     private void openFilterDialog() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle(getString(R.string.sort_by));
-        alertDialogBuilder.setItems(R.array.sortby, (dialog, which) -> {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final String titleText = getString(R.string.sort_by);
+        final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(titleText);
+        stringBuilder.setSpan(new ForegroundColorSpan(requireContext().getColor(R.color.text_color_dark)),
+                0, titleText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        builder.setTitle(stringBuilder);
+        builder.setItems(R.array.sortby, (dialog, which) -> {
             sortByCurrent = which;
             updateSortUI(true);
             dialog.dismiss();
         });
-        AlertDialog ad = alertDialogBuilder.create();
+        final AlertDialog ad = builder.create();
         ad.show();
     }
 

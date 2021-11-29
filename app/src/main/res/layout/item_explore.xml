@@ -12,7 +12,6 @@
     android:paddingStart="@dimen/medium_dp"
     android:paddingEnd="@dimen/medium_dp">
 
-
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -28,14 +27,15 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="?android:textColor" />
+            android:textColor="@color/text_color_dark" />
 
         <TextView
             android:id="@android:id/summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textColor="@color/text_color_dark" />
     </LinearLayout>
 
     <FrameLayout
