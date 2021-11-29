@@ -74,12 +74,13 @@ public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
     public Fragment createFragment(int i) {
         try {
             return ReadingFragment.newInstance(onOffLoadDtos.get(i), readingConfigDefaultDtos.get(i),
-                    counterStateDtos,karbariDtos.get(i),  i);
+                    counterStateDtos, karbariDtos.get(i), i);
         } catch (Exception e) {
             new CustomToast().error(MyApplication.getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
         }
         return null;
     }
+
     @Override
     public int getItemCount() {
         return onOffLoadDtos.size();

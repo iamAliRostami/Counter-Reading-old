@@ -112,7 +112,6 @@ public class CustomFile {
             original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         }
         return original;
-
     }
 
     public static String bitmapToBinary(Bitmap bitmap) {

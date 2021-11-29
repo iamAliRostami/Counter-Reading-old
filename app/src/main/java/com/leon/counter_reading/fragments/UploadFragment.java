@@ -80,7 +80,7 @@ public class UploadFragment extends Fragment {
             items = TrackingDto.getTrackingDtoItems(trackingDtos, getString(R.string.select_one));
             setupSpinner();
         }
-        binding.imageViewUpload.setImageResource(imageSrc[type]);
+        binding.imageViewUpload.setImageResource(imageSrc[type > -1 ? type : 0]);
         setOnButtonUploadClickListener();
     }
 

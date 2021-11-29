@@ -164,17 +164,17 @@ public class TakePhotoActivity extends AppCompatActivity {
         final Image image = new Image();
         try {
             image.bitmap = compressBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), PHOTO_URI));
-            PHOTO_URI = null;
             image.OnOffLoadId = uuid;
             image.trackNumber = trackNumber;
             if (replace > 0) {
-                getApplicationComponent().MyDatabase()
-                        .imageDao().deleteImage(images.get(replace - 1).id);
+                getApplicationComponent().MyDatabase().imageDao()
+                        .deleteImage(images.get(replace - 1).id);
                 images.set(replace - 1, image);
             } else {
                 images.add(image);
             }
             imageViewAdapter.notifyDataSetChanged();
+            PHOTO_URI = null;
         } catch (IOException e) {
             e.printStackTrace();
         }

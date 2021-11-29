@@ -171,11 +171,14 @@ public class PossibleFragment extends DialogFragment {
                 .getActiveCompanyName()));
         binding.editTextAhadTotal.setHint(DifferentCompanyManager
                 .getAhadTotal(DifferentCompanyManager.getActiveCompanyName()));
-
-        binding.editTextMobile.setText(onOffLoadDto.possibleMobile);
-        binding.editTextAddress.setText(onOffLoadDto.possibleAddress);
-        binding.editTextAccount.setText(onOffLoadDto.possibleEshterak);
-        binding.editTextSerial.setText(onOffLoadDto.possibleCounterSerial);
+        if (onOffLoadDto.possibleMobile != null)
+            binding.editTextMobile.setText(onOffLoadDto.possibleMobile);
+        if (onOffLoadDto.possibleAddress != null)
+            binding.editTextAddress.setText(onOffLoadDto.possibleAddress);
+        if (onOffLoadDto.possibleEshterak != null)
+            binding.editTextAccount.setText(onOffLoadDto.possibleEshterak);
+        if (onOffLoadDto.possibleCounterSerial != null)
+            binding.editTextSerial.setText(onOffLoadDto.possibleCounterSerial);
         if (onOffLoadDto.possibleEmpty > 0)
             binding.editTextAhadEmpty.setText(String.valueOf(onOffLoadDto.possibleEmpty));
         if (onOffLoadDto.possibleAhadMaskooniOrAsli > 0)
@@ -185,7 +188,8 @@ public class PossibleFragment extends DialogFragment {
         if (onOffLoadDto.possibleAhadSaierOrAbBaha > 0)
             binding.editTextAhadTotal.setText(String.valueOf(onOffLoadDto.possibleAhadSaierOrAbBaha));
 
-        binding.editTextDescription.setText(onOffLoadDto.description);
+        if (onOffLoadDto.description != null)
+            binding.editTextDescription.setText(onOffLoadDto.description);
 
         binding.editTextSerial.setVisibility(sharedPreferenceManager.
                 getBoolData(SharedReferenceKeys.SERIAL.getValue()) ? View.VISIBLE : View.GONE);

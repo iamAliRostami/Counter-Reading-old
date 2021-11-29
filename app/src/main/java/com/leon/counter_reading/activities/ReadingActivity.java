@@ -699,10 +699,6 @@ public class ReadingActivity extends BaseActivity {
             ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
             imageViewCheck.setImageDrawable(null);
         }
-        binding.imageViewHighLowState.setImageDrawable(null);
-        binding.imageViewOffLoadState.setImageDrawable(null);
-        binding.imageViewReadingType.setImageDrawable(null);
-        binding.imageViewExceptionState.setImageDrawable(null);
         this.readingData.onOffLoadDtos.clear();
         this.readingData.qotrDictionary.clear();
         this.readingData.karbariDtos.clear();
@@ -717,12 +713,11 @@ public class ReadingActivity extends BaseActivity {
         this.readingDataTemp.readingConfigDefaultDtos.clear();
         this.readingDataTemp.counterReportDtos.clear();
         this.readingDataTemp.counterStateDtos.clear();
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
+        if (binding != null) {
+            binding.imageViewHighLowState.setImageDrawable(null);
+            binding.imageViewOffLoadState.setImageDrawable(null);
+            binding.imageViewReadingType.setImageDrawable(null);
+            binding.imageViewExceptionState.setImageDrawable(null);
+        }
     }
 }
