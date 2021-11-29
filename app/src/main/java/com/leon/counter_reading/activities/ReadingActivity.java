@@ -141,7 +141,6 @@ public class ReadingActivity extends BaseActivity {
         readingData.onOffLoadDtos.get(position).isLocked = true;
         updateAdapter(position);
         new UpdateOnOffLoadDtoByLock(readingData.onOffLoadDtos.get(position)).execute();
-
     }
 
     public void updateOnOffLoadWithoutCounterNumber(int position, int counterStateCode,
@@ -234,7 +233,6 @@ public class ReadingActivity extends BaseActivity {
             setOnPageChangeListener();
         });
         setupViewPagerAdapter(0);
-
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (FOCUS_ON_EDIT_TEXT)
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -285,7 +283,6 @@ public class ReadingActivity extends BaseActivity {
 
     public void setupViewPagerAdapter(int currentItem) {
         runOnUiThread(() -> {
-//            final ViewPagerStateAdapter viewPagerAdapterReading = new ViewPagerStateAdapter(this, readingData);
             viewPagerAdapterReading = new ViewPagerStateAdapter2(this, readingData);
             try {
                 binding.viewPager.setOffscreenPageLimit(1);
@@ -383,12 +380,6 @@ public class ReadingActivity extends BaseActivity {
     }
 
     private void showPossible(int position) {
-
-//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//        PossibleFragment possibleFragment = PossibleFragment.newInstance(
-//                readingData.onOffLoadDtos.get(position), position, false);
-//        possibleFragment.show(fragmentTransaction, getString(R.string.dynamic_navigation));
-
         ShowFragmentDialog.ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG",
                 PossibleFragment.newInstance(readingData.onOffLoadDtos.get(position), position, false));
     }
