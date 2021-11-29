@@ -71,7 +71,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
     }
 
     private void uploadImage(Activity activity) {
-        if (imageGrouped.File.size() > 0) {
+        if (imageGrouped.File.size() > 0 && images.size() > 0) {
             imageGrouped.OnOffLoadId = RequestBody.create(images.get(0).OnOffLoadId,
                     MediaType.parse("text/plain"));
             imageGrouped.Description = RequestBody.create(images.get(0).Description,
