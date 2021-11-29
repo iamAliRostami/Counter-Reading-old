@@ -1,4 +1,4 @@
-package com.leon.counter_reading.adapters;
+package com.leon.counter_reading.adapters.holder;
 
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.leon.counter_reading.R;
 
-public class ViewHolderReading extends RecyclerView.ViewHolder {
+public class ReadingViewHolder extends RecyclerView.ViewHolder {
     public final Spinner spinner;
     public final EditText editTextNumber;
     public final TextView textViewAhad1Title;
@@ -32,7 +32,7 @@ public class ViewHolderReading extends RecyclerView.ViewHolder {
     public final TextView textViewSerial;
     public final Button buttonSubmit;
 
-    public ViewHolderReading(@NonNull View itemView) {
+    public ReadingViewHolder(@NonNull View itemView) {
         super(itemView);
         spinner = itemView.findViewById(R.id.spinner);
         editTextNumber = itemView.findViewById(R.id.edit_text_number);
@@ -58,7 +58,7 @@ public class ViewHolderReading extends RecyclerView.ViewHolder {
         buttonSubmit = itemView.findViewById(R.id.button_submit);
     }
 
-    public ViewHolderReading(@NonNull View itemView,int position) {
+    public ReadingViewHolder(@NonNull View itemView, int position) {
         super(itemView);
         spinner = itemView.findViewById(R.id.spinner);
         editTextNumber = itemView.findViewById(R.id.edit_text_number);

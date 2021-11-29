@@ -27,7 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.ImageViewAdapter;
+import com.leon.counter_reading.adapters.holder.ImageViewAdapter;
 import com.leon.counter_reading.databinding.ActivityTakePhotoBinding;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;

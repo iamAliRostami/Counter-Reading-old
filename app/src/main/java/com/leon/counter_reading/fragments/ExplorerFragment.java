@@ -89,22 +89,6 @@ public class ExplorerFragment extends Fragment {
                 final FileSystem fs = selectedDevice.getPartitions().get(0).getFileSystem();
                 // we always use the first partition of the device
                 final UsbFile root = fs.getRootDirectory();
-
-
-//                UsbFile root = currentFs.getRootDirectory();
-//            UsbFile root = entry;
-                try {
-                    UsbFile file = root.createFile("bar2.txt");
-                    // write to a file
-                    OutputStream os = new UsbFileOutputStream(file);
-
-                    os.write("hello".getBytes());
-                    os.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
                 setupRecyclerView();
                 adapter = new UsbFilesAdapter(requireContext(), root, listener);
                 binding.recyclerView.setAdapter(adapter);
@@ -142,7 +126,6 @@ public class ExplorerFragment extends Fragment {
 
     private void onListItemClick(int position) {
         final UsbFile entry = adapter.getItem(position);
-        Log.e("file", entry.getName());
         if (entry.isDirectory()) {
             dirs.push(adapter.getCurrentDir());
             doRefresh(entry);

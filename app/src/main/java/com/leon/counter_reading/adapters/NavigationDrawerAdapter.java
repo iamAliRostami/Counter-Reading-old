@@ -8,21 +8,18 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.leon.counter_reading.R;
+import com.leon.counter_reading.adapters.holder.DrawerItemHolder;
 import com.leon.counter_reading.adapters.items.DrawerItem;
 
 import java.util.List;
 
-public class NavigationDrawerAdapter extends
-        RecyclerView.Adapter<DrawerItemHolder> {
+public class NavigationDrawerAdapter extends RecyclerView.Adapter<DrawerItemHolder> {
     private final List<DrawerItem> drawerItemList;
     private final Context context;
 
@@ -34,23 +31,22 @@ public class NavigationDrawerAdapter extends
     @NonNull
     @Override
     public DrawerItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View drawerView = inflater.inflate(R.layout.item_navigation_drawer, parent, false);
+        final Context context = parent.getContext();
+        final LayoutInflater inflater = LayoutInflater.from(context);
+        final View drawerView = inflater.inflate(R.layout.item_navigation_drawer, parent, false);
         return new DrawerItemHolder(drawerView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DrawerItemHolder holder, int position) {
-        DrawerItem drawerItem = drawerItemList.get(position);
+        final DrawerItem drawerItem = drawerItemList.get(position);
         if (position == 8) {
             holder.textViewTitle.setTextColor(ContextCompat.getColor(context, R.color.red));
         } else if (position == POSITION) {
-            TypedValue typedValue = new TypedValue();
-            Resources.Theme theme = context.getTheme();
+            final TypedValue typedValue = new TypedValue();
+            final Resources.Theme theme = context.getTheme();
             theme.resolveAttribute(android.R.attr.textColorSecondary, typedValue, true);
-            int color = typedValue.data;
-            holder.textViewTitle.setTextColor(color);
+            holder.textViewTitle.setTextColor(typedValue.data);
             holder.linearLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.border_red_3));
         }
         holder.imageViewIcon.setImageDrawable(drawerItem.getDrawable());
@@ -65,18 +61,5 @@ public class NavigationDrawerAdapter extends
     @Override
     public int getItemCount() {
         return drawerItemList.size();
-    }
-}
-
-class DrawerItemHolder extends RecyclerView.ViewHolder {
-    final TextView textViewTitle;
-    final ImageView imageViewIcon;
-    final LinearLayout linearLayout;
-
-    public DrawerItemHolder(View viewItem) {
-        super(viewItem);
-        this.textViewTitle = viewItem.findViewById(R.id.text_view_title);
-        this.imageViewIcon = viewItem.findViewById(R.id.image_view_icon);
-        this.linearLayout = viewItem.findViewById(R.id.linear_layout_background);
     }
 }

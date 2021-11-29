@@ -3,7 +3,6 @@ package com.leon.counter_reading.adapters.recyclerview;
 import static com.leon.counter_reading.utils.USBUtils.isConfirmButton;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -16,12 +15,6 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
     private final OnItemClickListener listener;
     private final RecyclerView recyclerView;
     private final GestureDetector gestureDetector;
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-
-        void onLongItemClick(View view, int position);
-    }
 
     public RecyclerItemClickListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener) {
         this.listener = listener;
@@ -53,17 +46,15 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
     }
 
     @Override
-    public void onTouchEvent(@NonNull RecyclerView view, MotionEvent motionEvent) {
-        Log.d("onTouchEvent ", motionEvent.toString());
+    public void onTouchEvent(@NonNull RecyclerView view, @NonNull MotionEvent motionEvent) {
     }
 
     @Override
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
     }
 
-    public boolean handleDPad(View child, int keyCode, KeyEvent keyEvent) {
-        int position = recyclerView.getChildLayoutPosition(child);
-        // Return false if scrolled to the bounds and allow focus to move off the list
+    public boolean handleDPad(View child, KeyEvent keyEvent) {
+        final int position = recyclerView.getChildLayoutPosition(child);
         if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
             if (isConfirmButton(keyEvent)) {
                 if ((keyEvent.getFlags() & KeyEvent.FLAG_LONG_PRESS) == KeyEvent.FLAG_LONG_PRESS) {
@@ -79,5 +70,11 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
             return true;
         }
         return false;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+
+        void onLongItemClick(View view, int position);
     }
 }

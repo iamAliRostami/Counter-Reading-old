@@ -19,14 +19,14 @@ import com.leon.counter_reading.utils.CustomToast;
 
 import java.util.ArrayList;
 
-public class ViewPagerStateAdapter extends FragmentStateAdapter {
+public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
     private final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
     private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
     private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
     private final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
 
-    public ViewPagerStateAdapter(@NonNull FragmentActivity fragmentActivity,
-                                 ReadingData readingData) {
+    public ViewPagerStateAdapter2(@NonNull FragmentActivity fragmentActivity,
+                                  ReadingData readingData) {
         super(fragmentActivity);
         onOffLoadDtos.addAll(readingData.onOffLoadDtos);
         counterStateDtos.addAll(readingData.counterStateDtos);

@@ -6,11 +6,8 @@ import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import android.os.Environment;
 import android.util.Log;
 
-import com.github.mjdev.libaums.fs.UsbFile;
-import com.github.mjdev.libaums.fs.UsbFileOutputStream;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.leon.counter_reading.helpers.Constants;
 import com.leon.counter_reading.tables.ReadingData;
 
 import java.io.BufferedInputStream;
@@ -32,13 +29,9 @@ import java.util.zip.ZipOutputStream;
 public class OfflineUtils {
 
     public static String[] getStorageDirectories() {
-        String[] storageDirectories;
         String rawSecondaryStoragesStr = System.getenv("SECONDARY_STORAGE");
-//        String rawSecondaryStoragesStr = System.getenv("EMULATED_STORAGE_TARGET");
-//        String rawSecondaryStoragesStr = System.getenv("EXTERNAL_STORAGE");
-//        String rawSecondaryStoragesStr = System.getenv("EXTERNAL_SDCARD_STORAGE");
-        List<String> results = new ArrayList<>();
-        File[] externalDirs = getContext().getExternalFilesDirs(null);
+        final List<String> results = new ArrayList<>();
+        final File[] externalDirs = getContext().getExternalFilesDirs(null);
         for (File file : externalDirs) {
             String path = null;
             try {
@@ -52,21 +45,19 @@ public class OfflineUtils {
                 }
             }
         }
-        storageDirectories = results.toArray(new String[0]);
-        return storageDirectories;
+        return results.toArray(new String[0]);
     }
 
     public static void writeOnSdCard(String json, String name, int trackNumber) {
-        String filePostName = name.concat(".txt");
+        final String filePostName = name.concat(".txt");
         try {
             File root = new File(Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + trackNumber);
-            root.mkdirs();
+            if (!root.exists()) if (!root.mkdirs()) return;
             File file = new File(root + "/" + filePostName);
-            Log.e("address", file.getAbsolutePath());
-            file.createNewFile();
-            FileOutputStream fOut = new FileOutputStream(file);
-            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+            if (!file.exists()) if (!file.createNewFile()) return;
+            final FileOutputStream fOut = new FileOutputStream(file);
+            final OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
             myOutWriter.append(json);
             myOutWriter.close();
             fOut.close();
@@ -78,7 +69,6 @@ public class OfflineUtils {
 
     public static ReadingData readFromSdCard(String path) {
         File root = new File(path.concat("/Download"));
-
         File file = findFile(root, "125776_.txt");
         StringBuilder text = new StringBuilder();
         try {
@@ -93,7 +83,6 @@ public class OfflineUtils {
             ioException.printStackTrace();
         }
         String json = text.toString();
-        Log.e("json", json);
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(json, ReadingData.class);
     }
@@ -143,42 +132,6 @@ public class OfflineUtils {
             }
             out.close();
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-
-    public static boolean zipFileAtPath(int trackNumber, UsbFile toLocation) {
-        final int BUFFER = 2048;
-        final File root = new File(Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
-        final String sourcePath = root + "/" + trackNumber;
-        final File sourceFile = new File(sourcePath);
-        try {
-//            final FileOutputStream dest = new FileOutputStream(toLocation);
-//            final OutputStream dest = new UsbFileOutputStream(toLocation.createFile(trackNumber + ".zip"));
-            final UsbFileOutputStream dest = new UsbFileOutputStream(toLocation.createFile(trackNumber + ".zip"));
-            final ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
-            if (sourceFile.isDirectory() && sourceFile.getParent() != null) {
-                zipSubFolder(out, sourceFile, sourceFile.getParent().length());
-            } else {
-                final byte[] data = new byte[BUFFER];
-                final FileInputStream fi = new FileInputStream(sourcePath);
-
-                final BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);
-                final ZipEntry entry = new ZipEntry(getLastPathComponent(sourcePath));
-                entry.setTime(sourceFile.lastModified());// to keep modification time after unzipping
-                out.putNextEntry(entry);
-                int count;
-                while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                    out.write(data, 0, count);
-                }
-            }
-            out.close();
-        } catch (Exception e) {
-            Log.e("error", e.toString());
             e.printStackTrace();
             return false;
         }
@@ -271,13 +224,11 @@ public class OfflineUtils {
             if (directory != null && directory.length() != 0) {
                 if (i == size - 1) {
                     if (directory.contains(FLAG)) {
-                        Log.e("getClass().getSimpleName()", "SD Card's directory: " + directory);
                         return directory;
                     } else {
                         return null;
                     }
                 }
-                Log.e("getClass().getSimpleName()", "SD Card's directory: " + directory);
                 return directory;
             }
         }
@@ -293,13 +244,10 @@ public class OfflineUtils {
             fos.write(new byte[1024]);
             fos.flush();
             fos.close();
-            Log.e("getClass().getSimpleName()", "Can write file on this directory: " + FILE_DIR);
         } catch (Exception e) {
-            Log.e("getClass().getSimpleName()", "Write file error: " + e.getMessage());
             return null;
         } finally {
             if (tempFile != null && tempFile.exists() && tempFile.isFile()) {
-                // tempFlie.delete();
                 tempFile = null;
             }
         }

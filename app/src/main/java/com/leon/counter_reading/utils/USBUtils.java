@@ -23,7 +23,6 @@ public class USBUtils {
 
     static {
         int icon;
-
         // Package
         icon = R.drawable.ic_doc_apk_alpha;
         add("application/vnd.android.package-archive", icon);
@@ -186,21 +185,15 @@ public class USBUtils {
 
     public static boolean isMassStorageDevice(UsbDevice device) {
         boolean result = false;
-
-        int interfaceCount = device.getInterfaceCount();
+        final int interfaceCount = device.getInterfaceCount();
         for (int i = 0; i < interfaceCount; i++) {
-            UsbInterface usbInterface = device.getInterface(i);
-            // we currently only support SCSI transparent command set with
-            // bulk transfers only!
+            final UsbInterface usbInterface = device.getInterface(i);
             if (usbInterface.getInterfaceClass() != UsbConstants.USB_CLASS_MASS_STORAGE
                     || usbInterface.getInterfaceSubclass() != Constants.INTERFACE_SUBCLASS
                     || usbInterface.getInterfaceProtocol() != Constants.INTERFACE_PROTOCOL) {
                 continue;
             }
-
-            // Every mass storage device has exactly two endpoints
-            // One IN and one OUT endpoint
-            int endpointCount = usbInterface.getEndpointCount();
+            final int endpointCount = usbInterface.getEndpointCount();
             UsbEndpoint outEndpoint = null;
             UsbEndpoint inEndpoint = null;
             for (int j = 0; j < endpointCount; j++) {
@@ -213,12 +206,10 @@ public class USBUtils {
                     }
                 }
             }
-
             if (outEndpoint == null || inEndpoint == null)
                 continue;
             result = true;
         }
-
         return result;
     }
 
@@ -249,9 +240,8 @@ public class USBUtils {
             return 0;
         }
 
-        int extractInt(String s) {
+        final int extractInt(String s) {
             int result = 0;
-            // return 0 if no digits found
             try {
                 String num = s.replaceAll("\\D", "");
                 result = num.isEmpty() ? 0 : Integer.parseInt(num);
@@ -261,7 +251,7 @@ public class USBUtils {
             return result;
         }
 
-        int checkIfDirectory(UsbFile lhs, UsbFile rhs) {
+        final int checkIfDirectory(UsbFile lhs, UsbFile rhs) {
             if (lhs.isDirectory() && !rhs.isDirectory()) {
                 return -1;
             }
@@ -273,14 +263,14 @@ public class USBUtils {
             return 0;
         }
 
-        int sortByName(UsbFile lhs, UsbFile rhs) {
+        final int sortByName(UsbFile lhs, UsbFile rhs) {
             int result;
             int dir = checkIfDirectory(lhs, rhs);
             if (dir != 0)
                 return dir;
             // Check if there is any number
-            String lhsNum = lhs.getName().replaceAll("\\D", "");
-            String rhsNum = rhs.getName().replaceAll("\\D", "");
+            final String lhsNum = lhs.getName().replaceAll("\\D", "");
+            final String rhsNum = rhs.getName().replaceAll("\\D", "");
             int lhsRes;
             int rhsRes;
             if (!lhsNum.isEmpty() && !rhsNum.isEmpty()) {
@@ -294,27 +284,23 @@ public class USBUtils {
 
         int sortByDate(UsbFile lhs, UsbFile rhs) {
             long result;
-            int dir = checkIfDirectory(lhs, rhs);
+            final int dir = checkIfDirectory(lhs, rhs);
             if (dir != 0)
                 return dir;
-
             result = lhs.lastModified() - rhs.lastModified();
-
             return (int) result;
         }
 
         int sortBySize(UsbFile lhs, UsbFile rhs) {
             long result = 0;
-            int dir = checkIfDirectory(lhs, rhs);
+            final int dir = checkIfDirectory(lhs, rhs);
             if (dir != 0)
                 return dir;
-
             try {
                 result = lhs.getLength() - rhs.getLength();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             return (int) result;
         }
     };
@@ -327,19 +313,13 @@ public class USBUtils {
 
 
     public static int loadMimeIcon(String mimeType) {
-
-        // Look for exact match first
-        Integer resId = sMimeIcons.get(mimeType);
+        final Integer resId = sMimeIcons.get(mimeType);
         if (resId != null) {
             return resId;
         }
-
         if (mimeType == null) {
-            // TODO: generic icon?
             return R.drawable.ic_doc_generic_am_alpha;
         }
-
-        // Otherwise look for partial match
         final String typeOnly = mimeType.split("/")[0];
         if ("audio".equals(typeOnly)) {
             return R.drawable.ic_doc_audio_alpha;
@@ -355,9 +335,8 @@ public class USBUtils {
     }
 
     public static String getMimetype(File f) {
-        String extension = android.webkit.MimeTypeMap.getFileExtensionFromUrl(Uri
+        final String extension = android.webkit.MimeTypeMap.getFileExtensionFromUrl(Uri
                 .fromFile(f).toString().toLowerCase());
-
         return getMimetype(extension);
     }
 

@@ -30,7 +30,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.gson.Gson;
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.ViewPagerStateAdapter;
+import com.leon.counter_reading.adapters.ViewPagerStateAdapter2;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReadingBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
@@ -78,7 +78,7 @@ public class ReadingActivity extends BaseActivity {
     private ISharedPreferenceManager sharedPreferenceManager;
     private int readStatus = 0, highLow = 1;
     private boolean isReading = false, isShowing = false;
-    private ViewPagerStateAdapter viewPagerAdapterReading;
+    private ViewPagerStateAdapter2 viewPagerAdapterReading;
 
     @Override
     protected void initialize() {
@@ -286,7 +286,7 @@ public class ReadingActivity extends BaseActivity {
     public void setupViewPagerAdapter(int currentItem) {
         runOnUiThread(() -> {
 //            final ViewPagerStateAdapter viewPagerAdapterReading = new ViewPagerStateAdapter(this, readingData);
-            viewPagerAdapterReading = new ViewPagerStateAdapter(this, readingData);
+            viewPagerAdapterReading = new ViewPagerStateAdapter2(this, readingData);
             try {
                 binding.viewPager.setOffscreenPageLimit(1);
                 binding.viewPager.setAdapter(viewPagerAdapterReading);
