@@ -45,7 +45,7 @@ public class DifferentCompanyManager {
             case TOWNS_WEST:
                 return "http://217.66.195.75/";
             case KSH:
-                return "http://46.209.219.36:90";
+                return "http://46.225.241.211:25123/";
             case DEBUG:
                 return "http://192.168.43.185:45458/";
             default:
@@ -266,7 +266,7 @@ public class DifferentCompanyManager {
             case ZONE4:
                 return "آبفا منطقه چهار";
             case ZONE5:
-                return "آبفامنطقه پنج";
+                return "آبفا منطقه پنج";
             case ZONE6:
                 return "آبقا منطقه شش";
             case TE:

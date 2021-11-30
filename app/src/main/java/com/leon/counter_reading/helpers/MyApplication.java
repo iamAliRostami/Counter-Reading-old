@@ -90,14 +90,14 @@ public class MyApplication extends Application {
 //    }
 
     protected void setupYandex() {
-        com.yandex.metrica.YandexMetricaConfig config = com.yandex.metrica.YandexMetricaConfig
-                .newConfigBuilder("6d39e473-5c5c-4163-9c4c-21eb91758e8f").withLogs()
-                .withAppVersion(BuildConfig.VERSION_NAME).build();
-//         Initializing the AppMetrica SDK.
-        com.yandex.metrica.YandexMetrica.activate(appContext, config);
-//         Automatic tracking of user activity.
-        com.yandex.metrica.YandexMetrica.enableActivityAutoTracking(this);
-        com.yandex.metrica.YandexMetrica.activate(getApplicationContext(), config);
+//        com.yandex.metrica.YandexMetricaConfig config = com.yandex.metrica.YandexMetricaConfig
+//                .newConfigBuilder("6d39e473-5c5c-4163-9c4c-21eb91758e8f").withLogs()
+//                .withAppVersion(BuildConfig.VERSION_NAME).build();
+////         Initializing the AppMetrica SDK.
+//        com.yandex.metrica.YandexMetrica.activate(appContext, config);
+////         Automatic tracking of user activity.
+//        com.yandex.metrica.YandexMetrica.enableActivityAutoTracking(this);
+//        com.yandex.metrica.YandexMetrica.activate(getApplicationContext(), config);
     }
 
     @Override

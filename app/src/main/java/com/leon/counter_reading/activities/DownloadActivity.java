@@ -39,7 +39,9 @@ public class DownloadActivity extends BaseActivity {
         View childLayout = binding.getRoot();
         ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
-        checkAllFilePermission();
+//        checkAllFilePermission();
+        setupViewPager();
+        initializeTextViews();
     }
 
 

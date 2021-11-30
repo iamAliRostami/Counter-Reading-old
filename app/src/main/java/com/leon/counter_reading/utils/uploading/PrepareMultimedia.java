@@ -64,8 +64,6 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
         for (int i = 0; i < images.size(); i++) {
             Bitmap bitmap = CustomFile.loadImage(activities[0], images.get(i).address);
             if (bitmap != null) {
-                imageMultiples.OnOffLoadId.add(RequestBody.create(images.get(i).OnOffLoadId,
-                        MediaType.parse("text/plain")));
                 imageMultiples.Description.add(RequestBody.create(images.get(i).Description,
                         MediaType.parse("text/plain")));
                 imageMultiples.OnOffLoadId.add(RequestBody.create(images.get(i).OnOffLoadId,
