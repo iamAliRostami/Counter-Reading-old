@@ -11,6 +11,7 @@ import static com.leon.counter_reading.utils.PermissionManager.gpsEnabledNew;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
+import com.leon.counter_reading.utils.KeyboardUtils;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.reading.Counting;
 
@@ -80,8 +82,17 @@ public class ReadingFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
-        super.onSaveInstanceState(outState);
+//        if (onOffLoadDto != null && readingConfigDefaultDto != null && karbariDto != null && !counterStateDtos.isEmpty())
+//            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
+//        else {
+//            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
+//        }
+        try {
+            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
+            super.onSaveInstanceState(outState);
+        } catch (Exception e) {
+            Log.e("error", e.getMessage());
+        }
     }
 
     private static Bundle putBundle(OnOffLoadDto onOffLoadDto,
@@ -145,6 +156,11 @@ public class ReadingFragment extends Fragment {
     private void initialize() {
         initializeViews();
         initializeSpinner();
+        initializeEditText();
+        onButtonSubmitClickListener();
+    }
+
+    public void initializeEditText(boolean... b) {
         binding.editTextNumber.setOnLongClickListener(view -> {
             binding.editTextNumber.setText("");
             return false;
@@ -152,8 +168,14 @@ public class ReadingFragment extends Fragment {
         if (onOffLoadDto.isLocked) {
             binding.editTextNumber.setFocusable(false);
             binding.editTextNumber.setEnabled(false);
-        }
-        onButtonSubmitClickListener();
+        } else if (b.length > 0 && b[0]) {
+            KeyboardUtils.showKeyboard1(activity);
+        } else if (FOCUS_ON_EDIT_TEXT)
+            KeyboardUtils.showKeyboard2(activity);
+        else KeyboardUtils.hideKeyboard(activity);
+        binding.editTextNumber.requestFocus();
+        if (onOffLoadDto.counterNumber != null)
+            binding.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
     }
 
     private void initializeViews() {
@@ -177,18 +199,24 @@ public class ReadingFragment extends Fragment {
 
         binding.textViewAhad1.setText(String.valueOf(onOffLoadDto.ahadMaskooniOrAsli));
 
-        if (onOffLoadDto.counterNumber != null)
-            binding.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
         binding.textViewAhad2.setText(String.valueOf(onOffLoadDto.ahadTejariOrFari));
         binding.textViewAhadTotal.setText(String.valueOf(onOffLoadDto.ahadSaierOrAbBaha));
 
         if (readingConfigDefaultDto.isOnQeraatCode) {
             binding.textViewCode.setText(onOffLoadDto.qeraatCode);
         } else binding.textViewCode.setText(onOffLoadDto.eshterak);
-
-        binding.textViewKarbari.setText(karbariDto.title);
-        binding.textViewBranch.setText(onOffLoadDto.qotr.equals("مشخص نشده") ? "-" : onOffLoadDto.qotr);
-        binding.textViewSiphon.setText(onOffLoadDto.sifoonQotr.equals("مشخص نشده") ? "-" : onOffLoadDto.sifoonQotr);
+        if (karbariDto.title == null) {
+            new CustomToast().warning("کاربری اشتراک ".concat(onOffLoadDto.eshterak).concat(" به درستی بارگیری نشده است."));
+        } else
+            binding.textViewKarbari.setText(karbariDto.title);
+        if (onOffLoadDto.qotr == null)
+            new CustomToast().warning("قطر اشتراک ".concat(onOffLoadDto.eshterak).concat(" به درستی بارگیری نشده است."));
+        else
+            binding.textViewBranch.setText(onOffLoadDto.qotr.equals("مشخص نشده") ? "-" : onOffLoadDto.qotr);
+        if (onOffLoadDto.sifoonQotr == null)
+            new CustomToast().warning("قطر سیفون اشتراک ".concat(onOffLoadDto.eshterak).concat(" به درستی بارگیری نشده است."));
+        else
+            binding.textViewSiphon.setText(onOffLoadDto.sifoonQotr.equals("مشخص نشده") ? "-" : onOffLoadDto.sifoonQotr);
 
         if (onOffLoadDto.counterNumberShown) {
             binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber));
@@ -444,7 +472,7 @@ public class ReadingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (FOCUS_ON_EDIT_TEXT) {
+        if (FOCUS_ON_EDIT_TEXT && binding != null) {
             View viewFocus = binding.editTextNumber;
             viewFocus.requestFocus();
         }

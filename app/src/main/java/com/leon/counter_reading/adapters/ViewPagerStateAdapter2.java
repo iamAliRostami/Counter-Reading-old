@@ -49,6 +49,8 @@ public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
                 }
                 k++;
             }
+            if (!found)
+                karbariDtos.add(new KarbariDto());
             k = 0;
             found = false;
             while (!found && k < readingData.trackingDtos.size()) {
@@ -73,12 +75,18 @@ public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int i) {
         try {
+            if (counterStateDtos.isEmpty()){
+                new CustomToast().error(MyApplication.getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
+                return ReadingFragment.newInstance(onOffLoadDtos.get(i), new ReadingConfigDefaultDto(),
+                        new ArrayList<>(), new KarbariDto(), i);
+            }
             return ReadingFragment.newInstance(onOffLoadDtos.get(i), readingConfigDefaultDtos.get(i),
                     counterStateDtos, karbariDtos.get(i), i);
         } catch (Exception e) {
             new CustomToast().error(MyApplication.getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
+            return ReadingFragment.newInstance(onOffLoadDtos.get(i), new ReadingConfigDefaultDto(),
+                    new ArrayList<>(), new KarbariDto(), i);
         }
-        return null;
     }
 
     @Override
@@ -86,4 +94,3 @@ public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
         return onOffLoadDtos.size();
     }
 }
-

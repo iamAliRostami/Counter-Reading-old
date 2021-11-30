@@ -45,12 +45,16 @@ public class SaveDownloadData {
         myDatabase.trackingDao().insertAllTrackingDtos(readingData.trackingDtos);
         myDatabase.onOffLoadDao().insertAllOnOffLoad(readingData.onOffLoadDtos);
 
-        ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>(myDatabase
-                .counterStateDao().getCounterStateDtos());
+        ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>(myDatabase.counterStateDao()
+                .getCounterStateDtos());
         for (int j = 0; j < counterStateDtos.size(); j++) {
-            for (int i = 0; i < readingDataTemp.counterStateDtos.size(); i++) {
-                if (counterStateDtos.get(j).id == readingDataTemp.counterStateDtos.get(i).id)
-                    readingData.counterStateDtos.remove(readingDataTemp.counterStateDtos.get(i));
+            int i = 0;
+            boolean found = false;
+            while (readingData.counterStateDtos.size() > 0 && !found) {
+                if (counterStateDtos.get(j).id == readingData.counterStateDtos.get(i).id) {
+                    readingData.counterStateDtos.remove(readingData.counterStateDtos.get(i));
+                    found = true;
+                }
             }
         }
         myDatabase.counterStateDao().insertAllCounterStateDto(readingData.counterStateDtos);
@@ -58,12 +62,16 @@ public class SaveDownloadData {
         myDatabase.karbariDao().deleteKarbariDto();
         myDatabase.karbariDao().insertAllKarbariDtos(readingData.karbariDtos);
 
-        ArrayList<QotrDictionary> qotrDictionaries = new ArrayList<>(myDatabase
-                .qotrDictionaryDao().getAllQotrDictionaries());
+        ArrayList<QotrDictionary> qotrDictionaries = new ArrayList<>(myDatabase.qotrDictionaryDao()
+                .getAllQotrDictionaries());
         for (int j = 0; j < qotrDictionaries.size(); j++) {
-            for (int i = 0; i < readingDataTemp.qotrDictionary.size(); i++) {
-                if (qotrDictionaries.get(j).id == readingDataTemp.qotrDictionary.get(i).id)
-                    readingData.qotrDictionary.remove(readingDataTemp.qotrDictionary.get(i));
+            int i = 0;
+            boolean found = false;
+            while (readingData.qotrDictionary.size() > 0 && !found) {
+                if (qotrDictionaries.get(j).id == readingData.qotrDictionary.get(i).id) {
+                    readingData.qotrDictionary.remove(readingData.qotrDictionary.get(i));
+                    found = true;
+                }
             }
         }
         myDatabase.qotrDictionaryDao().insertQotrDictionaries(readingData.qotrDictionary);

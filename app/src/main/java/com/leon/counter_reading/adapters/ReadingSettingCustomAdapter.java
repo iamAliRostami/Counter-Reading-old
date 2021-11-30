@@ -78,11 +78,15 @@ public class ReadingSettingCustomAdapter extends BaseAdapter {
         });
         holder.imageViewMap2.setOnClickListener(v -> {
             if (checkLocation(trackingDto)) {
-                final String uriString = "geo:" + trackingDtos.get(position).y + "," + trackingDtos.get(position).x + "?q=" +
-                        Uri.encode(trackingDtos.get(position).y + "," + trackingDtos.get(position).x + "(label)") + "&z=19";
-                final Uri uri = Uri.parse(uriString);
-                final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                context.startActivity(intent);
+                try {
+                    final String uriString = "geo:" + trackingDtos.get(position).y + "," + trackingDtos.get(position).x + "?q=" +
+                            Uri.encode(trackingDtos.get(position).y + "," + trackingDtos.get(position).x + "(label)") + "&z=19";
+                    final Uri uri = Uri.parse(uriString);
+                    final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    context.startActivity(intent);
+                } catch (Exception e) {
+                    new CustomToast().warning("دستگاه شما مجهز به مسیریاب نیست.");
+                }
             }
         });
         holder.checkBox.setChecked(trackingDtos.get(position).isActive);

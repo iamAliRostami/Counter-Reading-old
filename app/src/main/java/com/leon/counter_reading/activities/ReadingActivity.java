@@ -14,11 +14,12 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Bundle;
 import android.os.Debug;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DepthPageTransformer2;
+import com.leon.counter_reading.utils.KeyboardUtils;
 import com.leon.counter_reading.utils.login.TwoStepVerification;
 import com.leon.counter_reading.utils.reading.ChangeSortType;
 import com.leon.counter_reading.utils.reading.GetBundle;
@@ -233,9 +235,6 @@ public class ReadingActivity extends BaseActivity {
             setOnPageChangeListener();
         });
         setupViewPagerAdapter(0);
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if (FOCUS_ON_EDIT_TEXT)
-            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         isReading = true;
     }
 
@@ -533,6 +532,7 @@ public class ReadingActivity extends BaseActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -590,17 +590,9 @@ public class ReadingActivity extends BaseActivity {
                 showNoEshterakFound();
             } else {
                 item.setChecked(!item.isChecked());
-                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-                if (FOCUS_ON_EDIT_TEXT) {
-                    try {
-                        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if (!inputMethodManager.isAcceptingText()) {
-                    inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                }
                 FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
+                KeyboardUtils.showKeyboard1(activity);
+//                viewPagerAdapterReading.readingFragments.get(binding.viewPager.getCurrentItem()).initializeEditText(FOCUS_ON_EDIT_TEXT);
             }
         } else if (id == R.id.menu_last) {
             if (readingData.onOffLoadDtos.isEmpty()) {
@@ -640,19 +632,15 @@ public class ReadingActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         if (isReading && !readingData.onOffLoadDtos.isEmpty() && FOCUS_ON_EDIT_TEXT) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+//            viewPagerAdapterReading.readingFragments.get(binding.viewPager.getCurrentItem()).initializeEditText(true);
+            KeyboardUtils.showKeyboard1(this);
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        try {
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        } catch (Exception ignored) {
-        }
+        KeyboardUtils.hideKeyboard(this);
     }
 
     @Override

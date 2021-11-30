@@ -124,7 +124,7 @@ public class UploadFragment extends Fragment {
             String message = String.format(getString(R.string.darsad_alal_1), alalPercent, new DecimalFormat("###.##").format(alalMane), mane);
             new CustomToast().info(message, Toast.LENGTH_LONG);
             return false;
-        } else if (imagesCount > 0 || voicesCount > 0) {
+        } else if (type != UploadType.OFFLINE.getValue() && (imagesCount > 0 || voicesCount > 0)) {
             String message = String.format(getString(R.string.unuploaded_multimedia),
                     imagesCount, voicesCount).concat("\n")
                     .concat(getString(R.string.recommend_multimedia));
