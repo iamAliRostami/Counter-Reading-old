@@ -46,7 +46,7 @@ android {
             debuggable true
             signingConfig signingConfigs.config
             buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
-                    "com.leon.counter_reading.enums.CompanyNames.KSH"
+                    "com.leon.counter_reading.enums.CompanyNames.ESF"
         }
         esf {
             debuggable true
@@ -113,10 +113,10 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
-    implementation 'com.google.firebase:firebase-analytics:20.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.4'
-    implementation platform('com.google.firebase:firebase-bom:28.1.0')
-    implementation 'com.google.firebase:firebase-analytics'
+//    implementation 'com.google.firebase:firebase-analytics:20.0.0'
+//    implementation 'com.google.firebase:firebase-crashlytics:18.2.4'
+//    implementation platform('com.google.firebase:firebase-bom:28.1.0')
+//    implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.code.gson:gson:2.8.8'
 
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
@@ -170,6 +170,7 @@ dependencies {
 //    implementation 'lib.kashif:folderpicker:2.4'
 
     implementation 'me.jahnen:libaums:0.8.0'
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
 
 
 }

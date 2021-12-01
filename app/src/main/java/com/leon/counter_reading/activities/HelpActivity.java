@@ -27,7 +27,7 @@ public class HelpActivity extends BaseActivity {
         View childLayout = binding.getRoot();
         ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
-//        binding.pdfView.fromAsset("counter_reading.pdf").load();
+        binding.pdfView.fromAsset("counter_reading.pdf").load();
         TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
 

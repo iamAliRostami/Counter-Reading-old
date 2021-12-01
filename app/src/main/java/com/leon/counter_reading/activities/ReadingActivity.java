@@ -5,6 +5,7 @@ import static com.leon.counter_reading.helpers.Constants.COUNTER_LOCATION;
 import static com.leon.counter_reading.helpers.Constants.DESCRIPTION;
 import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
 import static com.leon.counter_reading.helpers.Constants.NAVIGATION;
+import static com.leon.counter_reading.helpers.Constants.OFFLINE_ATTEMPT;
 import static com.leon.counter_reading.helpers.Constants.REPORT;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
@@ -14,9 +15,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Bundle;
 import android.os.Debug;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -81,6 +80,7 @@ public class ReadingActivity extends BaseActivity {
     private int readStatus = 0, highLow = 1;
     private boolean isReading = false, isShowing = false;
     private ViewPagerStateAdapter2 viewPagerAdapterReading;
+    public static int offlineAttempts = 0;
 
     @Override
     protected void initialize() {
@@ -370,9 +370,10 @@ public class ReadingActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 new Update(readingData.onOffLoadDtos.get(position), location).execute(activity);
-                new PrepareToSend(readingData.onOffLoadDtos, readingDataTemp.onOffLoadDtos,
-                        sharedPreferenceManager.getStringData(SharedReferenceKeys.TOKEN.getValue()))
-                        .execute(activity);
+                if (offlineAttempts < OFFLINE_ATTEMPT)
+                    new PrepareToSend(readingData.onOffLoadDtos, readingDataTemp.onOffLoadDtos,
+                            sharedPreferenceManager.getStringData(SharedReferenceKeys.TOKEN.getValue()))
+                            .execute(activity);
                 changePage(binding.viewPager.getCurrentItem() + 1);
             }
         }
@@ -678,6 +679,7 @@ public class ReadingActivity extends BaseActivity {
             ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
             imageViewCheck.setImageDrawable(null);
         }
+        offlineAttempts=0;
         this.readingData.onOffLoadDtos.clear();
         this.readingData.qotrDictionary.clear();
         this.readingData.karbariDtos.clear();

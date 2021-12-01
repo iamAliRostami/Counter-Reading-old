@@ -63,4 +63,5 @@ public class Constants {
     public final static File otgViewerPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/OTGViewer");
     public static String zipAddress;
     public final static int ZIP_ROOT = 7896;
+    public final static int OFFLINE_ATTEMPT = 5;
 }
