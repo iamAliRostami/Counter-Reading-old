@@ -18,8 +18,8 @@ android {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
         targetSdkVersion 31
-        versionCode 50
-        versionName "1.00.09.02"
+        versionCode 52
+        versionName "1.00.09.13"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config
@@ -62,7 +62,6 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.config
             applicationIdSuffix ".ksh"
-//            buildConfigField 'type', 'var_name', "\"value\""
             buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
                     "com.leon.counter_reading.enums.CompanyNames.KSH"
         }
@@ -170,7 +169,9 @@ dependencies {
 //    implementation 'lib.kashif:folderpicker:2.4'
 
     implementation 'me.jahnen:libaums:0.8.0'
-    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+//    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+//    implementation 'com.github.naya-aastra:SkewPdfView:1.1'
+//    implementation 'com.github.barteksc:android-pdf-viewer:2.0.3'
 
 
 }

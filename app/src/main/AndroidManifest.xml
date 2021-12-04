@@ -88,7 +88,10 @@
             android:label="@string/location" />
         <activity
             android:name=".activities.HelpActivity"
-            android:label="@string/help" />
+            android:label="@string/help"
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".activities.TakePhotoActivity"
             android:label="@string/camera"
@@ -162,10 +165,10 @@
             android:name=".helpers.MainActivity"
             android:exported="true"
             android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
 
         <provider
