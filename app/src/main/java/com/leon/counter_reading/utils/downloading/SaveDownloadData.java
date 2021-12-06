@@ -50,11 +50,12 @@ public class SaveDownloadData {
         for (int j = 0; j < counterStateDtos.size(); j++) {
             int i = 0;
             boolean found = false;
-            while (readingData.counterStateDtos.size() > 0 && !found) {
+            while (readingData.counterStateDtos.size() > i && !found) {
                 if (counterStateDtos.get(j).id == readingData.counterStateDtos.get(i).id) {
-                    readingData.counterStateDtos.remove(readingData.counterStateDtos.get(i));
+                    readingData.counterStateDtos.remove(i);
                     found = true;
                 }
+                i++;
             }
         }
         myDatabase.counterStateDao().insertAllCounterStateDto(readingData.counterStateDtos);
@@ -67,11 +68,12 @@ public class SaveDownloadData {
         for (int j = 0; j < qotrDictionaries.size(); j++) {
             int i = 0;
             boolean found = false;
-            while (readingData.qotrDictionary.size() > 0 && !found) {
+            while (readingData.qotrDictionary.size() > i && !found) {
                 if (qotrDictionaries.get(j).id == readingData.qotrDictionary.get(i).id) {
-                    readingData.qotrDictionary.remove(readingData.qotrDictionary.get(i));
+                    readingData.qotrDictionary.remove(i);
                     found = true;
                 }
+                i++;
             }
         }
         myDatabase.qotrDictionaryDao().insertQotrDictionaries(readingData.qotrDictionary);
