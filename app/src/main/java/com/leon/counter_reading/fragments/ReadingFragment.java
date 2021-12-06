@@ -340,7 +340,7 @@ public class ReadingFragment extends Fragment {
     }
 
     private boolean lockProcess(boolean canBeEmpty) {
-        onOffLoadDto.attemptCount++;
+        onOffLoadDto.attemptCount = onOffLoadDto.attemptCount + 1;
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount + 1 == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
             new CustomToast().error(getString(R.string.mistakes_error), Toast.LENGTH_LONG);
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
@@ -370,21 +370,31 @@ public class ReadingFragment extends Fragment {
                     counterStateCode, counterStatePosition);
         } else {
             View view = binding.editTextNumber;
-            int currentNumber = Integer.parseInt(binding.editTextNumber.getText().toString());
-            int use = currentNumber - onOffLoadDto.preNumber;
-            if (canLessThanPre) {
-                lessThanPre(currentNumber);
-            } else if (use < 0) {
+            if (binding.editTextNumber.getText().toString().contains(".")) {
                 makeRing(activity, NotificationType.NOT_SAVE);
-                binding.editTextNumber.setError(getString(R.string.less_than_pre));
+                binding.editTextNumber.setError(getString(R.string.error_format));
                 view.requestFocus();
+            } else {
+                int currentNumber = Integer.parseInt(binding.editTextNumber.getText().toString());
+                int use = currentNumber - onOffLoadDto.preNumber;
+                if (canLessThanPre) {
+                    lessThanPre(currentNumber);
+                } else if (use < 0) {
+                    makeRing(activity, NotificationType.NOT_SAVE);
+                    binding.editTextNumber.setError(getString(R.string.less_than_pre));
+                    view.requestFocus();
+                }
             }
         }
     }
 
     private void canNotBeEmpty() {
         View view = binding.editTextNumber;
-        if (binding.editTextNumber.getText().toString().isEmpty()) {
+        if (binding.editTextNumber.getText().toString().contains(".")) {
+            makeRing(activity, NotificationType.NOT_SAVE);
+            binding.editTextNumber.setError(getString(R.string.error_format));
+            view.requestFocus();
+        } else if (binding.editTextNumber.getText().toString().isEmpty()) {
             makeRing(activity, NotificationType.NOT_SAVE);
             binding.editTextNumber.setError(getString(R.string.counter_empty));
             view.requestFocus();
