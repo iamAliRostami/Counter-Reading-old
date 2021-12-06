@@ -11,7 +11,6 @@ import static com.leon.counter_reading.utils.PermissionManager.gpsEnabledNew;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
@@ -80,21 +80,6 @@ public class ReadingFragment extends Fragment {
         this.counterStateDtos.addAll(counterStateDtos);
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-//        if (onOffLoadDto != null && readingConfigDefaultDto != null && karbariDto != null && !counterStateDtos.isEmpty())
-//            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
-//        else {
-//            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
-//        }
-        try {
-            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
-            super.onSaveInstanceState(outState);
-        } catch (Exception e) {
-            Log.e("error", e.getMessage());
-        }
-    }
-
     private static Bundle putBundle(OnOffLoadDto onOffLoadDto,
                                     ReadingConfigDefaultDto readingConfigDefaultDto,
                                     KarbariDto karbariDto,
@@ -118,17 +103,7 @@ public class ReadingFragment extends Fragment {
         return args;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null)
-            getBundle(savedInstanceState);
-        else if (getArguments() != null)
-            getBundle(getArguments());
-        activity = getActivity();
-    }
-
-    private void getBundle(Bundle bundle) {
+    private void getBundle(final Bundle bundle) {
         position = bundle.getInt(BundleEnum.POSITION.getValue());
         final Gson gson = new Gson();
         onOffLoadDto = gson.fromJson(bundle.getString(BundleEnum.ON_OFF_LOAD.getValue()),
@@ -140,16 +115,57 @@ public class ReadingFragment extends Fragment {
         final ArrayList<String> json1 = bundle.getStringArrayList(BundleEnum.COUNTER_STATE.getValue());
         counterStateDtos.clear();
         for (String s : json1) counterStateDtos.add(gson.fromJson(s, CounterStateDto.class));
+        bundle.clear();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+//        if (onOffLoadDto != null && readingConfigDefaultDto != null && karbariDto != null && !counterStateDtos.isEmpty())
+//            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
+//        else {
+//            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
+//        }
+        super.onSaveInstanceState(outState);
+        try {
+            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
+        } catch (Exception ignored) {
+        }
+//        outState.clear();
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            getBundle(savedInstanceState);
+            savedInstanceState.clear();
+        } else if (getArguments() != null) {
+            getBundle(getArguments());
+            getArguments().clear();
+        }
+        activity = getActivity();
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState != null) {
+            savedInstanceState.clear();
+        }
+        if (getApplicationComponent().SharedPreferenceModel().getBoolData(SharedReferenceKeys.RTL_PAGING.getValue()))
+            binding.scrollViewReading.setRotationY(180);
+        initialize();
     }
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            savedInstanceState.clear();
+        }
         binding = FragmentReadingBinding.inflate(inflater, container, false);
-        if (getApplicationComponent().SharedPreferenceModel()
-                .getBoolData(SharedReferenceKeys.RTL_PAGING.getValue()))
-            binding.scrollViewReading.setRotationY(180);
-        initialize();
         return binding.getRoot();
     }
 

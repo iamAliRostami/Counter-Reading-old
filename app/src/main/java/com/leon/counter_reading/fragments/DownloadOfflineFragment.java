@@ -150,7 +150,10 @@ public class DownloadOfflineFragment extends Fragment implements HomeFragment.Ho
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        requireContext().unregisterReceiver(usbReceiver);
+        try {
+            requireContext().unregisterReceiver(usbReceiver);
+        } catch (Exception ignored) {
+        }
         binding.imageViewDownload.setImageDrawable(null);
     }
 }

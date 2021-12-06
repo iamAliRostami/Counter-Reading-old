@@ -593,7 +593,6 @@ public class ReadingActivity extends BaseActivity {
                 item.setChecked(!item.isChecked());
                 FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
                 KeyboardUtils.showKeyboard1(activity);
-//                viewPagerAdapterReading.readingFragments.get(binding.viewPager.getCurrentItem()).initializeEditText(FOCUS_ON_EDIT_TEXT);
             }
         } else if (id == R.id.menu_last) {
             if (readingData.onOffLoadDtos.isEmpty()) {
@@ -622,7 +621,6 @@ public class ReadingActivity extends BaseActivity {
                 requestCode == DESCRIPTION ||
                 requestCode == COUNTER_LOCATION) && resultCode == RESULT_OK) {
             new Result(data, readingData.onOffLoadDtos, readingDataTemp.onOffLoadDtos).execute(activity);
-
         } else if (requestCode == CAMERA && resultCode == RESULT_OK) {
             int position = data.getExtras().getInt(BundleEnum.POSITION.getValue());
             attemptSend(position, false, false);
@@ -633,7 +631,6 @@ public class ReadingActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         if (isReading && !readingData.onOffLoadDtos.isEmpty() && FOCUS_ON_EDIT_TEXT) {
-//            viewPagerAdapterReading.readingFragments.get(binding.viewPager.getCurrentItem()).initializeEditText(true);
             KeyboardUtils.showKeyboard1(this);
         }
     }

@@ -115,17 +115,20 @@ public class SaveDownloadData {
                 .getString(R.string.save_format_name))).format(new Date())
                 .concat(String.valueOf(new Random().nextInt(1000)));
         String query = "CREATE TABLE %s AS %s;";
-        String query1 = String.format(query, "TrackingDto_".concat(time), String
-                .format("SELECT * FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1"
-                        , readingData.trackingDtos.get(i).trackNumber));
-        String query2 = String.format(query, "OnOffLoadDto_".concat(time), String
-                .format("SELECT * FROM OnOffLoadDto WHERE trackNumber = %d"
-                        , readingData.trackingDtos.get(i).trackNumber));
-        Cursor cursor = myDatabase.getOpenHelper().getWritableDatabase().query(query1);
-        cursor.moveToFirst();
-        cursor = myDatabase.getOpenHelper().getWritableDatabase().query(query2);
-        cursor.moveToFirst();
-        myDatabase.trackingDao().deleteTrackingDto(readingData.trackingDtos.get(i).trackNumber, true);
-        myDatabase.onOffLoadDao().deleteOnOffLoad(readingData.trackingDtos.get(i).trackNumber);
+        String query1 = String.format(query, "TrackingDto_".concat(time),
+                String.format("SELECT * FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1",
+                        readingData.trackingDtos.get(i).trackNumber));
+        String query2 = String.format(query, "OnOffLoadDto_".concat(time),
+                String.format("SELECT * FROM OnOffLoadDto WHERE trackNumber = %d",
+                        readingData.trackingDtos.get(i).trackNumber));
+        try {
+            Cursor cursor = myDatabase.getOpenHelper().getWritableDatabase().query(query1);
+            cursor.moveToFirst();
+            cursor = myDatabase.getOpenHelper().getWritableDatabase().query(query2);
+            cursor.moveToFirst();
+            myDatabase.trackingDao().deleteTrackingDto(readingData.trackingDtos.get(i).trackNumber, true);
+            myDatabase.onOffLoadDao().deleteOnOffLoad(readingData.trackingDtos.get(i).trackNumber);
+        } catch (Exception ignored) {
+        }
     }
 }
