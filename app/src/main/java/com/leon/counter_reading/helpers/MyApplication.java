@@ -63,7 +63,7 @@ public class MyApplication extends Application {
         applicationComponent.inject(this);
         super.onCreate();
         if (!BuildConfig.BUILD_TYPE.equals("release")) {
-//            setupYandex();
+            setupYandex();
         } else {
             setupLeakCanary();
         }
