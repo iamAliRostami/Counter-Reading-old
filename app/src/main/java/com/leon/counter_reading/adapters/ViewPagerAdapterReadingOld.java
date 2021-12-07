@@ -78,9 +78,7 @@ public class ViewPagerAdapterReadingOld extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         try {
-            return ReadingFragment.newInstance(onOffLoadDtos.get(position),
-                    readingConfigDefaultDtos.get(position), counterStateDtos,
-                    karbariDtos.get(position), position);
+            return ReadingFragment.newInstance(position);
         } catch (Exception e) {
             new CustomToast().error(MyApplication.getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
         }

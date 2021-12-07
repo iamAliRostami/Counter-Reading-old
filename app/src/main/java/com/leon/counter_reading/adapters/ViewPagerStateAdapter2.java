@@ -1,5 +1,10 @@
 package com.leon.counter_reading.adapters;
 
+import static com.leon.counter_reading.helpers.Constants.counterStateDtos;
+import static com.leon.counter_reading.helpers.Constants.karbariDtos;
+import static com.leon.counter_reading.helpers.Constants.onOffLoadDtos;
+import static com.leon.counter_reading.helpers.Constants.readingConfigDefaultDtos;
+
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -10,24 +15,19 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.fragments.ReadingFragment;
 import com.leon.counter_reading.helpers.MyApplication;
-import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.KarbariDto;
-import com.leon.counter_reading.tables.OnOffLoadDto;
-import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.utils.CustomToast;
 
-import java.util.ArrayList;
-
 public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
-    private final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
-    private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
-    private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
-    private final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
 
-    public ViewPagerStateAdapter2(@NonNull FragmentActivity fragmentActivity,
-                                  ReadingData readingData) {
+    public ViewPagerStateAdapter2(@NonNull FragmentActivity fragmentActivity, ReadingData readingData) {
         super(fragmentActivity);
+        karbariDtos.clear();
+        onOffLoadDtos.clear();
+        readingConfigDefaultDtos.clear();
+        counterStateDtos.clear();
+
         onOffLoadDtos.addAll(readingData.onOffLoadDtos);
         counterStateDtos.addAll(readingData.counterStateDtos);
         for (int i = 0; i < readingData.onOffLoadDtos.size(); i++) {
@@ -75,17 +75,14 @@ public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int i) {
         try {
-            if (counterStateDtos.isEmpty()){
+            if (counterStateDtos.isEmpty()) {
                 new CustomToast().error(MyApplication.getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
-                return ReadingFragment.newInstance(onOffLoadDtos.get(i), new ReadingConfigDefaultDto(),
-                        new ArrayList<>(), new KarbariDto(), i);
+                return ReadingFragment.newInstance(i);
             }
-            return ReadingFragment.newInstance(onOffLoadDtos.get(i), readingConfigDefaultDtos.get(i),
-                    counterStateDtos, karbariDtos.get(i), i);
+            return ReadingFragment.newInstance(i);
         } catch (Exception e) {
             new CustomToast().error(MyApplication.getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
-            return ReadingFragment.newInstance(onOffLoadDtos.get(i), new ReadingConfigDefaultDto(),
-                    new ArrayList<>(), new KarbariDto(), i);
+            return ReadingFragment.newInstance(i);
         }
     }
 

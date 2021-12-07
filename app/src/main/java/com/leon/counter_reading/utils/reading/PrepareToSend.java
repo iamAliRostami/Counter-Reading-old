@@ -30,16 +30,11 @@ import retrofit2.Retrofit;
 
 public class PrepareToSend extends AsyncTask<Activity, Integer, Integer> {
     private final OnOffLoadDto.OffLoadData offLoadData;
-    private final ArrayList<OnOffLoadDto> onOffLoadDtos;
-    private final ArrayList<OnOffLoadDto> onOffLoadDtosTemp;
     private final String token;
 
-    public PrepareToSend(ArrayList<OnOffLoadDto> onOffLoadDtos,
-                         ArrayList<OnOffLoadDto> onOffLoadDtosTemp, String token) {
+    public PrepareToSend(String token) {
         super();
         this.token = token;
-        this.onOffLoadDtos = new ArrayList<>(onOffLoadDtos);
-        this.onOffLoadDtosTemp = new ArrayList<>(onOffLoadDtosTemp);
         offLoadData = new OnOffLoadDto.OffLoadData();
     }
 
@@ -65,7 +60,7 @@ public class PrepareToSend extends AsyncTask<Activity, Integer, Integer> {
         }
         activities[0].runOnUiThread(() ->
                 HttpClientWrapper.callHttpAsync(call, ProgressType.NOT_SHOW.getValue(), activities[0],
-                        new offLoadData(onOffLoadDtos, onOffLoadDtosTemp, activities[0]),
+                        new offLoadData(activities[0]),
                         new offLoadDataIncomplete(activities[0]), new offLoadError(activities[0])));
         return null;
     }
@@ -74,20 +69,15 @@ public class PrepareToSend extends AsyncTask<Activity, Integer, Integer> {
 
 class offLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
     private final Activity activity;
-    private final ArrayList<OnOffLoadDto> onOffLoadDtos;
-    private final ArrayList<OnOffLoadDto> onOffLoadDtosTemp;
 
-    public offLoadData(ArrayList<OnOffLoadDto> onOffLoadDtos,
-                       ArrayList<OnOffLoadDto> onOffLoadDtosTemp, Activity activity) {
+    public offLoadData(Activity activity) {
         this.activity = activity;
-        this.onOffLoadDtos = new ArrayList<>(onOffLoadDtos);
-        this.onOffLoadDtosTemp = new ArrayList<>(onOffLoadDtosTemp);
     }
 
     @Override
     public void execute(Response<OnOffLoadDto.OffLoadResponses> response) {
         if (response.body() != null && response.body().status == 200) {
-            new Sent(onOffLoadDtos, onOffLoadDtosTemp, response.body()).execute(activity);
+            new Sent(response.body()).execute(activity);
         } else if (response.body() != null) {
             try {
                 MyApplication.setErrorCounter(MyApplication.getErrorCounter() + 1);

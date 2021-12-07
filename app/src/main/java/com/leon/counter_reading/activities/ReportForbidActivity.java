@@ -13,7 +13,6 @@ import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -26,7 +25,6 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;

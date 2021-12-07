@@ -7,6 +7,8 @@ import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
 import static com.leon.counter_reading.helpers.Constants.NAVIGATION;
 import static com.leon.counter_reading.helpers.Constants.OFFLINE_ATTEMPT;
 import static com.leon.counter_reading.helpers.Constants.REPORT;
+import static com.leon.counter_reading.helpers.Constants.readingData;
+import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
@@ -49,7 +51,6 @@ import com.leon.counter_reading.infrastructure.IFlashLightManager;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
-import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DepthPageTransformer2;
 import com.leon.counter_reading.utils.KeyboardUtils;
@@ -71,7 +72,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.util.ArrayList;
 
 public class ReadingActivity extends BaseActivity {
-    private final ReadingData readingData = new ReadingData(), readingDataTemp = new ReadingData();
     private int[] imageSrc;
     private ActivityReadingBinding binding;
     private Activity activity;
@@ -214,13 +214,8 @@ public class ReadingActivity extends BaseActivity {
             readingData.onOffLoadDtos.addAll(readingDataTemp.onOffLoadDtos);
             runOnUiThread(this::setupViewPager);
         } else {
-            new Search(readingData.onOffLoadDtos, readingDataTemp.onOffLoadDtos, type, key, goToPage).execute(activity);
+            new Search(type, key, goToPage).execute(activity);
         }
-    }
-
-    public void setupViewPager(ReadingData readingData, ReadingData readingDataTemp) {
-        setReadingData(readingData, readingDataTemp);
-        setupViewPager();
     }
 
     public void setupViewPager() {
@@ -234,53 +229,11 @@ public class ReadingActivity extends BaseActivity {
             binding.viewPager.setPageTransformer(new DepthPageTransformer2());
             setOnPageChangeListener();
         });
-        setupViewPagerAdapter(0);
+        setupViewPagerAdapter();
         isReading = true;
     }
 
-    public void setReadingDataOnOffload(ArrayList<OnOffLoadDto> onOffLoadDtos,
-                                        ArrayList<OnOffLoadDto> onOffLoadDtosTemp) {
-        this.readingData.onOffLoadDtos.clear();
-        this.readingData.onOffLoadDtos.addAll(onOffLoadDtos);
-        this.readingDataTemp.onOffLoadDtos.clear();
-        this.readingDataTemp.onOffLoadDtos.addAll(onOffLoadDtosTemp);
-    }
-
-    private void setReadingData(ReadingData readingData, ReadingData readingDataTemp) {
-        setReadingDataOnOffload(readingData.onOffLoadDtos, readingDataTemp.onOffLoadDtos);
-        this.readingData.qotrDictionary.clear();
-        this.readingData.qotrDictionary.addAll(readingData.qotrDictionary);
-        this.readingData.karbariDtos.clear();
-        this.readingData.karbariDtos.addAll(readingData.karbariDtos);
-        this.readingData.trackingDtos.clear();
-        this.readingData.trackingDtos.addAll(readingData.trackingDtos);
-        this.readingData.readingConfigDefaultDtos.clear();
-        this.readingData.readingConfigDefaultDtos.addAll(readingData.readingConfigDefaultDtos);
-        this.readingData.counterReportDtos.clear();
-        this.readingData.counterReportDtos.addAll(readingData.counterReportDtos);
-        this.readingData.counterStateDtos.clear();
-        this.readingData.counterStateDtos.addAll(readingData.counterStateDtos);
-
-        this.readingDataTemp.qotrDictionary.clear();
-        this.readingDataTemp.qotrDictionary.addAll(readingDataTemp.qotrDictionary);
-        this.readingDataTemp.karbariDtos.clear();
-        this.readingDataTemp.karbariDtos.addAll(readingDataTemp.karbariDtos);
-        this.readingDataTemp.trackingDtos.clear();
-        this.readingDataTemp.trackingDtos.addAll(readingDataTemp.trackingDtos);
-        this.readingDataTemp.readingConfigDefaultDtos.clear();
-        this.readingDataTemp.readingConfigDefaultDtos.addAll(readingDataTemp.readingConfigDefaultDtos);
-        this.readingDataTemp.counterReportDtos.clear();
-        this.readingDataTemp.counterReportDtos.addAll(readingDataTemp.counterReportDtos);
-        this.readingDataTemp.counterStateDtos.clear();
-        this.readingDataTemp.counterStateDtos.addAll(readingDataTemp.counterStateDtos);
-    }
-
-    public void dataChanged(ArrayList<OnOffLoadDto> onOffLoadDtos, ArrayList<OnOffLoadDto> onOffLoadDtosTemp) {
-        setReadingDataOnOffload(onOffLoadDtos, onOffLoadDtosTemp);
-        setupViewPager();
-    }
-
-    public void setupViewPagerAdapter(int currentItem) {
+    private void setupViewPagerAdapter() {
         runOnUiThread(() -> {
             viewPagerAdapterReading = new ViewPagerStateAdapter2(this, readingData);
             try {
@@ -289,8 +242,7 @@ public class ReadingActivity extends BaseActivity {
                 if (getApplicationComponent().SharedPreferenceModel()
                         .getBoolData(SharedReferenceKeys.RTL_PAGING.getValue()))
                     binding.viewPager.setRotationY(180);
-                if (currentItem > 0)
-                    binding.viewPager.setCurrentItem(currentItem);
+                binding.viewPager.setCurrentItem(0);
             } catch (Exception e) {
                 new CustomToast().error(MyApplication.getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
             }
@@ -354,7 +306,6 @@ public class ReadingActivity extends BaseActivity {
                         .onOffLoadDtos.get(position).counterStatePosition);
                 if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
                         counterStateDto.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {
-
                     ShowFragmentDialog.ShowFragmentDialogOnce(activity, "SERIAL_DIALOG",
                             SerialFragment.newInstance(position, counterStateDto.id,
                                     readingData.onOffLoadDtos.get(position).counterStatePosition));
@@ -371,8 +322,7 @@ public class ReadingActivity extends BaseActivity {
                 }
                 new Update(readingData.onOffLoadDtos.get(position), location).execute(activity);
                 if (offlineAttempts < OFFLINE_ATTEMPT)
-                    new PrepareToSend(readingData.onOffLoadDtos, readingDataTemp.onOffLoadDtos,
-                            sharedPreferenceManager.getStringData(SharedReferenceKeys.TOKEN.getValue()))
+                    new PrepareToSend(sharedPreferenceManager.getStringData(SharedReferenceKeys.TOKEN.getValue()))
                             .execute(activity);
                 changePage(binding.viewPager.getCurrentItem() + 1);
             }
@@ -541,18 +491,13 @@ public class ReadingActivity extends BaseActivity {
         if (id == R.id.menu_sort) {
             item.setChecked(!item.isChecked());
             sharedPreferenceManager.putData(SharedReferenceKeys.SORT_TYPE.getValue(), item.isChecked());
-            new ChangeSortType(activity, item.isChecked(), readingData.onOffLoadDtos,
-                    readingDataTemp.onOffLoadDtos).execute(activity);
+            new ChangeSortType(activity, item.isChecked()).execute(activity);
         } else if (id == R.id.menu_navigation) {
             if (readingDataTemp.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
                 intent = new Intent(activity, NavigationActivity.class);
                 intent.putExtra(BundleEnum.POSITION.getValue(), binding.viewPager.getCurrentItem());
-
-                Gson gson = new Gson();
-                String json1 = gson.toJson(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()));
-                intent.putExtra(BundleEnum.ON_OFF_LOAD.getValue(), json1);
                 startActivityForResult(intent, NAVIGATION);
             }
         } else if (id == R.id.menu_report_forbid) {
@@ -620,7 +565,7 @@ public class ReadingActivity extends BaseActivity {
         if ((requestCode == REPORT || requestCode == NAVIGATION ||
                 requestCode == DESCRIPTION ||
                 requestCode == COUNTER_LOCATION) && resultCode == RESULT_OK) {
-            new Result(data, readingData.onOffLoadDtos, readingDataTemp.onOffLoadDtos).execute(activity);
+            new Result(data).execute(activity);
         } else if (requestCode == CAMERA && resultCode == RESULT_OK) {
             int position = data.getExtras().getInt(BundleEnum.POSITION.getValue());
             attemptSend(position, false, false);
@@ -676,21 +621,21 @@ public class ReadingActivity extends BaseActivity {
             ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
             imageViewCheck.setImageDrawable(null);
         }
-        offlineAttempts=0;
-        this.readingData.onOffLoadDtos.clear();
-        this.readingData.qotrDictionary.clear();
-        this.readingData.karbariDtos.clear();
-        this.readingData.trackingDtos.clear();
-        this.readingData.readingConfigDefaultDtos.clear();
-        this.readingData.counterReportDtos.clear();
-        this.readingData.counterStateDtos.clear();
-        this.readingDataTemp.onOffLoadDtos.clear();
-        this.readingDataTemp.qotrDictionary.clear();
-        this.readingDataTemp.karbariDtos.clear();
-        this.readingDataTemp.trackingDtos.clear();
-        this.readingDataTemp.readingConfigDefaultDtos.clear();
-        this.readingDataTemp.counterReportDtos.clear();
-        this.readingDataTemp.counterStateDtos.clear();
+        offlineAttempts = 0;
+        readingData.onOffLoadDtos.clear();
+        readingData.qotrDictionary.clear();
+        readingData.karbariDtos.clear();
+        readingData.trackingDtos.clear();
+        readingData.readingConfigDefaultDtos.clear();
+        readingData.counterReportDtos.clear();
+        readingData.counterStateDtos.clear();
+        readingDataTemp.onOffLoadDtos.clear();
+        readingDataTemp.qotrDictionary.clear();
+        readingDataTemp.karbariDtos.clear();
+        readingDataTemp.trackingDtos.clear();
+        readingDataTemp.readingConfigDefaultDtos.clear();
+        readingDataTemp.counterReportDtos.clear();
+        readingDataTemp.counterStateDtos.clear();
         if (binding != null) {
             binding.imageViewHighLowState.setImageDrawable(null);
             binding.imageViewOffLoadState.setImageDrawable(null);

@@ -1,6 +1,8 @@
 package com.leon.counter_reading.utils.reading;
 
 import static com.leon.counter_reading.helpers.Constants.IS_MANE;
+import static com.leon.counter_reading.helpers.Constants.readingData;
+import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -13,7 +15,6 @@ import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.enums.OffloadStateEnum;
 import com.leon.counter_reading.enums.ReadStatusEnum;
 import com.leon.counter_reading.helpers.MyApplication;
-import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.MyDatabase;
@@ -22,7 +23,6 @@ import java.util.Collections;
 
 public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
     private final CustomProgressModel customProgressModel;
-    private final ReadingData readingData, readingDataTemp;
     private final int readStatus, highLow;
     private final boolean sortType;
 
@@ -30,11 +30,26 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
         super();
         customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
+
+        readingData.trackingDtos.clear();
+        readingData.onOffLoadDtos.clear();
+        readingData.readingConfigDefaultDtos.clear();
+        readingData.karbariDtos.clear();
+        readingData.qotrDictionary.clear();
+        readingData.counterReportDtos.clear();
+        readingData.counterStateDtos.clear();
+
+        readingDataTemp.trackingDtos.clear();
+        readingDataTemp.onOffLoadDtos.clear();
+        readingDataTemp.readingConfigDefaultDtos.clear();
+        readingDataTemp.karbariDtos.clear();
+        readingDataTemp.qotrDictionary.clear();
+        readingDataTemp.counterReportDtos.clear();
+        readingDataTemp.counterStateDtos.clear();
+
         this.sortType = sortType;
         this.highLow = highLow;
         this.readStatus = readStatus;
-        readingData = new ReadingData();
-        readingDataTemp = new ReadingData();
     }
 
     @Override
@@ -113,7 +128,7 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
                         o1.eshterak));
             }
         }
-        ((ReadingActivity) (activities[0])).setupViewPager(readingData,readingDataTemp);
+        ((ReadingActivity) (activities[0])).setupViewPager();
         return null;
     }
 }

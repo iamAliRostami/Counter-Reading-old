@@ -3,6 +3,7 @@ package com.leon.counter_reading.fragments;
 import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.STORAGE_PERMISSIONS;
+import static com.leon.counter_reading.helpers.Constants.counterStateDtos;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
@@ -21,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.R;
@@ -35,6 +35,7 @@ import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
 import com.leon.counter_reading.fragments.dialog.ShowFragmentDialog;
+import com.leon.counter_reading.helpers.Constants;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
@@ -57,80 +58,42 @@ public class ReadingFragment extends Fragment {
     private KarbariDto karbariDto;
     private int position, counterStateCode, counterStatePosition;
     private boolean canBeEmpty, canLessThanPre, isMakoos, isMane;
-    private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
 
-    public static ReadingFragment newInstance(OnOffLoadDto onOffLoadDto,
-                                              ReadingConfigDefaultDto readingConfigDefaultDto,
-                                              ArrayList<CounterStateDto> counterStateDtos,
-                                              KarbariDto karbariDto, int position) {
-        return new ReadingFragment(onOffLoadDto, readingConfigDefaultDto, karbariDto,
-                counterStateDtos, position);
+    public static ReadingFragment newInstance(int position) {
+        return new ReadingFragment(position);
     }
 
     public ReadingFragment() {
     }
 
-    public ReadingFragment(OnOffLoadDto onOffLoadDto, ReadingConfigDefaultDto readingConfigDefaultDto,
-                           KarbariDto karbariDto, ArrayList<CounterStateDto> counterStateDtos, int position) {
-        this.onOffLoadDto = onOffLoadDto;
-        this.readingConfigDefaultDto = readingConfigDefaultDto;
-        this.karbariDto = karbariDto;
+    public ReadingFragment(int position) {
         this.position = position;
-        this.counterStateDtos.clear();
-        this.counterStateDtos.addAll(counterStateDtos);
+        this.onOffLoadDto = Constants.onOffLoadDtos.get(position);
+        this.readingConfigDefaultDto = Constants.readingConfigDefaultDtos.get(position);
+        this.karbariDto = Constants.karbariDtos.get(position);
     }
 
-    private static Bundle putBundle(OnOffLoadDto onOffLoadDto,
-                                    ReadingConfigDefaultDto readingConfigDefaultDto,
-                                    KarbariDto karbariDto,
-                                    ArrayList<CounterStateDto> counterStateDtos, int position) {
+    private static Bundle putBundle(int position) {
         final Bundle args = new Bundle();
-        final Gson gson = new Gson();
-        final String json1 = gson.toJson(onOffLoadDto);
-        args.putString(BundleEnum.ON_OFF_LOAD.getValue(), json1);
-        final String json2 = gson.toJson(readingConfigDefaultDto);
-        args.putString(BundleEnum.READING_CONFIG.getValue(), json2);
-        final String json3 = gson.toJson(karbariDto);
-        args.putString(BundleEnum.KARBARI_DICTONARY.getValue(), json3);
-        final ArrayList<String> json7 = new ArrayList<>();
-        for (int i = 0, counterStateDtosSize = counterStateDtos.size(); i < counterStateDtosSize; i++) {
-            CounterStateDto s = counterStateDtos.get(i);
-            String json = gson.toJson(s);
-            json7.add(json);
-        }
-        args.putStringArrayList(BundleEnum.COUNTER_STATE.getValue(), json7);
         args.putInt(BundleEnum.POSITION.getValue(), position);
         return args;
     }
 
     private void getBundle(final Bundle bundle) {
         position = bundle.getInt(BundleEnum.POSITION.getValue());
-        final Gson gson = new Gson();
-        onOffLoadDto = gson.fromJson(bundle.getString(BundleEnum.ON_OFF_LOAD.getValue()),
-                OnOffLoadDto.class);
-        readingConfigDefaultDto = gson.fromJson(bundle.getString(BundleEnum.READING_CONFIG.getValue()),
-                ReadingConfigDefaultDto.class);
-        karbariDto = gson.fromJson(bundle.getString(BundleEnum.KARBARI_DICTONARY.getValue()),
-                KarbariDto.class);
-        final ArrayList<String> json1 = bundle.getStringArrayList(BundleEnum.COUNTER_STATE.getValue());
-        counterStateDtos.clear();
-        for (String s : json1) counterStateDtos.add(gson.fromJson(s, CounterStateDto.class));
+        this.onOffLoadDto = Constants.onOffLoadDtos.get(position);
+        this.readingConfigDefaultDto = Constants.readingConfigDefaultDtos.get(position);
+        this.karbariDto = Constants.karbariDtos.get(position);
         bundle.clear();
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-//        if (onOffLoadDto != null && readingConfigDefaultDto != null && karbariDto != null && !counterStateDtos.isEmpty())
-//            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
-//        else {
-//            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
-//        }
         super.onSaveInstanceState(outState);
         try {
-            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
+            outState.putAll(putBundle(position));
         } catch (Exception ignored) {
         }
-//        outState.clear();
     }
 
 
@@ -515,7 +478,6 @@ public class ReadingFragment extends Fragment {
         super.onDestroy();
         karbariDto = null;
         readingConfigDefaultDto = null;
-        counterStateDtos.clear();
         binding = null;
     }
 }

@@ -14,7 +14,6 @@ import static com.leon.counter_reading.utils.PermissionManager.checkCameraPermis
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Debug;
 import android.provider.MediaStore;
@@ -38,7 +37,6 @@ import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.photo.PrepareMultimedia;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class TakePhotoActivity extends AppCompatActivity {
@@ -48,8 +46,8 @@ public class TakePhotoActivity extends AppCompatActivity {
     private int position, trackNumber;
     private Activity activity;
     private ActivityTakePhotoBinding binding;
-    private final ArrayList<Image> images = new ArrayList<>();
     private ImageViewAdapter imageViewAdapter;
+    private final ArrayList<Image> images = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,10 +139,9 @@ public class TakePhotoActivity extends AppCompatActivity {
 
     private void prepareImage(Intent data) {
         final Image image = new Image();
-        final Uri uri = data.getData();
         try {
-            final InputStream inputStream = this.getContentResolver().openInputStream(uri);
-            image.bitmap = compressBitmap(BitmapFactory.decodeStream(inputStream));
+            image.bitmap = compressBitmap(BitmapFactory.decodeStream(this.getContentResolver().
+                    openInputStream(data.getData())));
             image.OnOffLoadId = uuid;
             image.trackNumber = trackNumber;
             if (replace > 0) {

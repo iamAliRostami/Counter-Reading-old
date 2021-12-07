@@ -9,11 +9,11 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityCounterPlaceBinding;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 
 public class CounterPlaceActivity extends AppCompatActivity {
     private ActivityCounterPlaceBinding binding;
@@ -37,6 +37,7 @@ public class CounterPlaceActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             uuid = getIntent().getExtras().getString(BundleEnum.BILL_ID.getValue());
             position = getIntent().getExtras().getInt(BundleEnum.POSITION.getValue());
+            getIntent().getExtras().clear();
         }
         binding.imageViewLocation.setImageDrawable(
                 ContextCompat.getDrawable(activity, R.drawable.img_location));

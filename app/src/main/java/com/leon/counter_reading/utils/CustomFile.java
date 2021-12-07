@@ -30,6 +30,7 @@ import com.leon.counter_reading.tables.Voice;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -113,7 +114,20 @@ public class CustomFile {
         }
         return original;
     }
-
+    public static ByteArrayInputStream compressBitmapIS(Bitmap original) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
+            int qualityPercent = Math.max((int) ((double)
+                    stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
+            original = Bitmap.createScaledBitmap(original
+                    , (int) ((double) original.getWidth() * qualityPercent / 100)
+                    , (int) ((double) original.getHeight() * qualityPercent / 100), false);
+            stream = new ByteArrayOutputStream();
+            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        }
+        return new ByteArrayInputStream(stream.toByteArray());
+    }
     public static String bitmapToBinary(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
