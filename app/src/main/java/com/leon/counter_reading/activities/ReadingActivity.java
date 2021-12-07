@@ -242,7 +242,7 @@ public class ReadingActivity extends BaseActivity {
                 if (getApplicationComponent().SharedPreferenceModel()
                         .getBoolData(SharedReferenceKeys.RTL_PAGING.getValue()))
                     binding.viewPager.setRotationY(180);
-                binding.viewPager.setCurrentItem(0);
+//                binding.viewPager.setCurrentItem(0);
             } catch (Exception e) {
                 new CustomToast().error(MyApplication.getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
             }

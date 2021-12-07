@@ -28,8 +28,8 @@ public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
         readingConfigDefaultDtos.clear();
         counterStateDtos.clear();
 
-        onOffLoadDtos.addAll(readingData.onOffLoadDtos);
         counterStateDtos.addAll(readingData.counterStateDtos);
+        onOffLoadDtos.addAll(readingData.onOffLoadDtos);
         for (int i = 0; i < readingData.onOffLoadDtos.size(); i++) {
             int k = 0;
             boolean found = false;
