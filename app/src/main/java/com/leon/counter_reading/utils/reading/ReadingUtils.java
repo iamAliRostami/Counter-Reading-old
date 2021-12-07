@@ -32,17 +32,17 @@ public class ReadingUtils {
     static public int setExceptionImage(ReadingData readingData, int position) {
         try {
             for (int i = 0; i < readingData.counterStateDtos.size(); i++) {
-                if (readingData.counterStateDtos.get(i).moshtarakinId ==
-                        readingData.onOffLoadDtos.get(position).preCounterStateCode &&
-                        readingData.counterStateDtos.get(i).isXarab) {
+                if (readingData.counterStateDtos.get(i).isXarab &&
+                        readingData.counterStateDtos.get(i).moshtarakinId ==
+                                readingData.onOffLoadDtos.get(position).preCounterStateCode) {
                     return 14;
                 }
             }
 
             for (int i = 0; i < readingData.karbariDtos.size(); i++) {
-                if (readingData.karbariDtos.get(i).moshtarakinId ==
-                        readingData.onOffLoadDtos.get(position).karbariCode &&
-                        readingData.karbariDtos.get(i).isSaxt) {
+                if (readingData.karbariDtos.get(i).isSaxt &&
+                        readingData.karbariDtos.get(i).moshtarakinId ==
+                                readingData.onOffLoadDtos.get(position).karbariCode) {
                     return 13;
                 }
             }

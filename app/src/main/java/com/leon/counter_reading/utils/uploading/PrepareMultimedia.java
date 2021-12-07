@@ -1,5 +1,7 @@
 package com.leon.counter_reading.utils.uploading;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -43,7 +45,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
 
     public PrepareMultimedia(Activity activity, UploadFragment uploadFragment, boolean justImages) {
         super();
-        customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
+        customProgressModel = getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
         this.uploadFragment = uploadFragment;
         this.justImages = justImages;
@@ -52,35 +54,25 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
     @Override
     protected Activity doInBackground(Activity... activities) {
         images.clear();
-        images.addAll(MyApplication.getApplicationComponent().MyDatabase().imageDao()
+        images.addAll(getApplicationComponent().MyDatabase().imageDao()
                 .getImagesByBySent(false));
         voice.clear();
         if (!justImages)
-            voice.addAll(MyApplication.getApplicationComponent().MyDatabase().voiceDao().
+            voice.addAll(getApplicationComponent().MyDatabase().voiceDao().
                     getVoicesByBySent(false));
 //        long startTime = Calendar.getInstance().getTimeInMillis();
         for (int i = 0; i < images.size(); i++) {
-//            long time1 = Calendar.getInstance().getTimeInMillis();
             Bitmap bitmap = CustomFile.loadImage(activities[0], images.get(i).address);
-//            long time2 = Calendar.getInstance().getTimeInMillis();
-//            Log.e("time 1", String.valueOf(time2 - time1));
             if (bitmap != null) {
-                imageMultiples.OnOffLoadId.add(RequestBody.create(images.get(i).OnOffLoadId,
-                        MediaType.parse("text/plain")));
                 imageMultiples.Description.add(RequestBody.create(images.get(i).Description,
                         MediaType.parse("text/plain")));
                 imageMultiples.OnOffLoadId.add(RequestBody.create(images.get(i).OnOffLoadId,
                         MediaType.parse("text/plain")));
                 imageMultiples.File.add(CustomFile.bitmapToFile(bitmap, activities[0]));
-//                time1 = Calendar.getInstance().getTimeInMillis();
-//                Log.e("time 3", String.valueOf(time1 - time2));
             } else {
-                MyApplication.getApplicationComponent().MyDatabase().imageDao().
-                        deleteImage(images.get(i).id);
+                getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(i).id);
             }
         }
-//        long endTime = Calendar.getInstance().getTimeInMillis();
-//        Log.e("Time 4", String.valueOf(endTime - startTime));
         for (int i = 0; i < voice.size(); i++) {
             voice.get(i).File = CustomFile.prepareVoiceToSend(
                     activities[0].getExternalFilesDir(null).getAbsolutePath() +
@@ -92,11 +84,10 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
                         MediaType.parse("text/plain")));
                 voiceMultiples.File.add(voice.get(i).File);
             } else {
-                MyApplication.getApplicationComponent().MyDatabase().voiceDao().
+                getApplicationComponent().MyDatabase().voiceDao().
                         deleteVoice(voice.get(i).id);
             }
         }
-//        startTime = Calendar.getInstance().getTimeInMillis();
         return activities[0];
     }
 
@@ -111,7 +102,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
 
     void uploadVoice(Activity activity) {
         if (voice.size() > 0) {
-            Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
+            Retrofit retrofit = getApplicationComponent().Retrofit();
             IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
             Call<MultimediaUploadResponse> call = iAbfaService.voiceUploadMultiple(
                     voiceMultiples.File, voiceMultiples.OnOffLoadId, voiceMultiples.Description);
@@ -126,7 +117,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
 
     void uploadImages(Activity activity) {
         if (images.size() > 0) {
-            Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
+            Retrofit retrofit = getApplicationComponent().Retrofit();
             IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
             Call<MultimediaUploadResponse> call = iAbfaService.fileUploadMultiple(
                     imageMultiples.File, imageMultiples.OnOffLoadId, imageMultiples.Description);
@@ -166,7 +157,7 @@ class UploadImages implements ICallback<MultimediaUploadResponse> {
     void updateImages() {
         for (int i = 0; i < images.size(); i++) {
             images.get(i).isSent = true;
-            MyApplication.getApplicationComponent().MyDatabase().imageDao()
+            getApplicationComponent().MyDatabase().imageDao()
                     .updateImage(images.get(i));
         }
     }
@@ -190,7 +181,7 @@ class UploadVoices implements ICallback<MultimediaUploadResponse> {
     void updateVoice() {
         for (int i = 0; i < voice.size(); i++) {
             voice.get(i).isSent = true;
-            MyApplication.getApplicationComponent().MyDatabase().voiceDao()
+            getApplicationComponent().MyDatabase().voiceDao()
                     .updateVoice(voice.get(i));
         }
     }

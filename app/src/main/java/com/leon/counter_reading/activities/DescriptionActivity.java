@@ -2,6 +2,7 @@ package com.leon.counter_reading.activities;
 
 import static com.leon.counter_reading.helpers.Constants.RECORD_AUDIO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
 import static com.leon.counter_reading.utils.PermissionManager.checkRecorderPermission;
 
@@ -13,7 +14,6 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
@@ -29,7 +29,6 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityDescriptionBinding;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.Voice;
 import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
@@ -53,15 +52,14 @@ public class DescriptionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MyApplication.onActivitySetTheme(this, getApplicationComponent()
-                        .SharedPreferenceModel().getIntData(SharedReferenceKeys.THEME_STABLE.getValue()),
+        onActivitySetTheme(this, getApplicationComponent().SharedPreferenceModel()
+                        .getIntData(SharedReferenceKeys.THEME_STABLE.getValue()),
                 true);
         super.onCreate(savedInstanceState);
         binding = ActivityDescriptionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
-
         activity = this;
         if (checkRecorderPermission(getApplicationContext()))
             initialize();

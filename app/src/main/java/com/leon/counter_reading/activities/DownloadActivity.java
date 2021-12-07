@@ -25,13 +25,13 @@ import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityDownloadBinding;
 import com.leon.counter_reading.enums.DownloadType;
 import com.leon.counter_reading.fragments.DownloadFragment;
+import com.leon.counter_reading.fragments.DownloadOfflineFragment;
 import com.leon.counter_reading.utils.DepthPageTransformer;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 public class DownloadActivity extends BaseActivity {
     private ActivityDownloadBinding binding;
     private int previousState, currentState;
-    private Activity activity;
 
     @Override
     protected void initialize() {
@@ -39,9 +39,11 @@ public class DownloadActivity extends BaseActivity {
         View childLayout = binding.getRoot();
         ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
-        checkAllFilePermission();
-
+//        checkAllFilePermission();
+        setupViewPager();
+        initializeTextViews();
     }
+
 
     private void checkAllFilePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -57,7 +59,6 @@ public class DownloadActivity extends BaseActivity {
             setupViewPager();
             initializeTextViews();
         }
-        activity = this;
     }
 
     private void initializeTextViewNoRight() {
@@ -125,8 +126,8 @@ public class DownloadActivity extends BaseActivity {
     private void textViewDownloadOff() {
         binding.textViewDownloadOff.setOnClickListener(view -> {
             setColor();
-            binding.textViewDownloadOff.setBackground(
-                    ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_white_2));
+            binding.textViewDownloadOff.setBackground(ContextCompat
+                    .getDrawable(getApplicationContext(), R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(DownloadType.OFFLINE.getValue());
         });
@@ -176,7 +177,7 @@ public class DownloadActivity extends BaseActivity {
         ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
         adapter.addFragment(DownloadFragment.newInstance(DownloadType.NORMAL.getValue()));
         adapter.addFragment(DownloadFragment.newInstance(DownloadType.RETRY.getValue()));
-        adapter.addFragment(DownloadFragment.newInstance(DownloadType.OFFLINE.getValue()));
+        adapter.addFragment(DownloadOfflineFragment.newInstance());
         adapter.addFragment(DownloadFragment.newInstance(DownloadType.SPECIAL.getValue()));
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -233,5 +234,10 @@ public class DownloadActivity extends BaseActivity {
         Runtime.getRuntime().gc();
         System.gc();
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

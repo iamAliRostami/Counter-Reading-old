@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.leon.counter_reading">
 
+    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
     <queries>
         <intent>
             <action android:name="android.provider.MediaStore.ACTION_IMAGE_CAPTURE" />
@@ -27,7 +28,6 @@
     <uses-permission
         android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
         tools:ignore="ProtectedPermissions" />
-    <!--    <uses-permission android:name="android.Manifest.permission.READ_PRIVILEGED_PHONE_STATE" />-->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.STORAGE" />
@@ -39,8 +39,10 @@
         tools:ignore="ScopedStorage" />
 
     <uses-feature android:name="android.hardware.usb.host" />
+
     <uses-permission android:name="android.permission.USB_PERMISSION" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
 
     <uses-feature android:name="android.hardware.camera.flash" />
@@ -65,9 +67,6 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
 
-
-    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
-
     <application
         android:name=".helpers.MyApplication"
         android:allowBackup="true"
@@ -89,7 +88,10 @@
             android:label="@string/location" />
         <activity
             android:name=".activities.HelpActivity"
-            android:label="@string/help" />
+            android:label="@string/help"
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".activities.TakePhotoActivity"
             android:label="@string/camera"
@@ -131,8 +133,11 @@
         <activity
             android:name=".activities.DownloadActivity"
             android:exported="true"
-            android:label="@string/download_information" >
+            android:label="@string/download_information">
 
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />
         </activity>
         <activity
             android:name=".activities.ReadingActivity"
@@ -143,16 +148,13 @@
             android:label="@string/location" />
         <activity
             android:name=".activities.HomeActivity"
-            android:label="@string/home">
-
-        </activity>
+            android:label="@string/home" />
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -160,30 +162,14 @@
             android:name=".activities.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
-            android:theme="@style/AppTheme" />
-
-        <meta-data
-            android:name="io.sentry.debug"
-            android:value="true" />
-        <meta-data
-            android:name="io.sentry.traces.sample-rate"
-            android:value="1.0" />
-        <meta-data
-            android:name="io.sentry.dsn"
-            android:value="https://f65129b578e14ab78eb8054e4f497c51@o1017694.ingest.sentry.io/5983684" />
-        <meta-data
-            android:name="com.bugsnag.android.API_KEY"
-            android:value="59d371febd1113dd4863e3f8bcac9ddd" />
-        <meta-data
-            android:name="firebase_crashlytics_collection_enabled"
-            android:value="true" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="firebase_performance_logcat_enabled"
-            android:value="true" />
+            android:name=".helpers.MainActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -198,7 +184,6 @@
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
-
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="barcode" />

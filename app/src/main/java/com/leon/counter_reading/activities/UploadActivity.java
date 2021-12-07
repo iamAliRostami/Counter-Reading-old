@@ -1,10 +1,16 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.helpers.Constants.ZIP_ROOT;
+import static com.leon.counter_reading.helpers.Constants.zipAddress;
+import static com.leon.counter_reading.utils.CustomFile.copyFile;
+
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Debug;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
@@ -20,6 +26,7 @@ import com.leon.counter_reading.utils.DepthPageTransformer;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.uploading.GetUploadDBData;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class UploadActivity extends BaseActivity {
@@ -47,6 +54,7 @@ public class UploadActivity extends BaseActivity {
         ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
         adapter.addFragment(UploadFragment.newInstance(UploadType.NORMAL.getValue()));
         adapter.addFragment(UploadFragment.newInstance(UploadType.OFFLINE.getValue()));
+//        adapter.addFragment(UploadOfflineFragment.newInstance());
         adapter.addFragment(UploadFragment.newInstance(UploadType.MULTIMEDIA.getValue()));
         binding.viewPager.setAdapter(adapter);
 
@@ -150,6 +158,13 @@ public class UploadActivity extends BaseActivity {
                 (int) getResources().getDimension(R.dimen.medium_dp));
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ZIP_ROOT && resultCode == RESULT_OK && data != null) {
+            copyFile(new File(zipAddress), data.getData(), getApplicationContext());
+        }
+    }
 
     @Override
     protected void onStop() {
@@ -165,13 +180,6 @@ public class UploadActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
         super.onDestroy();
     }
 }

@@ -1,8 +1,8 @@
 package com.leon.counter_reading.utils;
 
+import static com.leon.counter_reading.helpers.Constants.zipAddress;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
-import android.annotation.SuppressLint;
 import android.os.Environment;
 import android.util.Log;
 
@@ -29,13 +29,9 @@ import java.util.zip.ZipOutputStream;
 public class OfflineUtils {
 
     public static String[] getStorageDirectories() {
-        String[] storageDirectories;
         String rawSecondaryStoragesStr = System.getenv("SECONDARY_STORAGE");
-//        String rawSecondaryStoragesStr = System.getenv("EMULATED_STORAGE_TARGET");
-//        String rawSecondaryStoragesStr = System.getenv("EXTERNAL_STORAGE");
-//        String rawSecondaryStoragesStr = System.getenv("EXTERNAL_SDCARD_STORAGE");
-        List<String> results = new ArrayList<>();
-        File[] externalDirs = getContext().getExternalFilesDirs(null);
+        final List<String> results = new ArrayList<>();
+        final File[] externalDirs = getContext().getExternalFilesDirs(null);
         for (File file : externalDirs) {
             String path = null;
             try {
@@ -49,22 +45,19 @@ public class OfflineUtils {
                 }
             }
         }
-        storageDirectories = results.toArray(new String[0]);
-        return storageDirectories;
+        return results.toArray(new String[0]);
     }
 
-    @SuppressLint("SimpleDateFormat")
     public static void writeOnSdCard(String json, String name, int trackNumber) {
-        String filePostName = name.concat(".txt");
+        final String filePostName = name.concat(".txt");
         try {
             File root = new File(Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + trackNumber);
-            root.mkdirs();
+            if (!root.exists()) if (!root.mkdirs()) return;
             File file = new File(root + "/" + filePostName);
-            Log.e("address", file.getAbsolutePath());
-            file.createNewFile();
-            FileOutputStream fOut = new FileOutputStream(file);
-            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+            if (!file.exists()) if (!file.createNewFile()) return;
+            final FileOutputStream fOut = new FileOutputStream(file);
+            final OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
             myOutWriter.append(json);
             myOutWriter.close();
             fOut.close();
@@ -76,7 +69,6 @@ public class OfflineUtils {
 
     public static ReadingData readFromSdCard(String path) {
         File root = new File(path.concat("/Download"));
-
         File file = findFile(root, "125776_.txt");
         StringBuilder text = new StringBuilder();
         try {
@@ -91,7 +83,6 @@ public class OfflineUtils {
             ioException.printStackTrace();
         }
         String json = text.toString();
-        Log.e("json", json);
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(json, ReadingData.class);
     }
@@ -119,18 +110,18 @@ public class OfflineUtils {
         final int BUFFER = 2048;
         final File root = new File(Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
-        final String sourcePath = root + "/" + trackNumber, toLocation = root + "/" + trackNumber + ".zip";
+        final String sourcePath = root + "/" + trackNumber;
+        zipAddress = sourcePath + ".zip";
         final File sourceFile = new File(sourcePath);
         try {
-            final BufferedInputStream origin;
-            final FileOutputStream dest = new FileOutputStream(toLocation);
+            final FileOutputStream dest = new FileOutputStream(zipAddress);
             final ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
             if (sourceFile.isDirectory() && sourceFile.getParent() != null) {
                 zipSubFolder(out, sourceFile, sourceFile.getParent().length());
             } else {
                 final byte[] data = new byte[BUFFER];
                 final FileInputStream fi = new FileInputStream(sourcePath);
-                origin = new BufferedInputStream(fi, BUFFER);
+                final BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);
                 final ZipEntry entry = new ZipEntry(getLastPathComponent(sourcePath));
                 entry.setTime(sourceFile.lastModified());// to keep modification time after unzipping
                 out.putNextEntry(entry);
@@ -160,8 +151,7 @@ public class OfflineUtils {
                 } else {
                     final byte[] data = new byte[BUFFER];
                     final String unmodifiedFilePath = file.getPath();
-                    final String relativePath = unmodifiedFilePath
-                            .substring(basePathLength);
+                    final String relativePath = unmodifiedFilePath.substring(basePathLength);
                     try {
                         final FileInputStream fi = new FileInputStream(unmodifiedFilePath);
                         final BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);
@@ -175,6 +165,7 @@ public class OfflineUtils {
                         origin.close();
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Log.e("error", e.toString());
                     }
                 }
             }
@@ -233,13 +224,11 @@ public class OfflineUtils {
             if (directory != null && directory.length() != 0) {
                 if (i == size - 1) {
                     if (directory.contains(FLAG)) {
-                        Log.e("getClass().getSimpleName()", "SD Card's directory: " + directory);
                         return directory;
                     } else {
                         return null;
                     }
                 }
-                Log.e("getClass().getSimpleName()", "SD Card's directory: " + directory);
                 return directory;
             }
         }
@@ -255,13 +244,10 @@ public class OfflineUtils {
             fos.write(new byte[1024]);
             fos.flush();
             fos.close();
-            Log.e("getClass().getSimpleName()", "Can write file on this directory: " + FILE_DIR);
         } catch (Exception e) {
-            Log.e("getClass().getSimpleName()", "Write file error: " + e.getMessage());
             return null;
         } finally {
             if (tempFile != null && tempFile.exists() && tempFile.isFile()) {
-                // tempFlie.delete();
                 tempFile = null;
             }
         }

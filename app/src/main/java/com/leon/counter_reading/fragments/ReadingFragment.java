@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
@@ -40,6 +41,7 @@ import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
+import com.leon.counter_reading.utils.KeyboardUtils;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.reading.Counting;
 
@@ -57,12 +59,10 @@ public class ReadingFragment extends Fragment {
     private boolean canBeEmpty, canLessThanPre, isMakoos, isMane;
     private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
 
-    public static ReadingFragment newInstance(
-            OnOffLoadDto onOffLoadDto,
-            ReadingConfigDefaultDto readingConfigDefaultDto,
-            KarbariDto karbariDto,
-            ArrayList<CounterStateDto> counterStateDtos,
-            int position) {
+    public static ReadingFragment newInstance(OnOffLoadDto onOffLoadDto,
+                                              ReadingConfigDefaultDto readingConfigDefaultDto,
+                                              ArrayList<CounterStateDto> counterStateDtos,
+                                              KarbariDto karbariDto, int position) {
         return new ReadingFragment(onOffLoadDto, readingConfigDefaultDto, karbariDto,
                 counterStateDtos, position);
     }
@@ -78,12 +78,6 @@ public class ReadingFragment extends Fragment {
         this.position = position;
         this.counterStateDtos.clear();
         this.counterStateDtos.addAll(counterStateDtos);
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
-        super.onSaveInstanceState(outState);
     }
 
     private static Bundle putBundle(OnOffLoadDto onOffLoadDto,
@@ -109,17 +103,7 @@ public class ReadingFragment extends Fragment {
         return args;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null)
-            getBundle(savedInstanceState);
-        else if (getArguments() != null)
-            getBundle(getArguments());
-        activity = getActivity();
-    }
-
-    private void getBundle(Bundle bundle) {
+    private void getBundle(final Bundle bundle) {
         position = bundle.getInt(BundleEnum.POSITION.getValue());
         final Gson gson = new Gson();
         onOffLoadDto = gson.fromJson(bundle.getString(BundleEnum.ON_OFF_LOAD.getValue()),
@@ -131,22 +115,68 @@ public class ReadingFragment extends Fragment {
         final ArrayList<String> json1 = bundle.getStringArrayList(BundleEnum.COUNTER_STATE.getValue());
         counterStateDtos.clear();
         for (String s : json1) counterStateDtos.add(gson.fromJson(s, CounterStateDto.class));
+        bundle.clear();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+//        if (onOffLoadDto != null && readingConfigDefaultDto != null && karbariDto != null && !counterStateDtos.isEmpty())
+//            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
+//        else {
+//            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
+//        }
+        super.onSaveInstanceState(outState);
+        try {
+            outState.putAll(putBundle(onOffLoadDto, readingConfigDefaultDto, karbariDto, counterStateDtos, position));
+        } catch (Exception ignored) {
+        }
+//        outState.clear();
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            getBundle(savedInstanceState);
+            savedInstanceState.clear();
+        } else if (getArguments() != null) {
+            getBundle(getArguments());
+            getArguments().clear();
+        }
+        activity = getActivity();
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState != null) {
+            savedInstanceState.clear();
+        }
+        if (getApplicationComponent().SharedPreferenceModel().getBoolData(SharedReferenceKeys.RTL_PAGING.getValue()))
+            binding.scrollViewReading.setRotationY(180);
+        initialize();
     }
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            savedInstanceState.clear();
+        }
         binding = FragmentReadingBinding.inflate(inflater, container, false);
-        if (getApplicationComponent().SharedPreferenceModel()
-                .getBoolData(SharedReferenceKeys.RTL_PAGING.getValue()))
-            binding.scrollViewReading.setRotationY(180);
-        initialize();
         return binding.getRoot();
     }
 
     private void initialize() {
         initializeViews();
         initializeSpinner();
+        initializeEditText();
+        onButtonSubmitClickListener();
+    }
+
+    public void initializeEditText(boolean... b) {
         binding.editTextNumber.setOnLongClickListener(view -> {
             binding.editTextNumber.setText("");
             return false;
@@ -154,8 +184,14 @@ public class ReadingFragment extends Fragment {
         if (onOffLoadDto.isLocked) {
             binding.editTextNumber.setFocusable(false);
             binding.editTextNumber.setEnabled(false);
-        }
-        onButtonSubmitClickListener();
+        } else if (b.length > 0 && b[0]) {
+            KeyboardUtils.showKeyboard1(activity);
+        } else if (FOCUS_ON_EDIT_TEXT)
+            KeyboardUtils.showKeyboard2(activity);
+        else KeyboardUtils.hideKeyboard(activity);
+        binding.editTextNumber.requestFocus();
+        if (onOffLoadDto.counterNumber != null)
+            binding.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
     }
 
     private void initializeViews() {
@@ -179,18 +215,24 @@ public class ReadingFragment extends Fragment {
 
         binding.textViewAhad1.setText(String.valueOf(onOffLoadDto.ahadMaskooniOrAsli));
 
-        if (onOffLoadDto.counterNumber != null)
-            binding.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
         binding.textViewAhad2.setText(String.valueOf(onOffLoadDto.ahadTejariOrFari));
         binding.textViewAhadTotal.setText(String.valueOf(onOffLoadDto.ahadSaierOrAbBaha));
 
         if (readingConfigDefaultDto.isOnQeraatCode) {
             binding.textViewCode.setText(onOffLoadDto.qeraatCode);
         } else binding.textViewCode.setText(onOffLoadDto.eshterak);
-
-        binding.textViewKarbari.setText(karbariDto.title);
-        binding.textViewBranch.setText(onOffLoadDto.qotr.equals("مشخص نشده") ? "-" : onOffLoadDto.qotr);
-        binding.textViewSiphon.setText(onOffLoadDto.sifoonQotr.equals("مشخص نشده") ? "-" : onOffLoadDto.sifoonQotr);
+        if (karbariDto.title == null) {
+            new CustomToast().warning("کاربری اشتراک ".concat(onOffLoadDto.eshterak).concat(" به درستی بارگیری نشده است."));
+        } else
+            binding.textViewKarbari.setText(karbariDto.title);
+        if (onOffLoadDto.qotr == null)
+            new CustomToast().warning("قطر اشتراک ".concat(onOffLoadDto.eshterak).concat(" به درستی بارگیری نشده است."));
+        else
+            binding.textViewBranch.setText(onOffLoadDto.qotr.equals("مشخص نشده") ? "-" : onOffLoadDto.qotr);
+        if (onOffLoadDto.sifoonQotr == null)
+            new CustomToast().warning("قطر سیفون اشتراک ".concat(onOffLoadDto.eshterak).concat(" به درستی بارگیری نشده است."));
+        else
+            binding.textViewSiphon.setText(onOffLoadDto.sifoonQotr.equals("مشخص نشده") ? "-" : onOffLoadDto.sifoonQotr);
 
         if (onOffLoadDto.counterNumberShown) {
             binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber));
@@ -314,7 +356,7 @@ public class ReadingFragment extends Fragment {
     }
 
     private boolean lockProcess(boolean canBeEmpty) {
-        onOffLoadDto.attemptCount++;
+        onOffLoadDto.attemptCount = onOffLoadDto.attemptCount + 1;
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount + 1 == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
             new CustomToast().error(getString(R.string.mistakes_error), Toast.LENGTH_LONG);
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount == DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName()))
@@ -323,7 +365,6 @@ public class ReadingFragment extends Fragment {
         ((ReadingActivity) activity).updateOnOffLoadByAttempt(position);
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= DifferentCompanyManager.getLockNumber(DifferentCompanyManager.getActiveCompanyName())) {
             ((ReadingActivity) activity).updateOnOffLoadByLock(position);
-//            binding.editTextNumber.setText("");
             binding.editTextNumber.setFocusable(false);
             binding.editTextNumber.setEnabled(false);
             return canBeEmpty;
@@ -345,21 +386,31 @@ public class ReadingFragment extends Fragment {
                     counterStateCode, counterStatePosition);
         } else {
             View view = binding.editTextNumber;
-            int currentNumber = Integer.parseInt(binding.editTextNumber.getText().toString());
-            int use = currentNumber - onOffLoadDto.preNumber;
-            if (canLessThanPre) {
-                lessThanPre(currentNumber);
-            } else if (use < 0) {
+            if (binding.editTextNumber.getText().toString().contains(".")) {
                 makeRing(activity, NotificationType.NOT_SAVE);
-                binding.editTextNumber.setError(getString(R.string.less_than_pre));
+                binding.editTextNumber.setError(getString(R.string.error_format));
                 view.requestFocus();
+            } else {
+                int currentNumber = Integer.parseInt(binding.editTextNumber.getText().toString());
+                int use = currentNumber - onOffLoadDto.preNumber;
+                if (canLessThanPre) {
+                    lessThanPre(currentNumber);
+                } else if (use < 0) {
+                    makeRing(activity, NotificationType.NOT_SAVE);
+                    binding.editTextNumber.setError(getString(R.string.less_than_pre));
+                    view.requestFocus();
+                }
             }
         }
     }
 
     private void canNotBeEmpty() {
         View view = binding.editTextNumber;
-        if (binding.editTextNumber.getText().toString().isEmpty()) {
+        if (binding.editTextNumber.getText().toString().contains(".")) {
+            makeRing(activity, NotificationType.NOT_SAVE);
+            binding.editTextNumber.setError(getString(R.string.error_format));
+            view.requestFocus();
+        } else if (binding.editTextNumber.getText().toString().isEmpty()) {
             makeRing(activity, NotificationType.NOT_SAVE);
             binding.editTextNumber.setError(getString(R.string.counter_empty));
             view.requestFocus();
@@ -447,7 +498,7 @@ public class ReadingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (FOCUS_ON_EDIT_TEXT) {
+        if (FOCUS_ON_EDIT_TEXT && binding != null) {
             View viewFocus = binding.editTextNumber;
             viewFocus.requestFocus();
         }

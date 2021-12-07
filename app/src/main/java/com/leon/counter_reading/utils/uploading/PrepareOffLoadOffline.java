@@ -1,11 +1,14 @@
 package com.leon.counter_reading.utils.uploading;
 
+import static com.leon.counter_reading.helpers.Constants.ZIP_ROOT;
+import static com.leon.counter_reading.helpers.Constants.zipAddress;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.OfflineUtils.writeOnSdCard;
 import static com.leon.counter_reading.utils.OfflineUtils.zipFileAtPath;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -13,7 +16,6 @@ import com.google.gson.Gson;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.enums.OffloadStateEnum;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.ForbiddenDto;
 import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.tables.OffLoadReport;
@@ -22,6 +24,7 @@ import com.leon.counter_reading.tables.Voice;
 import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activity> {
@@ -34,40 +37,43 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
 
     public PrepareOffLoadOffline(Activity activity, int trackNumber, String id) {
         super();
+        customProgressModel = getApplicationComponent().CustomProgressModel();
+        customProgressModel.show(activity, false);
         this.trackNumber = trackNumber;
         this.id = id;
-        customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
-        customProgressModel.show(activity, false);
     }
 
     @SuppressLint("DefaultLocale")
     @Override
     protected Activity doInBackground(Activity... activities) {
         forbiddenDtos.clear();
-        forbiddenDtos.addAll(MyApplication.getApplicationComponent().MyDatabase().
+        forbiddenDtos.addAll(getApplicationComponent().MyDatabase().
                 forbiddenDao().getAllForbiddenDto(false));
-        if (forbiddenDtos.size() > 0) {
-            uploadForbid();
-        }
+        if (forbiddenDtos.size() > 0) uploadForbid(activities[0]);
         onOffLoadDtos.clear();
-        onOffLoadDtos.addAll(MyApplication.getApplicationComponent().MyDatabase().
-                onOffLoadDao().getOnOffLoadReadByTrackingAndOffLoad(trackNumber,
-                OffloadStateEnum.INSERTED.getValue()));
+        onOffLoadDtos.addAll(getApplicationComponent().MyDatabase().onOffLoadDao()
+                .getOnOffLoadReadByTrackingAndOffLoad(trackNumber,
+                        OffloadStateEnum.INSERTED.getValue()));
         offLoadReports.clear();
-        offLoadReports.addAll(MyApplication.getApplicationComponent().MyDatabase().
-                offLoadReportDao().getAllOffLoadReport(false));
+        offLoadReports.addAll(getApplicationComponent().MyDatabase().offLoadReportDao()
+                .getAllOffLoadReport(false));
         if (uploadOffLoad(activities[0])) {
             uploadImages(activities[0]);
             uploadVoices(activities[0]);
             if (zipFileAtPath(trackNumber)) {
+                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                intent.setType("application/zip");
+                final File file = new File(zipAddress);
+                intent.putExtra(Intent.EXTRA_TITLE, file.getName());
+                activities[0].startActivityForResult(intent, ZIP_ROOT);
                 //TODO after zip and sent
                 for (int i = 0; i < onOffLoadDtos.size(); i++)
                     onOffLoadDtos.get(i).offLoadStateId = OffloadStateEnum.SENT.getValue();
-//                getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoads(onOffLoadDtos);
-                getApplicationComponent().MyDatabase().trackingDao().updateTrackingDtoByArchive(id, true, false);
+                getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoads(onOffLoadDtos);
+                getApplicationComponent().MyDatabase().trackingDao().updateTrackingDtoByArchive(id,
+                        true, false);
                 for (int i = 0; i < offLoadReports.size(); i++) offLoadReports.get(i).isSent = true;
                 getApplicationComponent().MyDatabase().offLoadReportDao().updateOffLoadReport(offLoadReports);
-
                 activities[0].runOnUiThread(() -> {
                     String message = "تعداد %d اشتراک با موفقیت بارگذاری شد.";
                     message = String.format(message, onOffLoadDtos.size());
@@ -116,21 +122,32 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
         }
     }
 
-    private void uploadForbid() {
-        final Gson gson = new Gson();
-        final String onOffLoadDtoString = gson.toJson(forbiddenDtos);
-        writeOnSdCard(onOffLoadDtoString, "forbiddenDtos", trackNumber);
+    private void uploadForbid(Activity activity) {
+        if (forbiddenDtos.size() > 0) {
+            final Gson gson = new Gson();
+            final String forbiddenString = gson.toJson(forbiddenDtos);
+            writeOnSdCard(forbiddenString, "forbiddenDtos", trackNumber);
+            getApplicationComponent().MyDatabase().forbiddenDao().
+                    updateAllForbiddenDtoBySent(true);
+            for (ForbiddenDto forbiddenDto : forbiddenDtos) {
+                if (forbiddenDto.address != null) {
+                    final Image image = new Image();
+                    image.address = forbiddenDto.address;
+                    CustomFile.copyImages(image, trackNumber, activity);
+                }
+            }
+        }
     }
 
     private boolean uploadOffLoad(Activity activity) {
         if (onOffLoadDtos.size() == 0) {
             thankYou(activity);
             onOffLoadDtos.clear();
-            onOffLoadDtos.add(MyApplication.getApplicationComponent().MyDatabase().
+            onOffLoadDtos.add(getApplicationComponent().MyDatabase().
                     onOffLoadDao().getOnOffLoadReadByTrackingAndOffLoad(trackNumber));
         }
         if (onOffLoadDtos.size() == 0 || onOffLoadDtos.get(0) == null) {
-            MyApplication.getApplicationComponent().MyDatabase().
+            getApplicationComponent().MyDatabase().
                     trackingDao().updateTrackingDtoByArchive(id, true, false);
             return false;
         }
@@ -145,7 +162,6 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
         writeOnSdCard(onOffLoadDtoString, "offLoadData", trackNumber);
         return true;
     }
-
 
     private void thankYou(Activity activity) {
         activity.runOnUiThread(() ->

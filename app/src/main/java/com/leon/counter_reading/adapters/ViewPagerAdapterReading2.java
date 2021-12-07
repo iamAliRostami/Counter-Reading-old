@@ -7,7 +7,6 @@ import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
 import static com.leon.counter_reading.utils.PermissionManager.checkStoragePermission;
 
-import android.Manifest;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +23,7 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
+import com.leon.counter_reading.adapters.holder.ReadingViewHolder;
 import com.leon.counter_reading.enums.HighLowStateEnum;
 import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
@@ -38,16 +38,13 @@ import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.reading.Counting;
-import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByIsShown;
-import com.leon.counter_reading.utils.reading.UpdateOnOffLoadDtoByLock;
 
 import java.util.ArrayList;
 
-public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderReading> {
+public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ReadingViewHolder> {
     private final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
     private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
     private final ArrayList<OnOffLoadDto> onOffLoadDtos;
-    private final ArrayList<OnOffLoadDto> onOffLoadDtosTemp;
     private final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
     private final SpinnerCustomAdapter adapter;
     private final Activity activity;
@@ -62,7 +59,6 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
                                     Activity activity) {
         this.activity = activity;
         this.onOffLoadDtos = new ArrayList<>(readingData.onOffLoadDtos);
-        this.onOffLoadDtosTemp = new ArrayList<>(onOffLoadDtosTemp);
         final String[] items = new String[readingData.counterStateDtos.size()];
         for (int i = 0; i < readingData.counterStateDtos.size(); i++) {
             items[i] = readingData.counterStateDtos.get(i).title;
@@ -110,14 +106,14 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
 
     @NonNull
     @Override
-    public ViewHolderReading onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ReadingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(activity).inflate(R.layout.fragment_reading, parent, false);
         view.setRotationY(180);
-        return new ViewHolderReading(view);
+        return new ReadingViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderReading holder, int position) {
+    public void onBindViewHolder(@NonNull ReadingViewHolder holder, int position) {
 //        holder.setIsRecyclable(false);
         holder.editTextNumber.setOnLongClickListener(view -> {
             holder.editTextNumber.setText("");
@@ -144,7 +140,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
         holder.buttonSubmit.setOnClickListener(v -> checkPermissions(holder, position));
     }
 
-    private void initializeViews(ViewHolderReading holder, OnOffLoadDto onOffLoadDto, int position) {
+    private void initializeViews(ReadingViewHolder holder, OnOffLoadDto onOffLoadDto, int position) {
         holder.textViewAhad1Title.setText(DifferentCompanyManager.getAhad1(
                 DifferentCompanyManager.getActiveCompanyName()).concat(" : "));
         holder.textViewAhad2Title.setText(DifferentCompanyManager.getAhad2(
@@ -198,7 +194,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
         });
     }
 
-    private void initializeSpinner(ViewHolderReading holder, OnOffLoadDto onOffLoadDto) {
+    private void initializeSpinner(ReadingViewHolder holder, OnOffLoadDto onOffLoadDto) {
         holder.spinner.setAdapter(adapter);
         boolean found = false;
         int i;
@@ -210,7 +206,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
         setOnSpinnerSelectedListener(holder);
     }
 
-    private void setOnSpinnerSelectedListener(ViewHolderReading holder) {
+    private void setOnSpinnerSelectedListener(ReadingViewHolder holder) {
         holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int i, long id) {
@@ -227,7 +223,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
         });
     }
 
-    public void attemptSend(ViewHolderReading holder, int position) {
+    public void attemptSend(ReadingViewHolder holder, int position) {
         counterStatePosition = holder.spinner.getSelectedItemPosition();
         counterStateCode = counterStateDtos.get(counterStatePosition).id;
         canLessThanPre = counterStateDtos.get(counterStatePosition).canNumberBeLessThanPre;
@@ -241,7 +237,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
         }
     }
 
-    private void canBeEmpty(ViewHolderReading holder, int position) {
+    private void canBeEmpty(ReadingViewHolder holder, int position) {
         if (holder.editTextNumber.getText().toString().isEmpty() || isMane) {
             ((ReadingActivity) activity).updateOnOffLoadWithoutCounterNumber(position,
                     counterStateCode, counterStatePosition);
@@ -259,7 +255,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
         }
     }
 
-    private void canNotBeEmpty(ViewHolderReading holder, int position) {
+    private void canNotBeEmpty(ReadingViewHolder holder, int position) {
         View view = holder.editTextNumber;
         if (holder.editTextNumber.getText().toString().isEmpty()) {
             makeRing(activity, NotificationType.NOT_SAVE);
@@ -351,7 +347,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
         }
     }
 
-    private void askLocationPermission(ViewHolderReading holder, int position) {
+    private void askLocationPermission(ReadingViewHolder holder, int position) {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -374,7 +370,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
                 .setPermissions(LOCATION_PERMISSIONS).check();
     }
 
-    private void askStoragePermission(ViewHolderReading holder, int position) {
+    private void askStoragePermission(ReadingViewHolder holder, int position) {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -397,7 +393,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ViewHolderRea
                 .setPermissions(STORAGE_PERMISSIONS).check();
     }
 
-    private void checkPermissions(ViewHolderReading holder, int position) {
+    private void checkPermissions(ReadingViewHolder holder, int position) {
         if (PermissionManager.gpsEnabledNew(activity))
             if (!checkLocationPermission(getContext())) {
                 askLocationPermission(holder, position);

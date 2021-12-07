@@ -1,12 +1,7 @@
 package com.leon.counter_reading.fragments;
 
-//import static com.leon.counter_reading.utils.ExternalStorage.getAllStorageLocations;
-
-import static com.leon.counter_reading.utils.OfflineUtils.getStorageDirectories;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,7 +80,7 @@ public class UploadFragment extends Fragment {
             items = TrackingDto.getTrackingDtoItems(trackingDtos, getString(R.string.select_one));
             setupSpinner();
         }
-        binding.imageViewUpload.setImageResource(imageSrc[type]);
+        binding.imageViewUpload.setImageResource(imageSrc[type > -1 ? type : 0]);
         setOnButtonUploadClickListener();
     }
 
@@ -129,7 +124,7 @@ public class UploadFragment extends Fragment {
             String message = String.format(getString(R.string.darsad_alal_1), alalPercent, new DecimalFormat("###.##").format(alalMane), mane);
             new CustomToast().info(message, Toast.LENGTH_LONG);
             return false;
-        } else if (imagesCount > 0 || voicesCount > 0) {
+        } else if (type != UploadType.OFFLINE.getValue() && (imagesCount > 0 || voicesCount > 0)) {
             String message = String.format(getString(R.string.unuploaded_multimedia),
                     imagesCount, voicesCount).concat("\n")
                     .concat(getString(R.string.recommend_multimedia));
@@ -171,15 +166,6 @@ public class UploadFragment extends Fragment {
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
                     .execute(activity);
-            String[] retArray = getStorageDirectories();
-            if (retArray.length == 0) {
-                new CustomToast().error("کارت حافظه نصب نشده است.", Toast.LENGTH_LONG);
-            } else {
-                for (String s : retArray) {
-                    Log.e("path ", s);
-//                    writeOnSdCard(s, trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber);
-                }
-            }
         }
     }
 
@@ -189,6 +175,4 @@ public class UploadFragment extends Fragment {
         trackingDtos.clear();
         items = null;
     }
-
-
 }

@@ -18,8 +18,8 @@ android {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
         targetSdkVersion 31
-        versionCode 50
-        versionName "1.00.09.02"
+        versionCode 54
+        versionName "1.00.09.15"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config
@@ -62,7 +62,6 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.config
             applicationIdSuffix ".ksh"
-//            buildConfigField 'type', 'var_name', "\"value\""
             buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
                     "com.leon.counter_reading.enums.CompanyNames.KSH"
         }
@@ -102,6 +101,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.4.0'
 //    implementation 'androidx.appcompat:appcompat:1.3.1'
 //    implementation 'androidx.annotation:annotation:1.2.0'
 //    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
@@ -112,10 +112,10 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
-    implementation 'com.google.firebase:firebase-analytics:20.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.4'
-    implementation platform('com.google.firebase:firebase-bom:28.1.0')
-    implementation 'com.google.firebase:firebase-analytics'
+//    implementation 'com.google.firebase:firebase-analytics:20.0.0'
+//    implementation 'com.google.firebase:firebase-crashlytics:18.2.4'
+//    implementation platform('com.google.firebase:firebase-bom:28.1.0')
+//    implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.code.gson:gson:2.8.8'
 
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
@@ -167,5 +167,11 @@ dependencies {
 
 //    implementation 'net.rdrei.android.dirchooser:library:3.2@aar'
 //    implementation 'lib.kashif:folderpicker:2.4'
+
+    implementation 'me.jahnen:libaums:0.8.0'
+//    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+//    implementation 'com.github.naya-aastra:SkewPdfView:1.1'
+//    implementation 'com.github.barteksc:android-pdf-viewer:2.0.3'
+
 
 }

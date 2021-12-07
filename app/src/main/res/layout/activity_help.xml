@@ -5,17 +5,29 @@
     android:layout_height="match_parent"
     tools:context=".activities.HelpActivity">
 
-<!--    <WebView-->
-<!--        android:id="@+id/web_view"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_above="@+id/linear_layout_footer"-->
-<!--        android:visibility="visible" />-->
-    <!--        <com.github.barteksc.pdfviewer.PDFView-->
-    <!--            android:id="@+id/pdf_view"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_above="@+id/linear_layout_footer" />-->
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linear_layout_footer"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/image_button_previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/next"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/image_button_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/previous"
+        tools:ignore="ContentDescription" />
+
 
     <include layout="@layout/footer" />
 </RelativeLayout>

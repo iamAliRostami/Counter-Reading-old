@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/large_dp"
+    tools:context="com.leon.counter_reading.fragments.DownloadOfflineFragment">
+
+    <FrameLayout
+        android:visibility="gone"
+        android:background="@drawable/border_gray_5"
+        android:id="@+id/container_body"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/large_dp" />
+
+    <ImageView
+        android:id="@+id/image_view_download"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/button_download"
+        android:src="@drawable/img_download_off"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/button_download"
+        style="@style/ButtonSubmit.Fragment.Warning"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="@string/no_usb_found" />
+</RelativeLayout>

@@ -8,7 +8,6 @@ import static com.leon.counter_reading.utils.PermissionManager.checkLocationPerm
 import static com.leon.counter_reading.utils.PermissionManager.checkStoragePermission;
 import static com.leon.counter_reading.utils.PermissionManager.gpsEnabledNew;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -28,6 +27,7 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
+import com.leon.counter_reading.adapters.holder.ReadingViewHolder;
 import com.leon.counter_reading.enums.HighLowStateEnum;
 import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
@@ -41,7 +41,6 @@ import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.reading.Counting;
-import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByAttemptNumber;
 
 import java.util.ArrayList;
 
@@ -123,7 +122,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         //    private ViewHolderReading holder;
         final LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View itemView = inflater.inflate(R.layout.fragment_reading, container, false);
-        final ViewHolderReading holder = new ViewHolderReading(itemView);
+        final ReadingViewHolder holder = new ReadingViewHolder(itemView);
 
         holder.editTextNumber.setOnLongClickListener(view -> {
             holder.editTextNumber.setText("");
@@ -148,7 +147,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         return itemView;
     }
 
-    private void initializeViews(ViewHolderReading holder, int position) {
+    private void initializeViews(ReadingViewHolder holder, int position) {
         holder.textViewAhad1Title.setText(DifferentCompanyManager.getAhad1(
                 DifferentCompanyManager.getActiveCompanyName()).concat(" : "));
         holder.textViewAhad2Title.setText(DifferentCompanyManager.getAhad2(
@@ -200,7 +199,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         });
     }
 
-    private void initializeSpinner(ViewHolderReading holder, int position) {
+    private void initializeSpinner(ReadingViewHolder holder, int position) {
         holder.spinner.setAdapter(adapter);
         boolean found = false;
         int i;
@@ -212,7 +211,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         setOnSpinnerSelectedListener(holder);
     }
 
-    private void setOnSpinnerSelectedListener(ViewHolderReading holder) {
+    private void setOnSpinnerSelectedListener(ReadingViewHolder holder) {
         holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int i, long id) {
@@ -229,7 +228,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         });
     }
 
-    private void checkPermissions(ViewHolderReading holder, int position) {
+    private void checkPermissions(ReadingViewHolder holder, int position) {
         if (gpsEnabledNew(activity))
             if (!checkLocationPermission(getContext())) {
                 askLocationPermission(holder, position);
@@ -252,7 +251,7 @@ public class ViewPagerAdapter extends PagerAdapter {
             }
     }
 
-    private void askLocationPermission(ViewHolderReading holder, int position) {
+    private void askLocationPermission(ReadingViewHolder holder, int position) {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -275,7 +274,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                 .setPermissions(LOCATION_PERMISSIONS).check();
     }
 
-    private void askStoragePermission(ViewHolderReading holder, int position) {
+    private void askStoragePermission(ReadingViewHolder holder, int position) {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -298,7 +297,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                 .setPermissions(STORAGE_PERMISSIONS).check();
     }
 
-    public void attemptSend(ViewHolderReading holder, int position) {
+    public void attemptSend(ReadingViewHolder holder, int position) {
         counterStatePosition = holder.spinner.getSelectedItemPosition();
         counterStateCode = counterStateDtos.get(counterStatePosition).id;
         canLessThanPre = counterStateDtos.get(counterStatePosition).canNumberBeLessThanPre;
@@ -313,7 +312,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         }
     }
 
-    private void canBeEmpty(ViewHolderReading holder, int position) {//TODO
+    private void canBeEmpty(ReadingViewHolder holder, int position) {//TODO
         if (holder.editTextNumber.getText().toString().isEmpty() || isMane) {
             ((ReadingActivity) activity).updateOnOffLoadWithoutCounterNumber(position,
                     counterStateCode, counterStatePosition);
@@ -331,7 +330,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         }
     }
 
-    private void canNotBeEmpty(ViewHolderReading holder, int position) {
+    private void canNotBeEmpty(ReadingViewHolder holder, int position) {
         View view = holder.editTextNumber;
         if (holder.editTextNumber.getText().toString().isEmpty()) {
             makeRing(activity, NotificationType.NOT_SAVE);

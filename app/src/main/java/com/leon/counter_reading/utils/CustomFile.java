@@ -27,6 +27,8 @@ import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.tables.Voice;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -110,7 +112,6 @@ public class CustomFile {
             original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         }
         return original;
-
     }
 
     public static String bitmapToBinary(Bitmap bitmap) {
@@ -156,7 +157,7 @@ public class CustomFile {
 
     public static boolean copyImages(final ArrayList<Image> images, final int trackNumber, final Context context) {
         if (isExternalStorageWritable()) {
-            File storageDir = new File(Environment
+            final File storageDir = new File(Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + trackNumber + "/images");
             if (!storageDir.exists()) if (!storageDir.mkdirs()) return false;
             boolean saved = false;
@@ -165,21 +166,24 @@ public class CustomFile {
                         context.getString(R.string.camera_folder) + image.address);
                 File to = new File(storageDir + "/" + image.address);
                 saved = from.renameTo(to);
-//                final Bitmap bitmapImage = CustomFile.loadImage(context, image.address);
-//                final File file = new File(storageDir, image.address);
-//                if (file.exists()) if (!file.delete()) return;
-//                try {
-//                    FileOutputStream out = new FileOutputStream(file);
-//                    if (bitmapImage != null) {
-//                        bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
-//                    }
-//                    out.flush();
-//                    out.close();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                MediaScannerConnection.scanFile(context, new String[]{file.getPath()}, new String[]{"image/jpeg"}, null);
             }
+            return saved;
+        } else {
+            new CustomToast().warning(context.getString(R.string.error_external_storage_is_not_writable));
+            return false;
+        }
+    }
+
+    public static boolean copyImages(final Image image, final int trackNumber, final Context context) {
+        if (isExternalStorageWritable()) {
+            final File storageDir = new File(Environment
+                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + trackNumber + "/images");
+            if (!storageDir.exists()) if (!storageDir.mkdirs()) return false;
+            boolean saved = false;
+            File from = new File(context.getExternalFilesDir(null).getAbsolutePath() +
+                    context.getString(R.string.camera_folder) + image.address);
+            File to = new File(storageDir + "/" + image.address);
+            saved = from.renameTo(to);
             return saved;
         } else {
             new CustomToast().warning(context.getString(R.string.error_external_storage_is_not_writable));
@@ -211,6 +215,29 @@ public class CustomFile {
         File from = new File(inputPath);
         File to = new File(outputPath);
         return from.renameTo(to);
+    }
+
+    public static void copyFile(File src, Uri destUri, Context context) {
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        try {
+            bis = new BufferedInputStream(new FileInputStream(src));
+            bos = new BufferedOutputStream(context.getContentResolver().openOutputStream(destUri));
+            final byte[] buf = new byte[1024];
+            bis.read(buf);
+            do {
+                bos.write(buf);
+            } while (bis.read(buf) != -1);
+        } catch (NullPointerException | IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bis != null) bis.close();
+                if (bos != null) bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static Bitmap rotateImage(Bitmap source, float angle) {
@@ -364,5 +391,23 @@ public class CustomFile {
         String json = text.toString();
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(json, ReadingData.class);
+    }
+
+    public static String readData(File file) {
+        StringBuilder text = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+            }
+            br.close();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        return text.toString();
+//        Gson gson = new GsonBuilder().create();
+//        return gson.fromJson(json, ReadingData.class);
     }
 }

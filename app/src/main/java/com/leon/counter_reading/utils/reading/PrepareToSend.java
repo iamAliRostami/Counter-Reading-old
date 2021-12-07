@@ -1,5 +1,8 @@
 package com.leon.counter_reading.utils.reading;
 
+import static com.leon.counter_reading.activities.ReadingActivity.offlineAttempts;
+import static com.leon.counter_reading.helpers.Constants.OFFLINE_ATTEMPT;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 
@@ -84,7 +87,7 @@ class offLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
     @Override
     public void execute(Response<OnOffLoadDto.OffLoadResponses> response) {
         if (response.body() != null && response.body().status == 200) {
-            new Sent(onOffLoadDtos,onOffLoadDtosTemp, response.body()).execute(activity);
+            new Sent(onOffLoadDtos, onOffLoadDtosTemp, response.body()).execute(activity);
         } else if (response.body() != null) {
             try {
                 MyApplication.setErrorCounter(MyApplication.getErrorCounter() + 1);
@@ -127,6 +130,10 @@ class offLoadError implements ICallbackError {
             }
         }
         MyApplication.setErrorCounter(MyApplication.getErrorCounter() + 1);
+        offlineAttempts++;
+        if (offlineAttempts == OFFLINE_ATTEMPT) {
+            activity.runOnUiThread(() -> new CustomToast().warning("حالت آفلاین فعال گردید."));
+        }
     }
 }
 

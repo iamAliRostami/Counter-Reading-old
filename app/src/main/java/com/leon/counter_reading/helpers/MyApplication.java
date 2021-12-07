@@ -186,26 +186,4 @@ public class MyApplication extends Application {
                     Settings.Secure.ANDROID_ID);
         return serial;
     }
-
-
-    public static void showSoftKeyboard(View view) {
-        if (view.requestFocus()) {
-            InputMethodManager imm = (InputMethodManager) appContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-            try {
-//                imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void hideSoftKeyboard(View view) {
-        InputMethodManager imm = (InputMethodManager) appContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        try {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

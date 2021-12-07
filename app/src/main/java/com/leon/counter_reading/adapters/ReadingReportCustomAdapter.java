@@ -1,14 +1,16 @@
 package com.leon.counter_reading.adapters;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckedTextView;
 
 import com.leon.counter_reading.R;
+import com.leon.counter_reading.adapters.holder.ReadingReportCheckBoxViewHolder;
 import com.leon.counter_reading.fragments.dialog.AhadFragment;
 import com.leon.counter_reading.fragments.dialog.KarbariFragment;
 import com.leon.counter_reading.fragments.dialog.ShowFragmentDialog;
@@ -16,7 +18,6 @@ import com.leon.counter_reading.fragments.dialog.TaviziFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.OffLoadReport;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 import java.util.ArrayList;
 
@@ -39,25 +40,10 @@ public class ReadingReportCustomAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    @Override
-    public int getCount() {
-        return counterReportDtos.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return position;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
     @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ReadingReportCheckBoxViewHolder holder;
+        final ReadingReportCheckBoxViewHolder holder;
         View view = convertView;
         if (view == null) {
             view = inflater.inflate(R.layout.item_public, null);
@@ -67,9 +53,9 @@ public class ReadingReportCustomAdapter extends BaseAdapter {
         holder.checkBox.setOnClickListener(view1 -> {
             holder.checkBox.setChecked(!holder.checkBox.isChecked());
             if (holder.checkBox.isChecked()) {
-                OffLoadReport offLoadReport = new OffLoadReport(uuid, tracking,
+                final OffLoadReport offLoadReport = new OffLoadReport(uuid, tracking,
                         counterReportDtos.get(position).id);
-                MyApplication.getApplicationComponent().MyDatabase()
+                getApplicationComponent().MyDatabase()
                         .offLoadReportDao().insertOffLoadReport(offLoadReport);
                 offLoadReports.add(offLoadReport);
                 if (counterReportDtos.get(position).isAhad) {
@@ -87,7 +73,7 @@ public class ReadingReportCustomAdapter extends BaseAdapter {
             } else {
                 for (int i = 0; i < offLoadReports.size(); i++) {
                     if (offLoadReports.get(i).reportId == counterReportDtos.get(position).id) {
-                        MyApplication.getApplicationComponent().MyDatabase().offLoadReportDao().
+                        getApplicationComponent().MyDatabase().offLoadReportDao().
                                 deleteOffLoadReport(offLoadReports.get(i).reportId, tracking, uuid);
                         offLoadReports.remove(offLoadReports.get(i));
                     }
@@ -98,12 +84,20 @@ public class ReadingReportCustomAdapter extends BaseAdapter {
         holder.checkBox.setChecked(counterReportDtos.get(position).isSelected);
         return view;
     }
-}
 
-class ReadingReportCheckBoxViewHolder {
-    final CheckedTextView checkBox;
-
-    ReadingReportCheckBoxViewHolder(View view) {
-        checkBox = view.findViewById(android.R.id.text1);
+    @Override
+    public int getCount() {
+        return counterReportDtos.size();
     }
+
+    @Override
+    public Object getItem(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
 }

@@ -70,8 +70,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
         uploadImage(activity);
     }
 
-    void uploadImage(Activity activity) {
-        if (imageGrouped.File.size() > 0) {
+    private void uploadImage(Activity activity) {
+        if (imageGrouped.File.size() > 0 && images.size() > 0) {
             imageGrouped.OnOffLoadId = RequestBody.create(images.get(0).OnOffLoadId,
                     MediaType.parse("text/plain"));
             imageGrouped.Description = RequestBody.create(images.get(0).Description,
@@ -93,7 +93,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
         }
     }
 
-    void setResult(Activity activity, boolean result) {
+    private void setResult(Activity activity, boolean result) {
         if (result) {
             Intent intent = new Intent();
             intent.putExtra(BundleEnum.POSITION.getValue(), position);

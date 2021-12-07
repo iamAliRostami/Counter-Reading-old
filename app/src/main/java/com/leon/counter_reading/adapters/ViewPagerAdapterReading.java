@@ -1,6 +1,5 @@
 package com.leon.counter_reading.adapters;
 
-import android.app.Activity;
 import android.os.Parcelable;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -15,7 +14,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.fragments.ReadingFragment;
 import com.leon.counter_reading.helpers.MyApplication;
-import com.leon.counter_reading.infrastructure.IViewPagerAdapter;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
@@ -27,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class ViewPagerAdapterReading extends FragmentStatePagerAdapter implements IViewPagerAdapter {
+public class ViewPagerAdapterReading extends FragmentStatePagerAdapter {
     private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
     private final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
     private final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
@@ -92,8 +90,8 @@ public class ViewPagerAdapterReading extends FragmentStatePagerAdapter implement
         try {
 
             return ReadingFragment.newInstance(onOffLoadDtos.get(position),
-                    readingConfigDefaultDtos.get(position), karbariDtos.get(position),
-                    counterStateDtos,/*adapter,*/ position);
+                    readingConfigDefaultDtos.get(position), counterStateDtos,
+                    karbariDtos.get(position),/*adapter,*/ position);
         } catch (Exception e) {
             new CustomToast().error(MyApplication.getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
         }
