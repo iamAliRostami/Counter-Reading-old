@@ -1,5 +1,7 @@
 package com.leon.counter_reading.utils.performance;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -7,8 +9,8 @@ import android.widget.Toast;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.ProgressType;
+import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.fragments.ReportPerformanceFragment;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
@@ -29,7 +31,7 @@ public class GetPerformance extends AsyncTask<Activity, Activity, Activity> {
 
     public GetPerformance(Activity activity, ReportPerformanceFragment fragment, String startDate, String endDate) {
         super();
-        customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
+        customProgressModel = getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
         this.startDate = startDate;
         this.endDate = endDate;
@@ -43,16 +45,15 @@ public class GetPerformance extends AsyncTask<Activity, Activity, Activity> {
 
     @Override
     protected Activity doInBackground(Activity... activities) {
-        Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
-        IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
+        Retrofit retrofit = getApplicationComponent().NetworkHelperModel()
+                .getInstance(true, getApplicationComponent().SharedPreferenceModel()
+                        .getStringData(SharedReferenceKeys.TOKEN.getValue()), 10, 5, 5);
 
-//        Call<PerformanceResponse> call = iAbfaService
-//                .myPerformance(RequestBody.create(startDate, MediaType.parse("text/plain")),
-//                        RequestBody.create(endDate, MediaType.parse("text/plain")));
+        IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
         Call<PerformanceResponse> call = iAbfaService.myPerformance(new PerformanceInfo(startDate, endDate));
         activities[0].runOnUiThread(() -> {
             customProgressModel.getDialog().dismiss();
-            HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW.getValue(), activities[0],
+            HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW_CANCELABLE.getValue(), activities[0],
                     new Performance(fragment), new PerformanceIncomplete(activities[0]),
                     new PerformanceError(activities[0]));
         });

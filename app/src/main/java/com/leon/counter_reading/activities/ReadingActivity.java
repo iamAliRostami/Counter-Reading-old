@@ -134,7 +134,7 @@ public class ReadingActivity extends BaseActivity {
     }
 
     public void updateOnOffLoadByAttempt(int position) {
-        readingData.onOffLoadDtos.get(position).attemptCount++;
+//        readingData.onOffLoadDtos.get(position).attemptCount++;
         updateAdapter(position);
         new UpdateOnOffLoadByAttemptNumber(readingData.onOffLoadDtos.get(position)).execute();
     }
@@ -609,38 +609,38 @@ public class ReadingActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ImageView imageViewFlash = findViewById(R.id.image_view_flash);
-        if (imageViewFlash != null) {
-            imageViewFlash.setImageDrawable(null);
-            ImageView imageViewReverse = findViewById(R.id.image_view_reverse);
-            imageViewReverse.setImageDrawable(null);
-            ImageView imageViewCamera = findViewById(R.id.image_view_camera);
-            imageViewCamera.setImageDrawable(null);
-            ImageView imageViewSearch = findViewById(R.id.image_view_search);
-            imageViewSearch.setImageDrawable(null);
-            ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
-            imageViewCheck.setImageDrawable(null);
-        }
+//        ImageView imageViewFlash = findViewById(R.id.image_view_flash);
+//        if (imageViewFlash != null) {
+//            imageViewFlash.setImageDrawable(null);
+//            ImageView imageViewReverse = findViewById(R.id.image_view_reverse);
+//            imageViewReverse.setImageDrawable(null);
+//            ImageView imageViewCamera = findViewById(R.id.image_view_camera);
+//            imageViewCamera.setImageDrawable(null);
+//            ImageView imageViewSearch = findViewById(R.id.image_view_search);
+//            imageViewSearch.setImageDrawable(null);
+//            ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
+//            imageViewCheck.setImageDrawable(null);
+//        }
         offlineAttempts = 0;
-        readingData.onOffLoadDtos.clear();
-        readingData.qotrDictionary.clear();
-        readingData.karbariDtos.clear();
-        readingData.trackingDtos.clear();
-        readingData.readingConfigDefaultDtos.clear();
-        readingData.counterReportDtos.clear();
-        readingData.counterStateDtos.clear();
-        readingDataTemp.onOffLoadDtos.clear();
-        readingDataTemp.qotrDictionary.clear();
-        readingDataTemp.karbariDtos.clear();
-        readingDataTemp.trackingDtos.clear();
-        readingDataTemp.readingConfigDefaultDtos.clear();
-        readingDataTemp.counterReportDtos.clear();
-        readingDataTemp.counterStateDtos.clear();
-        if (binding != null) {
-            binding.imageViewHighLowState.setImageDrawable(null);
-            binding.imageViewOffLoadState.setImageDrawable(null);
-            binding.imageViewReadingType.setImageDrawable(null);
-            binding.imageViewExceptionState.setImageDrawable(null);
-        }
+//        readingData.onOffLoadDtos.clear();
+//        readingData.qotrDictionary.clear();
+//        readingData.karbariDtos.clear();
+//        readingData.trackingDtos.clear();
+//        readingData.readingConfigDefaultDtos.clear();
+//        readingData.counterReportDtos.clear();
+//        readingData.counterStateDtos.clear();
+//        readingDataTemp.onOffLoadDtos.clear();
+//        readingDataTemp.qotrDictionary.clear();
+//        readingDataTemp.karbariDtos.clear();
+//        readingDataTemp.trackingDtos.clear();
+//        readingDataTemp.readingConfigDefaultDtos.clear();
+//        readingDataTemp.counterReportDtos.clear();
+//        readingDataTemp.counterStateDtos.clear();
+//        if (binding != null) {
+//            binding.imageViewHighLowState.setImageDrawable(null);
+//            binding.imageViewOffLoadState.setImageDrawable(null);
+//            binding.imageViewReadingType.setImageDrawable(null);
+//            binding.imageViewExceptionState.setImageDrawable(null);
+//        }
     }
 }

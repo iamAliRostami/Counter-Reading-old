@@ -96,8 +96,7 @@ public class TakePhotoActivity extends AppCompatActivity {
     private void setOnButtonSendClickListener() {
         binding.buttonSaveSend.setOnClickListener(v ->
                 new PrepareMultimedia(activity, position, result,
-                        binding.editTextDescription.getText().toString(), images)
-                        .execute(activity));
+                        binding.editTextDescription.getText().toString(), images).execute(activity));
     }
 
     private void askCameraPermission() {
@@ -134,6 +133,7 @@ public class TakePhotoActivity extends AppCompatActivity {
                     prepareImage();
                 }
             }
+            imageViewAdapter.notifyDataSetChanged();
         }
     }
 
@@ -151,7 +151,7 @@ public class TakePhotoActivity extends AppCompatActivity {
             } else {
                 images.add(image);
             }
-            imageViewAdapter.notifyDataSetChanged();
+//            imageViewAdapter.notifyDataSetChanged();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -170,7 +170,7 @@ public class TakePhotoActivity extends AppCompatActivity {
             } else {
                 images.add(image);
             }
-            imageViewAdapter.notifyDataSetChanged();
+//            imageViewAdapter.notifyDataSetChanged();
             PHOTO_URI = null;
         } catch (IOException e) {
             e.printStackTrace();

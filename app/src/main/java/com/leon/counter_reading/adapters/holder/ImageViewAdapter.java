@@ -70,7 +70,10 @@ public class ImageViewAdapter extends BaseAdapter {
                 View.VISIBLE : View.GONE);
         holder.imageViewSent.setVisibility(position < images.size() && images.get(position).isSent ?
                 View.VISIBLE : View.GONE);
+
+        holder.imageView.setEnabled(true);
         holder.imageView.setOnClickListener(view1 -> {
+            holder.imageView.setEnabled(false);
             replace = position < images.size() ? position + 1 : 0;
             imagePicker();
         });
