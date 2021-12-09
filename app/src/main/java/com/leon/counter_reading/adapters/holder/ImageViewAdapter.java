@@ -2,27 +2,21 @@ package com.leon.counter_reading.adapters.holder;
 
 import static com.leon.counter_reading.activities.TakePhotoActivity.replace;
 import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
-import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 
 import android.annotation.SuppressLint;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.TakePhotoActivity;
 import com.leon.counter_reading.adapters.ImageViewHolder;
@@ -30,8 +24,6 @@ import com.leon.counter_reading.fragments.dialog.HighQualityFragment;
 import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ImageViewAdapter extends BaseAdapter {
@@ -71,7 +63,7 @@ public class ImageViewAdapter extends BaseAdapter {
         holder.imageViewSent.setVisibility(position < images.size() && images.get(position).isSent ?
                 View.VISIBLE : View.GONE);
 
-        holder.imageView.setEnabled(true);
+        holder.imageView.setEnabled(position >= images.size() || !images.get(position).isSent);
         holder.imageView.setOnClickListener(view1 -> {
             holder.imageView.setEnabled(false);
             replace = position < images.size() ? position + 1 : 0;
@@ -105,25 +97,30 @@ public class ImageViewAdapter extends BaseAdapter {
     }
 
     private void imagePicker() {
-        final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(context.getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = createImageFile(context);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (photoFile != null) {
-                PHOTO_URI = FileProvider.getUriForFile(context,
-                        BuildConfig.APPLICATION_ID.concat(".provider"), photoFile);
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, PHOTO_URI);
-                try {
-                    ((TakePhotoActivity) (context)).startActivityForResult(cameraIntent, CAMERA_REQUEST);
-                } catch (ActivityNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        ((TakePhotoActivity) (context)).startActivityForResult(cameraIntent, CAMERA_REQUEST);
+
+//        final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (cameraIntent.resolveActivity(context.getPackageManager()) != null) {
+//            File photoFile = null;
+//            try {
+//                photoFile = createImageFile(context);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            if (photoFile != null) {
+//                PHOTO_URI = FileProvider.getUriForFile(context,
+//                        BuildConfig.APPLICATION_ID.concat(".provider"), photoFile);
+//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, PHOTO_URI);
+//                try {
+//                    ((TakePhotoActivity) (context)).startActivityForResult(cameraIntent, CAMERA_REQUEST);
+//                } catch (ActivityNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+
+
 //        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
 //        builder.setTitle(R.string.choose_document);
 //        builder.setMessage(R.string.select_source);

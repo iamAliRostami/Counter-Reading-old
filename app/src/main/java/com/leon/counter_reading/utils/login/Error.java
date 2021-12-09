@@ -1,6 +1,7 @@
 package com.leon.counter_reading.utils.login;
 
 import android.app.Activity;
+import android.view.View;
 import android.widget.Toast;
 
 import com.leon.counter_reading.infrastructure.ICallbackError;
@@ -19,9 +20,5 @@ class Error implements ICallbackError {
         CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(activity);
         String error = customErrorHandlingNew.getErrorMessageTotal(t);
         new CustomToast().error(error, Toast.LENGTH_LONG);
-//        new CustomDialog(DialogType.Yellow, activity, error,
-//                activity.getString(R.string.dear_user),
-//                activity.getString(R.string.login),
-//                activity.getString(R.string.accepted));
     }
 }

@@ -139,6 +139,7 @@ public class UploadFragment extends Fragment {
     private void setOnButtonUploadClickListener() {
         binding.buttonUpload.setOnClickListener(v -> {
             if (type == UploadType.MULTIMEDIA.getValue()) {
+                binding.buttonUpload.setEnabled(true);
                 new PrepareMultimedia(activity, this, false).execute(activity);
             } else {
                 if (checkOnOffLoad()) {
@@ -157,9 +158,10 @@ public class UploadFragment extends Fragment {
 
     private void sendOnOffLoad() {
         if (type == UploadType.NORMAL.getValue()) {
+            binding.buttonUpload.setEnabled(true);
             new PrepareOffLoad(activity,
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
+                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id, this)
                     .execute(activity);
         } else if (type == UploadType.OFFLINE.getValue()) {
             new PrepareOffLoadOffline(activity,
@@ -167,6 +169,10 @@ public class UploadFragment extends Fragment {
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
                     .execute(activity);
         }
+    }
+
+    public void setButtonState() {
+        binding.buttonUpload.setEnabled(true);
     }
 
     @Override

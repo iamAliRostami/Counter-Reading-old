@@ -33,8 +33,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
-    private final CustomProgressModel customProgressModel;
     private final ImageGrouped imageGrouped = new ImageGrouped();
+    private final CustomProgressModel customProgressModel;
     private final ArrayList<Image> images;
     private final String description;
     private final boolean result;
@@ -108,8 +108,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
         for (int i = 0; i < images.size(); i++) {
             if (!images.get(i).isSent) {
                 images.get(i).isSent = isSent;//TODO
-                if (getApplicationComponent().MyDatabase().imageDao()
-                        .getImagesById(images.get(i).id).size() > 0) {
+                if (getApplicationComponent().MyDatabase().imageDao().getImagesById(images.get(i).id)
+                        .size() > 0) {
                     getApplicationComponent().MyDatabase().imageDao().updateImage(images.get(i));
                 } else {
                     String address = CustomFile.saveTempBitmap(images.get(i).bitmap, activity);

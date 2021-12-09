@@ -20,7 +20,6 @@ class Incomplete implements ICallbackIncomplete<LoginFeedBack> {
     private final Activity activity;
 
     public Incomplete(Activity activity) {
-        super();
         this.activity = activity;
     }
 
@@ -38,11 +37,7 @@ class Incomplete implements ICallbackIncomplete<LoginFeedBack> {
                     e.printStackTrace();
                 }
             }
-        } /*else
-            new CustomDialog(DialogType.Yellow, activity, error,
-                    activity.getString(R.string.dear_user),
-                    activity.getString(R.string.login),
-                    activity.getString(R.string.accepted));*/
+        }
         new CustomToast().warning(error, Toast.LENGTH_LONG);
     }
 }

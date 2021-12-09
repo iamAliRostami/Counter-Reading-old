@@ -13,6 +13,7 @@ import static com.leon.counter_reading.utils.PermissionManager.checkCameraPermis
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Debug;
@@ -36,6 +37,7 @@ import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.photo.PrepareMultimedia;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -94,9 +96,11 @@ public class TakePhotoActivity extends AppCompatActivity {
     }
 
     private void setOnButtonSendClickListener() {
-        binding.buttonSaveSend.setOnClickListener(v ->
-                new PrepareMultimedia(activity, position, result,
-                        binding.editTextDescription.getText().toString(), images).execute(activity));
+        binding.buttonSaveSend.setOnClickListener(v -> {
+            binding.buttonSaveSend.setEnabled(false);
+            new PrepareMultimedia(activity, position, result,
+                    binding.editTextDescription.getText().toString(), images).execute(activity);
+        });
     }
 
     private void askCameraPermission() {
@@ -128,16 +132,38 @@ public class TakePhotoActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == GALLERY_REQUEST && data != null) {
                 prepareImage(data);
-            } else if (requestCode == CAMERA_REQUEST) {
-                if (PHOTO_URI != null) {
-                    prepareImage();
+            } else if (requestCode == CAMERA_REQUEST && data != null) {
+                try {
+                    prepareImage(compressBitmap(BitmapFactory.decodeStream(this.getContentResolver().
+                            openInputStream(data.getData()))));
+                    data.getExtras().clear();
+                    data = null;
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
+//                if (PHOTO_URI != null) {
+//                    prepareImage();
+//                }
             }
             imageViewAdapter.notifyDataSetChanged();
+            binding.buttonSaveSend.setEnabled(true);
         }
     }
 
-    private void prepareImage(Intent data) {
+    private void prepareImage(final Bitmap bitmap) {
+        final Image image = new Image();
+        image.bitmap = bitmap;
+        image.OnOffLoadId = uuid;
+        image.trackNumber = trackNumber;
+        if (replace > 0) {
+            getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
+            images.set(replace - 1, image);
+        } else {
+            images.add(image);
+        }
+    }
+
+    private void prepareImage(final Intent data) {
         final Image image = new Image();
         try {
             image.bitmap = compressBitmap(BitmapFactory.decodeStream(this.getContentResolver().
@@ -145,8 +171,7 @@ public class TakePhotoActivity extends AppCompatActivity {
             image.OnOffLoadId = uuid;
             image.trackNumber = trackNumber;
             if (replace > 0) {
-                getApplicationComponent().MyDatabase()
-                        .imageDao().deleteImage(images.get(replace - 1).id);
+                getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
                 images.set(replace - 1, image);
             } else {
                 images.add(image);

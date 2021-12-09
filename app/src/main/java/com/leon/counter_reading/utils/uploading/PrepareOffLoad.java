@@ -6,11 +6,13 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
+import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.OffloadStateEnum;
 import com.leon.counter_reading.enums.ProgressType;
+import com.leon.counter_reading.fragments.UploadFragment;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
@@ -23,7 +25,6 @@ import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.CustomErrorHandling;
 import com.leon.counter_reading.utils.CustomFile;
-import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.utils.CustomToast;
 
 import java.util.ArrayList;
@@ -34,18 +35,20 @@ import retrofit2.Retrofit;
 
 public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
     private final CustomProgressModel customProgressModel;
+    private final UploadFragment fragment;
     private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
     private final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
     private final ArrayList<ForbiddenDto> forbiddenDtos = new ArrayList<>();
     private final int trackNumber;
     private final String id;
 
-    public PrepareOffLoad(Activity activity, int trackNumber, String id) {
+    public PrepareOffLoad(Activity activity, int trackNumber, String id, UploadFragment fragment) {
         super();
-        this.trackNumber = trackNumber;
-        this.id = id;
         customProgressModel = getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
+        this.trackNumber = trackNumber;
+        this.id = id;
+        this.fragment = fragment;
     }
 
     @Override
@@ -71,9 +74,10 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
         if (forbiddenDtos.size() > 0) {
             uploadForbid(activity);
         }
+        fragment.setButtonState();
     }
 
-    void uploadForbid(Activity activity) {
+    private void uploadForbid(Activity activity) {
         ForbiddenDtoRequestMultiple forbiddenDtoRequestMultiple =
                 new ForbiddenDtoRequestMultiple();
         Retrofit retrofit = getApplicationComponent().Retrofit();
@@ -98,7 +102,7 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
                 new Forbidden(), new ForbiddenIncomplete(), new ForbiddenError());
     }
 
-    void uploadOffLoad(Activity activity) {
+    private void uploadOffLoad(Activity activity) {
         if (onOffLoadDtos.size() <= 0) {
             thankYou(activity);
             onOffLoadDtos.clear();
@@ -123,7 +127,7 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
                 new OffLoadData(id), new OffLoadDataIncomplete(), new OffLoadError());
     }
 
-    void thankYou(Activity activity) {
+    private void thankYou(Activity activity) {
         activity.runOnUiThread(() ->
                 new CustomToast().info(activity.getString(R.string.thank_you), Toast.LENGTH_LONG));
     }

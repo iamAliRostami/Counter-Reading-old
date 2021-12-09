@@ -1,5 +1,6 @@
 package com.leon.counter_reading.utils.performance;
 
+import static com.leon.counter_reading.di.view_model.HttpClientWrapper.callHttpAsync;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -7,7 +8,6 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
-import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.fragments.ReportPerformanceFragment;
@@ -41,6 +41,7 @@ public class GetPerformance extends AsyncTask<Activity, Activity, Activity> {
     @Override
     protected void onPostExecute(Activity activity) {
         super.onPostExecute(activity);
+        fragment.setButtonState();
     }
 
     @Override
@@ -53,7 +54,7 @@ public class GetPerformance extends AsyncTask<Activity, Activity, Activity> {
         Call<PerformanceResponse> call = iAbfaService.myPerformance(new PerformanceInfo(startDate, endDate));
         activities[0].runOnUiThread(() -> {
             customProgressModel.getDialog().dismiss();
-            HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW_CANCELABLE.getValue(), activities[0],
+            callHttpAsync(call, ProgressType.SHOW.getValue(), activities[0],
                     new Performance(fragment), new PerformanceIncomplete(activities[0]),
                     new PerformanceError(activities[0]));
         });

@@ -1,6 +1,8 @@
 package com.leon.counter_reading.activities;
 
 import static com.leon.counter_reading.helpers.MyApplication.getAndroidVersion;
+import static com.leon.counter_reading.helpers.MyApplication.getSerial;
+import static com.leon.counter_reading.utils.Crypto.decrypt;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
 
 import android.Manifest;
@@ -164,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
 
     void setOnImageViewPerson() {
         binding.imageViewPerson.setOnClickListener(view ->
-                new CustomDialogModel(DialogType.Green, activity, MyApplication.getSerial(activity),
+                new CustomDialogModel(DialogType.Green, activity, getSerial(activity),
                         MyApplication.getContext().getString(R.string.serial),
                         MyApplication.getContext().getString(R.string.dear_user),
                         MyApplication.getContext().getString(R.string.accepted)));
@@ -209,19 +211,19 @@ public class LoginActivity extends AppCompatActivity {
             if (isLogin && isNetworkAvailable(activity)) {
                 counter++;
                 if (counter < 4)
-                    new AttemptLogin(username, password, MyApplication.getSerial(activity),
-                            binding.checkBoxSave.isChecked()).execute(activity);
+                    new AttemptLogin(username, password, getSerial(activity),
+                            binding.checkBoxSave.isChecked(), binding.buttonLogin).execute(activity);
                 else
                     offlineLogin();
             } else {
-                new AttemptRegister(username, password, MyApplication.getSerial(activity)).execute(activity);
+                new AttemptRegister(username, password, getSerial(activity), binding.buttonLogin).execute(activity);
             }
         }
     }
 
     void offlineLogin() {
         if (sharedPreferenceManager.getStringData(SharedReferenceKeys.USERNAME.getValue()).equals(username) &&
-                Crypto.decrypt(sharedPreferenceManager.getStringData(SharedReferenceKeys.PASSWORD.getValue()))
+                decrypt(sharedPreferenceManager.getStringData(SharedReferenceKeys.PASSWORD.getValue()))
                         .equals(password)) {
             new CustomToast().info(getString(R.string.check_connection), Toast.LENGTH_LONG);
             Intent intent = new Intent(activity, HomeActivity.class);
@@ -243,7 +245,7 @@ public class LoginActivity extends AppCompatActivity {
                 sharedPreferenceManager.checkIsNotEmpty(SharedReferenceKeys.PASSWORD.getValue())) {
             binding.editTextUsername.setText(sharedPreferenceManager.getStringData(
                     SharedReferenceKeys.USERNAME.getValue()));
-            binding.editTextPassword.setText(Crypto.decrypt(sharedPreferenceManager.getStringData(
+            binding.editTextPassword.setText(decrypt(sharedPreferenceManager.getStringData(
                     SharedReferenceKeys.PASSWORD.getValue())));
         }
     }

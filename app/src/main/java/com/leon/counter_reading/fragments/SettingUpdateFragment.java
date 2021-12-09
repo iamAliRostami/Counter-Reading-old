@@ -1,5 +1,7 @@
 package com.leon.counter_reading.fragments;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +13,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.BuildConfig;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentSettingUpdateBinding;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
@@ -49,11 +50,12 @@ public class SettingUpdateFragment extends Fragment {
         binding.imageViewUpdate.
                 setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.img_update));
         setOnButtonReceiveClickListener();
-        binding.imageViewUpdate.setOnClickListener(view -> Log.e("here","imageViewUpdate"));
+        binding.imageViewUpdate.setOnClickListener(view -> Log.e("here", "imageViewUpdate"));
     }
 
     private void setOnButtonReceiveClickListener() {
         binding.buttonReceive.setOnClickListener(v -> {
+            binding.buttonReceive.setEnabled(false);
             if (firstTime) {
                 new GetUpdateInfo(activity, this);
             } else if (BuildConfig.VERSION_CODE >= versionCode) {
@@ -61,19 +63,19 @@ public class SettingUpdateFragment extends Fragment {
             } else {
                 new GetUpdateFile(activity);
             }
+            binding.buttonReceive.setEnabled(true);
         });
     }
 
     public void updateInfoUi(LastInfo lastInfo) {
         activity.runOnUiThread(() -> {
             binding.textViewVersion.setText(lastInfo.versionName);
-            MyApplication.getApplicationComponent().SharedPreferenceModel().
-                    putData(SharedReferenceKeys.DATE.getValue(), lastInfo.uploadDateJalali);
+            getApplicationComponent().SharedPreferenceModel().putData(SharedReferenceKeys.DATE.getValue()
+                    , lastInfo.uploadDateJalali);
             binding.textViewDate.setText(lastInfo.uploadDateJalali);
             binding.textViewPossibility.setText(lastInfo.description);
-            float size = (float) lastInfo.sizeInByte / (1028 * 1028);
-            binding.textViewSize.setText(new DecimalFormat("###.##").format(size).
-                    concat(getString(R.string.mega_byte)));
+            final float size = (float) lastInfo.sizeInByte / (1028 * 1028);
+            binding.textViewSize.setText(new DecimalFormat("###.##").format(size).concat(getString(R.string.mega_byte)));
 
             binding.linearLayout1.setVisibility(View.VISIBLE);
             binding.linearLayout2.setVisibility(View.VISIBLE);

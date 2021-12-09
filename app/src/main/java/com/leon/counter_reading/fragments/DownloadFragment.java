@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentDownloadBinding;
 import com.leon.counter_reading.enums.BundleEnum;
-import com.leon.counter_reading.enums.DownloadType;
 import com.leon.counter_reading.utils.downloading.Download;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +51,14 @@ public class DownloadFragment extends Fragment {
     }
 
     void setOnButtonDownloadClickListener() {
-        binding.buttonDownload.setOnClickListener(v -> new Download().execute(requireActivity()));
+        binding.buttonDownload.setOnClickListener(v -> {
+            binding.buttonDownload.setEnabled(false);
+            new Download(this).execute(requireActivity());
+        });
+    }
+
+    public void setButtonState() {
+        binding.buttonDownload.setEnabled(true);
     }
 
     @Override
