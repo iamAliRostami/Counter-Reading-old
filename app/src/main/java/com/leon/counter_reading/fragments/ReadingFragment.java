@@ -13,6 +13,7 @@ import static com.leon.counter_reading.utils.PermissionManager.gpsEnabledNew;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,6 +88,7 @@ public class ReadingFragment extends Fragment {
             this.readingConfigDefaultDto = Constants.readingConfigDefaultDtos.get(position);
             this.karbariDto = Constants.karbariDtos.get(position);
         } catch (Exception e) {
+//            Log.e("here",e.getMessage());
             Intent intent = requireActivity().getIntent();
             requireActivity().finish();
             startActivity(intent);

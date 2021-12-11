@@ -37,7 +37,6 @@ import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.photo.PrepareMultimedia;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -134,13 +133,20 @@ public class TakePhotoActivity extends AppCompatActivity {
                 prepareImage(data);
             } else if (requestCode == CAMERA_REQUEST && data != null) {
                 try {
-                    prepareImage(compressBitmap(BitmapFactory.decodeStream(this.getContentResolver().
-                            openInputStream(data.getData()))));
+                    prepareImage(compressBitmap((Bitmap) data.getExtras().get("data")));
                     data.getExtras().clear();
                     data = null;
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                }catch (Exception  e){
+
                 }
+
+//                try {
+//                    prepareImage(compressBitmap(BitmapFactory.decodeStream(this.getContentResolver().
+//                            openInputStream(data.getData()))));
+//                    data = null;
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
 //                if (PHOTO_URI != null) {
 //                    prepareImage();
 //                }
