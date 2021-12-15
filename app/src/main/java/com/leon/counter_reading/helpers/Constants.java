@@ -5,6 +5,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 
+import com.leon.counter_reading.tables.CounterStateDto;
+import com.leon.counter_reading.tables.KarbariDto;
+import com.leon.counter_reading.tables.OnOffLoadDto;
+import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
+import com.leon.counter_reading.tables.ReadingData;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -64,4 +70,17 @@ public class Constants {
     public static String zipAddress;
     public final static int ZIP_ROOT = 7896;
     public final static int OFFLINE_ATTEMPT = 5;
+
+
+    public static final ReadingData readingData = new ReadingData(), readingDataTemp = new ReadingData();
+//    public static final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtosTotal = new ArrayList<>();
+//    public static final ArrayList<CounterStateDto> counterStateDtosTotal = new ArrayList<>();
+//    public static final ArrayList<OnOffLoadDto> onOffLoadDtosTotal = new ArrayList<>();
+//    public static final ArrayList<KarbariDto> karbariDtosTotal = new ArrayList<>();
+
+    public static final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
+    public static final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
+    public static final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
+    public static final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
+
 }

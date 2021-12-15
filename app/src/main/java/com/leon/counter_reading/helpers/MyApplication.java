@@ -72,10 +72,10 @@ public class MyApplication extends Application {
 //    private com.squareup.leakcanary.RefWatcher refWatcher;
 
     protected void setupLeakCanary() {
-//        if (com.squareup.leakcanary.LeakCanary.isInAnalyzerProcess(this)) {
-//            return;
-//        }
-//        refWatcher = com.squareup.leakcanary.LeakCanary.install(this);
+        /*if (com.squareup.leakcanary.LeakCanary.isInAnalyzerProcess(this)) {
+            return;
+        }
+        refWatcher = com.squareup.leakcanary.LeakCanary.install(this);*/
     }
 
 //    public static com.squareup.leakcanary.RefWatcher getRefWatcher(Context context) {

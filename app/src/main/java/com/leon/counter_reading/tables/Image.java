@@ -1,6 +1,7 @@
 package com.leon.counter_reading.tables;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -24,4 +25,7 @@ public class Image {
     public MultipartBody.Part File;
     @Ignore
     public Bitmap bitmap;
+//    @Ignore
+//    public BitmapFactory.Options options;
+
 }

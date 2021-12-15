@@ -54,15 +54,14 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
     @Override
     protected Activity doInBackground(Activity... activities) {
         images.clear();
-        images.addAll(getApplicationComponent().MyDatabase().imageDao()
-                .getImagesByBySent(false));
+        images.addAll(getApplicationComponent().MyDatabase().imageDao().getImagesByBySent(false));
         voice.clear();
         if (!justImages)
             voice.addAll(getApplicationComponent().MyDatabase().voiceDao().
                     getVoicesByBySent(false));
 //        long startTime = Calendar.getInstance().getTimeInMillis();
         for (int i = 0; i < images.size(); i++) {
-            Bitmap bitmap = CustomFile.loadImage(activities[0], images.get(i).address);
+            final Bitmap bitmap = CustomFile.loadImage(activities[0], images.get(i).address);
             if (bitmap != null) {
                 imageMultiples.Description.add(RequestBody.create(images.get(i).Description,
                         MediaType.parse("text/plain")));
@@ -98,9 +97,10 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
         uploadImages(activity);
         if (!justImages)
             uploadVoice(activity);
+        uploadFragment.setButtonState();
     }
 
-    void uploadVoice(Activity activity) {
+    private void uploadVoice(Activity activity) {
         if (voice.size() > 0) {
             Retrofit retrofit = getApplicationComponent().Retrofit();
             IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
@@ -115,7 +115,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
         }
     }
 
-    void uploadImages(Activity activity) {
+    private void uploadImages(Activity activity) {
         if (images.size() > 0) {
             Retrofit retrofit = getApplicationComponent().Retrofit();
             IAbfaService iAbfaService = retrofit.create(IAbfaService.class);

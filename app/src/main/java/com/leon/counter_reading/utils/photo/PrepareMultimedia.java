@@ -1,5 +1,7 @@
 package com.leon.counter_reading.utils.photo;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -11,7 +13,6 @@ import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
@@ -32,8 +33,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
-    private final CustomProgressModel customProgressModel;
     private final ImageGrouped imageGrouped = new ImageGrouped();
+    private final CustomProgressModel customProgressModel;
     private final ArrayList<Image> images;
     private final String description;
     private final boolean result;
@@ -42,7 +43,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
     public PrepareMultimedia(Activity activity, int position, boolean result, String description,
                              ArrayList<Image> images) {
         super();
-        customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
+        customProgressModel = getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
         this.description = description;
         this.position = position;
@@ -76,8 +77,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
                     MediaType.parse("text/plain"));
             imageGrouped.Description = RequestBody.create(images.get(0).Description,
                     MediaType.parse("text/plain"));
-            Retrofit retrofit = MyApplication.getApplicationComponent().NetworkHelperModel()
-                    .getInstance(true, MyApplication.getApplicationComponent().SharedPreferenceModel()
+            Retrofit retrofit = getApplicationComponent().NetworkHelperModel()
+                    .getInstance(true, getApplicationComponent().SharedPreferenceModel()
                             .getStringData(SharedReferenceKeys.TOKEN.getValue()), 10, 5, 5);
             IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
             Call<MultimediaUploadResponse> call = iAbfaService.fileUploadGrouped(imageGrouped.File,
@@ -102,21 +103,19 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
         activity.finish();
     }
 
-    void saveImages(boolean isSent, Activity activity) {
+    private void saveImages(boolean isSent, Activity activity) {
 //        for (int j = 0; j < 200; j++)//TODO
         for (int i = 0; i < images.size(); i++) {
             if (!images.get(i).isSent) {
                 images.get(i).isSent = isSent;//TODO
-                if (MyApplication.getApplicationComponent().MyDatabase().imageDao()
-                        .getImagesById(images.get(i).id).size() > 0) {
-                    MyApplication.getApplicationComponent().MyDatabase().imageDao()
-                            .updateImage(images.get(i));
+                if (getApplicationComponent().MyDatabase().imageDao().getImagesById(images.get(i).id)
+                        .size() > 0) {
+                    getApplicationComponent().MyDatabase().imageDao().updateImage(images.get(i));
                 } else {
                     String address = CustomFile.saveTempBitmap(images.get(i).bitmap, activity);
                     if (!address.equals(activity.getString(R.string.error_external_storage_is_not_writable))) {
                         images.get(i).address = address;
-                        MyApplication.getApplicationComponent().MyDatabase().imageDao()
-                                .insertImage(images.get(i));
+                        getApplicationComponent().MyDatabase().imageDao().insertImage(images.get(i));
                     }
                 }
             }

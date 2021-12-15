@@ -2,6 +2,8 @@ package com.leon.counter_reading.utils.voice;
 
 import static android.app.Activity.RESULT_OK;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -32,14 +34,14 @@ import retrofit2.Retrofit;
 
 public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
     private final CustomProgressModel customProgressModel;
+    private final VoiceGrouped voiceGrouped;
     private final Voice voice;
     private final String uuid;
     private final int position;
-    private final VoiceGrouped voiceGrouped;
 
     public PrepareMultimedia(Activity activity, Voice voice, String description, String uuid, int position) {
         super();
-        customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
+        customProgressModel = getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
         this.voice = voice;
         this.voice.Description = description;
@@ -65,12 +67,12 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
         uploadVoice(activity);
     }
 
-    void uploadVoice(Activity activity) {
+    private void uploadVoice(Activity activity) {
         voiceGrouped.OnOffLoadId = RequestBody.create(
                 voice.OnOffLoadId, MediaType.parse("text/plain"));
         voiceGrouped.Description = RequestBody.create(
                 voice.Description, MediaType.parse("text/plain"));
-        Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
+        Retrofit retrofit = getApplicationComponent().Retrofit();
         IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
         Call<MultimediaUploadResponse> call = iAbfaService.fileUploadGrouped(
                 voiceGrouped.File, voiceGrouped.OnOffLoadId, voiceGrouped.Description);
@@ -78,18 +80,18 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
                 new UploadVoice(activity), new UploadVoiceIncomplete(activity), new uploadVoiceError(activity));
     }
 
-    void saveVoice(boolean isSent) {
+    private void saveVoice(boolean isSent) {
         voice.isSent = isSent;
-        if (MyApplication.getApplicationComponent().MyDatabase()
+        if (getApplicationComponent().MyDatabase()
                 .imageDao().getImagesById(voice.id).size() > 0) {
-            MyApplication.getApplicationComponent().MyDatabase().voiceDao().updateVoice(voice);
+            getApplicationComponent().MyDatabase().voiceDao().updateVoice(voice);
         } else {
-            MyApplication.getApplicationComponent().MyDatabase().voiceDao().insertVoice(voice);
+            getApplicationComponent().MyDatabase().voiceDao().insertVoice(voice);
         }
     }
 
-    void finishDescription(Activity activity, String message) {
-        MyApplication.getApplicationComponent().MyDatabase()
+    private void finishDescription(Activity activity, String message) {
+        getApplicationComponent().MyDatabase()
                 .onOffLoadDao().updateOnOffLoadDescription(uuid, message);
         Intent intent = new Intent();
         intent.putExtra(BundleEnum.POSITION.getValue(), position);

@@ -1,12 +1,14 @@
 package com.leon.counter_reading.utils.login;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.Toast;
 
 import com.auth0.android.jwt.JWT;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.HomeActivity;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
@@ -31,9 +33,11 @@ public class AttemptLogin extends AsyncTask<Activity, Activity, Void> {
     private final String password;
     private final String serial;
     private final boolean isChecked;
+    private final View view;
 
-    public AttemptLogin(String username, String password, String serial, boolean isChecked) {
+    public AttemptLogin(String username, String password, String serial, boolean isChecked, View view) {
         super();
+        this.view = view;
         this.username = username;
         this.password = password;
         this.serial = serial;
@@ -42,15 +46,28 @@ public class AttemptLogin extends AsyncTask<Activity, Activity, Void> {
 
     @Override
     protected Void doInBackground(Activity... activities) {
-        Retrofit retrofit = MyApplication.getApplicationComponent().NetworkHelperModel().getInstance();
+        Retrofit retrofit = getApplicationComponent().NetworkHelperModel().getInstance();
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
         Call<LoginFeedBack> call = iAbfaService.login(new LoginInfo(username, password, serial));
         activities[0].runOnUiThread(() ->
                 HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW.getValue(), activities[0],
                         new LoginCompleted(activities[0], isChecked, username, password),
-                        new Incomplete(activities[0]),
-                        new Error(activities[0])));
+                        new Incomplete(activities[0]), new Error(activities[0])));
         return null;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        if (view != null)
+            view.setEnabled(false);
+        super.onPreExecute();
+    }
+
+    @Override
+    protected void onPostExecute(Void unused) {
+        super.onPostExecute(unused);
+        if (view != null)
+            view.setEnabled(true);
     }
 }
 
@@ -88,27 +105,18 @@ class LoginCompleted implements ICallback<LoginFeedBack> {
         }
     }
 
-    void savePreference(LoginFeedBack loginFeedBack, boolean isChecked) {
-        ISharedPreferenceManager sharedPreferenceManager = MyApplication.getApplicationComponent().SharedPreferenceModel();
-        sharedPreferenceManager
-                .putData(SharedReferenceKeys.DISPLAY_NAME.getValue(), loginFeedBack.displayName);
-        sharedPreferenceManager
-                .putData(SharedReferenceKeys.USER_CODE.getValue(), loginFeedBack.userCode);
-        sharedPreferenceManager
-                .putData(SharedReferenceKeys.TOKEN.getValue(), loginFeedBack.access_token);
-        sharedPreferenceManager
-                .putData(SharedReferenceKeys.REFRESH_TOKEN.getValue(), loginFeedBack.refresh_token);
-        sharedPreferenceManager
-                .putData(SharedReferenceKeys.XSRF.getValue(), loginFeedBack.XSRFToken);
-        sharedPreferenceManager
-                .putData(SharedReferenceKeys.USERNAME_TEMP.getValue(), username);
-        sharedPreferenceManager
-                .putData(SharedReferenceKeys.PASSWORD_TEMP.getValue(), Crypto.encrypt(password));
+    private void savePreference(LoginFeedBack loginFeedBack, boolean isChecked) {
+        final ISharedPreferenceManager sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
+        sharedPreferenceManager.putData(SharedReferenceKeys.DISPLAY_NAME.getValue(), loginFeedBack.displayName);
+        sharedPreferenceManager.putData(SharedReferenceKeys.USER_CODE.getValue(), loginFeedBack.userCode);
+        sharedPreferenceManager.putData(SharedReferenceKeys.TOKEN.getValue(), loginFeedBack.access_token);
+        sharedPreferenceManager.putData(SharedReferenceKeys.REFRESH_TOKEN.getValue(), loginFeedBack.refresh_token);
+        sharedPreferenceManager.putData(SharedReferenceKeys.XSRF.getValue(), loginFeedBack.XSRFToken);
+        sharedPreferenceManager.putData(SharedReferenceKeys.USERNAME_TEMP.getValue(), username);
+        sharedPreferenceManager.putData(SharedReferenceKeys.PASSWORD_TEMP.getValue(), Crypto.encrypt(password));
         if (isChecked) {
-            sharedPreferenceManager
-                    .putData(SharedReferenceKeys.USERNAME.getValue(), username);
-            sharedPreferenceManager
-                    .putData(SharedReferenceKeys.PASSWORD.getValue(), Crypto.encrypt(password));
+            sharedPreferenceManager.putData(SharedReferenceKeys.USERNAME.getValue(), username);
+            sharedPreferenceManager.putData(SharedReferenceKeys.PASSWORD.getValue(), Crypto.encrypt(password));
         }
     }
 }

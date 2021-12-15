@@ -18,13 +18,8 @@ import com.leon.counter_reading.utils.CustomToast;
 
 public final class CustomProgressModel {
     private Dialog dialog;
-//    private static CustomProgressModel instance = null;
 
     public static CustomProgressModel getInstance() {
-//        if (instance == null) {
-//            instance = new CustomProgressModel();
-//        }
-//        return instance;
         return new CustomProgressModel();
     }
 
@@ -91,16 +86,20 @@ public final class CustomProgressModel {
                     HttpClientWrapper.call.cancel();
                     HttpClientWrapper.call = null;
                 }
-                if (dialog != null) {
-                    dialog.dismiss();
-                    dialog.cancel();
-                    dialog = null;
-                }
+                cancelDialog();
             });
         }
     }
 
     public Dialog getDialog() {
         return dialog;
+    }
+
+    public void cancelDialog() {
+        if (dialog != null) {
+            dialog.dismiss();
+            dialog.cancel();
+            dialog = null;
+        }
     }
 }

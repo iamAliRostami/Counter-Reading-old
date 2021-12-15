@@ -262,17 +262,18 @@ public class DescriptionActivity extends AppCompatActivity {
 
     private void setOnButtonSendClickListener() {
         binding.buttonSend.setOnClickListener(v -> {
+            binding.buttonSend.setEnabled(false);
             voice.OnOffLoadId = uuid;
             voice.trackNumber = trackNumber;
             String message = binding.editTextMessage.getText().toString();
             if (voice.address != null && voice.address.length() > 0)
                 new PrepareMultimedia(activity, voice, binding.editTextMessage.getText().toString()
                         , uuid, position).execute(activity);
-
             else if (message.length() > 0) {
                 finishDescription(message);
             } else {
                 new CustomToast().warning(getString(R.string.insert_message));
+                binding.buttonSend.setEnabled(true);
             }
         });
     }

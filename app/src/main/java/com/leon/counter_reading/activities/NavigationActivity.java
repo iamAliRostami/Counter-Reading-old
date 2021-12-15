@@ -1,5 +1,7 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.helpers.Constants.readingData;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Debug;
@@ -11,12 +13,11 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 
-import com.google.gson.Gson;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityNavigationBinding;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.navigation.Navigating;
@@ -24,7 +25,6 @@ import com.leon.counter_reading.utils.navigation.Navigating;
 public class NavigationActivity extends AppCompatActivity {
     private ActivityNavigationBinding binding;
     private Activity activity;
-    private String uuid;
     private int position;
     private OnOffLoadDto onOffLoadDto;
 
@@ -41,11 +41,9 @@ public class NavigationActivity extends AppCompatActivity {
 
     void initialize() {
         if (getIntent().getExtras() != null) {
-            Gson gson = new Gson();
-            onOffLoadDto = gson.fromJson(getIntent().getExtras()
-                    .getString(BundleEnum.ON_OFF_LOAD.getValue()), OnOffLoadDto.class);
-            uuid = onOffLoadDto.id;
             position = getIntent().getExtras().getInt(BundleEnum.POSITION.getValue());
+            onOffLoadDto = readingData.onOffLoadDtos.get(position);
+            getIntent().getExtras().clear();
         }
         setTextViews();
         initializeImageViews();
@@ -102,7 +100,7 @@ public class NavigationActivity extends AppCompatActivity {
             } else {
                 int possibleEmpty = binding.editTextEmpty.getText().length() > 0 ?
                         Integer.parseInt(binding.editTextEmpty.getText().toString()) : 0;
-                new Navigating(position, uuid, possibleEmpty,
+                new Navigating(position, onOffLoadDto.id, possibleEmpty,
                         binding.editTextAccount.getText().toString(),
                         binding.editTextMobile.getText().toString(),
                         binding.editTextPhone.getText().toString(),

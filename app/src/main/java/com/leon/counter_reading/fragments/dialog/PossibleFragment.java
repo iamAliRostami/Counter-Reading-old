@@ -98,7 +98,7 @@ public class PossibleFragment extends DialogFragment {
             binding.editTextMobile.setVisibility(View.VISIBLE);
             binding.textViewMobile.setVisibility(View.VISIBLE);
 
-            binding.textViewMobile.setText(String.valueOf(onOffLoadDto.mobile));
+            binding.textViewMobile.setText(onOffLoadDto.mobile != null ? onOffLoadDto.mobile : "-");
             binding.editTextMobile.setText(onOffLoadDto.possibleMobile);
 
             binding.editTextSerial.setVisibility(View.GONE);
@@ -222,7 +222,7 @@ public class PossibleFragment extends DialogFragment {
         binding.textViewMobile.setVisibility(sharedPreferenceManager.
                 getBoolData(SharedReferenceKeys.MOBILE.getValue()) ? View.VISIBLE : View.GONE);
 
-        binding.textViewMobile.setText(String.valueOf(onOffLoadDto.mobile));
+        binding.textViewMobile.setText(onOffLoadDto.mobile != null ? onOffLoadDto.mobile : "-");
 
         if (sharedPreferenceManager.getBoolData(SharedReferenceKeys.READING_REPORT.getValue())) {
             counterReportDtos = new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase()

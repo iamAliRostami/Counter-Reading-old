@@ -57,9 +57,12 @@ public class ReportPerformanceFragment extends Fragment {
     }
 
     private void setSubmitButtonOnClickListener() {
-        binding.buttonSubmit.setOnClickListener(v -> new GetPerformance(activity, this,
-                binding.textViewFrom.getText().toString(), binding.textViewEnd.getText().toString())
-                .execute(activity));
+        binding.buttonSubmit.setOnClickListener(v -> {
+            binding.buttonSubmit.setEnabled(false);
+            new GetPerformance(activity, this, binding.textViewFrom.getText().toString(),
+                    binding.textViewEnd.getText().toString()).execute(activity);
+        });
+
     }
 
     private void setOnTextViewFromOnClickListener() {
@@ -71,12 +74,8 @@ public class ReportPerformanceFragment extends Fragment {
             datePickerDialog.setTextSizeWeek(12.0f);
             datePickerDialog.setTextSizeDate(14.0f);
             datePickerDialog.setCanceledOnTouchOutside(true);
-//            datePickerDialog.setOnSingleDateSelectedListener(date ->
-//                    );
             datePickerDialog.setOnSingleDateSelectedListener(date -> {
-//                startDate = date.getPersianShortDate();
                 binding.relativeLayoutDetail.setVisibility(View.GONE);
-//                setLinearLayoutVisibility(View.GONE);
                 binding.textViewFrom.setText(date.getPersianShortDate());
             });
             datePickerDialog.showDialog();
@@ -93,9 +92,7 @@ public class ReportPerformanceFragment extends Fragment {
             datePickerDialog.setTextSizeDate(14.0f);
             datePickerDialog.setCanceledOnTouchOutside(true);
             datePickerDialog.setOnSingleDateSelectedListener(date -> {
-//                setLinearLayoutVisibility(View.GONE);
                 binding.relativeLayoutDetail.setVisibility(View.GONE);
-//                endDate = date.getPersianShortDate();
                 binding.textViewEnd.setText(date.getPersianShortDate());
             });
 
@@ -105,10 +102,6 @@ public class ReportPerformanceFragment extends Fragment {
 
     public void setTextViewTextSetter(PerformanceResponse performanceResponse) {
         activity.runOnUiThread(() -> {
-//            binding.linearLayoutEnd.setVisibility(View.GONE);
-//            binding.linearLayoutFrom.setVisibility(View.GONE);
-//            visible = false;
-//            setLinearLayoutVisibility(View.VISIBLE);
             binding.relativeLayoutDetail.setVisibility(View.VISIBLE);
             binding.textViewAdiCount.setText(String.valueOf(performanceResponse.adiCount));
             binding.textViewTotal.setText(String.valueOf(performanceResponse.overalCount));
@@ -118,6 +111,10 @@ public class ReportPerformanceFragment extends Fragment {
             binding.textViewXarab.setText(String.valueOf(performanceResponse.xarabCount));
             binding.textViewTaviz.setText(String.valueOf(performanceResponse.tavizCount));
             binding.textViewFaqed.setText(String.valueOf(performanceResponse.faqedCount));
+            setButtonState();
         });
+    }
+    public void setButtonState(){
+        binding.buttonSubmit.setEnabled(true);
     }
 }

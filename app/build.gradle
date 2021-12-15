@@ -18,8 +18,8 @@ android {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
         targetSdkVersion 31
-        versionCode 54
-        versionName "1.00.09.15"
+        versionCode 56
+        versionName "1.00.09.20"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config
@@ -46,10 +46,10 @@ android {
             debuggable true
             signingConfig signingConfigs.config
             buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
-                    "com.leon.counter_reading.enums.CompanyNames.ESF"
+                    "com.leon.counter_reading.enums.CompanyNames.TSE"
         }
         esf {
-            debuggable true
+//            debuggable true
             minifyEnabled false
             signingConfig signingConfigs.config
             applicationIdSuffix ".esf"
@@ -58,7 +58,7 @@ android {
                     "com.leon.counter_reading.enums.CompanyNames.ESF"
         }
         ksh {
-            debuggable true
+//            debuggable true
             minifyEnabled false
             signingConfig signingConfigs.config
             applicationIdSuffix ".ksh"
@@ -66,7 +66,7 @@ android {
                     "com.leon.counter_reading.enums.CompanyNames.KSH"
         }
         zone_4 {
-            debuggable true
+//            debuggable true
             minifyEnabled false
             signingConfig signingConfigs.config
             applicationIdSuffix ".zone4"
@@ -74,7 +74,7 @@ android {
                     "com.leon.counter_reading.enums.CompanyNames.ZONE4"
         }
         tse {
-            debuggable true
+//            debuggable true
             minifyEnabled false
             signingConfig signingConfigs.config
             applicationIdSuffix ".tse"
@@ -172,6 +172,4 @@ dependencies {
 //    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
 //    implementation 'com.github.naya-aastra:SkewPdfView:1.1'
 //    implementation 'com.github.barteksc:android-pdf-viewer:2.0.3'
-
-
 }
