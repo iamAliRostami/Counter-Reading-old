@@ -1,12 +1,11 @@
 package com.leon.counter_reading.activities;
 
-import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
-import static com.leon.counter_reading.helpers.Constants.GALLERY_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.PHOTO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
+import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
 import static com.leon.counter_reading.utils.PermissionManager.checkCameraPermission;
@@ -15,17 +14,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Debug;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.holder.ImageViewAdapter;
 import com.leon.counter_reading.databinding.ActivityTakePhotoBinding;
@@ -37,6 +41,7 @@ import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.photo.PrepareMultimedia;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -48,6 +53,7 @@ public class TakePhotoActivity extends AppCompatActivity {
     private Activity activity;
     private ActivityTakePhotoBinding binding;
     private ImageViewAdapter imageViewAdapter;
+    private Uri photoUri;
     private final ArrayList<Image> images = new ArrayList<>();
 
     @Override
@@ -126,36 +132,48 @@ public class TakePhotoActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == GALLERY_REQUEST && data != null) {
-                prepareImage(data);
-            } else if (requestCode == CAMERA_REQUEST && data != null) {
-                try {
-                    final Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                    prepareImage(bitmap);
-//                    prepareImage(compressBitmap((Bitmap) data.getExtras().get("data")));
-                    data.getExtras().clear();
-                    data = null;
-                } catch (Exception e) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.clear();
+    }
 
+    final ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    if (result.getData() != null) {
+//                        prepareImage((Bitmap) result.getData().getExtras().get("data"));
+                        prepareImage(result.getData());
+                        result.getData().getExtras().clear();
+                    } else {
+                        prepareImage();
+                    }
+                    imageViewAdapter.notifyDataSetChanged();
+                    binding.buttonSaveSend.setEnabled(true);
                 }
+            });
 
-//                try {
-//                    prepareImage(compressBitmap(BitmapFactory.decodeStream(this.getContentResolver().
-//                            openInputStream(data.getData()))));
-//                    data = null;
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//                if (PHOTO_URI != null) {
-//                    prepareImage();
-//                }
+    public void openSomeActivityForResult() {
+//        Intent intent = new Intent(activity,CameraActivity.class);
+//        startActivity(intent);
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile(activity);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            imageViewAdapter.notifyDataSetChanged();
-            binding.buttonSaveSend.setEnabled(true);
+            if (photoFile != null) {
+                photoUri = FileProvider.getUriForFile(activity,
+                        BuildConfig.APPLICATION_ID.concat(".provider"), photoFile);
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                someActivityResultLauncher.launch(cameraIntent);
+            }
         }
+
+//        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, PHOTO_URI);
+//        someActivityResultLauncher.launch(intent);
     }
 
     private void prepareImage(final Bitmap bitmap) {
@@ -184,7 +202,6 @@ public class TakePhotoActivity extends AppCompatActivity {
             } else {
                 images.add(image);
             }
-//            imageViewAdapter.notifyDataSetChanged();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -193,7 +210,7 @@ public class TakePhotoActivity extends AppCompatActivity {
     private void prepareImage() {
         final Image image = new Image();
         try {
-            image.bitmap = compressBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), PHOTO_URI));
+            image.bitmap = compressBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri));
             image.OnOffLoadId = uuid;
             image.trackNumber = trackNumber;
             if (replace > 0) {
@@ -203,8 +220,7 @@ public class TakePhotoActivity extends AppCompatActivity {
             } else {
                 images.add(image);
             }
-//            imageViewAdapter.notifyDataSetChanged();
-            PHOTO_URI = null;
+            photoUri = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
