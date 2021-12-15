@@ -2,15 +2,6 @@ package com.leon.counter_reading.utils;
 
 import static android.content.Context.TELEPHONY_SERVICE;
 import static com.leon.counter_reading.helpers.Constants.CARRIER_PRIVILEGE_STATUS;
-import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
-import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
-import static com.leon.counter_reading.helpers.Constants.PHONE_PERMISSIONS;
-import static com.leon.counter_reading.helpers.Constants.PHOTO_PERMISSIONS;
-import static com.leon.counter_reading.helpers.Constants.POSITION;
-import static com.leon.counter_reading.helpers.Constants.RECORD_AUDIO_PERMISSIONS;
-import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
-import static com.leon.counter_reading.helpers.Constants.REQUEST_WIFI_CODE;
-import static com.leon.counter_reading.helpers.Constants.STORAGE_PERMISSIONS;
 
 import android.Manifest;
 import android.app.Activity;
@@ -22,7 +13,6 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
@@ -35,7 +25,6 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.helpers.Constants;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class PermissionManager {
@@ -126,18 +115,16 @@ public class PermissionManager {
                 .setDeniedMessage(activity.getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(activity.getString(R.string.close))
                 .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.CAMERA,
+                .setPermissions(Manifest.permission.CAMERA,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).check();
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
     }
 
     public static boolean checkStoragePermission(Context context) {
         return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
+                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     public static void checkStoragePermission(Activity activity) {
@@ -298,6 +285,7 @@ public class PermissionManager {
         new CustomToast().error(activity.getString(R.string.permission_not_completed));
         activity.finish();
     }
+
     public static boolean hasCarrierPrivileges(Activity activity) {
         TelephonyManager tm = (TelephonyManager)
                 new ContextWrapper(activity).getSystemService(TELEPHONY_SERVICE);

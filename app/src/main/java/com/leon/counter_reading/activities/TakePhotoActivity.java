@@ -133,10 +133,12 @@ public class TakePhotoActivity extends AppCompatActivity {
                 prepareImage(data);
             } else if (requestCode == CAMERA_REQUEST && data != null) {
                 try {
-                    prepareImage(compressBitmap((Bitmap) data.getExtras().get("data")));
+                    final Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                    prepareImage(bitmap);
+//                    prepareImage(compressBitmap((Bitmap) data.getExtras().get("data")));
                     data.getExtras().clear();
                     data = null;
-                }catch (Exception  e){
+                } catch (Exception e) {
 
                 }
 
