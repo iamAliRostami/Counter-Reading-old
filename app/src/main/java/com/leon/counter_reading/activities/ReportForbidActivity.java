@@ -14,7 +14,6 @@ import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -27,6 +26,9 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,6 +62,7 @@ public class ReportForbidActivity extends AppCompatActivity {
     private Activity activity;
     private ForbiddenDto forbiddenDto = new ForbiddenDto();
     private int zoneId;
+    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -291,43 +294,77 @@ public class ReportForbidActivity extends AppCompatActivity {
             builder.setMessage(R.string.select_source);
             builder.setPositiveButton(R.string.gallery, (dialog, which) -> {
                 dialog.dismiss();
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(Intent.createChooser(intent, "Select Picture"), MyApplication.GALLERY_REQUEST);
                 Intent intent = new Intent("android.intent.action.PICK");
                 intent.setType("image/*");
                 startActivityForResult(intent, GALLERY_REQUEST);
             });
             builder.setNegativeButton(R.string.camera, (dialog, which) -> {
                 dialog.dismiss();
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (cameraIntent.resolveActivity(activity.getPackageManager()) != null) {
-                    // Create the File where the photo should go
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile(activity);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    // Continue only if the File was successfully created
-                    if (photoFile != null) {
-                        PHOTO_URI = FileProvider.getUriForFile(activity,
-                                BuildConfig.APPLICATION_ID.concat(".provider"),
-                                photoFile);
-                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, PHOTO_URI);
-                        try {
-                            startActivityForResult(cameraIntent, CAMERA_REQUEST);
-                        } catch (ActivityNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+                openSomeActivityForResult();
+//                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                if (cameraIntent.resolveActivity(activity.getPackageManager()) != null) {
+//                    // Create the File where the photo should go
+//                    File photoFile = null;
+//                    try {
+//                        photoFile = createImageFile(activity);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                    // Continue only if the File was successfully created
+//                    if (photoFile != null) {
+//                        PHOTO_URI = FileProvider.getUriForFile(activity,
+//                                BuildConfig.APPLICATION_ID.concat(".provider"),
+//                                photoFile);
+//                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, PHOTO_URI);
+//                        try {
+//                            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+//                        } catch (ActivityNotFoundException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
             });
             builder.setNeutralButton("", (dialog, which) -> dialog.dismiss());
             builder.create().show();
         });
     }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.clear();
+    }
+
+    public void openSomeActivityForResult() {
+        final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile(activity);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (photoFile != null) {
+                path = photoFile.getPath();
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(activity,
+                        BuildConfig.APPLICATION_ID.concat(".provider"), photoFile));
+                someActivityResultLauncher.launch(cameraIntent);
+            }
+        }
+    }
+
+    private final ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    final Bitmap bitmap = compressBitmap(BitmapFactory.decodeFile(path));
+                    forbiddenDto.bitmaps.add(bitmap);
+                    binding.relativeLayoutImage.setVisibility(View.VISIBLE);
+                    binding.imageViewTaken.setImageBitmap(bitmap);
+                    forbiddenDto.File.add(CustomFile.bitmapToFile(bitmap, activity));
+
+                }
+            });
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

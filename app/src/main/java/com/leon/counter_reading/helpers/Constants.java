@@ -73,10 +73,6 @@ public class Constants {
 
 
     public static final ReadingData readingData = new ReadingData(), readingDataTemp = new ReadingData();
-//    public static final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtosTotal = new ArrayList<>();
-//    public static final ArrayList<CounterStateDto> counterStateDtosTotal = new ArrayList<>();
-//    public static final ArrayList<OnOffLoadDto> onOffLoadDtosTotal = new ArrayList<>();
-//    public static final ArrayList<KarbariDto> karbariDtosTotal = new ArrayList<>();
 
     public static final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
     public static final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();

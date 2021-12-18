@@ -90,7 +90,7 @@
         <activity
             android:name=".activities.HelpActivity"
             android:exported="true"
-            android:label="@string/help"></activity>
+            android:label="@string/help"/>
         <activity
             android:name=".activities.TakePhotoActivity"
             android:label="@string/camera"
@@ -146,7 +146,8 @@
             android:label="@string/location" />
         <activity
             android:name=".activities.HomeActivity"
-            android:label="@string/home" />
+            android:label="@string/home"
+            android:exported="true"/>
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true"

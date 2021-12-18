@@ -1,7 +1,6 @@
 package com.leon.counter_reading.activities;
 
 import static com.leon.counter_reading.helpers.Constants.PHOTO_PERMISSIONS;
-import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
@@ -18,6 +17,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Debug;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -53,7 +53,8 @@ public class TakePhotoActivity extends AppCompatActivity {
     private Activity activity;
     private ActivityTakePhotoBinding binding;
     private ImageViewAdapter imageViewAdapter;
-    private Uri photoUri;
+//    private Uri photoUri;
+    private String path;
     private final ArrayList<Image> images = new ArrayList<>();
 
     @Override
@@ -137,7 +138,32 @@ public class TakePhotoActivity extends AppCompatActivity {
         outState.clear();
     }
 
-    final ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+    public void openSomeActivityForResult() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile(activity);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (photoFile != null) {
+//                photoUri = FileProvider.getUriForFile(activity,
+//                        BuildConfig.APPLICATION_ID.concat(".provider"), photoFile);
+//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                path = photoFile.getPath();
+//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(activity,
+                        BuildConfig.APPLICATION_ID.concat(".provider"), photoFile));
+                someActivityResultLauncher.launch(cameraIntent);
+            }
+        }
+
+//        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, PHOTO_URI);
+//        someActivityResultLauncher.launch(intent);
+    }
+
+    private final ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
@@ -153,39 +179,26 @@ public class TakePhotoActivity extends AppCompatActivity {
                 }
             });
 
-    public void openSomeActivityForResult() {
-//        Intent intent = new Intent(activity,CameraActivity.class);
-//        startActivity(intent);
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = createImageFile(activity);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (photoFile != null) {
-                photoUri = FileProvider.getUriForFile(activity,
-                        BuildConfig.APPLICATION_ID.concat(".provider"), photoFile);
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                someActivityResultLauncher.launch(cameraIntent);
-            }
-        }
 
-//        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, PHOTO_URI);
-//        someActivityResultLauncher.launch(intent);
-    }
-
-    private void prepareImage(final Bitmap bitmap) {
+    private void prepareImage() {
         final Image image = new Image();
-        image.bitmap = bitmap;
-        image.OnOffLoadId = uuid;
-        image.trackNumber = trackNumber;
-        if (replace > 0) {
-            getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
-            images.set(replace - 1, image);
-        } else {
-            images.add(image);
+        try {
+            image.bitmap = compressBitmap(BitmapFactory.decodeFile(path));
+//            image.bitmap = compressBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri));
+//            image.bitmap = compressBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(path)));
+            image.OnOffLoadId = uuid;
+            image.trackNumber = trackNumber;
+            if (replace > 0) {
+                getApplicationComponent().MyDatabase().imageDao()
+                        .deleteImage(images.get(replace - 1).id);
+                images.set(replace - 1, image);
+            } else {
+                images.add(image);
+            }
+//            photoUri = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("error", e.toString());
         }
     }
 
@@ -207,22 +220,17 @@ public class TakePhotoActivity extends AppCompatActivity {
         }
     }
 
-    private void prepareImage() {
+
+    private void prepareImage(final Bitmap bitmap) {
         final Image image = new Image();
-        try {
-            image.bitmap = compressBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri));
-            image.OnOffLoadId = uuid;
-            image.trackNumber = trackNumber;
-            if (replace > 0) {
-                getApplicationComponent().MyDatabase().imageDao()
-                        .deleteImage(images.get(replace - 1).id);
-                images.set(replace - 1, image);
-            } else {
-                images.add(image);
-            }
-            photoUri = null;
-        } catch (IOException e) {
-            e.printStackTrace();
+        image.bitmap = bitmap;
+        image.OnOffLoadId = uuid;
+        image.trackNumber = trackNumber;
+        if (replace > 0) {
+            getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
+            images.set(replace - 1, image);
+        } else {
+            images.add(image);
         }
     }
 
