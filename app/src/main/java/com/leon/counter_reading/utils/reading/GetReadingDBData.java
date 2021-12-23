@@ -70,27 +70,25 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
         }
 
         for (int j = 0, trackingDtosSize = readingData.trackingDtos.size(); j < trackingDtosSize; j++) {
+            final String id = readingData.trackingDtos.get(j).id;
             if (readStatus == ReadStatusEnum.ALL.getValue()) {
-                readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
-                        getAllOnOffLoadByTracking(readingData.trackingDtos.get(j).trackNumber));
+                readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().getAllOnOffLoadByTracking(id));
             } else if (readStatus == ReadStatusEnum.STATE.getValue()) {
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
-                        getAllOnOffLoadByHighLowAndTracking(readingData.trackingDtos.get(j).trackNumber, highLow));
+                        getAllOnOffLoadByHighLowAndTracking(id, highLow));
             } else if (readStatus == ReadStatusEnum.UNREAD.getValue()) {
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
-                        getAllOnOffLoadNotRead(0, readingData.trackingDtos.get(j).trackNumber));
+                        getAllOnOffLoadNotRead(0, id));
             } else if (readStatus == ReadStatusEnum.READ.getValue()) {
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
-                        getAllOnOffLoadRead(OffloadStateEnum.SENT.getValue(), readingData.trackingDtos.get(j).trackNumber));
+                        getAllOnOffLoadRead(OffloadStateEnum.SENT.getValue(), id));
             } else if (readStatus == ReadStatusEnum.ALL_MANE_UNREAD.getValue()) {
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
-                        getOnOffLoadReadByIsManeNotRead(IS_MANE, 0,
-                                readingData.trackingDtos.get(j).trackNumber));
+                        getOnOffLoadReadByIsManeNotRead(IS_MANE, 0, id));
 
             } else if (readStatus == ReadStatusEnum.ALL_MANE.getValue()) {
-
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
-                        getOnOffLoadReadByIsMane(IS_MANE, readingData.trackingDtos.get(j).trackNumber));
+                        getOnOffLoadReadByIsMane(IS_MANE, id));
             }
         }
 

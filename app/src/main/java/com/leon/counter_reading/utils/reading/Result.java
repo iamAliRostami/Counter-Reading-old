@@ -28,10 +28,8 @@ public class Result extends AsyncTask<Activity, Void, Void> {
         int position = data.getExtras().getInt(BundleEnum.POSITION.getValue()), i = 0;
         String uuid = data.getExtras().getString(BundleEnum.BILL_ID.getValue());
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(true, uuid);
-
-
         readingData.onOffLoadDtos.set(position, getApplicationComponent().MyDatabase()
-                .onOffLoadDao().getAllOnOffLoadById(uuid, readingData.onOffLoadDtos.get(position).trackNumber));
+                .onOffLoadDao().getAllOnOffLoadById(uuid, readingData.onOffLoadDtos.get(position).trackingId));
         boolean found = false;
         while (!found) {
             if (readingDataTemp.onOffLoadDtos.get(i).id.equals(uuid)) {

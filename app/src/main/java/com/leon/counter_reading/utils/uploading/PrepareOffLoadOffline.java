@@ -32,7 +32,7 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
     private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
     private final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
     private final ArrayList<ForbiddenDto> forbiddenDtos = new ArrayList<>();
-    private final int trackNumber;
+        private final int trackNumber;
     private final String id;
 
     public PrepareOffLoadOffline(Activity activity, int trackNumber, String id) {
@@ -52,8 +52,7 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
         if (forbiddenDtos.size() > 0) uploadForbid(activities[0]);
         onOffLoadDtos.clear();
         onOffLoadDtos.addAll(getApplicationComponent().MyDatabase().onOffLoadDao()
-                .getOnOffLoadReadByTrackingAndOffLoad(trackNumber,
-                        OffloadStateEnum.INSERTED.getValue()));
+                .getOnOffLoadReadByTrackingAndOffLoad(id, OffloadStateEnum.INSERTED.getValue()));
         offLoadReports.clear();
         offLoadReports.addAll(getApplicationComponent().MyDatabase().offLoadReportDao()
                 .getAllOffLoadReport(false));
@@ -91,8 +90,8 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
     }
 
     private void uploadImages(Activity activity) {
-        final ArrayList<Image> images = new ArrayList<>(getApplicationComponent().MyDatabase().imageDao()
-                .getImagesByBySentAndTrack(trackNumber, false));
+        final ArrayList<Image> images = new ArrayList<>(getApplicationComponent().MyDatabase().
+                imageDao().getImagesByBySentAndTrack(trackNumber, false));
         if (images.size() > 0) {
             final Gson gson = new Gson();
             final String onOffLoadDtoString = gson.toJson(images);
@@ -144,7 +143,7 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
             thankYou(activity);
             onOffLoadDtos.clear();
             onOffLoadDtos.add(getApplicationComponent().MyDatabase().
-                    onOffLoadDao().getOnOffLoadReadByTrackingAndOffLoad(trackNumber));
+                    onOffLoadDao().getOnOffLoadReadByTrackingAndOffLoad(id));
         }
         if (onOffLoadDtos.size() == 0 || onOffLoadDtos.get(0) == null) {
             getApplicationComponent().MyDatabase().

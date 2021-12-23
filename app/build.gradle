@@ -46,7 +46,7 @@ android {
             debuggable true
             signingConfig signingConfigs.config
             buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
-                    "com.leon.counter_reading.enums.CompanyNames.TSE"
+                    "com.leon.counter_reading.enums.CompanyNames.ESF"
         }
         esf {
 //            debuggable true
@@ -112,7 +112,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.android.gms:play-services-location:19.0.0'
 //    implementation 'com.google.firebase:firebase-analytics:20.0.0'
 //    implementation 'com.google.firebase:firebase-crashlytics:18.2.4'
 //    implementation platform('com.google.firebase:firebase-bom:28.1.0')
