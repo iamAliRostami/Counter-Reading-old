@@ -91,6 +91,8 @@ public class DeleteFragment extends DialogFragment {
                     if (id.isEmpty()) {
                         getApplicationComponent().MyDatabase().
                                 trackingDao().updateTrackingDtoByArchive(true, false);
+//                        getApplicationComponent().MyDatabase().
+//                                trackingDao().updateTrackingDtoByArchive("4a5005b2-3fb8-4e03-a8a2-1ece4374a672", false, false);
                     } else {
                         getApplicationComponent().MyDatabase().
                                 trackingDao().updateTrackingDtoByArchive(id, true, false);

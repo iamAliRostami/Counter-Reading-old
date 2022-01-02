@@ -1,7 +1,5 @@
 package com.leon.counter_reading.utils.downloading;
 
-import static com.leon.counter_reading.di.view_model.MyDatabaseClientModel.customTransaction;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
@@ -9,7 +7,6 @@ import android.util.Log;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
-import com.leon.counter_reading.di.view_model.MyDatabaseClientModel;
 import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterStateDto;

@@ -79,7 +79,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
                     MediaType.parse("text/plain"));
             Retrofit retrofit = getApplicationComponent().NetworkHelperModel()
                     .getInstance(true, getApplicationComponent().SharedPreferenceModel()
-                            .getStringData(SharedReferenceKeys.TOKEN.getValue()), 10, 5, 5);
+                            .getStringData(SharedReferenceKeys.TOKEN.getValue()), 10, 5 * imageGrouped.File.size(), 5);
             IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
             Call<MultimediaUploadResponse> call = iAbfaService.fileUploadGrouped(imageGrouped.File,
                     imageGrouped.OnOffLoadId, imageGrouped.Description);
