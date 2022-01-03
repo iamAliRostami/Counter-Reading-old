@@ -30,7 +30,7 @@ public class FlashViewModel implements IFlashLightManager {
                 String[] cameraId = camManager.getCameraIdList();
                 try {
                     camManager.setTorchMode(cameraId[0], true);
-                } catch (CameraAccessException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 isFlashOn = true;

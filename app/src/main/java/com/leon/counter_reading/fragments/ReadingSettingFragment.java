@@ -47,7 +47,11 @@ public class ReadingSettingFragment extends Fragment {
 
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            json = getArguments().getStringArrayList(BundleEnum.TRACKING.getValue());
+            json = getArguments().getStringArrayList(BundleEnum.TRACKING.getValue());trackingDtos.clear();
+            for (int i = 0; i < json.size(); i++) {
+                String s = json.get(i);
+                trackingDtos.add(new Gson().fromJson(s, TrackingDto.class));
+            }
             getArguments().clear();
         }
     }
@@ -62,12 +66,6 @@ public class ReadingSettingFragment extends Fragment {
 
     private void initialize() {
         context = getActivity();
-        Gson gson = new Gson();
-        trackingDtos.clear();
-        for (int i = 0, jsonSize = json.size(); i < jsonSize; i++) {
-            String s = json.get(i);
-            trackingDtos.add(gson.fromJson(s, TrackingDto.class));
-        }
         setupListView();
         initializeCheckbox();
     }

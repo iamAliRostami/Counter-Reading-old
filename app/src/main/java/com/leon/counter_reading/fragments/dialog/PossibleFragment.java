@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -320,16 +321,16 @@ public class PossibleFragment extends DialogFragment {
                 onOffLoadDto.possibleAddress = binding.editTextAddress.getText().toString();
 
             if (binding.editTextAhadTotal.getText().length() > 0)
-                onOffLoadDto.possibleAhadSaierOrAbBaha = Integer.parseInt(binding.editTextAhadTotal.getText().toString());
+                onOffLoadDto.possibleAhadSaierOrAbBaha = getDigits(binding.editTextAhadTotal.getText().toString());
 
             if (binding.editTextAhad2.getText().length() > 0)
-                onOffLoadDto.possibleAhadTejariOrFari = Integer.parseInt(binding.editTextAhad2.getText().toString());
+                onOffLoadDto.possibleAhadTejariOrFari = getDigits(binding.editTextAhad2.getText().toString());
 
             if (binding.editTextAhad1.getText().length() > 0)
-                onOffLoadDto.possibleAhadMaskooniOrAsli = Integer.parseInt(binding.editTextAhad1.getText().toString());
+                onOffLoadDto.possibleAhadMaskooniOrAsli = getDigits(binding.editTextAhad1.getText().toString());
 
             if (binding.editTextAhadEmpty.getText().length() > 0)
-                onOffLoadDto.possibleEmpty = Integer.parseInt(binding.editTextAhadEmpty.getText().toString());
+                onOffLoadDto.possibleEmpty = getDigits(binding.editTextAhadEmpty.getText().toString());
 
             if (cancel)
                 view.requestFocus();
@@ -342,7 +343,15 @@ public class PossibleFragment extends DialogFragment {
         binding.buttonClose.setOnClickListener(v -> dismiss());
     }
 
-    void initializeSpinner() {
+    private int getDigits(String number) {
+        if (!TextUtils.isEmpty(number) && TextUtils.isDigitsOnly(number)) {
+            return Integer.parseInt(number);
+        } else {
+            return 0;
+        }
+    }
+
+    private void initializeSpinner() {
         if (sharedPreferenceManager.getBoolData(SharedReferenceKeys.KARBARI.getValue())) {
             karbariDtos = new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase()
                     .karbariDao().getAllKarbariDto());

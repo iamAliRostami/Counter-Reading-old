@@ -57,10 +57,14 @@ public class GetReportDBData extends AsyncTask<Activity, Integer, Integer> {
         }
         if (trackingDtos.size() > 0)
             counterStateDtos.addAll(myDatabase.counterStateDao().getCounterStateDtos(trackingDtos.get(0).zoneId));
+        try {
+            activities[0].runOnUiThread(() -> ((ReportActivity) (activities[0])).
+                    setupViewPager(counterStateDtos, trackingDtos,
+                            zero, normal, high, low, total, isMane, unread));
+        } catch (Exception e) {
 
-        activities[0].runOnUiThread(() -> ((ReportActivity) (activities[0])).
-                setupViewPager(counterStateDtos, trackingDtos,
-                        zero, normal, high, low, total, isMane, unread));
+        }
+
         return null;
     }
 }

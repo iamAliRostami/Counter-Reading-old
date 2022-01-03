@@ -127,7 +127,6 @@ public class CustomFile {
         }
         return original;
     }
-
     public static ByteArrayInputStream compressBitmapIS(Bitmap original) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         original.compress(Bitmap.CompressFormat.JPEG, 100, stream);

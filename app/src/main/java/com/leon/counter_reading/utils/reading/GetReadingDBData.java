@@ -69,7 +69,7 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
                     getReadingConfigDefaultDtosByZoneId(trackingDto.zoneId));
         }
 
-        for (int j = 0, trackingDtosSize = readingData.trackingDtos.size(); j < trackingDtosSize; j++) {
+        for (int j = 0; j < readingData.trackingDtos.size(); j++) {
             final String id = readingData.trackingDtos.get(j).id;
             if (readStatus == ReadStatusEnum.ALL.getValue()) {
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().getAllOnOffLoadByTracking(id));

@@ -427,7 +427,7 @@ public class ReadingActivity extends BaseActivity {
             imageViewCamera.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_camera));
             imageViewCamera.setOnClickListener(v -> {
-                if (readingDataTemp.onOffLoadDtos.isEmpty()) {
+                if (readingData.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
                     Intent intent = new Intent(activity, TakePhotoActivity.class);
@@ -445,7 +445,7 @@ public class ReadingActivity extends BaseActivity {
             imageViewCheck.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_checked));
             imageViewCheck.setOnClickListener(v -> {
-                if (readingDataTemp.onOffLoadDtos.isEmpty()) {
+                if (readingData.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
                     Intent intent = new Intent(activity, ReadingReportActivity.class);
@@ -493,7 +493,7 @@ public class ReadingActivity extends BaseActivity {
             sharedPreferenceManager.putData(SharedReferenceKeys.SORT_TYPE.getValue(), item.isChecked());
             new ChangeSortType(activity, item.isChecked()).execute(activity);
         } else if (id == R.id.menu_navigation) {
-            if (readingDataTemp.onOffLoadDtos.isEmpty()) {
+            if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
                 intent = new Intent(activity, NavigationActivity.class);
@@ -507,7 +507,7 @@ public class ReadingActivity extends BaseActivity {
                         get(binding.viewPager.getCurrentItem()).zoneId);
             startActivity(intent);
         } else if (id == R.id.menu_description) {
-            if (readingDataTemp.onOffLoadDtos.isEmpty()) {
+            if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
                 intent = new Intent(activity, DescriptionActivity.class);
@@ -522,7 +522,7 @@ public class ReadingActivity extends BaseActivity {
             }
         }
         if (id == R.id.menu_location) {
-            if (readingDataTemp.onOffLoadDtos.isEmpty()) {
+            if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
                 intent = new Intent(activity, CounterPlaceActivity.class);
