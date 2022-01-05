@@ -1,22 +1,29 @@
 package com.leon.counter_reading.adapters.holder;
 
+import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
 import static com.leon.counter_reading.activities.TakePhotoActivity.replace;
 import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.TakePhotoActivity;
 import com.leon.counter_reading.adapters.ImageViewHolder;
@@ -24,6 +31,8 @@ import com.leon.counter_reading.fragments.dialog.HighQualityFragment;
 import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ImageViewAdapter extends BaseAdapter {
@@ -97,8 +106,9 @@ public class ImageViewAdapter extends BaseAdapter {
     }
 
     private void imagePicker() {
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        ((TakePhotoActivity) (context)).startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        ((TakePhotoActivity) (context)).openSomeActivityForResult();
+//        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        ((TakePhotoActivity) (context)).startActivityForResult(cameraIntent, CAMERA_REQUEST);
 
 //        final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //        if (cameraIntent.resolveActivity(context.getPackageManager()) != null) {

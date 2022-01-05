@@ -101,19 +101,38 @@ public class CustomFile {
     }
 
     public static Bitmap compressBitmap(Bitmap original) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
-            int qualityPercent = Math.max((int) ((double)
-                    stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
-            original = Bitmap.createScaledBitmap(original
-                    , (int) ((double) original.getWidth() * qualityPercent / 100)
-                    , (int) ((double) original.getHeight() * qualityPercent / 100), false);
-            stream = new ByteArrayOutputStream();
-            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        try {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+            if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
+//            int qualityPercent = Math.max((int) ((double)
+//                    stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
+                final int qualityPercent;
+                if (stream.toByteArray().length > 4000000)
+                    qualityPercent = Math.max((int) ((double)
+                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 8)), 20);
+                else if (stream.toByteArray().length > 2000000)
+                    qualityPercent = Math.max((int) ((double)
+                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 4)), 20);
+                else if (stream.toByteArray().length > 1000000)
+                    qualityPercent = Math.max((int) ((double)
+                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 2)), 20);
+                else
+                    qualityPercent = Math.max((int) ((double)
+                            stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
+                original = Bitmap.createScaledBitmap(original
+                        , (int) ((double) original.getWidth() * qualityPercent / 100)
+                        , (int) ((double) original.getHeight() * qualityPercent / 100), false);
+                stream = new ByteArrayOutputStream();
+                original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            }
+            return original;
+        } catch (Exception e) {
+            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
         }
-        return original;
+        return null;
     }
+
     public static ByteArrayInputStream compressBitmapIS(Bitmap original) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
@@ -128,6 +147,7 @@ public class CustomFile {
         }
         return new ByteArrayInputStream(stream.toByteArray());
     }
+
     public static String bitmapToBinary(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);

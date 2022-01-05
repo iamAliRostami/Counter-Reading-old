@@ -4,6 +4,7 @@
     package="com.leon.counter_reading">
 
     <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
+
     <queries>
         <intent>
             <action android:name="android.provider.MediaStore.ACTION_IMAGE_CAPTURE" />
@@ -88,10 +89,8 @@
             android:label="@string/location" />
         <activity
             android:name=".activities.HelpActivity"
-            android:label="@string/help"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"
+            android:label="@string/help"/>
         <activity
             android:name=".activities.TakePhotoActivity"
             android:label="@string/camera"
@@ -134,7 +133,6 @@
             android:name=".activities.DownloadActivity"
             android:exported="true"
             android:label="@string/download_information">
-
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
@@ -148,13 +146,15 @@
             android:label="@string/location" />
         <activity
             android:name=".activities.HomeActivity"
-            android:label="@string/home" />
+            android:label="@string/home"
+            android:exported="true"/>
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -164,12 +164,7 @@
         <activity
             android:name=".helpers.MainActivity"
             android:exported="true"
-            android:theme="@style/AppTheme">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-        </activity>
+            android:theme="@style/AppTheme" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

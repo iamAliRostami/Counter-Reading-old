@@ -15,36 +15,23 @@ import com.leon.counter_reading.enums.BundleEnum;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Objects;
 
 public class HighQualityFragment extends DialogFragment {
     private FragmentHighQualityBinding binding;
-    private Bitmap bitmap;
+    private final Bitmap bitmap;
 
-    public HighQualityFragment() {
+    public HighQualityFragment(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 
     public static HighQualityFragment newInstance(Bitmap bitmap) {
-        HighQualityFragment fragment = new HighQualityFragment();
-        Bundle args = new Bundle();
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-        args.putByteArray(BundleEnum.IMAGE_BITMAP.getValue(), bos.toByteArray());
-        fragment.setArguments(args);
-        return fragment;
+        return new HighQualityFragment(bitmap);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            byte[] bytes = getArguments().getByteArray((BundleEnum.IMAGE_BITMAP.getValue()));
-            if (bytes != null) {
-                bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            }
-            getArguments().clear();
-        }
     }
 
     @Override

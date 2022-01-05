@@ -1,6 +1,5 @@
 package com.leon.counter_reading.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +8,9 @@ import android.view.ViewGroup;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.gson.Gson;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingSettingDeleteBinding;
-import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.fragments.dialog.DeleteFragment;
 import com.leon.counter_reading.fragments.dialog.ShowFragmentDialog;
 import com.leon.counter_reading.tables.TrackingDto;
@@ -24,68 +21,45 @@ import java.util.ArrayList;
 
 public class ReadingSettingDeleteFragment extends Fragment {
     private FragmentReadingSettingDeleteBinding binding;
+    private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
     private String[] items;
-    private ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
-    private ArrayList<String> json;
-    private Activity activity;
 
-    public ReadingSettingDeleteFragment() {
+
+    public ReadingSettingDeleteFragment(ArrayList<TrackingDto> trackingDtos) {
+        this.trackingDtos.addAll(trackingDtos);
     }
 
     public static ReadingSettingDeleteFragment newInstance(ArrayList<TrackingDto> trackingDtos) {
-        ReadingSettingDeleteFragment fragment = new ReadingSettingDeleteFragment();
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-        ArrayList<String> json = new ArrayList<>();
-        for (int i = 0, trackingDtosSize = trackingDtos.size(); i < trackingDtosSize; i++) {
-            TrackingDto trackingDto = trackingDtos.get(i);
-            json.add(gson.toJson(trackingDto));
-        }
-        args.putStringArrayList(BundleEnum.TRACKING.getValue(), json);
-        fragment.setArguments(args);
-        return fragment;
+        return new ReadingSettingDeleteFragment(trackingDtos);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            json = getArguments().getStringArrayList(
-                    BundleEnum.TRACKING.getValue());
-            getArguments().clear();
-        }
     }
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentReadingSettingDeleteBinding.inflate(inflater, container, false);
-        activity = getActivity();
         initialize();
         return binding.getRoot();
     }
 
     void initialize() {
-        Gson gson = new Gson();
-        trackingDtos.clear();
-        for (int i = 0, jsonSize = json.size(); i < jsonSize; i++) {
-            String s = json.get(i);
-            trackingDtos.add(gson.fromJson(s, TrackingDto.class));
-        }
         initializeSpinner();
         setOnButtonDeleteClickListener();
-        binding.imageViewDelete.setImageDrawable(
-                ContextCompat.getDrawable(activity, R.drawable.img_delete));
+        binding.imageViewDelete.setImageDrawable(ContextCompat
+                .getDrawable(requireContext(), R.drawable.img_delete));
     }
 
     void setOnButtonDeleteClickListener() {
         binding.buttonDelete.setOnClickListener(v -> {
             if (binding.spinner.getSelectedItemPosition() == 0) {
-                ShowFragmentDialog.ShowFragmentDialogOnce(activity, "DELETE_DIALOG",
+                ShowFragmentDialog.ShowFragmentDialogOnce(requireContext(), "DELETE_DIALOG",
                         DeleteFragment.newInstance(""));
             } else {
-                ShowFragmentDialog.ShowFragmentDialogOnce(activity, "DELETE_DIALOG",
+                ShowFragmentDialog.ShowFragmentDialogOnce(requireContext(), "DELETE_DIALOG",
                         DeleteFragment.newInstance(trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id));
             }
         });
@@ -99,7 +73,7 @@ public class ReadingSettingDeleteFragment extends Fragment {
             }
         }
         items[0] = getString(R.string.all_items);
-        SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(activity, items);
+        SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
         binding.spinner.setAdapter(adapter);
     }
 
@@ -114,6 +88,6 @@ public class ReadingSettingDeleteFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         items = null;
-        trackingDtos = null;
+        trackingDtos.clear();
     }
 }

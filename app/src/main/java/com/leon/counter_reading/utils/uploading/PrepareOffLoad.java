@@ -39,7 +39,7 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
     private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
     private final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
     private final ArrayList<ForbiddenDto> forbiddenDtos = new ArrayList<>();
-    private final int trackNumber;
+        private final int trackNumber;
     private final String id;
 
     public PrepareOffLoad(Activity activity, int trackNumber, String id, UploadFragment fragment) {
@@ -58,8 +58,7 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
                 forbiddenDao().getAllForbiddenDto(false));
         onOffLoadDtos.clear();
         onOffLoadDtos.addAll(getApplicationComponent().MyDatabase().
-                onOffLoadDao().getOnOffLoadReadByTrackingAndOffLoad(trackNumber,
-                OffloadStateEnum.INSERTED.getValue()));
+                onOffLoadDao().getOnOffLoadReadByTrackingAndOffLoad(id, OffloadStateEnum.INSERTED.getValue()));
         offLoadReports.clear();
         offLoadReports.addAll(getApplicationComponent().MyDatabase().
                 offLoadReportDao().getAllOffLoadReport(false));
@@ -78,10 +77,9 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
     }
 
     private void uploadForbid(Activity activity) {
-        ForbiddenDtoRequestMultiple forbiddenDtoRequestMultiple =
-                new ForbiddenDtoRequestMultiple();
-        Retrofit retrofit = getApplicationComponent().Retrofit();
-        IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
+        final ForbiddenDtoRequestMultiple forbiddenDtoRequestMultiple = new ForbiddenDtoRequestMultiple();
+        final Retrofit retrofit = getApplicationComponent().Retrofit();
+        final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
         for (ForbiddenDto forbiddenDto : forbiddenDtos) {
             /*  TODO */
             ForbiddenDtoMultiple forbiddenDtoMultiple =
@@ -106,8 +104,8 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
         if (onOffLoadDtos.size() <= 0) {
             thankYou(activity);
             onOffLoadDtos.clear();
-            onOffLoadDtos.add(getApplicationComponent().MyDatabase().
-                    onOffLoadDao().getOnOffLoadReadByTrackingAndOffLoad(trackNumber));
+            onOffLoadDtos.add(getApplicationComponent().MyDatabase().onOffLoadDao()
+                    .getOnOffLoadReadByTrackingAndOffLoad(id));
         }
         if (onOffLoadDtos.size() == 0 || onOffLoadDtos.get(0) == null) {
             getApplicationComponent().MyDatabase().

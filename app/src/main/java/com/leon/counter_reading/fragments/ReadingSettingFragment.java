@@ -2,7 +2,6 @@ package com.leon.counter_reading.fragments;
 
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +10,8 @@ import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
-import com.google.gson.Gson;
 import com.leon.counter_reading.adapters.ReadingSettingCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingSettingBinding;
-import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.tables.TrackingDto;
 
@@ -24,32 +21,19 @@ import java.util.ArrayList;
 
 public class ReadingSettingFragment extends Fragment {
     private FragmentReadingSettingBinding binding;
-    private ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
-    private ArrayList<String> json = new ArrayList<>();
-    private Context context;
+    private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
+
+    public ReadingSettingFragment(ArrayList<TrackingDto> trackingDtos) {
+        this.trackingDtos.addAll(trackingDtos);
+    }
 
     public static ReadingSettingFragment newInstance(ArrayList<TrackingDto> trackingDtos) {
-        ReadingSettingFragment fragment = new ReadingSettingFragment();
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-        ArrayList<String> json = new ArrayList<>();
-        for (int i = 0, trackingDtosSize = trackingDtos.size(); i < trackingDtosSize; i++) {
-            TrackingDto trackingDto = trackingDtos.get(i);
-            json.add(gson.toJson(trackingDto));
-        }
-        args.putStringArrayList(BundleEnum.TRACKING.getValue(), json);
-        fragment.setArguments(args);
-        return fragment;
+        return new ReadingSettingFragment(trackingDtos);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            json = getArguments().getStringArrayList(BundleEnum.TRACKING.getValue());
-            getArguments().clear();
-        }
     }
 
     @Override
@@ -61,13 +45,6 @@ public class ReadingSettingFragment extends Fragment {
     }
 
     private void initialize() {
-        context = getActivity();
-        Gson gson = new Gson();
-        trackingDtos.clear();
-        for (int i = 0, jsonSize = json.size(); i < jsonSize; i++) {
-            String s = json.get(i);
-            trackingDtos.add(gson.fromJson(s, TrackingDto.class));
-        }
         setupListView();
         initializeCheckbox();
     }
@@ -75,7 +52,7 @@ public class ReadingSettingFragment extends Fragment {
     private void setupListView() {
         if (trackingDtos.size() > 0) {
             final ReadingSettingCustomAdapter readingSettingCustomAdapter =
-                    new ReadingSettingCustomAdapter(context, trackingDtos);
+                    new ReadingSettingCustomAdapter(requireContext(), trackingDtos);
             binding.listViewRead.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
             binding.listViewRead.setAdapter(readingSettingCustomAdapter);
         } else {
@@ -101,7 +78,6 @@ public class ReadingSettingFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        json = null;
-        trackingDtos = null;
+        trackingDtos.clear();
     }
 }

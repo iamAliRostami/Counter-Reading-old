@@ -12,7 +12,7 @@ public interface CounterStateDao {
     @Query("Select * From CounterStateDto")
     List<CounterStateDto> getCounterStateDtos();
 
-    @Query("Select * From CounterStateDto Where zoneId = :zoneId")
+    @Query("Select * From CounterStateDto Where zoneId = :zoneId order by clientOrder")
     List<CounterStateDto> getCounterStateDtos(int zoneId);
 
     @Query("Select id From CounterStateDto WHERE isMane = :isMane AND zoneId = :zoneId")

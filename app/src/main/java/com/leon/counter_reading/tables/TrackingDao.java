@@ -55,7 +55,7 @@ public interface TrackingDao {
     int getTrackingDtoActivesCount(boolean isActive, boolean isArchive);
 
     @Query("SELECT COUNT(*) FROM TrackingDto WHERE trackNumber= :trackNumber")
-    int getTrackingDtoActivesCountByTracking(int trackNumber);
+    int  getTrackingDtoActivesCountByTracking(int trackNumber);
 
     @Query("SELECT COUNT(*) FROM TrackingDto WHERE trackNumber= :trackNumber AND isArchive = :isArchive")
     int getTrackingDtoArchiveCountByTrackNumber(int trackNumber, boolean isArchive);

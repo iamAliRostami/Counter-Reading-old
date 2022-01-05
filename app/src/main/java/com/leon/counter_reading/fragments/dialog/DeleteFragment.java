@@ -1,5 +1,6 @@
 package com.leon.counter_reading.fragments.dialog;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.app.Activity;
@@ -79,7 +80,7 @@ public class DeleteFragment extends DialogFragment {
                 view = binding.editTextPassword;
                 view.requestFocus();
             } else {
-                ISharedPreferenceManager sharedPreferenceManager = MyApplication.getApplicationComponent().SharedPreferenceModel();
+                ISharedPreferenceManager sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
                 String password = binding.editTextPassword.getText().toString();
                 String username = binding.editTextUsername.getText().toString();
                 if (sharedPreferenceManager.getStringData(
@@ -88,10 +89,12 @@ public class DeleteFragment extends DialogFragment {
                                 SharedReferenceKeys.PASSWORD_TEMP.getValue())).contains(password)
                 ) {
                     if (id.isEmpty()) {
-                        MyApplication.getApplicationComponent().MyDatabase().
+                        getApplicationComponent().MyDatabase().
                                 trackingDao().updateTrackingDtoByArchive(true, false);
+//                        getApplicationComponent().MyDatabase().
+//                                trackingDao().updateTrackingDtoByArchive("4a5005b2-3fb8-4e03-a8a2-1ece4374a672", false, false);
                     } else {
-                        MyApplication.getApplicationComponent().MyDatabase().
+                        getApplicationComponent().MyDatabase().
                                 trackingDao().updateTrackingDtoByArchive(id, true, false);
                     }
                     Intent intent = activity.getIntent();

@@ -11,8 +11,10 @@ import okhttp3.MultipartBody;
 public class Voice {
     @PrimaryKey(autoGenerate = true)
     public int id;
-    public String OnOffLoadId;
     public int trackNumber;
+//    public int size;
+
+    public String OnOffLoadId;
     public String Description;
     public String address;
     public boolean isSent;

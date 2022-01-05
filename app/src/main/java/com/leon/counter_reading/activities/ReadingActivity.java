@@ -1,5 +1,9 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.BundleEnum.IMAGE;
+import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.enums.BundleEnum.SENT;
+import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.helpers.Constants.CAMERA;
 import static com.leon.counter_reading.helpers.Constants.COUNTER_LOCATION;
 import static com.leon.counter_reading.helpers.Constants.DESCRIPTION;
@@ -276,11 +280,11 @@ public class ReadingActivity extends BaseActivity {
         Intent intent = new Intent(activity, TakePhotoActivity.class);
         intent.putExtra(BundleEnum.BILL_ID.getValue(),
                 readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-        intent.putExtra(BundleEnum.TRACKING.getValue(),
+        intent.putExtra(TRACKING.getValue(),
                 readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
-        intent.putExtra(BundleEnum.POSITION.getValue(), position);
-        intent.putExtra(BundleEnum.IMAGE.getValue(), true);
-        intent.putExtra(BundleEnum.SENT.getValue(),
+        intent.putExtra(POSITION.getValue(), position);
+        intent.putExtra(IMAGE.getValue(), true);
+        intent.putExtra(SENT.getValue(),
                 readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0);
         startActivityForResult(intent, CAMERA);
     }
@@ -427,15 +431,15 @@ public class ReadingActivity extends BaseActivity {
             imageViewCamera.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_camera));
             imageViewCamera.setOnClickListener(v -> {
-                if (readingDataTemp.onOffLoadDtos.isEmpty()) {
+                if (readingData.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
                     Intent intent = new Intent(activity, TakePhotoActivity.class);
-                    intent.putExtra(BundleEnum.SENT.getValue(),
+                    intent.putExtra(SENT.getValue(),
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0);
                     intent.putExtra(BundleEnum.BILL_ID.getValue(),
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-                    intent.putExtra(BundleEnum.TRACKING.getValue(),
+                    intent.putExtra(TRACKING.getValue(),
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
                     startActivity(intent);
                 }
@@ -445,15 +449,15 @@ public class ReadingActivity extends BaseActivity {
             imageViewCheck.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_checked));
             imageViewCheck.setOnClickListener(v -> {
-                if (readingDataTemp.onOffLoadDtos.isEmpty()) {
+                if (readingData.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
                     Intent intent = new Intent(activity, ReadingReportActivity.class);
                     intent.putExtra(BundleEnum.BILL_ID.getValue(),
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-                    intent.putExtra(BundleEnum.TRACKING.getValue(),
+                    intent.putExtra(TRACKING.getValue(),
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
-                    intent.putExtra(BundleEnum.POSITION.getValue(), binding.viewPager.getCurrentItem());
+                    intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
                     intent.putExtra(BundleEnum.ZONE_ID.getValue(),
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).zoneId);
                     startActivityForResult(intent, REPORT);
@@ -493,11 +497,11 @@ public class ReadingActivity extends BaseActivity {
             sharedPreferenceManager.putData(SharedReferenceKeys.SORT_TYPE.getValue(), item.isChecked());
             new ChangeSortType(activity, item.isChecked()).execute(activity);
         } else if (id == R.id.menu_navigation) {
-            if (readingDataTemp.onOffLoadDtos.isEmpty()) {
+            if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
                 intent = new Intent(activity, NavigationActivity.class);
-                intent.putExtra(BundleEnum.POSITION.getValue(), binding.viewPager.getCurrentItem());
+                intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
                 startActivityForResult(intent, NAVIGATION);
             }
         } else if (id == R.id.menu_report_forbid) {
@@ -507,28 +511,28 @@ public class ReadingActivity extends BaseActivity {
                         get(binding.viewPager.getCurrentItem()).zoneId);
             startActivity(intent);
         } else if (id == R.id.menu_description) {
-            if (readingDataTemp.onOffLoadDtos.isEmpty()) {
+            if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
                 intent = new Intent(activity, DescriptionActivity.class);
                 intent.putExtra(BundleEnum.BILL_ID.getValue(),
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-                intent.putExtra(BundleEnum.TRACKING.getValue(),
+                intent.putExtra(TRACKING.getValue(),
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
                 intent.putExtra(BundleEnum.DESCRIPTION.getValue(),
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).description);
-                intent.putExtra(BundleEnum.POSITION.getValue(), binding.viewPager.getCurrentItem());
+                intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
                 startActivityForResult(intent, DESCRIPTION);
             }
         }
         if (id == R.id.menu_location) {
-            if (readingDataTemp.onOffLoadDtos.isEmpty()) {
+            if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
                 intent = new Intent(activity, CounterPlaceActivity.class);
                 intent.putExtra(BundleEnum.BILL_ID.getValue(),
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-                intent.putExtra(BundleEnum.POSITION.getValue(), binding.viewPager.getCurrentItem());
+                intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
                 startActivityForResult(intent, COUNTER_LOCATION);
             }
         } else if (id == R.id.menu_keyboard) {
@@ -567,7 +571,7 @@ public class ReadingActivity extends BaseActivity {
                 requestCode == COUNTER_LOCATION) && resultCode == RESULT_OK) {
             new Result(data).execute(activity);
         } else if (requestCode == CAMERA && resultCode == RESULT_OK) {
-            int position = data.getExtras().getInt(BundleEnum.POSITION.getValue());
+            int position = data.getExtras().getInt(POSITION.getValue());
             attemptSend(position, false, false);
         }
     }

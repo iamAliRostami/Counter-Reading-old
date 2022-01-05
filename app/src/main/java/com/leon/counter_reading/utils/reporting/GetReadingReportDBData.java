@@ -34,10 +34,10 @@ public class GetReadingReportDBData extends AsyncTask<Activity, Integer, Integer
 
     @Override
     protected Integer doInBackground(Activity... activities) {
-        ArrayList<CounterReportDto> counterReportDtos =
+        final ArrayList<CounterReportDto> counterReportDtos =
                 new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase()
                         .counterReportDao().getAllCounterReportByZone(zoneId));
-        ArrayList<OffLoadReport> offLoadReports = new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase()
+        final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase()
                 .offLoadReportDao().getAllOffLoadReportById(uuid, trackNumber));
         for (int i = 0; i < offLoadReports.size(); i++) {
             for (int j = 0; j < counterReportDtos.size(); j++) {

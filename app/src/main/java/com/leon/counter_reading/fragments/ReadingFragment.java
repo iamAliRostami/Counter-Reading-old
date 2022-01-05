@@ -13,6 +13,7 @@ import static com.leon.counter_reading.utils.PermissionManager.gpsEnabledNew;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,7 +89,6 @@ public class ReadingFragment extends Fragment {
             this.readingConfigDefaultDto = Constants.readingConfigDefaultDtos.get(position);
             this.karbariDto = Constants.karbariDtos.get(position);
         } catch (Exception e) {
-//            Log.e("here",e.getMessage());
             Intent intent = requireActivity().getIntent();
             requireActivity().finish();
             startActivity(intent);
@@ -358,12 +358,12 @@ public class ReadingFragment extends Fragment {
                     counterStateCode, counterStatePosition);
         } else {
             View view = binding.editTextNumber;
-            if (binding.editTextNumber.getText().toString().contains(".")) {
+            if (binding.editTextNumber.getText().toString().contains(".")||binding.editTextNumber.getText().toString().contains(",")) {
                 makeRing(activity, NotificationType.NOT_SAVE);
                 binding.editTextNumber.setError(getString(R.string.error_format));
                 view.requestFocus();
             } else {
-                int currentNumber = Integer.parseInt(binding.editTextNumber.getText().toString());
+                int currentNumber = getDigits(binding.editTextNumber.getText().toString());
                 int use = currentNumber - onOffLoadDto.preNumber;
                 if (canLessThanPre) {
                     lessThanPre(currentNumber);
@@ -378,7 +378,7 @@ public class ReadingFragment extends Fragment {
 
     private void canNotBeEmpty() {
         View view = binding.editTextNumber;
-        if (binding.editTextNumber.getText().toString().contains(".")) {
+        if (binding.editTextNumber.getText().toString().contains(".")||binding.editTextNumber.getText().toString().contains(",")) {
             makeRing(activity, NotificationType.NOT_SAVE);
             binding.editTextNumber.setError(getString(R.string.error_format));
             view.requestFocus();
@@ -387,8 +387,8 @@ public class ReadingFragment extends Fragment {
             binding.editTextNumber.setError(getString(R.string.counter_empty));
             view.requestFocus();
         } else if (lockProcess(canBeEmpty)) {
-            int currentNumber = Integer.parseInt(binding.editTextNumber.getText().toString());
-            int use = currentNumber - onOffLoadDto.preNumber;
+            final int currentNumber = getDigits(binding.editTextNumber.getText().toString());
+            final int use = currentNumber - onOffLoadDto.preNumber;
             if (canLessThanPre) {
                 lessThanPre(currentNumber);
             } else if (use < 0) {
@@ -400,7 +400,13 @@ public class ReadingFragment extends Fragment {
             }
         }
     }
-
+    private int getDigits(String number) {
+        if (!TextUtils.isEmpty(number) && TextUtils.isDigitsOnly(number)) {
+            return Integer.parseInt(number);
+        } else {
+            return 0;
+        }
+    }
     private void lessThanPre(int currentNumber) {
         if (!isMakoos)
             ((ReadingActivity) activity).updateOnOffLoadByCounterNumber(position, currentNumber,

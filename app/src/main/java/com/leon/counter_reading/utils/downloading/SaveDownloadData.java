@@ -3,6 +3,7 @@ package com.leon.counter_reading.utils.downloading;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
@@ -21,12 +22,12 @@ import java.util.Random;
 
 public class SaveDownloadData {
     public void savedData(Activity activity, ReadingData readingData, ReadingData readingDataTemp) {
-        MyDatabase myDatabase = MyApplication.getApplicationComponent().MyDatabase();
+        final MyDatabase myDatabase = MyApplication.getApplicationComponent().MyDatabase();
 //            long startTime = Calendar.getInstance().getTimeInMillis();
         for (int i = 0; i < readingData.trackingDtos.size(); i++) {
             if (myDatabase.trackingDao().getTrackingDtoArchiveCountByTrackNumber(readingData
                     .trackingDtos.get(i).trackNumber, true) > 0) {
-                downloadArchive(activity, readingData, myDatabase, i);
+                if (!downloadArchive(activity, readingData, myDatabase, i)) return;
                 myDatabase.counterReportDao().deleteAllCounterReport(readingData.trackingDtos.get(i).zoneId);
             } else if (myDatabase.trackingDao().getTrackingDtoActivesCountByTracking(readingData
                     .trackingDtos.get(i).trackNumber) > 0) {
@@ -109,26 +110,46 @@ public class SaveDownloadData {
     }
 
     @SuppressLint({"DefaultLocale", "SimpleDateFormat"})
-    private void downloadArchive(Activity activity, ReadingData readingData, MyDatabase myDatabase,
-                                 int i) {
-        String time = (new SimpleDateFormat(activity
+    private boolean downloadArchive(Activity activity, ReadingData readingData, MyDatabase myDatabase,
+                                    int i) {
+        final String time = (new SimpleDateFormat(activity
                 .getString(R.string.save_format_name))).format(new Date())
                 .concat(String.valueOf(new Random().nextInt(1000)));
-        String query = "CREATE TABLE %s AS %s;";
-        String query1 = String.format(query, "TrackingDto_".concat(time),
+        final String query = "CREATE TABLE %s AS %s;";
+        final String queryTrackDto = String.format(query, "TrackingDto_".concat(time),
                 String.format("SELECT * FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1",
                         readingData.trackingDtos.get(i).trackNumber));
-        String query2 = String.format(query, "OnOffLoadDto_".concat(time),
+        final String queryOnOffLoad = String.format(query, "OnOffLoadDto_".concat(time),
                 String.format("SELECT * FROM OnOffLoadDto WHERE trackNumber = %d",
                         readingData.trackingDtos.get(i).trackNumber));
+        final String queryDeleteOnOffLoad = String.format("DELETE FROM OnOffLoadDto WHERE trackNumber = %d;",
+                readingData.trackingDtos.get(i).trackNumber);
+        final String queryDeleteTracking = String.format("DELETE FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1;",
+                readingData.trackingDtos.get(i).trackNumber);
+
+//        if (customTransaction(queryTrackDto, queryOnOffLoad, queryDeleteOnOffLoad, queryDeleteTracking)) {
+//            return true;
+//        } else {
+//            final String message = String.format(activity.getString(R.string.download_message_error),
+//                    readingData.trackingDtos.get(i).trackNumber);
+//            showMessage(activity, message, DialogType.Yellow);
+//        }
+//        return false;
         try {
-            Cursor cursor = myDatabase.getOpenHelper().getWritableDatabase().query(query1);
+//            myDatabase.getOpenHelper().getWritableDatabase().query(queryTrackDto);
+//            myDatabase.getOpenHelper().getWritableDatabase().query(queryOnOffLoad);
+
+            Cursor cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryTrackDto);
             cursor.moveToFirst();
-            cursor = myDatabase.getOpenHelper().getWritableDatabase().query(query2);
+            cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryOnOffLoad);
             cursor.moveToFirst();
+
             myDatabase.trackingDao().deleteTrackingDto(readingData.trackingDtos.get(i).trackNumber, true);
             myDatabase.onOffLoadDao().deleteOnOffLoad(readingData.trackingDtos.get(i).trackNumber);
-        } catch (Exception ignored) {
+            return true;
+        } catch (Exception e) {
+            Log.e("error", e.getMessage());
+            return false;
         }
     }
 }

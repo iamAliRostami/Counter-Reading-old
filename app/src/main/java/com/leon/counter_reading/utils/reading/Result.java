@@ -8,12 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 
-import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.enums.BundleEnum;
-import com.leon.counter_reading.helpers.MyApplication;
-import com.leon.counter_reading.tables.OnOffLoadDto;
-
-import java.util.ArrayList;
 
 public class Result extends AsyncTask<Activity, Void, Void> {
     private final Intent data;
@@ -28,12 +23,10 @@ public class Result extends AsyncTask<Activity, Void, Void> {
         int position = data.getExtras().getInt(BundleEnum.POSITION.getValue()), i = 0;
         String uuid = data.getExtras().getString(BundleEnum.BILL_ID.getValue());
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(true, uuid);
-
-
         readingData.onOffLoadDtos.set(position, getApplicationComponent().MyDatabase()
-                .onOffLoadDao().getAllOnOffLoadById(uuid, readingData.onOffLoadDtos.get(position).trackNumber));
+                .onOffLoadDao().getAllOnOffLoadById(uuid, readingData.onOffLoadDtos.get(position).trackingId));
         boolean found = false;
-        while (!found) {
+        while (!found && i < readingDataTemp.onOffLoadDtos.size()) {
             if (readingDataTemp.onOffLoadDtos.get(i).id.equals(uuid)) {
                 readingDataTemp.onOffLoadDtos.set(i, readingData.onOffLoadDtos.get(position));
                 found = true;

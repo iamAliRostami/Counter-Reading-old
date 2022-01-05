@@ -1,5 +1,11 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
+import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
+import static com.leon.counter_reading.enums.BundleEnum.ZONE_ID;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
+import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,12 +14,10 @@ import android.os.Debug;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ReadingReportCustomAdapter;
 import com.leon.counter_reading.databinding.ActivityReadingReportBinding;
-import com.leon.counter_reading.enums.BundleEnum;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.utils.CustomToast;
@@ -29,9 +33,8 @@ public class ReadingReportActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MyApplication.onActivitySetTheme(this, MyApplication.getApplicationComponent()
-                        .SharedPreferenceModel().getIntData(SharedReferenceKeys.THEME_STABLE.getValue()),
-                true);
+        onActivitySetTheme(this, MyApplication.getApplicationComponent()
+                .SharedPreferenceModel().getIntData(THEME_STABLE.getValue()), true);
         super.onCreate(savedInstanceState);
         binding = ActivityReadingReportBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -41,17 +44,17 @@ public class ReadingReportActivity extends AppCompatActivity {
 
     private void initialize() {
         if (getIntent().getExtras() != null) {
-            uuid = getIntent().getExtras().getString(BundleEnum.BILL_ID.getValue());
-            trackNumber = getIntent().getExtras().getInt(BundleEnum.TRACKING.getValue());
-            position = getIntent().getExtras().getInt(BundleEnum.POSITION.getValue());
-            zoneId = getIntent().getExtras().getInt(BundleEnum.ZONE_ID.getValue());
+            uuid = getIntent().getExtras().getString(BILL_ID.getValue());
+            trackNumber = getIntent().getExtras().getInt(TRACKING.getValue());
+            position = getIntent().getExtras().getInt(POSITION.getValue());
+            zoneId = getIntent().getExtras().getInt(ZONE_ID.getValue());
             getIntent().getExtras().clear();
         }
         new GetReadingReportDBData(activity, trackNumber, zoneId, uuid).execute(activity);
         binding.buttonSubmit.setOnClickListener(v -> {
             Intent intent = new Intent();
-            intent.putExtra(BundleEnum.POSITION.getValue(), position);
-            intent.putExtra(BundleEnum.BILL_ID.getValue(), uuid);
+            intent.putExtra(POSITION.getValue(), position);
+            intent.putExtra(BILL_ID.getValue(), uuid);
             setResult(RESULT_OK, intent);
             finish();
         });

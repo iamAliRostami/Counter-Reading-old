@@ -126,7 +126,7 @@ public class ReportActivity extends BaseActivity {
         this.counterStateDtos = new ArrayList<>(counterStateDtos);
         this.trackingDtos = new ArrayList<>(trackingDtos);
 
-        ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
+        final ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
         adapter.addFragment(ReportTotalFragment.newInstance(zero, normal, high, low));
         adapter.addFragment(ReportNotReadingFragment.newInstance(total, unread));
         adapter.addFragment(ReportTemporaryFragment.newInstance(total, isMane));

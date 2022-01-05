@@ -1,5 +1,9 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
+import static com.leon.counter_reading.enums.BundleEnum.DESCRIPTION;
+import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.helpers.Constants.RECORD_AUDIO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
@@ -27,7 +31,6 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityDescriptionBinding;
-import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.tables.Voice;
 import com.leon.counter_reading.utils.CustomFile;
@@ -68,10 +71,10 @@ public class DescriptionActivity extends AppCompatActivity {
 
     private void initialize() {
         if (getIntent().getExtras() != null) {
-            uuid = getIntent().getExtras().getString(BundleEnum.BILL_ID.getValue());
-            position = getIntent().getExtras().getInt(BundleEnum.POSITION.getValue());
-            trackNumber = getIntent().getExtras().getInt(BundleEnum.TRACKING.getValue());
-            description = getIntent().getExtras().getString(BundleEnum.DESCRIPTION.getValue());
+            uuid = getIntent().getExtras().getString(BILL_ID.getValue());
+            position = getIntent().getExtras().getInt(POSITION.getValue());
+            trackNumber = getIntent().getExtras().getInt(TRACKING.getValue());
+            description = getIntent().getExtras().getString(DESCRIPTION.getValue());
             getIntent().getExtras().clear();
         }
         binding.imageViewRecord.setImageDrawable(AppCompatResources.getDrawable(activity,
@@ -281,8 +284,8 @@ public class DescriptionActivity extends AppCompatActivity {
     private void finishDescription(String message) {
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoadDescription(uuid, message);
         Intent intent = new Intent();
-        intent.putExtra(BundleEnum.POSITION.getValue(), position);
-        intent.putExtra(BundleEnum.BILL_ID.getValue(), uuid);
+        intent.putExtra(POSITION.getValue(), position);
+        intent.putExtra(BILL_ID.getValue(), uuid);
         setResult(RESULT_OK, intent);
         finish();
     }

@@ -227,7 +227,7 @@
     <string name="set_point">نقطه زنی لحظه ای</string>
     <string name="can_not_show_pre">رقم قبلی قابل نمایش نمیباشد.</string>
     <string name="download_message">تعداد %d مسیر و %d اشتراک بارگیری شد.</string>
-    <string name="download_message_error">در بارگیری شماره پیگیری %d خطایی به وجود آمد، با پشتیبان تماس بگیرید.</string>
+    <string name="download_message_error">در بارگیری شماره پیگیری %d خطایی به وجود آمد، این فایل تکراری است. هیچ مسیری ذخیره نشد.</string>
     <string name="unread_number">همکار گرامی!\nتعداد %d اشتراک قرائت نشده است.</string>
     <string name="darsad_alal">همکار گرامی!\nدرصد علی الحساب بالاتر از حد مجاز است.</string>
     <string name="darsad_alal_1">همکار گرامی!\nدرصد علی الحساب مجاز %d درصد است.\nدرصد علی الحساب شما: %s\nتعداد علی الحساب شما: %d</string>

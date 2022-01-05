@@ -98,17 +98,19 @@ public class UploadFragment extends Fragment {
 
     private boolean checkOnOffLoad() {
         int total, mane = 0, unread, alalPercent, imagesCount, voicesCount, trackNumber;
+        String trackingId;
         double alalMane;
         MyDatabase myDatabase = MyApplication.getApplicationComponent().MyDatabase();
         if (binding.spinner.getSelectedItemPosition() != 0) {
+            trackingId = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id;
             trackNumber = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber;
-            total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackNumber);
-            unread = myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackNumber);
+            total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId);
+            unread = myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackingId);
             ArrayList<Integer> isManes = new ArrayList<>(myDatabase.counterStateDao().
                     getCounterStateDtosIsMane(true,
                             trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId));
             for (int i = 0; i < isManes.size(); i++) {
-                mane += myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(isManes.get(i), trackNumber);
+                mane += myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(isManes.get(i), trackingId);
             }
             alalPercent = myDatabase.trackingDao().getAlalHesabByZoneId(trackingDtos
                     .get(binding.spinner.getSelectedItemPosition() - 1).zoneId);

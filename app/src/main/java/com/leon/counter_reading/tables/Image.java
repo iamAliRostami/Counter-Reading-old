@@ -1,7 +1,6 @@
 package com.leon.counter_reading.tables;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -14,8 +13,9 @@ import okhttp3.MultipartBody;
 public class Image {
     @PrimaryKey(autoGenerate = true)
     public int id;
-    public String OnOffLoadId;
     public int trackNumber;
+//    public int size;
+    public String OnOffLoadId;
     public String Description;
     public String address;
     public boolean isSent;
