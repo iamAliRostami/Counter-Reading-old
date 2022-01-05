@@ -4,6 +4,8 @@ import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.enums.BundleEnum.ZONE_ID;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
+import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ReadingReportCustomAdapter;
 import com.leon.counter_reading.databinding.ActivityReadingReportBinding;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.OffLoadReport;
@@ -32,9 +33,8 @@ public class ReadingReportActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MyApplication.onActivitySetTheme(this, MyApplication.getApplicationComponent()
-                        .SharedPreferenceModel().getIntData(SharedReferenceKeys.THEME_STABLE.getValue()),
-                true);
+        onActivitySetTheme(this, MyApplication.getApplicationComponent()
+                .SharedPreferenceModel().getIntData(THEME_STABLE.getValue()), true);
         super.onCreate(savedInstanceState);
         binding = ActivityReadingReportBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
