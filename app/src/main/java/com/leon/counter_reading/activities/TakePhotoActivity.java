@@ -1,5 +1,9 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
+import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
+import static com.leon.counter_reading.enums.MultimediaTypeEnum.IMAGE;
 import static com.leon.counter_reading.helpers.Constants.PHOTO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
@@ -46,14 +50,12 @@ import java.util.ArrayList;
 
 public class TakePhotoActivity extends AppCompatActivity {
     public static int replace = 0;
-    private boolean result;
-    private String uuid;
-    private int position, trackNumber;
-    private Activity activity;
     private ActivityTakePhotoBinding binding;
     private ImageViewAdapter imageViewAdapter;
-    //    private Uri photoUri;
+    private String uuid;
     private String path;
+    private boolean result;
+    private int position, trackNumber;
     private final ArrayList<Image> images = new ArrayList<>();
 
     @Override
@@ -64,13 +66,12 @@ public class TakePhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityTakePhotoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
 
-        activity = this;
         if (checkCameraPermission(getApplicationContext()))
             initialize();
-        else askCameraPermission();
+        else askCameraPermission(this);
     }
 
     @Override
@@ -82,10 +83,10 @@ public class TakePhotoActivity extends AppCompatActivity {
 
     private void initialize() {
         if (getIntent().getExtras() != null) {
-            uuid = getIntent().getExtras().getString(BundleEnum.BILL_ID.getValue());
-            position = getIntent().getExtras().getInt(BundleEnum.POSITION.getValue());
-            trackNumber = getIntent().getExtras().getInt(BundleEnum.TRACKING.getValue());
-            result = getIntent().getExtras().getBoolean(BundleEnum.IMAGE.getValue());
+            uuid = getIntent().getExtras().getString(BILL_ID.getValue());
+            position = getIntent().getExtras().getInt(POSITION.getValue());
+            trackNumber = getIntent().getExtras().getInt(TRACKING.getValue());
+            result = getIntent().getExtras().getBoolean(IMAGE.getValue());
             binding.textViewNotSent.setVisibility(getIntent().getExtras()
                     .getBoolean(BundleEnum.SENT.getValue()) ? View.GONE : View.VISIBLE);
             getIntent().getExtras().clear();
@@ -100,22 +101,22 @@ public class TakePhotoActivity extends AppCompatActivity {
             images.addAll(getApplicationComponent().MyDatabase()
                     .imageDao().getImagesByOnOffLoadId(uuid));
             for (int i = 0; i < images.size(); i++) {
-                images.get(i).bitmap = CustomFile.loadImage(activity, images.get(i).address);
+                images.get(i).bitmap = CustomFile.loadImage(this, images.get(i).address);
             }
         }
-        imageViewAdapter = new ImageViewAdapter(activity, images);
+        imageViewAdapter = new ImageViewAdapter(this, images);
         binding.gridViewImage.setAdapter(imageViewAdapter);
     }
 
     private void setOnButtonSendClickListener() {
         binding.buttonSaveSend.setOnClickListener(v -> {
             binding.buttonSaveSend.setEnabled(false);
-            new PrepareMultimedia(activity, position, result,
-                    binding.editTextDescription.getText().toString(), images).execute(activity);
+            new PrepareMultimedia(this, position, result,
+                    binding.editTextDescription.getText().toString(), images).execute(this);
         });
     }
 
-    private void askCameraPermission() {
+    private void askCameraPermission(Activity activity) {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
@@ -149,14 +150,14 @@ public class TakePhotoActivity extends AppCompatActivity {
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
             try {
-                photoFile = createImageFile(activity);
+                photoFile = createImageFile(this);
             } catch (IOException e) {
                 new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
             }
             if (photoFile != null) {
                 try {
                     path = photoFile.getPath();
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(activity,
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(this,
                             BuildConfig.APPLICATION_ID.concat(".provider"), photoFile));
                     someActivityResultLauncher.launch(cameraIntent);
                 } catch (Exception e) {

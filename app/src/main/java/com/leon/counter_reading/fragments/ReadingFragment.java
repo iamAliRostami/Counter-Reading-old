@@ -89,7 +89,6 @@ public class ReadingFragment extends Fragment {
             this.readingConfigDefaultDto = Constants.readingConfigDefaultDtos.get(position);
             this.karbariDto = Constants.karbariDtos.get(position);
         } catch (Exception e) {
-//            Log.e("here",e.getMessage());
             Intent intent = requireActivity().getIntent();
             requireActivity().finish();
             startActivity(intent);
