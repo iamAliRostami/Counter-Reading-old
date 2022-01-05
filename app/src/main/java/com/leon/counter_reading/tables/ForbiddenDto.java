@@ -18,16 +18,17 @@ public class ForbiddenDto {
     @PrimaryKey(autoGenerate = true)
     public int customId;
     public int zoneId;
+    public int tedadVahed;
+//    public int size;
     public String description;
     public String preEshterak;
     public String nextEshterak;
     public String postalCode;
-    public int tedadVahed;
+    public String address;
+    public String gisAccuracy;
     public String x;
     public String y;
-    public String gisAccuracy;
     public boolean isSent;
-    public String address;
 
     @Ignore
     public ArrayList<MultipartBody.Part> File;
