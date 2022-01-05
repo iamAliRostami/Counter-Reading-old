@@ -1,6 +1,7 @@
 package com.leon.counter_reading.helpers;
 
 import static android.os.Build.UNKNOWN;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
 import static com.leon.counter_reading.helpers.Constants.FONT_NAME;
 import static com.leon.counter_reading.helpers.Constants.TOAST_TEXT_SIZE;
 import static com.leon.counter_reading.utils.PermissionManager.hasCarrierPrivileges;
@@ -13,8 +14,6 @@ import android.content.ContextWrapper;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.provider.Settings;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 import androidx.multidex.MultiDex;
 
@@ -31,9 +30,14 @@ import com.leon.counter_reading.di.module.LocationTrackingModule;
 import com.leon.counter_reading.di.module.MyDatabaseModule;
 import com.leon.counter_reading.di.module.NetworkModule;
 import com.leon.counter_reading.di.module.SharedPreferenceModule;
+import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.enums.SharedReferenceNames;
 import com.leon.counter_reading.infrastructure.ILocationTracking;
 import com.leon.counter_reading.utils.locating.CheckSensor;
+import com.yandex.metrica.YandexMetrica;
+import com.yandex.metrica.YandexMetricaConfig;
+import com.yandex.metrica.profile.Attribute;
+import com.yandex.metrica.profile.UserProfile;
 
 import es.dmoral.toasty.Toasty;
 
@@ -90,14 +94,22 @@ public class MyApplication extends Application {
 //    }
 
     protected void setupYandex() {
-        com.yandex.metrica.YandexMetricaConfig config = com.yandex.metrica.YandexMetricaConfig
+        UserProfile userProfile = UserProfile.newBuilder()
+                .apply(Attribute.name().withValue(applicationComponent.SharedPreferenceModel()
+                        .getStringData(USERNAME.getValue()))).build();
+
+        YandexMetricaConfig config = com.yandex.metrica.YandexMetricaConfig
                 .newConfigBuilder("6d39e473-5c5c-4163-9c4c-21eb91758e8f").withLogs()
                 .withAppVersion(BuildConfig.VERSION_NAME).build();
 //         Initializing the AppMetrica SDK.
-        com.yandex.metrica.YandexMetrica.activate(appContext, config);
+        YandexMetrica.activate(appContext, config);
 //         Automatic tracking of user activity.
-        com.yandex.metrica.YandexMetrica.enableActivityAutoTracking(this);
-        com.yandex.metrica.YandexMetrica.activate(getApplicationContext(), config);
+        YandexMetrica.enableActivityAutoTracking(this);
+        YandexMetrica.activate(getApplicationContext(), config);
+//        YandexMetrica.setUserProfileID("id 784");
+        YandexMetrica.reportUserProfile(userProfile);
+
+//        throw new RuntimeException("Test Force Crash"); // Force a crash
     }
 
     @Override

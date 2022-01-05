@@ -7,7 +7,7 @@ public enum BundleEnum {
     ON_OFF_LOAD("on_off_load"),
     COUNTER_STATE_POSITION("counter_state_position"),
     COUNTER_STATE_CODE("counter_state_code"),
-    TRACKING("tracking"),//TODO
+    TRACKING("tracking"),
     POSITION("position"),
     NUMBER("number"),
     UNREAD("total"),
@@ -18,7 +18,6 @@ public enum BundleEnum {
     IS_MANE("is_mane"),
     NORMAL("normal"),
     READ_STATUS("read_status"),
-    IMAGE_BITMAP("image_bitmap"),//TODO
     ZONE_ID("zone_id"),
     SENT("sent"),
     DESCRIPTION("description"),

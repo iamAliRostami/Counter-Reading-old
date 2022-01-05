@@ -11,15 +11,14 @@ import static com.leon.counter_reading.utils.PermissionManager.checkCameraPermis
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Debug;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -53,7 +52,7 @@ public class TakePhotoActivity extends AppCompatActivity {
     private Activity activity;
     private ActivityTakePhotoBinding binding;
     private ImageViewAdapter imageViewAdapter;
-//    private Uri photoUri;
+    //    private Uri photoUri;
     private String path;
     private final ArrayList<Image> images = new ArrayList<>();
 
@@ -72,6 +71,13 @@ public class TakePhotoActivity extends AppCompatActivity {
         if (checkCameraPermission(getApplicationContext()))
             initialize();
         else askCameraPermission();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outPersistentState.clear();
+        outState.clear();
     }
 
     private void initialize() {
@@ -145,68 +151,35 @@ public class TakePhotoActivity extends AppCompatActivity {
             try {
                 photoFile = createImageFile(activity);
             } catch (IOException e) {
-                e.printStackTrace();
+                new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
             }
             if (photoFile != null) {
-//                photoUri = FileProvider.getUriForFile(activity,
-//                        BuildConfig.APPLICATION_ID.concat(".provider"), photoFile);
-//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                path = photoFile.getPath();
-//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(activity,
-                        BuildConfig.APPLICATION_ID.concat(".provider"), photoFile));
-                someActivityResultLauncher.launch(cameraIntent);
+                try {
+                    path = photoFile.getPath();
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(activity,
+                            BuildConfig.APPLICATION_ID.concat(".provider"), photoFile));
+                    someActivityResultLauncher.launch(cameraIntent);
+                } catch (Exception e) {
+                    new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+                }
             }
         }
-
-//        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, PHOTO_URI);
-//        someActivityResultLauncher.launch(intent);
     }
 
     private final ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    if (result.getData() != null) {
-//                        prepareImage((Bitmap) result.getData().getExtras().get("data"));
-                        prepareImage(result.getData());
-                        result.getData().getExtras().clear();
-                    } else {
-                        prepareImage();
-                    }
+                    prepareImage();
                     imageViewAdapter.notifyDataSetChanged();
                     binding.buttonSaveSend.setEnabled(true);
                 }
             });
 
-
     private void prepareImage() {
         final Image image = new Image();
         try {
             image.bitmap = compressBitmap(BitmapFactory.decodeFile(path));
-//            image.bitmap = compressBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri));
-//            image.bitmap = compressBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(path)));
-            image.OnOffLoadId = uuid;
-            image.trackNumber = trackNumber;
-            if (replace > 0) {
-                getApplicationComponent().MyDatabase().imageDao()
-                        .deleteImage(images.get(replace - 1).id);
-                images.set(replace - 1, image);
-            } else {
-                images.add(image);
-            }
-//            photoUri = null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("error", e.toString());
-        }
-    }
-
-    private void prepareImage(final Intent data) {
-        final Image image = new Image();
-        try {
-            image.bitmap = compressBitmap(BitmapFactory.decodeStream(this.getContentResolver().
-                    openInputStream(data.getData())));
             image.OnOffLoadId = uuid;
             image.trackNumber = trackNumber;
             if (replace > 0) {
@@ -215,22 +188,8 @@ public class TakePhotoActivity extends AppCompatActivity {
             } else {
                 images.add(image);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private void prepareImage(final Bitmap bitmap) {
-        final Image image = new Image();
-        image.bitmap = bitmap;
-        image.OnOffLoadId = uuid;
-        image.trackNumber = trackNumber;
-        if (replace > 0) {
-            getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
-            images.set(replace - 1, image);
-        } else {
-            images.add(image);
+        } catch (Exception e) {
+            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
         }
     }
 
