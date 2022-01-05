@@ -13,7 +13,6 @@ public class Voice {
     public int id;
     public int trackNumber;
 //    public int size;
-
     public String OnOffLoadId;
     public String Description;
     public String address;
