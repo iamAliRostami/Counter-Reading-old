@@ -103,20 +103,10 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
-//    implementation 'androidx.appcompat:appcompat:1.3.1'
-//    implementation 'androidx.annotation:annotation:1.2.0'
-//    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
-//    implementation 'androidx.multidex:multidex:2.0.1'
-//    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-//    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'com.google.android.gms:play-services-location:19.0.0'
-//    implementation 'com.google.firebase:firebase-analytics:20.0.0'
-//    implementation 'com.google.firebase:firebase-crashlytics:18.2.4'
-//    implementation platform('com.google.firebase:firebase-bom:28.1.0')
-//    implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.code.gson:gson:2.8.8'
 
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
@@ -124,11 +114,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
-
-//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
-//    releaseImplementation  'com.squareup.leakcanary:leakcanary-android:2.7'
-//    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
-//    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
 
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
 
@@ -165,12 +150,5 @@ dependencies {
     implementation 'com.yandex.android:mobmetricalib:4.0.0'
     implementation 'com.yandex.android:mobmetricalib-ndk-crashes:1.1.0'
 
-
-//    implementation 'net.rdrei.android.dirchooser:library:3.2@aar'
-//    implementation 'lib.kashif:folderpicker:2.4'
-
     implementation 'me.jahnen:libaums:0.8.0'
-//    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
-//    implementation 'com.github.naya-aastra:SkewPdfView:1.1'
-//    implementation 'com.github.barteksc:android-pdf-viewer:2.0.3'
 }

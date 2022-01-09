@@ -32,4 +32,11 @@
         android:visibility="gone"
         app:srcCompat="@drawable/img_check_mark"
         tools:ignore="ContentDescription,RtlHardcoded" />
+    <TextView
+        style="@style/TitleText"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/text_view_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

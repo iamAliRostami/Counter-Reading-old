@@ -4,6 +4,7 @@ import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.enums.MultimediaTypeEnum.IMAGE;
+import static com.leon.counter_reading.helpers.Constants.CURRENT_IMAGE_SIZE;
 import static com.leon.counter_reading.helpers.Constants.PHOTO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
@@ -181,6 +182,12 @@ public class TakePhotoActivity extends AppCompatActivity {
         final Image image = new Image();
         try {
             image.bitmap = compressBitmap(BitmapFactory.decodeFile(path));
+            if (image.bitmap != null) {
+//                image.size = image.bitmap.getAllocationByteCount();
+//                image.size = image.bitmap.getByteCount();
+//                image.size = image.bitmap.getRowBytes() * image.bitmap.getHeight();
+                image.size = CURRENT_IMAGE_SIZE;
+            }
             image.OnOffLoadId = uuid;
             image.trackNumber = trackNumber;
             if (replace > 0) {

@@ -9,6 +9,8 @@ import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_WIFI_CODE;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
+import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
+import static com.leon.counter_reading.utils.CustomFile.bitmapToFile;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
@@ -66,9 +68,8 @@ public class ReportForbidActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MyApplication.onActivitySetTheme(this, MyApplication.getApplicationComponent()
-                        .SharedPreferenceModel().getIntData(SharedReferenceKeys.THEME_STABLE.getValue()),
-                true);
+        onActivitySetTheme(this, MyApplication.getApplicationComponent().SharedPreferenceModel()
+                .getIntData(SharedReferenceKeys.THEME_STABLE.getValue()), true);
         super.onCreate(savedInstanceState);
         binding = ActivityReportForbidBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -301,28 +302,6 @@ public class ReportForbidActivity extends AppCompatActivity {
             builder.setNegativeButton(R.string.camera, (dialog, which) -> {
                 dialog.dismiss();
                 openSomeActivityForResult();
-//                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                if (cameraIntent.resolveActivity(activity.getPackageManager()) != null) {
-//                    // Create the File where the photo should go
-//                    File photoFile = null;
-//                    try {
-//                        photoFile = createImageFile(activity);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                    // Continue only if the File was successfully created
-//                    if (photoFile != null) {
-//                        PHOTO_URI = FileProvider.getUriForFile(activity,
-//                                BuildConfig.APPLICATION_ID.concat(".provider"),
-//                                photoFile);
-//                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, PHOTO_URI);
-//                        try {
-//                            startActivityForResult(cameraIntent, CAMERA_REQUEST);
-//                        } catch (ActivityNotFoundException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
             });
             builder.setNeutralButton("", (dialog, which) -> dialog.dismiss());
             builder.create().show();
@@ -361,7 +340,7 @@ public class ReportForbidActivity extends AppCompatActivity {
                     forbiddenDto.bitmaps.add(bitmap);
                     binding.relativeLayoutImage.setVisibility(View.VISIBLE);
                     binding.imageViewTaken.setImageBitmap(bitmap);
-                    forbiddenDto.File.add(CustomFile.bitmapToFile(bitmap, activity));
+                    forbiddenDto.File.add(bitmapToFile(bitmap, activity));
 
                 }
             });
@@ -404,7 +383,7 @@ public class ReportForbidActivity extends AppCompatActivity {
                 forbiddenDto.bitmaps.add(bitmap);
                 binding.relativeLayoutImage.setVisibility(View.VISIBLE);
                 binding.imageViewTaken.setImageBitmap(bitmap);
-                forbiddenDto.File.add(CustomFile.bitmapToFile(bitmap, activity));
+                forbiddenDto.File.add(bitmapToFile(bitmap, activity));
             }
         }
     }

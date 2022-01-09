@@ -1,5 +1,6 @@
 package com.leon.counter_reading.utils;
 
+import static com.leon.counter_reading.helpers.Constants.CURRENT_IMAGE_SIZE;
 import static com.leon.counter_reading.helpers.Constants.MAX_IMAGE_SIZE;
 
 import android.annotation.SuppressLint;
@@ -103,35 +104,70 @@ public class CustomFile {
     public static Bitmap compressBitmap(Bitmap original) {
         try {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
-//            int qualityPercent = Math.max((int) ((double)
-//                    stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
-                final int qualityPercent;
-                if (stream.toByteArray().length > 4000000)
-                    qualityPercent = Math.max((int) ((double)
-                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 8)), 20);
-                else if (stream.toByteArray().length > 2000000)
-                    qualityPercent = Math.max((int) ((double)
-                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 4)), 20);
-                else if (stream.toByteArray().length > 1000000)
-                    qualityPercent = Math.max((int) ((double)
-                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 2)), 20);
-                else
-                    qualityPercent = Math.max((int) ((double)
-                            stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
-                original = Bitmap.createScaledBitmap(original
-                        , (int) ((double) original.getWidth() * qualityPercent / 100)
-                        , (int) ((double) original.getHeight() * qualityPercent / 100), false);
+                final int width, height;
+                if (original.getHeight() > original.getWidth()) {
+                    height = 1000;
+                    width = original.getWidth() / (original.getHeight() / height);
+                } else {
+                    width = 1000;
+                    height = original.getHeight() / (original.getWidth() / width);
+                }
+                original = Bitmap.createScaledBitmap(original, width, height, false);
                 stream = new ByteArrayOutputStream();
-                original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
             }
+            CURRENT_IMAGE_SIZE = stream.toByteArray().length;
             return original;
         } catch (Exception e) {
             new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
         }
         return null;
     }
+//    public static Bitmap compressBitmap(Bitmap original) {
+//        try {
+//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//            original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+//            if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
+//                Log.e("Size 1", String.valueOf(stream.toByteArray().length));
+////            int qualityPercent = Math.max((int) ((double)
+////                    stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
+//                final int qualityPercent;
+//                if (stream.toByteArray().length > 4000000)
+//                    qualityPercent = Math.max((int) ((double)
+//                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 12)), 20);
+//                else if (stream.toByteArray().length > 3000000)
+//                    qualityPercent = Math.max((int) ((double)
+//                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 10)), 20);
+//                else if (stream.toByteArray().length > 2000000)
+//                    qualityPercent = Math.max((int) ((double)
+//                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 8)), 20);
+//                else if (stream.toByteArray().length > 1000000)
+//                    qualityPercent = Math.max((int) ((double)
+//                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 6)), 20);
+//                else if (stream.toByteArray().length > 500000)
+////                    qualityPercent = Math.max((int) ((double)
+////                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 8)), 20);
+//                    qualityPercent = stream.toByteArray().length / MAX_IMAGE_SIZE;
+//                else if (stream.toByteArray().length > 200000)
+//                    qualityPercent = stream.toByteArray().length / (MAX_IMAGE_SIZE * 2);
+//                else
+//                    qualityPercent = Math.max((int) ((double)
+//                            stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
+//                original = Bitmap.createScaledBitmap(original
+//                        , (int) ((double) original.getWidth() * qualityPercent / 100)
+//                        , (int) ((double) original.getHeight() * qualityPercent / 100), false);
+//                stream = new ByteArrayOutputStream();
+//                original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+//            }
+//            CURRENT_IMAGE_SIZE = stream.toByteArray().length;
+//            return original;
+//        } catch (Exception e) {
+//            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+//        }
+//        return null;
+//    }
 
     public static ByteArrayInputStream compressBitmapIS(Bitmap original) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
