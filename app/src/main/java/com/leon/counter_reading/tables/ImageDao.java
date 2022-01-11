@@ -6,7 +6,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -28,6 +27,9 @@ public interface ImageDao {
 
     @Query("SELECT COUNT(*) FROM Image WHERE isSent = :isSent")
     int getUnsentImageCount(boolean isSent);
+
+    @Query("SELECT SUM(size)/1024 FROM Image WHERE isSent = :isSent")
+    int getUnsentImageSize(boolean isSent);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertImage(Image image);

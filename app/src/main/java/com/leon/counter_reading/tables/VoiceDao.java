@@ -6,7 +6,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -26,6 +25,9 @@ public interface VoiceDao {
 
     @Query("SELECT COUNT(*) FROM Voice WHERE isSent = :isSent")
     int getUnsentVoiceCount(boolean isSent);
+
+    @Query("SELECT SUM(size) FROM Voice WHERE isSent = :isSent")
+    int getUnsentVoiceSizes(boolean isSent);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertVoice(Voice Voice);
