@@ -110,8 +110,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
                     new UploadVoices(voice), new UploadVoicesIncomplete(), new UploadMultimediaError());
         } else {
             activity.runOnUiThread(() ->
-                    new CustomToast().info(activity.getString(R.string.there_is_no_voices),
-                            Toast.LENGTH_LONG));
+                    new CustomToast().info(activity.getString(R.string.there_is_no_voices),Toast.LENGTH_LONG));
         }
     }
 
@@ -207,8 +206,8 @@ class UploadMultimediaError implements ICallbackError {
     @Override
     public void executeError(Throwable t) {
         if (!HttpClientWrapper.cancel) {
-            CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(MyApplication.getContext());
-            String error = customErrorHandlingNew.getErrorMessageTotal(t);
+            final CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(MyApplication.getContext());
+            final String error = customErrorHandlingNew.getErrorMessageTotal(t);
             new CustomToast().error(error, Toast.LENGTH_LONG);
         }
     }
