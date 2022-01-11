@@ -1,6 +1,7 @@
 package com.leon.counter_reading.activities;
 
 import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
+import static com.leon.counter_reading.helpers.Constants.CURRENT_IMAGE_SIZE;
 import static com.leon.counter_reading.helpers.Constants.GALLERY_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
@@ -341,7 +342,6 @@ public class ReportForbidActivity extends AppCompatActivity {
                     binding.relativeLayoutImage.setVisibility(View.VISIBLE);
                     binding.imageViewTaken.setImageBitmap(bitmap);
                     forbiddenDto.File.add(bitmapToFile(bitmap, activity));
-
                 }
             });
 

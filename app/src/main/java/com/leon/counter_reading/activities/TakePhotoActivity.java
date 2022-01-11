@@ -183,9 +183,6 @@ public class TakePhotoActivity extends AppCompatActivity {
         try {
             image.bitmap = compressBitmap(BitmapFactory.decodeFile(path));
             if (image.bitmap != null) {
-//                image.size = image.bitmap.getAllocationByteCount();
-//                image.size = image.bitmap.getByteCount();
-//                image.size = image.bitmap.getRowBytes() * image.bitmap.getHeight();
                 image.size = CURRENT_IMAGE_SIZE;
             }
             image.OnOffLoadId = uuid;

@@ -19,7 +19,7 @@ public class ForbiddenDto {
     public int customId;
     public int zoneId;
     public int tedadVahed;
-    public int size;
+    public long size;
     public String description;
     public String preEshterak;
     public String nextEshterak;

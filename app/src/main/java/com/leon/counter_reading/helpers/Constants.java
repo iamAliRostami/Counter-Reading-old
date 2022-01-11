@@ -38,7 +38,7 @@ public class Constants {
     public static final long MIN_TIME_BW_UPDATES = 10000;
     public static final long FASTEST_INTERVAL = 10000;
     public static final int MAX_IMAGE_SIZE = 100000;
-    public static int CURRENT_IMAGE_SIZE;
+    public static long CURRENT_IMAGE_SIZE;
 
     public static int POSITION = -1;
     public static Bitmap BITMAP_SELECTED_IMAGE;

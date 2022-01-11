@@ -214,13 +214,14 @@ public class CustomFile {
         File file = new File(mediaStorageDir, fileNameToSave);
         if (file.exists()) if (!file.delete()) return null;
         try {
-            FileOutputStream out = new FileOutputStream(file);
-            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            final FileOutputStream out = new FileOutputStream(file);
+            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 80, out);
             out.flush();
             out.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        CURRENT_IMAGE_SIZE = file.length();
         MediaScannerConnection.scanFile(context, new String[]{file.getPath()}, new String[]{"image/jpeg"}, null);
         return fileNameToSave;
     }
