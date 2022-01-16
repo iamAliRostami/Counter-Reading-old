@@ -1,6 +1,10 @@
 package com.leon.counter_reading.utils.uploading;
 
+import static com.leon.counter_reading.enums.OffloadStateEnum.INSERTED;
+import static com.leon.counter_reading.enums.OffloadStateEnum.SENT;
+import static com.leon.counter_reading.enums.OffloadStateEnum.SENT_WITH_ERROR;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -9,10 +13,8 @@ import android.widget.Toast;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
-import com.leon.counter_reading.enums.OffloadStateEnum;
 import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.fragments.UploadFragment;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
@@ -39,7 +41,7 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
     private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
     private final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
     private final ArrayList<ForbiddenDto> forbiddenDtos = new ArrayList<>();
-        private final int trackNumber;
+    private final int trackNumber;
     private final String id;
 
     public PrepareOffLoad(Activity activity, int trackNumber, String id, UploadFragment fragment) {
@@ -54,11 +56,11 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
     @Override
     protected Activity doInBackground(Activity... activities) {
         forbiddenDtos.clear();
-        forbiddenDtos.addAll(getApplicationComponent().MyDatabase().
-                forbiddenDao().getAllForbiddenDto(false));
+        forbiddenDtos.addAll(getApplicationComponent().MyDatabase().forbiddenDao()
+                .getAllForbiddenDto(false));
         onOffLoadDtos.clear();
-        onOffLoadDtos.addAll(getApplicationComponent().MyDatabase().
-                onOffLoadDao().getOnOffLoadReadByTrackingAndOffLoad(id, OffloadStateEnum.INSERTED.getValue()));
+        onOffLoadDtos.addAll(getApplicationComponent().MyDatabase().onOffLoadDao()
+                .getOnOffLoadReadByTrackingAndOffLoad(id, INSERTED.getValue()));
         offLoadReports.clear();
         offLoadReports.addAll(getApplicationComponent().MyDatabase().
                 offLoadReportDao().getAllOffLoadReport(false));
@@ -138,7 +140,7 @@ class Forbidden implements ICallback<ForbiddenDtoResponses> {
             getApplicationComponent().MyDatabase().forbiddenDao().
                     updateAllForbiddenDtoBySent(true);
             if (response.body() != null) {
-                new CustomToast().success(MyApplication.getContext().
+                new CustomToast().success(getContext().
                                 getString(R.string.report_forbid) + "\n" + response.body().message,
                         Toast.LENGTH_LONG);
             }
@@ -168,8 +170,7 @@ class OffLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
     @Override
     public void execute(Response<OnOffLoadDto.OffLoadResponses> response) {
         if (response.body() != null && response.body().status == 200) {
-            int state = response.body().isValid ? OffloadStateEnum.SENT.getValue() :
-                    OffloadStateEnum.SENT_WITH_ERROR.getValue();
+            int state = response.body().isValid ? SENT.getValue() : SENT_WITH_ERROR.getValue();
             getApplicationComponent().MyDatabase().onOffLoadDao().
                     updateOnOffLoad(state, response.body().targetObject);
             getApplicationComponent().MyDatabase().trackingDao().
@@ -184,8 +185,8 @@ class OffLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
 class OffLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadResponses> {
     @Override
     public void executeIncomplete(Response<OnOffLoadDto.OffLoadResponses> response) {
-        CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(MyApplication.getContext());
-        String error = customErrorHandlingNew.getErrorMessageDefault(response);
+        final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+        final String error = errorHandling.getErrorMessageDefault(response);
         new CustomToast().warning(error, Toast.LENGTH_LONG);
     }
 }
@@ -193,8 +194,8 @@ class OffLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadR
 class OffLoadError implements ICallbackError {
     @Override
     public void executeError(Throwable t) {
-        CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(MyApplication.getContext());
-        String error = customErrorHandlingNew.getErrorMessageTotal(t);
+        final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+        final String error = errorHandling.getErrorMessageTotal(t);
         new CustomToast().error(error, Toast.LENGTH_LONG);
     }
 }

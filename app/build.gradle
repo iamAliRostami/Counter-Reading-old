@@ -151,4 +151,6 @@ dependencies {
     implementation 'com.yandex.android:mobmetricalib-ndk-crashes:1.1.0'
 
     implementation 'me.jahnen:libaums:0.8.0'
+    implementation 'com.gu.android:toolargetool:0.3.0'
+
 }

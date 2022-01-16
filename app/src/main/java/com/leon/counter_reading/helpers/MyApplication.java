@@ -17,6 +17,7 @@ import android.provider.Settings;
 
 import androidx.multidex.MultiDex;
 
+import com.gu.toolargetool.TooLargeTool;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.component.ActivityComponent;
@@ -69,6 +70,7 @@ public class MyApplication extends Application {
         if (!BuildConfig.BUILD_TYPE.equals("release")) {
             setupYandex();
         } else {
+            TooLargeTool.startLogging(this);
             setupLeakCanary();
         }
     }
@@ -82,33 +84,19 @@ public class MyApplication extends Application {
         refWatcher = com.squareup.leakcanary.LeakCanary.install(this);*/
     }
 
-//    public static com.squareup.leakcanary.RefWatcher getRefWatcher(Context context) {
-//        MyApplication application = (MyApplication) context.getApplicationContext();
-//        return application.refWatcher;
-//    }
-//
-//    public void mustDie(Object object) {
-//        if (refWatcher != null) {
-//            refWatcher.watch(object);
-//        }
-//    }
 
     protected void setupYandex() {
         UserProfile userProfile = UserProfile.newBuilder()
                 .apply(Attribute.name().withValue(applicationComponent.SharedPreferenceModel()
                         .getStringData(USERNAME.getValue()))).build();
-
         YandexMetricaConfig config = com.yandex.metrica.YandexMetricaConfig
                 .newConfigBuilder("6d39e473-5c5c-4163-9c4c-21eb91758e8f").withLogs()
                 .withAppVersion(BuildConfig.VERSION_NAME).build();
-//         Initializing the AppMetrica SDK.
         YandexMetrica.activate(appContext, config);
-//         Automatic tracking of user activity.
         YandexMetrica.enableActivityAutoTracking(this);
         YandexMetrica.activate(getApplicationContext(), config);
 //        YandexMetrica.setUserProfileID("id 784");
         YandexMetrica.reportUserProfile(userProfile);
-
 //        throw new RuntimeException("Test Force Crash"); // Force a crash
     }
 

@@ -2,6 +2,7 @@ package com.leon.counter_reading.utils.reading;
 
 import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -25,10 +26,10 @@ public class Sent extends AsyncTask<Activity, Integer, Integer> {
     protected Integer doInBackground(Activity... activities) {
         try {
             //TODO
-            MyApplication.getApplicationComponent().MyDatabase().offLoadReportDao().updateOffLoadReportByIsSent(true);
+            getApplicationComponent().MyDatabase().offLoadReportDao().updateOffLoadReportByIsSent(true);
             int state = offLoadResponses.isValid ? OffloadStateEnum.SENT.getValue() :
                     OffloadStateEnum.SENT_WITH_ERROR.getValue();
-            MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao()
+            getApplicationComponent().MyDatabase().onOffLoadDao()
                     .updateOnOffLoad(state, offLoadResponses.targetObject);
             String[] targetObject = offLoadResponses.targetObject;
 

@@ -100,6 +100,7 @@ public class ReadingFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         try {
+            outState.clear();
             outState.putAll(putBundle(position));
         } catch (Exception ignored) {
         }

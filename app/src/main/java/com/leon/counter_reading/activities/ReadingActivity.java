@@ -1,5 +1,6 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
 import static com.leon.counter_reading.enums.BundleEnum.IMAGE;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.SENT;
@@ -284,7 +285,7 @@ public class ReadingActivity extends BaseActivity {
 
     private void showImage(int position) {
         Intent intent = new Intent(activity, TakePhotoActivity.class);
-        intent.putExtra(BundleEnum.BILL_ID.getValue(),
+        intent.putExtra(BILL_ID.getValue(),
                 readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
         intent.putExtra(TRACKING.getValue(),
                 readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
@@ -443,7 +444,7 @@ public class ReadingActivity extends BaseActivity {
                     Intent intent = new Intent(activity, TakePhotoActivity.class);
                     intent.putExtra(SENT.getValue(),
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0);
-                    intent.putExtra(BundleEnum.BILL_ID.getValue(),
+                    intent.putExtra(BILL_ID.getValue(),
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
                     intent.putExtra(TRACKING.getValue(),
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
@@ -459,7 +460,7 @@ public class ReadingActivity extends BaseActivity {
                     showNoEshterakFound();
                 } else {
                     Intent intent = new Intent(activity, ReadingReportActivity.class);
-                    intent.putExtra(BundleEnum.BILL_ID.getValue(),
+                    intent.putExtra(BILL_ID.getValue(),
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
                     intent.putExtra(TRACKING.getValue(),
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
@@ -521,7 +522,7 @@ public class ReadingActivity extends BaseActivity {
                 showNoEshterakFound();
             } else {
                 intent = new Intent(activity, DescriptionActivity.class);
-                intent.putExtra(BundleEnum.BILL_ID.getValue(),
+                intent.putExtra(BILL_ID.getValue(),
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
                 intent.putExtra(TRACKING.getValue(),
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
@@ -536,7 +537,7 @@ public class ReadingActivity extends BaseActivity {
                 showNoEshterakFound();
             } else {
                 intent = new Intent(activity, CounterPlaceActivity.class);
-                intent.putExtra(BundleEnum.BILL_ID.getValue(),
+                intent.putExtra(BILL_ID.getValue(),
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
                 intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
                 startActivityForResult(intent, COUNTER_LOCATION);

@@ -3,6 +3,7 @@ package com.leon.counter_reading.di.view_model;
 
 import static com.leon.counter_reading.helpers.Constants.FASTEST_INTERVAL;
 import static com.leon.counter_reading.helpers.Constants.MIN_TIME_BW_UPDATES;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -77,14 +78,13 @@ public class LocationTrackingGoogle extends Service implements ILocationTracking
     public void addLocation(Location location) {
         if (location != null) {
             LocationTrackingGoogle.location = location;
-            if (MyApplication.getApplicationComponent().SharedPreferenceModel()
+            if (getApplicationComponent().SharedPreferenceModel()
                     .getBoolData(SharedReferenceKeys.POINT.getValue())) {
                 SavedLocation savedLocation = new SavedLocation(location.getAccuracy(),
                         location.getLongitude(), location.getLatitude());
-                MyApplication.getApplicationComponent().MyDatabase().savedLocationDao()
+                getApplicationComponent().MyDatabase().savedLocationDao()
                         .insertSavedLocation(savedLocation);
             }
-            Log.e("google", String.valueOf(getAccuracy()));
         }
     }
 
