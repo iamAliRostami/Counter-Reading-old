@@ -1,5 +1,7 @@
 package com.leon.counter_reading.base_items;
 
+import static com.leon.counter_reading.enums.BundleEnum.THEME;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.PHOTO_PERMISSIONS;
@@ -7,6 +9,7 @@ import static com.leon.counter_reading.helpers.Constants.POSITION;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_WIFI_CODE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
 import static com.leon.counter_reading.utils.PermissionManager.checkCameraPermission;
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
@@ -79,14 +82,14 @@ public abstract class BaseActivity extends AppCompatActivity implements
         sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
         int theme;
         if (getIntent().getExtras() != null) {
-            theme = getIntent().getExtras().getInt(BundleEnum.THEME.getValue());
+            theme = getIntent().getExtras().getInt(THEME.getValue());
             if (theme == 0)
-                theme = sharedPreferenceManager.getIntData(SharedReferenceKeys.THEME_STABLE.getValue());
+                theme = sharedPreferenceManager.getIntData(THEME_STABLE.getValue());
             getIntent().getExtras().clear();
         } else {
-            theme = sharedPreferenceManager.getIntData(SharedReferenceKeys.THEME_STABLE.getValue());
+            theme = sharedPreferenceManager.getIntData(THEME_STABLE.getValue());
         }
-        MyApplication.onActivitySetTheme(this, theme, false);
+        onActivitySetTheme(this, theme, false);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         binding = ActivityBaseBinding.inflate(getLayoutInflater());

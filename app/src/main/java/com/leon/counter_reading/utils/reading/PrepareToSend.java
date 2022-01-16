@@ -1,7 +1,10 @@
 package com.leon.counter_reading.utils.reading;
 
 import static com.leon.counter_reading.activities.ReadingActivity.offlineAttempts;
+import static com.leon.counter_reading.enums.DialogType.Red;
+import static com.leon.counter_reading.enums.OffloadStateEnum.INSERTED;
 import static com.leon.counter_reading.helpers.Constants.OFFLINE_ATTEMPT;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -41,18 +44,18 @@ public class PrepareToSend extends AsyncTask<Activity, Integer, Integer> {
     @Override
     protected Integer doInBackground(Activity... activities) {
         offLoadData.isFinal = false;
-        offLoadData.offLoads = new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase().
-                onOffLoadDao().getAllOnOffLoadInsert(OffloadStateEnum.INSERTED.getValue(), true));
-        offLoadData.offLoadReports.addAll(MyApplication.getApplicationComponent().MyDatabase().offLoadReportDao().
+        offLoadData.offLoads = new ArrayList<>(getApplicationComponent().MyDatabase().
+                onOffLoadDao().getAllOnOffLoadInsert(INSERTED.getValue(), true));
+        offLoadData.offLoadReports.addAll(getApplicationComponent().MyDatabase().offLoadReportDao().
                 getAllOffLoadReportByActive(true, false));
-        Retrofit retrofit = MyApplication.getApplicationComponent().NetworkHelperModel().getInstance(2, token);
+        Retrofit retrofit = getApplicationComponent().NetworkHelperModel().getInstance(2, token);
         IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
         Call<OnOffLoadDto.OffLoadResponses> call = iAbfaService.OffLoadData(offLoadData);
         try {
             if (HttpClientWrapper.call != null)
                 HttpClientWrapper.call.cancel();
         } catch (Exception e) {
-            activities[0].runOnUiThread(() -> new CustomDialogModel(DialogType.Red,
+            activities[0].runOnUiThread(() -> new CustomDialogModel(Red,
                     activities[0], e.getMessage(),
                     activities[0].getString(R.string.dear_user),
                     activities[0].getString(R.string.take_screen_shot),
@@ -86,7 +89,7 @@ class offLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
 //                String error = customErrorHandling.getErrorMessage(response.body().status);
                 new CustomToast().error(error);
             } catch (Exception e) {
-                activity.runOnUiThread(() -> new CustomDialogModel(DialogType.Red,
+                activity.runOnUiThread(() -> new CustomDialogModel(Red,
                         activity, e.getMessage(),
                         activity.getString(R.string.dear_user),
                         activity.getString(R.string.take_screen_shot),
@@ -112,7 +115,7 @@ class offLoadError implements ICallbackError {
                 String error = customErrorHandlingNew.getErrorMessageTotal(t);
                 new CustomToast().error(error);
             } catch (Exception e) {
-                activity.runOnUiThread(() -> new CustomDialogModel(DialogType.Red,
+                activity.runOnUiThread(() -> new CustomDialogModel(Red,
                         activity, e.getMessage(),
                         activity.getString(R.string.dear_user),
                         activity.getString(R.string.take_screen_shot),
@@ -142,7 +145,7 @@ class offLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadR
                 String error = customErrorHandlingNew.getErrorMessageDefault(response);
                 new CustomToast().error(error);
             } catch (Exception e) {
-                activity.runOnUiThread(() -> new CustomDialogModel(DialogType.Red,
+                activity.runOnUiThread(() -> new CustomDialogModel(Red,
                         activity, e.getMessage(),
                         activity.getString(R.string.dear_user),
                         activity.getString(R.string.take_screen_shot),

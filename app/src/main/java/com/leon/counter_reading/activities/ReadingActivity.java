@@ -4,6 +4,7 @@ import static com.leon.counter_reading.enums.BundleEnum.IMAGE;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.SENT;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.SORT_TYPE;
 import static com.leon.counter_reading.helpers.Constants.CAMERA;
 import static com.leon.counter_reading.helpers.Constants.COUNTER_LOCATION;
 import static com.leon.counter_reading.helpers.Constants.DESCRIPTION;
@@ -21,6 +22,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Bundle;
 import android.os.Debug;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +36,6 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.gson.Gson;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ViewPagerStateAdapter2;
 import com.leon.counter_reading.base_items.BaseActivity;
@@ -93,12 +94,18 @@ public class ReadingActivity extends BaseActivity {
         ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
         activity = this;
-        sharedPreferenceManager = MyApplication.getApplicationComponent().SharedPreferenceModel();
+        sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
         imageSrc = ArrayUtils.clone(ReadingUtils.setAboveIcons());
         getBundle();
         setOnImageViewsClickListener();
         new GetReadingDBData(activity, readStatus, highLow, sharedPreferenceManager.
-                getBoolData(SharedReferenceKeys.SORT_TYPE.getValue())).execute(activity);
+                getBoolData(SORT_TYPE.getValue())).execute(activity);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.clear();
     }
 
     private void updateOnOffLoad(int position, int counterStateCode, int counterStatePosition) {
@@ -138,7 +145,6 @@ public class ReadingActivity extends BaseActivity {
     }
 
     public void updateOnOffLoadByAttempt(int position) {
-//        readingData.onOffLoadDtos.get(position).attemptCount++;
         updateAdapter(position);
         new UpdateOnOffLoadByAttemptNumber(readingData.onOffLoadDtos.get(position)).execute();
     }
@@ -483,7 +489,7 @@ public class ReadingActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.reading_menu, menu);
         menu.getItem(6).setChecked(FOCUS_ON_EDIT_TEXT);
         menu.getItem(7).setChecked(MyApplication.getApplicationComponent()
-                .SharedPreferenceModel().getBoolData(SharedReferenceKeys.SORT_TYPE.getValue()));
+                .SharedPreferenceModel().getBoolData(SORT_TYPE.getValue()));
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -494,7 +500,7 @@ public class ReadingActivity extends BaseActivity {
         Intent intent;
         if (id == R.id.menu_sort) {
             item.setChecked(!item.isChecked());
-            sharedPreferenceManager.putData(SharedReferenceKeys.SORT_TYPE.getValue(), item.isChecked());
+            sharedPreferenceManager.putData(SORT_TYPE.getValue(), item.isChecked());
             new ChangeSortType(activity, item.isChecked()).execute(activity);
         } else if (id == R.id.menu_navigation) {
             if (readingData.onOffLoadDtos.isEmpty()) {

@@ -39,7 +39,7 @@ public class ForbiddenDto {
 
     public void prepareToSend(double gisAccuracy, double x, double y, String postalCode,
                               String description, String preEshterak, String nextEshterak,
-                              String tedadVahed, int zoneId) {
+                              int tedadVahed, int zoneId) {
 
         this.gisAccuracy = String.valueOf(gisAccuracy);
         this.x = String.valueOf(x);
@@ -48,21 +48,21 @@ public class ForbiddenDto {
         this.description = description;
         this.preEshterak = preEshterak;
         this.nextEshterak = nextEshterak;
-        this.tedadVahed = Integer.parseInt(tedadVahed);
+        this.tedadVahed = tedadVahed;
         this.zoneId = zoneId;
         forbiddenDtoRequest = new ForbiddenDtoRequest();
         prepareRequestBody(/*File,*/ zoneId, description, preEshterak, nextEshterak, tedadVahed, x, y, gisAccuracy);
     }
 
     void prepareRequestBody(/*ArrayList<MultipartBody.Part> file,*/ int zoneId, String description,
-                                                                    String preEshterak, String nextEshterak, String tedadVahed,
+                                                                    String preEshterak, String nextEshterak, int tedadVahed,
                                                                     double x, double y, double gisAccuracy) {
 //        File.addAll(file);
         forbiddenDtoRequest.description = RequestBody.create(description, MediaType.parse("text/plain"));
         forbiddenDtoRequest.preEshterak = RequestBody.create(preEshterak, MediaType.parse("text/plain"));
         forbiddenDtoRequest.nextEshterak = RequestBody.create(nextEshterak, MediaType.parse("text/plain"));
         forbiddenDtoRequest.postalCode = RequestBody.create(postalCode, MediaType.parse("text/plain"));
-        forbiddenDtoRequest.tedadVahed = RequestBody.create(tedadVahed,
+        forbiddenDtoRequest.tedadVahed = RequestBody.create(String.valueOf(tedadVahed),
                 MediaType.parse("text/plain"));
         forbiddenDtoRequest.x = RequestBody.create(String.valueOf(x), MediaType.parse("text/plain"));
         forbiddenDtoRequest.y = RequestBody.create(String.valueOf(y), MediaType.parse("text/plain"));

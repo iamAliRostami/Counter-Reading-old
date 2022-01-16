@@ -1,7 +1,6 @@
 package com.leon.counter_reading.activities;
 
 import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
-import static com.leon.counter_reading.helpers.Constants.CURRENT_IMAGE_SIZE;
 import static com.leon.counter_reading.helpers.Constants.GALLERY_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
@@ -26,6 +25,7 @@ import android.os.Debug;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 
@@ -49,7 +49,6 @@ import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.fragments.dialog.HighQualityFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.ForbiddenDto;
-import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.PermissionManager;
@@ -263,20 +262,26 @@ public class ReportForbidActivity extends AppCompatActivity {
             else view.requestFocus();
         });
     }
-
+    private int getDigits(String number) {
+        if (!TextUtils.isEmpty(number) && TextUtils.isDigitsOnly(number)) {
+            return Integer.parseInt(number);
+        } else {
+            return 0;
+        }
+    }
     private void sendForbid() {
         double latitude = 0, longitude = 0, accuracy = 0;
         if (getLocationTracker(activity).getCurrentLocation() != null) {
             latitude = getLocationTracker(activity).getCurrentLocation().getLatitude();
-            longitude = getLocationTracker(activity).getCurrentLocation().getLatitude();
-            accuracy = getLocationTracker(activity).getCurrentLocation().getLatitude();
+            longitude = getLocationTracker(activity).getCurrentLocation().getLongitude();
+            accuracy = getLocationTracker(activity).getCurrentLocation().getAccuracy();
         }
         forbiddenDto.prepareToSend(accuracy, longitude, latitude,
                 binding.editTextPostalCode.getText().toString(),
                 binding.editTextDescription.getText().toString(),
                 binding.editTextPreAccount.getText().toString(),
                 binding.editTextNextAccount.getText().toString(),
-                binding.editTextAhadNumber.getText().toString(), zoneId);
+               getDigits(binding.editTextAhadNumber.getText().toString()), zoneId);
         new PrepareForbid(activity, forbiddenDto, zoneId).execute(activity);
     }
 
