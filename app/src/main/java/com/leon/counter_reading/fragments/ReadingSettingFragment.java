@@ -27,6 +27,9 @@ public class ReadingSettingFragment extends Fragment {
         this.trackingDtos.addAll(trackingDtos);
     }
 
+    public ReadingSettingFragment() {
+    }
+
     public static ReadingSettingFragment newInstance(ArrayList<TrackingDto> trackingDtos) {
         return new ReadingSettingFragment(trackingDtos);
     }

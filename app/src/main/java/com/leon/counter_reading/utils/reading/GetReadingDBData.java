@@ -93,7 +93,8 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
         }
 
         if (readingData.onOffLoadDtos != null && readingData.onOffLoadDtos.size() > 0) {
-            readingData.counterStateDtos.addAll(myDatabase.counterStateDao().getCounterStateDtos(readingData.onOffLoadDtos.get(0).zoneId));
+            readingData.counterStateDtos.addAll(myDatabase.counterStateDao()
+                    .getCounterStateDtos(readingData.onOffLoadDtos.get(0).zoneId));
             if (readingData.counterStateDtos.size() > 0)
                 readingDataTemp.counterStateDtos.addAll(readingData.counterStateDtos);
             else {

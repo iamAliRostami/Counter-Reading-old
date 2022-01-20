@@ -81,10 +81,9 @@ public class CustomFile {
             e.printStackTrace();
         }
 //        long startTime = Calendar.getInstance().getTimeInMillis();
-        byte[] bitmapData = compressBitmapToByte(bitmap);
-        FileOutputStream fos;
         try {
-            fos = new FileOutputStream(f);
+            final byte[] bitmapData = compressBitmapToByte(bitmap);
+            final FileOutputStream fos = new FileOutputStream(f);
             fos.write(bitmapData);
             fos.flush();
             fos.close();
