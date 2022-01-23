@@ -31,7 +31,7 @@ public class SaveDownloadData {
                 myDatabase.counterReportDao().deleteAllCounterReport(readingData.trackingDtos.get(i).zoneId);
             } else if (myDatabase.trackingDao().getTrackingDtoActivesCountByTracking(readingData
                     .trackingDtos.get(i).trackNumber) > 0) {
-                String message = String.format(activity.getString(R.string.download_message_error),
+                final String message = String.format(activity.getString(R.string.download_message_error),
                         readingData.trackingDtos.get(i).trackNumber);
                 showMessage(activity, message, DialogType.Yellow);
                 return;
@@ -46,7 +46,7 @@ public class SaveDownloadData {
         myDatabase.trackingDao().insertAllTrackingDtos(readingData.trackingDtos);
         myDatabase.onOffLoadDao().insertAllOnOffLoad(readingData.onOffLoadDtos);
 
-        ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>(myDatabase.counterStateDao()
+        final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>(myDatabase.counterStateDao()
                 .getCounterStateDtos());
         for (int j = 0; j < counterStateDtos.size(); j++) {
             int i = 0;
@@ -122,33 +122,19 @@ public class SaveDownloadData {
         final String queryOnOffLoad = String.format(query, "OnOffLoadDto_".concat(time),
                 String.format("SELECT * FROM OnOffLoadDto WHERE trackNumber = %d",
                         readingData.trackingDtos.get(i).trackNumber));
-        final String queryDeleteOnOffLoad = String.format("DELETE FROM OnOffLoadDto WHERE trackNumber = %d;",
-                readingData.trackingDtos.get(i).trackNumber);
-        final String queryDeleteTracking = String.format("DELETE FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1;",
-                readingData.trackingDtos.get(i).trackNumber);
-
-//        if (customTransaction(queryTrackDto, queryOnOffLoad, queryDeleteOnOffLoad, queryDeleteTracking)) {
-//            return true;
-//        } else {
-//            final String message = String.format(activity.getString(R.string.download_message_error),
-//                    readingData.trackingDtos.get(i).trackNumber);
-//            showMessage(activity, message, DialogType.Yellow);
-//        }
-//        return false;
+//        final String queryDeleteOnOffLoad = String.format("DELETE FROM OnOffLoadDto WHERE trackNumber = %d;",
+//                readingData.trackingDtos.get(i).trackNumber);
+//        final String queryDeleteTracking = String.format("DELETE FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1;",
+//                readingData.trackingDtos.get(i).trackNumber);
         try {
-//            myDatabase.getOpenHelper().getWritableDatabase().query(queryTrackDto);
-//            myDatabase.getOpenHelper().getWritableDatabase().query(queryOnOffLoad);
-
             Cursor cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryTrackDto);
             cursor.moveToFirst();
             cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryOnOffLoad);
             cursor.moveToFirst();
-
             myDatabase.trackingDao().deleteTrackingDto(readingData.trackingDtos.get(i).trackNumber, true);
             myDatabase.onOffLoadDao().deleteOnOffLoad(readingData.trackingDtos.get(i).trackNumber);
             return true;
         } catch (Exception e) {
-            Log.e("error", e.getMessage());
             return false;
         }
     }

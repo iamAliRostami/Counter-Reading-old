@@ -21,7 +21,7 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_main.xml" value="0.39375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_navigation.xml" value="0.18671875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_reading.xml" value="0.2625" />
-        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_reading_report.xml" value="0.2625" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_reading_report.xml" value="0.536" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_report.xml" value="0.26614583333333336" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_report_forbid.xml" value="0.23984375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_take_photo.xml" value="0.39375" />
@@ -57,6 +57,7 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/row_listdevices.xml" value="0.19375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/title_dialog.xml" value="0.190625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/toolbar.xml" value="0.2625" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/menu/keyboard_menu.xml" value="0.365625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/menu/reading_menu.xml" value="0.39375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/menu/setting_menu.xml" value="0.2625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/xml/device_filter.xml" value="0.39375" />

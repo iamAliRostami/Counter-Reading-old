@@ -1,5 +1,6 @@
 package com.leon.counter_reading.adapters;
 
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.annotation.SuppressLint;
@@ -13,9 +14,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.holder.ReadingReportCheckBoxViewHolder;
 import com.leon.counter_reading.fragments.dialog.AhadFragment;
 import com.leon.counter_reading.fragments.dialog.KarbariFragment;
-import com.leon.counter_reading.fragments.dialog.ShowFragmentDialog;
 import com.leon.counter_reading.fragments.dialog.TaviziFragment;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.OffLoadReport;
 
@@ -24,10 +23,10 @@ import java.util.ArrayList;
 public class ReadingReportCustomAdapter extends BaseAdapter {
     private final ArrayList<CounterReportDto> counterReportDtos;
     private final ArrayList<OffLoadReport> offLoadReports;
-    private final String uuid;
     private final LayoutInflater inflater;
     private final Context context;
     private final int tracking;
+    private final String uuid;
 
     public ReadingReportCustomAdapter(Context context, String uuid, int tracking,
                                       ArrayList<CounterReportDto> counterReportDtos,
@@ -55,20 +54,17 @@ public class ReadingReportCustomAdapter extends BaseAdapter {
             if (holder.checkBox.isChecked()) {
                 final OffLoadReport offLoadReport = new OffLoadReport(uuid, tracking,
                         counterReportDtos.get(position).id);
-                getApplicationComponent().MyDatabase()
-                        .offLoadReportDao().insertOffLoadReport(offLoadReport);
+                getApplicationComponent().MyDatabase().offLoadReportDao()
+                        .insertOffLoadReport(offLoadReport);
                 offLoadReports.add(offLoadReport);
                 if (counterReportDtos.get(position).isAhad) {
-                    ShowFragmentDialog.ShowFragmentDialogOnce(context, "AHAD_DIALOG",
-                            AhadFragment.newInstance(uuid));
+                    ShowFragmentDialogOnce(context, "AHAD_DIALOG", AhadFragment.newInstance(uuid));
                 }
                 if (counterReportDtos.get(position).isTavizi) {
-                    ShowFragmentDialog.ShowFragmentDialogOnce(context, "TAVIZ_DIALOG",
-                            TaviziFragment.newInstance(uuid));
+                    ShowFragmentDialogOnce(context, "TAVIZ_DIALOG", TaviziFragment.newInstance(uuid));
                 }
                 if (counterReportDtos.get(position).isKarbari) {
-                    ShowFragmentDialog.ShowFragmentDialogOnce(context, "KARBARI_DIALOG",
-                            KarbariFragment.newInstance(uuid));
+                    ShowFragmentDialogOnce(context, "KARBARI_DIALOG", KarbariFragment.newInstance(uuid));
                 }
             } else {
                 for (int i = 0; i < offLoadReports.size(); i++) {

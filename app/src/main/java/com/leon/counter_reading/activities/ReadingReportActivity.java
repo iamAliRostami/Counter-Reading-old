@@ -52,7 +52,7 @@ public class ReadingReportActivity extends AppCompatActivity {
         }
         new GetReadingReportDBData(activity, trackNumber, zoneId, uuid).execute(activity);
         binding.buttonSubmit.setOnClickListener(v -> {
-            Intent intent = new Intent();
+            final Intent intent = new Intent();
             intent.putExtra(POSITION.getValue(), position);
             intent.putExtra(BILL_ID.getValue(), uuid);
             setResult(RESULT_OK, intent);
@@ -62,27 +62,14 @@ public class ReadingReportActivity extends AppCompatActivity {
 
     public void setupRecyclerView(ArrayList<CounterReportDto> counterReportDtos,
                                   ArrayList<OffLoadReport> offLoadReports) {
-        ReadingReportCustomAdapter readingReportCustomAdapter =
-                new ReadingReportCustomAdapter(activity, uuid, trackNumber,
-                        counterReportDtos, offLoadReports);
+        final ReadingReportCustomAdapter readingReportCustomAdapter =
+                new ReadingReportCustomAdapter(activity, uuid, trackNumber,counterReportDtos, offLoadReports);
         activity.runOnUiThread(() -> binding.listViewReports.setAdapter(readingReportCustomAdapter));
     }
 
     @Override
     public void onBackPressed() {
         new CustomToast().warning(getString(R.string.submit_for_back));
-    }
-
-    @Override
-    protected void onStop() {
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
-        super.onStop();
     }
 
     @Override

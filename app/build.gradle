@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
-//    id 'com.google.firebase.crashlytics'
 }
 android {
     compileSdkVersion 31
@@ -18,8 +17,8 @@ android {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
         targetSdkVersion 31
-        versionCode 62
-        versionName "1.00.10.21"
+        versionCode 63
+        versionName "1.00.10.30"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config

@@ -48,6 +48,7 @@ import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.enums.OffloadStateEnum;
 import com.leon.counter_reading.enums.SearchTypeEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.fragments.ReadingFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
 import com.leon.counter_reading.fragments.dialog.SearchFragment;
 import com.leon.counter_reading.fragments.dialog.SerialFragment;
@@ -77,7 +78,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 
-public class ReadingActivity extends BaseActivity {
+public class ReadingActivity extends BaseActivity implements ReadingFragment.Callback {
     private int[] imageSrc;
     private ActivityReadingBinding binding;
     private Activity activity;
@@ -103,11 +104,11 @@ public class ReadingActivity extends BaseActivity {
                 getBoolData(SORT_TYPE.getValue())).execute(activity);
     }
 
-//    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.clear();
-//    }
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.clear();
+    }
 
     private void updateOnOffLoad(int position, int counterStateCode, int counterStatePosition) {
         readingData.onOffLoadDtos.get(position).isBazdid = true;
@@ -488,8 +489,8 @@ public class ReadingActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.reading_menu, menu);
-        menu.getItem(6).setChecked(FOCUS_ON_EDIT_TEXT);
-        menu.getItem(7).setChecked(MyApplication.getApplicationComponent()
+//        menu.getItem(6).setChecked(FOCUS_ON_EDIT_TEXT);
+        menu.getItem(6).setChecked(getApplicationComponent()
                 .SharedPreferenceModel().getBoolData(SORT_TYPE.getValue()));
         return super.onCreateOptionsMenu(menu);
     }
@@ -601,13 +602,19 @@ public class ReadingActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         try {
-            ImageView imageViewFlash = findViewById(R.id.image_view_flash);
+            final ImageView imageViewFlash = findViewById(R.id.image_view_flash);
             imageViewFlash.setImageDrawable(
                     AppCompatResources.getDrawable(activity, R.drawable.img_flash_off));
             flashLightManager.turnOff();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        offlineAttempts = 0;
         Debug.getNativeHeapAllocatedSize();
         System.runFinalization();
         Runtime.getRuntime().totalMemory();
@@ -618,40 +625,7 @@ public class ReadingActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        ImageView imageViewFlash = findViewById(R.id.image_view_flash);
-//        if (imageViewFlash != null) {
-//            imageViewFlash.setImageDrawable(null);
-//            ImageView imageViewReverse = findViewById(R.id.image_view_reverse);
-//            imageViewReverse.setImageDrawable(null);
-//            ImageView imageViewCamera = findViewById(R.id.image_view_camera);
-//            imageViewCamera.setImageDrawable(null);
-//            ImageView imageViewSearch = findViewById(R.id.image_view_search);
-//            imageViewSearch.setImageDrawable(null);
-//            ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
-//            imageViewCheck.setImageDrawable(null);
-//        }
-        offlineAttempts = 0;
-//        readingData.onOffLoadDtos.clear();
-//        readingData.qotrDictionary.clear();
-//        readingData.karbariDtos.clear();
-//        readingData.trackingDtos.clear();
-//        readingData.readingConfigDefaultDtos.clear();
-//        readingData.counterReportDtos.clear();
-//        readingData.counterStateDtos.clear();
-//        readingDataTemp.onOffLoadDtos.clear();
-//        readingDataTemp.qotrDictionary.clear();
-//        readingDataTemp.karbariDtos.clear();
-//        readingDataTemp.trackingDtos.clear();
-//        readingDataTemp.readingConfigDefaultDtos.clear();
-//        readingDataTemp.counterReportDtos.clear();
-//        readingDataTemp.counterStateDtos.clear();
-//        if (binding != null) {
-//            binding.imageViewHighLowState.setImageDrawable(null);
-//            binding.imageViewOffLoadState.setImageDrawable(null);
-//            binding.imageViewReadingType.setImageDrawable(null);
-//            binding.imageViewExceptionState.setImageDrawable(null);
-//        }
+    public int getCurrentPageNumber() {
+        return binding.viewPager.getCurrentItem();
     }
 }
