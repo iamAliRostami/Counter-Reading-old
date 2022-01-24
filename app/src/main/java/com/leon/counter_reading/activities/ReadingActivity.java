@@ -110,11 +110,11 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
                 getBoolData(SORT_TYPE.getValue())).execute(activity);
     }
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.clear();
-    }
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.clear();
+//    }
 
     private void updateOnOffLoad(int position, int counterStateCode, int counterStatePosition) {
         readingData.onOffLoadDtos.get(position).isBazdid = true;

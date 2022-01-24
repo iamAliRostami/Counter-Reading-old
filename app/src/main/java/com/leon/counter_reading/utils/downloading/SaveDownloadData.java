@@ -3,7 +3,6 @@ package com.leon.counter_reading.utils.downloading;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
@@ -13,6 +12,7 @@ import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.QotrDictionary;
 import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.tables.ReadingData;
+import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.MyDatabase;
 
 import java.text.SimpleDateFormat;
@@ -112,30 +112,33 @@ public class SaveDownloadData {
     @SuppressLint({"DefaultLocale", "SimpleDateFormat"})
     private boolean downloadArchive(Activity activity, ReadingData readingData, MyDatabase myDatabase,
                                     int i) {
-        final String time = (new SimpleDateFormat(activity
-                .getString(R.string.save_format_name))).format(new Date())
-                .concat(String.valueOf(new Random().nextInt(1000)));
-        final String query = "CREATE TABLE %s AS %s;";
-        final String queryTrackDto = String.format(query, "TrackingDto_".concat(time),
-                String.format("SELECT * FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1",
-                        readingData.trackingDtos.get(i).trackNumber));
-        final String queryOnOffLoad = String.format(query, "OnOffLoadDto_".concat(time),
-                String.format("SELECT * FROM OnOffLoadDto WHERE trackNumber = %d",
-                        readingData.trackingDtos.get(i).trackNumber));
-//        final String queryDeleteOnOffLoad = String.format("DELETE FROM OnOffLoadDto WHERE trackNumber = %d;",
-//                readingData.trackingDtos.get(i).trackNumber);
-//        final String queryDeleteTracking = String.format("DELETE FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1;",
-//                readingData.trackingDtos.get(i).trackNumber);
         try {
-            Cursor cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryTrackDto);
-            cursor.moveToFirst();
-            cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryOnOffLoad);
-            cursor.moveToFirst();
-            myDatabase.trackingDao().deleteTrackingDto(readingData.trackingDtos.get(i).trackNumber, true);
-            myDatabase.onOffLoadDao().deleteOnOffLoad(readingData.trackingDtos.get(i).trackNumber);
-            return true;
+            final String time = (new SimpleDateFormat(activity
+                    .getString(R.string.save_format_name))).format(new Date())
+                    .concat(String.valueOf(new Random().nextInt(1000)));
+            final String query = "CREATE TABLE %s AS %s;";
+            final String queryTrackDto = String.format(query, "TrackingDto_".concat(time),
+                    String.format("SELECT * FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1",
+                            readingData.trackingDtos.get(i).trackNumber));
+            final String queryOnOffLoad = String.format(query, "OnOffLoadDto_".concat(time),
+                    String.format("SELECT * FROM OnOffLoadDto WHERE trackNumber = %d",
+                            readingData.trackingDtos.get(i).trackNumber));
+            try {
+                Cursor cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryTrackDto);
+                cursor.moveToFirst();
+                cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryOnOffLoad);
+                cursor.moveToFirst();
+                myDatabase.trackingDao().deleteTrackingDto(readingData.trackingDtos.get(i).trackNumber, true);
+                myDatabase.onOffLoadDao().deleteOnOffLoad(readingData.trackingDtos.get(i).trackNumber);
+                return true;
+            } catch (Exception e) {
+                new CustomToast().error(e.getMessage());
+                return false;
+            }
         } catch (Exception e) {
+            new CustomToast().error(e.getMessage());
             return false;
         }
+
     }
 }
