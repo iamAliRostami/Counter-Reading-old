@@ -1,6 +1,7 @@
 package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.ZONE_ID;
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.CustomFile.bitmapToFile;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
@@ -98,18 +99,16 @@ public class ReportForbidFragment extends DialogFragment {
         binding.editTextPreAccount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == getEshterakMaxLength(getActiveCompanyName())) {
-                    View view = binding.editTextNextAccount;
+                    final View view = binding.editTextNextAccount;
                     view.requestFocus();
                 }
             }
@@ -126,7 +125,7 @@ public class ReportForbidFragment extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == getEshterakMaxLength(getActiveCompanyName())) {
-                    View view = binding.editTextPostalCode;
+                    final View view = binding.editTextPostalCode;
                     view.requestFocus();
                 }
             }
@@ -143,7 +142,7 @@ public class ReportForbidFragment extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 10) {
-                    View view = binding.editTextAhadNumber;
+                    final View view = binding.editTextAhadNumber;
                     view.requestFocus();
                 }
             }
@@ -224,7 +223,7 @@ public class ReportForbidFragment extends DialogFragment {
 
     private void setOnImageViewTakenClickListener() {
         binding.imageViewTaken.setOnClickListener(v ->
-                ShowFragmentDialog.ShowFragmentDialogOnce(requireContext(), "Image # 1",
+                ShowFragmentDialogOnce(requireContext(), "Image # 1",
                         HighQualityFragment.newInstance(forbiddenDto.bitmaps.get(forbiddenDto.bitmaps.size() - 1))));
     }
 
