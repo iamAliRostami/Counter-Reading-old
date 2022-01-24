@@ -35,7 +35,8 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.holder.ImageViewAdapter;
+import com.leon.counter_reading.adapters.ImageViewAdapter;
+import com.leon.counter_reading.adapters.ImageViewAdapterOld;
 import com.leon.counter_reading.databinding.ActivityTakePhotoBinding;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
@@ -44,6 +45,7 @@ import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.photo.PrepareMultimedia;
+import com.leon.counter_reading.utils.photo.PrepareMultimediaOld;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +54,7 @@ import java.util.ArrayList;
 public class TakePhotoActivity extends AppCompatActivity {
     public static int replace = 0;
     private ActivityTakePhotoBinding binding;
-    private ImageViewAdapter imageViewAdapter;
+    private ImageViewAdapterOld imageViewAdapter;
     private String uuid;
     private String path;
     private boolean result;
@@ -105,14 +107,14 @@ public class TakePhotoActivity extends AppCompatActivity {
                 images.get(i).bitmap = CustomFile.loadImage(this, images.get(i).address);
             }
         }
-        imageViewAdapter = new ImageViewAdapter(this, images);
+        imageViewAdapter = new ImageViewAdapterOld(this, images);
         binding.gridViewImage.setAdapter(imageViewAdapter);
     }
 
     private void setOnButtonSendClickListener() {
         binding.buttonSaveSend.setOnClickListener(v -> {
             binding.buttonSaveSend.setEnabled(false);
-            new PrepareMultimedia(this, position, result,
+            new PrepareMultimediaOld(this, position, result,
                     binding.editTextDescription.getText().toString(), images).execute(this);
         });
     }

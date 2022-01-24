@@ -20,7 +20,7 @@ import com.leon.counter_reading.tables.OffLoadReport;
 
 import java.util.ArrayList;
 
-public class ReadingReportCustomAdapter extends BaseAdapter {
+public class ReadingReportAdapter extends BaseAdapter {
     private final ArrayList<CounterReportDto> counterReportDtos;
     private final ArrayList<OffLoadReport> offLoadReports;
     private final LayoutInflater inflater;
@@ -28,9 +28,9 @@ public class ReadingReportCustomAdapter extends BaseAdapter {
     private final int tracking;
     private final String uuid;
 
-    public ReadingReportCustomAdapter(Context context, String uuid, int tracking,
-                                      ArrayList<CounterReportDto> counterReportDtos,
-                                      ArrayList<OffLoadReport> offLoadReports) {
+    public ReadingReportAdapter(Context context, String uuid, int tracking,
+                                ArrayList<CounterReportDto> counterReportDtos,
+                                ArrayList<OffLoadReport> offLoadReports) {
         this.counterReportDtos = counterReportDtos;
         this.offLoadReports = offLoadReports;
         this.uuid = uuid;

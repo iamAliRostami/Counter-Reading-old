@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/large_dp"
+    tools:context=".fragments.dialog.ReadingReportFragment">
+
+    <ListView
+        android:id="@+id/list_view_reports"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/button_submit"
+        tools:listitem="@layout/item_public" />
+
+    <Button
+        style="@style/ButtonWarning"
+        android:id="@+id/button_submit"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/low_dp"
+        android:layout_marginBottom="@dimen/low_dp"
+        android:text="@string/submit"/>
+</RelativeLayout>

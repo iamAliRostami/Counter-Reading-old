@@ -1,24 +1,29 @@
 package com.leon.counter_reading.utils.reading;
 
+import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
+import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 
-public class Result extends AsyncTask<Activity, Void, Void> {
-    final int position;
-    final String uuid;
+import com.leon.counter_reading.enums.BundleEnum;
 
-    public Result(int position, String uuid) {
+public class ResultOld extends AsyncTask<Activity, Void, Void> {
+    private final Intent data;
+
+    public ResultOld(Intent data) {
         super();
-        this.position = position;
-        this.uuid = uuid;
+        this.data = data;
     }
 
     @Override
     protected Void doInBackground(Activity... activities) {
+        final int position = data.getExtras().getInt(POSITION.getValue());
+        final String uuid = data.getExtras().getString(BILL_ID.getValue());
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(true, uuid);
         readingData.onOffLoadDtos.set(position, getApplicationComponent().MyDatabase()
                 .onOffLoadDao().getAllOnOffLoadById(uuid, readingData.onOffLoadDtos.get(position).trackingId));

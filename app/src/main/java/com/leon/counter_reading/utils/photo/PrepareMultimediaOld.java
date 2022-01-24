@@ -1,7 +1,5 @@
 package com.leon.counter_reading.utils.photo;
 
-import static com.leon.counter_reading.enums.ProgressType.SHOW_CANCELABLE;
-import static com.leon.counter_reading.enums.SharedReferenceKeys.TOKEN;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -15,7 +13,6 @@ import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.fragments.dialog.TakePhotoFragment;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
@@ -35,7 +32,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
+public class PrepareMultimediaOld extends AsyncTask<Activity, Integer, Activity> {
     private final ImageGrouped imageGrouped = new ImageGrouped();
     private final CustomProgressModel customProgressModel;
     private final ArrayList<Image> images;
@@ -43,8 +40,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
     private final boolean result;
     private final int position;
 
-    public PrepareMultimedia(Activity activity, int position, boolean result, String description,
-                             ArrayList<Image> images) {
+    public PrepareMultimediaOld(Activity activity, int position, boolean result, String description,
+                                ArrayList<Image> images) {
         super();
         customProgressModel = getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
@@ -82,11 +79,11 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
                     MediaType.parse("text/plain"));
             Retrofit retrofit = getApplicationComponent().NetworkHelperModel()
                     .getInstance(true, getApplicationComponent().SharedPreferenceModel()
-                            .getStringData(TOKEN.getValue()), 10, 5 * imageGrouped.File.size(), 5);
+                            .getStringData(SharedReferenceKeys.TOKEN.getValue()), 10, 5 * imageGrouped.File.size(), 5);
             IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
             Call<MultimediaUploadResponse> call = iAbfaService.fileUploadGrouped(imageGrouped.File,
                     imageGrouped.OnOffLoadId, imageGrouped.Description);
-            HttpClientWrapper.callHttpAsync(call, SHOW_CANCELABLE.getValue(), activity,
+            HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW_CANCELABLE.getValue(), activity,
                     new UploadImages(activity), new UploadImagesIncomplete(activity),
                     new UploadImagesError(activity));
         } else if (result) {
@@ -98,14 +95,12 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
     }
 
     private void setResult(Activity activity, boolean result) {
-//        if (result) {
-//            Intent intent = new Intent();
-//            intent.putExtra(BundleEnum.POSITION.getValue(), position);
-//            activity.setResult(Activity.RESULT_OK, intent);
-//        }
-//        activity.finish();
-        TakePhotoFragment.newInstance().setResult();
-
+        if (result) {
+            Intent intent = new Intent();
+            intent.putExtra(BundleEnum.POSITION.getValue(), position);
+            activity.setResult(Activity.RESULT_OK, intent);
+        }
+        activity.finish();
     }
 
     private void saveImages(boolean isSent, Activity activity) {

@@ -1,4 +1,4 @@
-package com.leon.counter_reading.adapters;
+package com.leon.counter_reading.adapters.holder;
 
 import android.view.View;
 import android.widget.ImageView;

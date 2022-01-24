@@ -156,6 +156,12 @@ public class ReadingFragment extends Fragment {
     private void initialize() {
         if (position != readingActivity.getCurrentPageNumber())
             binding.editTextNumber.setEnabled(false);
+        binding.editTextNumber.setOnLongClickListener(view -> {
+            binding.editTextNumber.setText("");
+            return false;
+        });
+        if (onOffLoadDto.counterNumber != null)
+            binding.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
         initializeViews();
         initializeSpinner();
         initializeEditText();
@@ -163,21 +169,13 @@ public class ReadingFragment extends Fragment {
     }
 
     public void initializeEditText(boolean... b) {
-        binding.editTextNumber.setOnLongClickListener(view -> {
-            binding.editTextNumber.setText("");
-            return false;
-        });
         if (onOffLoadDto.isLocked) {
             binding.editTextNumber.setFocusable(false);
             binding.editTextNumber.setEnabled(false);
-        } else if (b.length > 0 && b[0]) {
-            KeyboardUtils.showKeyboard1(activity);
-        } else if (FOCUS_ON_EDIT_TEXT)
-            KeyboardUtils.showKeyboard2(activity);
+        } else if (b.length > 0 && b[0]) KeyboardUtils.showKeyboard1(activity);
+        else if (FOCUS_ON_EDIT_TEXT) KeyboardUtils.showKeyboard2(activity);
         else KeyboardUtils.hideKeyboard(activity);
         binding.editTextNumber.requestFocus();
-        if (onOffLoadDto.counterNumber != null)
-            binding.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
     }
 
     private void initializeViews() {
@@ -494,11 +492,11 @@ public class ReadingFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.menu_keyboard) {
-            item.setChecked(!item.isChecked());
-            FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
+        if (item.getItemId() == R.id.menu_keyboard && readingActivity.getCurrentPageNumber() == position) {
+//            item.setChecked(!item.isChecked());
+            FOCUS_ON_EDIT_TEXT = item.isChecked();
 //            KeyboardUtils.showKeyboard1(activity);
-            initializeEditText();
+            initializeEditText(FOCUS_ON_EDIT_TEXT);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -506,9 +504,7 @@ public class ReadingFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof Activity) {
-            readingActivity = (Callback) context;
-        }
+        if (context instanceof Activity) readingActivity = (Callback) context;
     }
 
     @Override

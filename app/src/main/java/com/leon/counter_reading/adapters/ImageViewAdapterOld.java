@@ -1,4 +1,4 @@
-package com.leon.counter_reading.adapters.holder;
+package com.leon.counter_reading.adapters;
 
 import static com.leon.counter_reading.activities.TakePhotoActivity.replace;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
@@ -15,23 +15,24 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.TakePhotoActivity;
-import com.leon.counter_reading.adapters.ImageViewHolder;
+import com.leon.counter_reading.adapters.holder.ImageViewHolder;
 import com.leon.counter_reading.fragments.dialog.HighQualityFragment;
 import com.leon.counter_reading.fragments.dialog.ShowFragmentDialog;
+import com.leon.counter_reading.fragments.dialog.TakePhotoFragment;
 import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 import java.util.ArrayList;
 
-public class ImageViewAdapter extends BaseAdapter {
+public class ImageViewAdapterOld extends BaseAdapter {
     private final ArrayList<Image> images;
     private final LayoutInflater inflater;
     private final Context context;
 
-    public ImageViewAdapter(Context c, ArrayList<Image> images) {
+    public ImageViewAdapterOld(Context context, ArrayList<Image> images) {
         this.images = images;
-        context = c;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.context = context;
+        inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public int getCount() {
@@ -93,66 +94,6 @@ public class ImageViewAdapter extends BaseAdapter {
 
     private void imagePicker() {
         ((TakePhotoActivity) (context)).openSomeActivityForResult();
-//        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        ((TakePhotoActivity) (context)).startActivityForResult(cameraIntent, CAMERA_REQUEST);
-
-//        final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (cameraIntent.resolveActivity(context.getPackageManager()) != null) {
-//            File photoFile = null;
-//            try {
-//                photoFile = createImageFile(context);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            if (photoFile != null) {
-//                PHOTO_URI = FileProvider.getUriForFile(context,
-//                        BuildConfig.APPLICATION_ID.concat(".provider"), photoFile);
-//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, PHOTO_URI);
-//                try {
-//                    ((TakePhotoActivity) (context)).startActivityForResult(cameraIntent, CAMERA_REQUEST);
-//                } catch (ActivityNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-
-
-//        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogCustom));
-//        builder.setTitle(R.string.choose_document);
-//        builder.setMessage(R.string.select_source);
-//        builder.setPositiveButton(R.string.gallery, (dialog, which) -> {
-//            dialog.dismiss();
-//            Intent intent = new Intent("android.intent.action.PICK");
-//            intent.setType("image/*");
-//            ((TakePhotoActivity) (context)).startActivityForResult(intent, GALLERY_REQUEST);
-//        });
-//        builder.setNegativeButton(R.string.camera, (dialog, which) -> {
-//            dialog.dismiss();
-//            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//            if (cameraIntent.resolveActivity(context.getPackageManager()) != null) {
-//                // Create the File where the photo should go
-//                File photoFile = null;
-//                try {
-//                    photoFile = createImageFile(context);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                // Continue only if the File was successfully created
-//                if (photoFile != null) {
-//                    PHOTO_URI = FileProvider.getUriForFile(context,
-//                            BuildConfig.APPLICATION_ID.concat(".provider"),
-//                            photoFile);
-//                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, PHOTO_URI);
-//                    try {
-//                        ((TakePhotoActivity) (context)).startActivityForResult(cameraIntent, CAMERA_REQUEST);
-//                    } catch (ActivityNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        });
-////        builder.setNeutralButton("", (dialog, which) -> dialog.dismiss());
-//        builder.create().show();
     }
 }
 

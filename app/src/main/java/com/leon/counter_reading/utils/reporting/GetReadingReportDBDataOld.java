@@ -3,21 +3,21 @@ package com.leon.counter_reading.utils.reporting;
 import android.app.Activity;
 import android.os.AsyncTask;
 
-import com.leon.counter_reading.di.view_model.CustomProgressModel;
-import com.leon.counter_reading.fragments.dialog.ReadingReportFragment;
 import com.leon.counter_reading.helpers.MyApplication;
+import com.leon.counter_reading.activities.ReadingReportActivity;
+import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.OffLoadReport;
 
 import java.util.ArrayList;
 
-public class GetReadingReportDBData extends AsyncTask<Activity, Integer, Integer> {
+public class GetReadingReportDBDataOld extends AsyncTask<Activity, Integer, Integer> {
     private final String uuid;
     private final int trackNumber;
     private final int zoneId;
     private final CustomProgressModel customProgressModel;
 
-    public GetReadingReportDBData(Activity activity, int trackNumber, int zoneId, String uuid) {
+    public GetReadingReportDBDataOld(Activity activity, int trackNumber, int zoneId, String uuid) {
         super();
         customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
@@ -46,8 +46,7 @@ public class GetReadingReportDBData extends AsyncTask<Activity, Integer, Integer
                 }
             }
         }
-//        ((ReadingReportActivity) (activities[0])).setupRecyclerView(counterReportDtos, offLoadReports);
-        ReadingReportFragment.newInstance().setupRecyclerView(counterReportDtos, offLoadReports);
+        ((ReadingReportActivity) (activities[0])).setupRecyclerView(counterReportDtos, offLoadReports);
         return null;
     }
 }

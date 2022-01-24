@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
-import com.leon.counter_reading.adapters.ReadingSettingCustomAdapter;
+import com.leon.counter_reading.adapters.ReadingSettingAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingSettingBinding;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.tables.TrackingDto;
@@ -54,10 +54,10 @@ public class ReadingSettingFragment extends Fragment {
 
     private void setupListView() {
         if (trackingDtos.size() > 0) {
-            final ReadingSettingCustomAdapter readingSettingCustomAdapter =
-                    new ReadingSettingCustomAdapter(requireContext(), trackingDtos);
+            final ReadingSettingAdapter adapter =
+                    new ReadingSettingAdapter(requireContext(), trackingDtos);
             binding.listViewRead.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-            binding.listViewRead.setAdapter(readingSettingCustomAdapter);
+            binding.listViewRead.setAdapter(adapter);
         } else {
             binding.listViewRead.setVisibility(View.GONE);
             binding.textViewNotFound.setVisibility(View.VISIBLE);

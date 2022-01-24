@@ -21,13 +21,13 @@ import com.leon.counter_reading.utils.CustomToast;
 
 import java.util.ArrayList;
 
-public class ReadingSettingCustomAdapter extends BaseAdapter {
+public class ReadingSettingAdapter extends BaseAdapter {
     private final ArrayList<TrackingDto> trackingDtos;
     private final LayoutInflater inflater;
     private final Context context;
     private int zoneId;
 
-    public ReadingSettingCustomAdapter(Context context, ArrayList<TrackingDto> trackingDtos) {
+    public ReadingSettingAdapter(Context context, ArrayList<TrackingDto> trackingDtos) {
         this.trackingDtos = trackingDtos;
         this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

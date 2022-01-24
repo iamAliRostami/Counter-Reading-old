@@ -1,11 +1,10 @@
 package com.leon.counter_reading.activities;
 
 import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
-import static com.leon.counter_reading.enums.BundleEnum.IMAGE;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
-import static com.leon.counter_reading.enums.BundleEnum.SENT;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SORT_TYPE;
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
 import static com.leon.counter_reading.helpers.Constants.CAMERA;
 import static com.leon.counter_reading.helpers.Constants.COUNTER_LOCATION;
 import static com.leon.counter_reading.helpers.Constants.DESCRIPTION;
@@ -50,9 +49,10 @@ import com.leon.counter_reading.enums.SearchTypeEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.fragments.ReadingFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
+import com.leon.counter_reading.fragments.dialog.ReadingReportFragment;
 import com.leon.counter_reading.fragments.dialog.SearchFragment;
 import com.leon.counter_reading.fragments.dialog.SerialFragment;
-import com.leon.counter_reading.fragments.dialog.ShowFragmentDialog;
+import com.leon.counter_reading.fragments.dialog.TakePhotoFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IFlashLightManager;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
@@ -68,6 +68,7 @@ import com.leon.counter_reading.utils.reading.GetReadingDBData;
 import com.leon.counter_reading.utils.reading.PrepareToSend;
 import com.leon.counter_reading.utils.reading.ReadingUtils;
 import com.leon.counter_reading.utils.reading.Result;
+import com.leon.counter_reading.utils.reading.ResultOld;
 import com.leon.counter_reading.utils.reading.Search;
 import com.leon.counter_reading.utils.reading.Update;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByAttemptNumber;
@@ -78,7 +79,8 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 
-public class ReadingActivity extends BaseActivity implements ReadingFragment.Callback {
+public class ReadingActivity extends BaseActivity implements ReadingFragment.Callback,
+        TakePhotoFragment.Callback, ReadingReportFragment.Callback {
     private int[] imageSrc;
     private ActivityReadingBinding binding;
     private Activity activity;
@@ -285,16 +287,21 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
     }
 
     private void showImage(int position) {
-        Intent intent = new Intent(activity, TakePhotoActivity.class);
-        intent.putExtra(BILL_ID.getValue(),
-                readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-        intent.putExtra(TRACKING.getValue(),
-                readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
-        intent.putExtra(POSITION.getValue(), position);
-        intent.putExtra(IMAGE.getValue(), true);
-        intent.putExtra(SENT.getValue(),
-                readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0);
-        startActivityForResult(intent, CAMERA);
+        ShowFragmentDialogOnce(activity, "TAKE_PHOTO", TakePhotoFragment
+                .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
+                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
+                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber,
+                        position, true));
+//        Intent intent = new Intent(activity, TakePhotoActivity.class);
+//        intent.putExtra(BILL_ID.getValue(),
+//                readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
+//        intent.putExtra(TRACKING.getValue(),
+//                readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
+//        intent.putExtra(POSITION.getValue(), position);
+//        intent.putExtra(IMAGE.getValue(), true);
+//        intent.putExtra(SENT.getValue(),
+//                readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0);
+//        startActivityForResult(intent, CAMERA);
     }
 
     private void attemptSend(int position, boolean isForm, boolean isImage) {
@@ -318,7 +325,7 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
                         .onOffLoadDtos.get(position).counterStatePosition);
                 if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
                         counterStateDto.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {
-                    ShowFragmentDialog.ShowFragmentDialogOnce(activity, "SERIAL_DIALOG",
+                    ShowFragmentDialogOnce(activity, "SERIAL_DIALOG",
                             SerialFragment.newInstance(position, counterStateDto.id,
                                     readingData.onOffLoadDtos.get(position).counterStatePosition));
                 } else isShowing = true;
@@ -342,7 +349,7 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
     }
 
     private void showPossible(int position) {
-        ShowFragmentDialog.ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG",
+        ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG",
                 PossibleFragment.newInstance(readingData.onOffLoadDtos.get(position), position, false));
     }
 
@@ -417,7 +424,7 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
 
     private void setOnImageViewsClickListener() {
         flashLightManager = MyApplication.getApplicationComponent().FlashViewModel();
-        ImageView imageViewFlash = findViewById(R.id.image_view_flash);
+        final ImageView imageViewFlash = findViewById(R.id.image_view_flash);
         if (imageViewFlash != null) {
             imageViewFlash.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_flash_off));
@@ -428,59 +435,66 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
                         isOn ? R.drawable.img_flash_on : R.drawable.img_flash_off));
             });
 
-            ImageView imageViewReverse = findViewById(R.id.image_view_reverse);
+            final ImageView imageViewReverse = findViewById(R.id.image_view_reverse);
             imageViewReverse.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_inverse));
             imageViewReverse.setOnClickListener(v ->
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode() < 2 ?
                             AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO));
 
-            ImageView imageViewCamera = findViewById(R.id.image_view_camera);
+            final ImageView imageViewCamera = findViewById(R.id.image_view_camera);
             imageViewCamera.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_camera));
             imageViewCamera.setOnClickListener(v -> {
                 if (readingData.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
-                    Intent intent = new Intent(activity, TakePhotoActivity.class);
-                    intent.putExtra(SENT.getValue(),
-                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0);
-                    intent.putExtra(BILL_ID.getValue(),
-                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-                    intent.putExtra(TRACKING.getValue(),
-                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
-                    startActivity(intent);
+                    ShowFragmentDialogOnce(activity, "TAKE_PHOTO", TakePhotoFragment
+                            .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
+                                    readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
+                                    readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber));
+//                    Intent intent = new Intent(activity, TakePhotoActivity.class);
+//                    intent.putExtra(SENT.getValue(),
+//                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0);
+//                    intent.putExtra(BILL_ID.getValue(),
+//                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
+//                    intent.putExtra(TRACKING.getValue(),
+//                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
+//                    startActivity(intent);
                 }
             });
 
-            ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
+            final ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
             imageViewCheck.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_checked));
             imageViewCheck.setOnClickListener(v -> {
                 if (readingData.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
-                    Intent intent = new Intent(activity, ReadingReportActivity.class);
-                    intent.putExtra(BILL_ID.getValue(),
-                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-                    intent.putExtra(TRACKING.getValue(),
-                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
-                    intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
-                    intent.putExtra(BundleEnum.ZONE_ID.getValue(),
-                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).zoneId);
-                    startActivityForResult(intent, REPORT);
+                    ShowFragmentDialogOnce(activity, "READING_REPORT", ReadingReportFragment.newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
+                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber,
+                            binding.viewPager.getCurrentItem(),
+                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).zoneId));
+//                    Intent intent = new Intent(activity, ReadingReportActivity.class);
+//                    intent.putExtra(BILL_ID.getValue(),
+//                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
+//                    intent.putExtra(TRACKING.getValue(),
+//                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
+//                    intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
+//                    intent.putExtra(BundleEnum.ZONE_ID.getValue(),
+//                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).zoneId);
+//                    startActivityForResult(intent, REPORT);
                 }
             });
 
-            ImageView imageViewSearch = findViewById(R.id.image_view_search);
+            final ImageView imageViewSearch = findViewById(R.id.image_view_search);
             imageViewSearch.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_search));
             imageViewSearch.setOnClickListener(v -> {
                 if (readingDataTemp.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
-                    ShowFragmentDialog.ShowFragmentDialogOnce(activity, "SEARCH_DIALOG",
-                            new SearchFragment());
+                    ShowFragmentDialogOnce(activity, "SEARCH_DIALOG", new SearchFragment());
                 }
             });
         }
@@ -577,11 +591,27 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
         if ((requestCode == REPORT || requestCode == NAVIGATION ||
                 requestCode == DESCRIPTION ||
                 requestCode == COUNTER_LOCATION) && resultCode == RESULT_OK) {
-            new Result(data).execute(activity);
+            new ResultOld(data).execute(activity);
         } else if (requestCode == CAMERA && resultCode == RESULT_OK) {
             int position = data.getExtras().getInt(POSITION.getValue());
             attemptSend(position, false, false);
         }
+    }
+
+    @Override
+    public void setReportResult(int position, String uuid) {
+        new Result(position, uuid).execute(activity);
+
+    }
+
+    @Override
+    public int getCurrentPageNumber() {
+        return binding.viewPager.getCurrentItem();
+    }
+
+    @Override
+    public void setPhotoResult(int position) {
+        attemptSend(position, false, false);
     }
 
     @Override
@@ -624,8 +654,4 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
         System.gc();
     }
 
-    @Override
-    public int getCurrentPageNumber() {
-        return binding.viewPager.getCurrentItem();
-    }
 }
