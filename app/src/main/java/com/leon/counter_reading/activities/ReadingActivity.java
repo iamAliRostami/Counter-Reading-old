@@ -48,8 +48,11 @@ import com.leon.counter_reading.enums.OffloadStateEnum;
 import com.leon.counter_reading.enums.SearchTypeEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.fragments.ReadingFragment;
+import com.leon.counter_reading.fragments.dialog.CounterPlaceFragment;
+import com.leon.counter_reading.fragments.dialog.NavigationFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
 import com.leon.counter_reading.fragments.dialog.ReadingReportFragment;
+import com.leon.counter_reading.fragments.dialog.ReportForbidFragment;
 import com.leon.counter_reading.fragments.dialog.SearchFragment;
 import com.leon.counter_reading.fragments.dialog.SerialFragment;
 import com.leon.counter_reading.fragments.dialog.TakePhotoFragment;
@@ -80,7 +83,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.util.ArrayList;
 
 public class ReadingActivity extends BaseActivity implements ReadingFragment.Callback,
-        TakePhotoFragment.Callback, ReadingReportFragment.Callback {
+        TakePhotoFragment.Callback, ReadingReportFragment.Callback, CounterPlaceFragment.Callback,
+        NavigationFragment.Callback {
     private int[] imageSrc;
     private ActivityReadingBinding binding;
     private Activity activity;
@@ -522,16 +526,21 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                intent = new Intent(activity, NavigationActivity.class);
-                intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
-                startActivityForResult(intent, NAVIGATION);
+                ShowFragmentDialogOnce(activity, "NAVIGATION", NavigationFragment
+                        .newInstance(binding.viewPager.getCurrentItem()));
+//                intent = new Intent(activity, NavigationActivity.class);
+//                intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
+//                startActivityForResult(intent, NAVIGATION);
             }
         } else if (id == R.id.menu_report_forbid) {
-            intent = new Intent(activity, ReportForbidActivity.class);
-            if (readingData.onOffLoadDtos.size() > 0)
-                intent.putExtra(BundleEnum.ZONE_ID.getValue(), readingData.onOffLoadDtos.
-                        get(binding.viewPager.getCurrentItem()).zoneId);
-            startActivity(intent);
+            ShowFragmentDialogOnce(activity, "REPORT_FORBID", ReportForbidFragment.newInstance(
+                    readingData.onOffLoadDtos.size() > 0 ? readingData.onOffLoadDtos
+                            .get(binding.viewPager.getCurrentItem()).zoneId : 0));
+//            intent = new Intent(activity, ReportForbidActivity.class);
+//            if (readingData.onOffLoadDtos.size() > 0)
+//                intent.putExtra(BundleEnum.ZONE_ID.getValue(), readingData.onOffLoadDtos.
+//                        get(binding.viewPager.getCurrentItem()).zoneId);
+//            startActivity(intent);
         } else if (id == R.id.menu_description) {
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
@@ -551,11 +560,14 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                intent = new Intent(activity, CounterPlaceActivity.class);
-                intent.putExtra(BILL_ID.getValue(),
-                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-                intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
-                startActivityForResult(intent, COUNTER_LOCATION);
+//                intent = new Intent(activity, CounterPlaceActivity.class);
+//                intent.putExtra(BILL_ID.getValue(),
+//                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
+//                intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
+//                startActivityForResult(intent, COUNTER_LOCATION);
+                ShowFragmentDialogOnce(activity, "COUNTER_PLACE", CounterPlaceFragment
+                        .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
+                                binding.viewPager.getCurrentItem()));
             }
         } else if (id == R.id.menu_keyboard) {
             if (readingData.onOffLoadDtos.isEmpty()) {
@@ -599,7 +611,7 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
     }
 
     @Override
-    public void setReportResult(int position, String uuid) {
+    public void setResult(int position, String uuid) {
         new Result(position, uuid).execute(activity);
 
     }

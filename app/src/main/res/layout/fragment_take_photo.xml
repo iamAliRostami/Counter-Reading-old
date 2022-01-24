@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="@dimen/medium_dp"
     tools:context=".fragments.dialog.TakePhotoFragment">
 
@@ -19,11 +19,8 @@
     <GridView
         android:id="@+id/grid_view_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/edit_text_description"
+        android:layout_height="wrap_content"
         android:layout_below="@id/text_view_not_sent"
-        android:layout_marginLeft="@dimen/medium_dp"
-        android:layout_marginRight="@dimen/medium_dp"
         android:background="@drawable/border_gray_3"
         android:gravity="center"
         android:nestedScrollingEnabled="true"
@@ -35,8 +32,9 @@
         android:id="@+id/edit_text_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/button_save_send"
-        android:layout_margin="@dimen/medium_dp"
+        android:layout_below="@id/grid_view_image"
+        android:layout_marginTop="@dimen/medium_dp"
+        android:layout_marginBottom="@dimen/medium_dp"
         android:background="@drawable/border_gray_3"
         android:gravity="top"
         android:hint="@string/description"
@@ -51,10 +49,8 @@
         style="@style/ButtonWarning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="@dimen/medium_dp"
-        android:layout_marginEnd="@dimen/medium_dp"
-        android:layout_marginBottom="@dimen/medium_dp"
+        android:layout_below="@id/edit_text_description"
+        android:layout_alignParentBottom="false"
         android:text="@string/save_send" />
 
 

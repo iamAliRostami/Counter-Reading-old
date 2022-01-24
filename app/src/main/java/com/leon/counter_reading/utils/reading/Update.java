@@ -1,11 +1,12 @@
 package com.leon.counter_reading.utils.reading;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.location.Location;
 import android.os.AsyncTask;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 
 import java.text.SimpleDateFormat;
@@ -35,8 +36,7 @@ public class Update extends AsyncTask<Activity, Void, Void> {
         }
         onOffLoadDto.phoneDateTime = dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis()));
 //        date = new Date(Calendar.getInstance().getTimeInMillis());
-        MyApplication.getApplicationComponent().MyDatabase()
-                .onOffLoadDao().updateOnOffLoad(onOffLoadDto);
+        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
         return null;
     }
 }

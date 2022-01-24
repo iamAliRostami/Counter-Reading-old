@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/large_dp"
+    android:padding="@dimen/medium_dp"
     tools:context=".fragments.dialog.ReadingReportFragment">
 
     <ListView

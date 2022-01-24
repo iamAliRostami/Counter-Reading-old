@@ -1,51 +1,69 @@
-package com.leon.counter_reading.activities;
+package com.leon.counter_reading.fragments.dialog;
 
-import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
+import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.helpers.Constants.readingData;
-import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.os.Debug;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.fragment.app.DialogFragment;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.databinding.ActivityNavigationBinding;
-import com.leon.counter_reading.enums.BundleEnum;
+import com.leon.counter_reading.databinding.FragmentNavigationBinding;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
-import com.leon.counter_reading.utils.navigation.NavigatingOld;
+import com.leon.counter_reading.utils.navigation.Navigating;
 
-public class NavigationActivity extends AppCompatActivity {
-    private ActivityNavigationBinding binding;
-    private Activity activity;
-    private int position;
+public class NavigationFragment extends DialogFragment {
+    public Callback readingActivity;
+    private FragmentNavigationBinding binding;
+    private static NavigationFragment instance;
     private OnOffLoadDto onOffLoadDto;
+    private int position;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        onActivitySetTheme(this, getApplicationComponent().SharedPreferenceModel()
-                .getIntData(THEME_STABLE.getValue()), true);
-        super.onCreate(savedInstanceState);
-        binding = ActivityNavigationBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        activity = this;
-        initialize();
+    public NavigationFragment() {
     }
 
-    void initialize() {
-        if (getIntent().getExtras() != null) {
-            position = getIntent().getExtras().getInt(BundleEnum.POSITION.getValue());
-            onOffLoadDto = readingData.onOffLoadDtos.get(position);
-            getIntent().getExtras().clear();
+    public static NavigationFragment newInstance() {
+        return instance;
+    }
+
+    public static NavigationFragment newInstance(int position) {
+        instance = new NavigationFragment();
+        Bundle args = new Bundle();
+        args.putInt(POSITION.getValue(), position);
+        instance.setArguments(args);
+        return instance;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            position = getArguments().getInt(POSITION.getValue());
         }
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentNavigationBinding.inflate(inflater, container, false);
+        initialize();
+        return binding.getRoot();
+    }
+
+    private void initialize() {
+        onOffLoadDto = readingData.onOffLoadDtos.get(position);
         setTextViews();
         initializeImageViews();
         setOnButtonNavigationClickListener();
@@ -99,35 +117,34 @@ public class NavigationActivity extends AppCompatActivity {
             if (cancel) {
                 view.requestFocus();
             } else {
-                int possibleEmpty = binding.editTextEmpty.getText().length() > 0 ?
+                final int possibleEmpty = binding.editTextEmpty.getText().length() > 0 ?
                         Integer.parseInt(binding.editTextEmpty.getText().toString()) : 0;
-                new NavigatingOld(position, onOffLoadDto.id, possibleEmpty,
+                dismiss();
+                new Navigating(position, onOffLoadDto.id, possibleEmpty,
                         binding.editTextAccount.getText().toString(),
                         binding.editTextMobile.getText().toString(),
                         binding.editTextPhone.getText().toString(),
                         binding.editTextSerialCounter.getText().toString(),
-                        binding.editTextAddress.getText().toString()).execute(activity);
+                        binding.editTextAddress.getText().toString()).execute(requireActivity());
             }
         });
     }
 
-    void setOnEditTextChangeListener() {
+    private void setOnEditTextChangeListener() {
         binding.editTextAccount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == DifferentCompanyManager.
                         getEshterakMaxLength(DifferentCompanyManager.getActiveCompanyName())) {
-                    View view = binding.editTextPhone;
+                    final View view = binding.editTextPhone;
                     view.requestFocus();
                 }
             }
@@ -135,18 +152,16 @@ public class NavigationActivity extends AppCompatActivity {
         binding.editTextPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 8) {
-                    View view = binding.editTextMobile;
+                    final View view = binding.editTextMobile;
                     view.requestFocus();
                 }
             }
@@ -155,18 +170,16 @@ public class NavigationActivity extends AppCompatActivity {
         binding.editTextMobile.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 11 && s.toString().substring(0, 2).contains("09")) {
-                    View view = binding.editTextSerialCounter;
+                    final View view = binding.editTextSerialCounter;
                     view.requestFocus();
                 } else binding.editTextMobile.setError(getString(R.string.error_format));
             }
@@ -174,67 +187,54 @@ public class NavigationActivity extends AppCompatActivity {
         binding.editTextSerialCounter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 15) {
-                    View view = binding.editTextAddress;
+                    final View view = binding.editTextAddress;
                     view.requestFocus();
                 }
             }
         });
     }
 
-    void initializeImageViews() {
-        binding.imageViewAccount.
-                setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.img_subscribe));
-        binding.imageViewAddress.
-                setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.img_address));
-        binding.imageViewCounterSerial.
-                setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.img_counter));
-        binding.imageViewPhoneNumber.
-                setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.img_phone));
-        binding.imageViewMobile.
-                setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.img_mobile));
-        binding.imageViewEmpty.
-                setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.img_home));
+    private void initializeImageViews() {
+        binding.imageViewAccount.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
+                R.drawable.img_subscribe));
+        binding.imageViewAddress.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
+                R.drawable.img_address));
+        binding.imageViewCounterSerial.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
+                R.drawable.img_counter));
+        binding.imageViewPhoneNumber.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
+                R.drawable.img_phone));
+        binding.imageViewMobile.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
+                R.drawable.img_mobile));
+        binding.imageViewEmpty.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
+                R.drawable.img_home));
     }
 
     @Override
-    protected void onStop() {
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
-        super.onStop();
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity) readingActivity = (Callback) context;
     }
 
-    @Override
-    protected void onDestroy() {
-        binding.imageViewAccount.setImageDrawable(null);
-        binding.imageViewAddress.setImageDrawable(null);
-        binding.imageViewCounterSerial.setImageDrawable(null);
-        binding.imageViewPhoneNumber.setImageDrawable(null);
-        binding.imageViewMobile.setImageDrawable(null);
-        binding.imageViewEmpty.setImageDrawable(null);
-        binding = null;
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
-        super.onDestroy();
+    public void onResume() {
+        if (getDialog() != null) {
+            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            getDialog().getWindow().setAttributes(params);
+        }
+        super.onResume();
+    }
+
+    public interface Callback {
+        void setResult(int position, String uuid);
     }
 }

@@ -74,7 +74,7 @@ public class ReadingReportFragment extends DialogFragment {
         new GetReadingReportDBData(requireActivity(), trackNumber, zoneId, uuid).execute(requireActivity());
         binding.buttonSubmit.setOnClickListener(v -> {
             dismiss();
-            readingActivity.setReportResult(position, uuid);
+            readingActivity.setResult(position, uuid);
         });
     }
 
@@ -94,7 +94,7 @@ public class ReadingReportFragment extends DialogFragment {
     public void onResume() {
         if (getDialog() != null) {
             WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
-            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
         }
@@ -102,6 +102,6 @@ public class ReadingReportFragment extends DialogFragment {
     }
 
     public interface Callback {
-        void setReportResult(int position, String uuid);
+        void setResult(int position, String uuid);
     }
 }

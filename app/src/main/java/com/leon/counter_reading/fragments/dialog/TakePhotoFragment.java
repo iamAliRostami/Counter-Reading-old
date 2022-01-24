@@ -193,7 +193,7 @@ public class TakePhotoFragment extends DialogFragment {
     public void onResume() {
         if (getDialog() != null) {
             WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
-            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
         }

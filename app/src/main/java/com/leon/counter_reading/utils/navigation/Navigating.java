@@ -1,13 +1,11 @@
 package com.leon.counter_reading.utils.navigation;
 
-import static android.app.Activity.RESULT_OK;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 
-import com.leon.counter_reading.helpers.MyApplication;
-import com.leon.counter_reading.enums.BundleEnum;
+import com.leon.counter_reading.fragments.dialog.NavigationFragment;
 
 public class Navigating extends AsyncTask<Activity, Void, Void> {
     private final int possibleEmpty;
@@ -34,14 +32,10 @@ public class Navigating extends AsyncTask<Activity, Void, Void> {
 
     @Override
     protected Void doInBackground(Activity... activities) {
-        MyApplication.getApplicationComponent().MyDatabase()
-                .onOffLoadDao().updateOnOffLoad(uuid, possibleEshterak, possibleMobile,
-                possibleEmpty, phoneNumber, serialNumber, address);
-        Intent intent = new Intent();
-        intent.putExtra(BundleEnum.POSITION.getValue(), position);
-        intent.putExtra(BundleEnum.BILL_ID.getValue(), uuid);
-        activities[0].setResult(RESULT_OK, intent);
-        activities[0].finish();
+        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(uuid,
+                possibleEshterak, possibleMobile, possibleEmpty, phoneNumber,
+                        serialNumber, address);
+        NavigationFragment.newInstance().readingActivity.setResult(position, uuid);
         return null;
     }
 }

@@ -24,12 +24,12 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
+public class PrepareForbidOld extends AsyncTask<Activity, Activity, Activity> {
     private final CustomProgressModel customProgressModel;
     private final ForbiddenDto forbiddenDto;
     private final int zoneId;
 
-    public PrepareForbid(Activity activity, ForbiddenDto forbiddenDto, int zoneId) {
+    public PrepareForbidOld(Activity activity, ForbiddenDto forbiddenDto, int zoneId) {
         super();
         customProgressModel = getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
@@ -39,9 +39,9 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
 
     @Override
     protected Activity doInBackground(Activity... activities) {
-        final Retrofit retrofit = getApplicationComponent().Retrofit();
-        final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-        final Call<ForbiddenDtoResponses> call;
+        Retrofit retrofit = getApplicationComponent().Retrofit();
+        IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
+        Call<ForbiddenDtoResponses> call;
         if (zoneId != 0 && forbiddenDto.File.size() > 0) {
             call = iAbfaService.singleForbidden(forbiddenDto.File, forbiddenDto.forbiddenDtoRequest.zoneId,
                     forbiddenDto.forbiddenDtoRequest.description,
@@ -86,8 +86,8 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
             customProgressModel.getDialog().dismiss();
             HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW.getValue(), activities[0],
                     new Forbidden(forbiddenDto),
-                    new ForbiddenIncomplete(activities[0]),
-                    new ForbiddenError(activities[0]));
+                    new ForbiddenIncompleteOld(activities[0]),
+                    new ForbiddenErrorOld(activities[0]));
         });
         return null;
     }
@@ -111,37 +111,41 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
             getApplicationComponent().MyDatabase().forbiddenDao().insertForbiddenDto(forbiddenDto);
     }
 
-    class ForbiddenIncomplete implements ICallbackIncomplete<ForbiddenDtoResponses> {
+    class ForbiddenIncompleteOld implements ICallbackIncomplete<ForbiddenDtoResponses> {
         private final Activity activity;
 
-        public ForbiddenIncomplete(Activity activity) {
+        public ForbiddenIncompleteOld(Activity activity) {
             this.activity = activity;
         }
 
         @Override
         public void executeIncomplete(Response<ForbiddenDtoResponses> response) {
             saveForbidden(activity);
+            activity.finish();
         }
     }
 
-    class ForbiddenError implements ICallbackError {
+    class ForbiddenErrorOld implements ICallbackError {
         private final Activity activity;
 
-        public ForbiddenError(Activity activity) {
+        public ForbiddenErrorOld(Activity activity) {
             this.activity = activity;
         }
 
         @Override
         public void executeError(Throwable t) {
             saveForbidden(activity);
+            activity.finish();
         }
     }
 }
 
-class Forbidden implements ICallback<ForbiddenDtoResponses> {
+class ForbiddenOld implements ICallback<ForbiddenDtoResponses> {
+    private final Activity activity;
     private final ForbiddenDto forbiddenDto;
 
-    public Forbidden(ForbiddenDto forbiddenDto) {
+    public ForbiddenOld(Activity activity, ForbiddenDto forbiddenDto) {
+        this.activity = activity;
         this.forbiddenDto = forbiddenDto;
     }
 
@@ -155,5 +159,6 @@ class Forbidden implements ICallback<ForbiddenDtoResponses> {
                 new CustomToast().success(response.body().message);
             }
         }
+        activity.finish();
     }
 }
