@@ -2,6 +2,7 @@ package com.leon.counter_reading.di.view_model;
 
 import static com.leon.counter_reading.helpers.Constants.MIN_DISTANCE_CHANGE_FOR_UPDATES;
 import static com.leon.counter_reading.helpers.Constants.MIN_TIME_BW_UPDATES;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -132,14 +133,13 @@ public class LocationTrackingGps extends Service implements LocationListener, IL
     public void addLocation(Location location) {
         if (location != null && (location.getLatitude() != 0 || location.getLongitude() != 0)) {
             LocationTrackingGps.location = location;
-            if (MyApplication.getApplicationComponent().SharedPreferenceModel()
+            if (getApplicationComponent().SharedPreferenceModel()
                     .getBoolData(SharedReferenceKeys.POINT.getValue())) {
                 SavedLocation savedLocation = new SavedLocation(location.getAccuracy(),
                         location.getLongitude(), location.getLatitude());
-                MyApplication.getApplicationComponent().MyDatabase().savedLocationDao()
+                getApplicationComponent().MyDatabase().savedLocationDao()
                         .insertSavedLocation(savedLocation);
             }
-            Log.e("gps", String.valueOf(getAccuracy()));
         }
     }
 

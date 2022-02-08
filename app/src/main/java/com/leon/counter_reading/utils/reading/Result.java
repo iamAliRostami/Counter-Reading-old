@@ -5,26 +5,24 @@ import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 
-import com.leon.counter_reading.enums.BundleEnum;
-
 public class Result extends AsyncTask<Activity, Void, Void> {
-    private final Intent data;
+    final int position;
+    final String uuid;
 
-    public Result(Intent data) {
+    public Result(int position, String uuid) {
         super();
-        this.data = data;
+        this.position = position;
+        this.uuid = uuid;
     }
 
     @Override
     protected Void doInBackground(Activity... activities) {
-        int position = data.getExtras().getInt(BundleEnum.POSITION.getValue()), i = 0;
-        String uuid = data.getExtras().getString(BundleEnum.BILL_ID.getValue());
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(true, uuid);
         readingData.onOffLoadDtos.set(position, getApplicationComponent().MyDatabase()
                 .onOffLoadDao().getAllOnOffLoadById(uuid, readingData.onOffLoadDtos.get(position).trackingId));
+        int i = 0;
         boolean found = false;
         while (!found && i < readingDataTemp.onOffLoadDtos.size()) {
             if (readingDataTemp.onOffLoadDtos.get(i).id.equals(uuid)) {

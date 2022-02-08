@@ -1,5 +1,7 @@
 package com.leon.counter_reading.fragments;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,7 +19,6 @@ import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.enums.UploadType;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.MyDatabase;
@@ -85,9 +86,16 @@ public class UploadFragment extends Fragment {
     }
 
     public void setMultimediaInfo(Activity activity) {
-        int imagesCount = MyApplication.getApplicationComponent().MyDatabase().imageDao().getUnsentImageCount(false);
-        int voicesCount = MyApplication.getApplicationComponent().MyDatabase().voiceDao().getUnsentVoiceCount(false);
-        String message = String.format(activity.getString(R.string.unuploaded_multimedia), imagesCount, voicesCount);
+        final int imagesCount = getApplicationComponent().MyDatabase().imageDao().getUnsentImageCount(false);
+        final int voicesCount = getApplicationComponent().MyDatabase().voiceDao().getUnsentVoiceCount(false);
+        final int imagesSize = getApplicationComponent().MyDatabase().imageDao().getUnsentImageSize(false);
+        final int voicesSize = getApplicationComponent().MyDatabase().voiceDao().getUnsentVoiceSizes(false);
+
+//        String message = String.format(activity.getString(R.string.unuploaded_multimedia), imagesCount, voicesCount);
+        String message = "تعداد عکس: ".concat(String.valueOf(imagesCount))
+                .concat(" *** حجم: ").concat(String.valueOf(imagesSize)).concat(" KB").concat("\n")
+                .concat("تعداد صدا: ").concat(String.valueOf(voicesCount))
+                .concat(" *** حجم: ").concat(String.valueOf(voicesSize)).concat(" KB");
         activity.runOnUiThread(() -> binding.textViewMultimedia.setText(message));
     }
 
@@ -100,7 +108,7 @@ public class UploadFragment extends Fragment {
         int total, mane = 0, unread, alalPercent, imagesCount, voicesCount, trackNumber;
         String trackingId;
         double alalMane;
-        MyDatabase myDatabase = MyApplication.getApplicationComponent().MyDatabase();
+        MyDatabase myDatabase = getApplicationComponent().MyDatabase();
         if (binding.spinner.getSelectedItemPosition() != 0) {
             trackingId = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id;
             trackNumber = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber;

@@ -1,5 +1,7 @@
 package com.leon.counter_reading.utils.photo;
 
+import static com.leon.counter_reading.enums.ProgressType.SHOW_CANCELABLE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.TOKEN;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -13,6 +15,7 @@ import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.fragments.dialog.TakePhotoFragment;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
@@ -79,11 +82,11 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
                     MediaType.parse("text/plain"));
             Retrofit retrofit = getApplicationComponent().NetworkHelperModel()
                     .getInstance(true, getApplicationComponent().SharedPreferenceModel()
-                            .getStringData(SharedReferenceKeys.TOKEN.getValue()), 10, 5 * imageGrouped.File.size(), 5);
+                            .getStringData(TOKEN.getValue()), 10, 5 * imageGrouped.File.size(), 5);
             IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
             Call<MultimediaUploadResponse> call = iAbfaService.fileUploadGrouped(imageGrouped.File,
                     imageGrouped.OnOffLoadId, imageGrouped.Description);
-            HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW_CANCELABLE.getValue(), activity,
+            HttpClientWrapper.callHttpAsync(call, SHOW_CANCELABLE.getValue(), activity,
                     new UploadImages(activity), new UploadImagesIncomplete(activity),
                     new UploadImagesError(activity));
         } else if (result) {
@@ -95,12 +98,14 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
     }
 
     private void setResult(Activity activity, boolean result) {
-        if (result) {
-            Intent intent = new Intent();
-            intent.putExtra(BundleEnum.POSITION.getValue(), position);
-            activity.setResult(Activity.RESULT_OK, intent);
-        }
-        activity.finish();
+//        if (result) {
+//            Intent intent = new Intent();
+//            intent.putExtra(BundleEnum.POSITION.getValue(), position);
+//            activity.setResult(Activity.RESULT_OK, intent);
+//        }
+//        activity.finish();
+        TakePhotoFragment.newInstance().setResult();
+
     }
 
     private void saveImages(boolean isSent, Activity activity) {
@@ -150,8 +155,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
 
         @Override
         public void executeIncomplete(Response<MultimediaUploadResponse> response) {
-            CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(activity);
-            String error = customErrorHandlingNew.getErrorMessageDefault(response);
+            final CustomErrorHandling errorHandling = new CustomErrorHandling(activity);
+            final String error = errorHandling.getErrorMessageDefault(response);
             new CustomToast().warning(error, Toast.LENGTH_LONG);
             saveImages(false, activity);
             setResult(activity, result);
@@ -168,8 +173,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
         @Override
         public void executeError(Throwable t) {
             if (!HttpClientWrapper.cancel) {
-                CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(activity);
-                String error = customErrorHandlingNew.getErrorMessageTotal(t);
+                final CustomErrorHandling errorHandling = new CustomErrorHandling(activity);
+                final String error = errorHandling.getErrorMessageTotal(t);
                 new CustomToast().error(error, Toast.LENGTH_LONG);
             }
             saveImages(false, activity);

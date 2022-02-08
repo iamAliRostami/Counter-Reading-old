@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_keyboard"
+        android:checkable="true"
+        android:title="@string/visible_hide_keyboard"
+        android:visible="true"
+        app:showAsAction="never" />
+</menu>

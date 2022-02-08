@@ -1,5 +1,8 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
+import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +15,6 @@ import androidx.core.content.ContextCompat;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityCounterPlaceBinding;
 import com.leon.counter_reading.enums.BundleEnum;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.helpers.MyApplication;
 
 public class CounterPlaceActivity extends AppCompatActivity {
@@ -23,9 +25,8 @@ public class CounterPlaceActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MyApplication.onActivitySetTheme(this, MyApplication.getApplicationComponent()
-                        .SharedPreferenceModel().getIntData(SharedReferenceKeys.THEME_STABLE.getValue()),
-                true);
+        onActivitySetTheme(this, MyApplication.getApplicationComponent()
+                .SharedPreferenceModel().getIntData(THEME_STABLE.getValue()), true);
         super.onCreate(savedInstanceState);
         binding = ActivityCounterPlaceBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

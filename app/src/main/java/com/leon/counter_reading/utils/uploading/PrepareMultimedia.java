@@ -106,12 +106,11 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
             IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
             Call<MultimediaUploadResponse> call = iAbfaService.voiceUploadMultiple(
                     voiceMultiples.File, voiceMultiples.OnOffLoadId, voiceMultiples.Description);
-            HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW.getValue(), activity,
+            HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW_CANCELABLE.getValue(), activity,
                     new UploadVoices(voice), new UploadVoicesIncomplete(), new UploadMultimediaError());
         } else {
             activity.runOnUiThread(() ->
-                    new CustomToast().info(activity.getString(R.string.there_is_no_voices),
-                            Toast.LENGTH_LONG));
+                    new CustomToast().info(activity.getString(R.string.there_is_no_voices),Toast.LENGTH_LONG));
         }
     }
 
@@ -157,8 +156,7 @@ class UploadImages implements ICallback<MultimediaUploadResponse> {
     void updateImages() {
         for (int i = 0; i < images.size(); i++) {
             images.get(i).isSent = true;
-            getApplicationComponent().MyDatabase().imageDao()
-                    .updateImage(images.get(i));
+            getApplicationComponent().MyDatabase().imageDao().updateImage(images.get(i));
         }
     }
 }
@@ -181,8 +179,7 @@ class UploadVoices implements ICallback<MultimediaUploadResponse> {
     void updateVoice() {
         for (int i = 0; i < voice.size(); i++) {
             voice.get(i).isSent = true;
-            getApplicationComponent().MyDatabase().voiceDao()
-                    .updateVoice(voice.get(i));
+            getApplicationComponent().MyDatabase().voiceDao().updateVoice(voice.get(i));
         }
     }
 }
@@ -209,8 +206,8 @@ class UploadMultimediaError implements ICallbackError {
     @Override
     public void executeError(Throwable t) {
         if (!HttpClientWrapper.cancel) {
-            CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(MyApplication.getContext());
-            String error = customErrorHandlingNew.getErrorMessageTotal(t);
+            final CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(MyApplication.getContext());
+            final String error = customErrorHandlingNew.getErrorMessageTotal(t);
             new CustomToast().error(error, Toast.LENGTH_LONG);
         }
     }

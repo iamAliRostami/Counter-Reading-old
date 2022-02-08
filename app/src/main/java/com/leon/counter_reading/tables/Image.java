@@ -14,7 +14,7 @@ public class Image {
     @PrimaryKey(autoGenerate = true)
     public int id;
     public int trackNumber;
-//    public int size;
+    public long size;
     public String OnOffLoadId;
     public String Description;
     public String address;
@@ -25,7 +25,4 @@ public class Image {
     public MultipartBody.Part File;
     @Ignore
     public Bitmap bitmap;
-//    @Ignore
-//    public BitmapFactory.Options options;
-
 }

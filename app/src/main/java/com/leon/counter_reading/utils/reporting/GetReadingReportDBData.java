@@ -3,9 +3,9 @@ package com.leon.counter_reading.utils.reporting;
 import android.app.Activity;
 import android.os.AsyncTask;
 
-import com.leon.counter_reading.helpers.MyApplication;
-import com.leon.counter_reading.activities.ReadingReportActivity;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
+import com.leon.counter_reading.fragments.dialog.ReadingReportFragment;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.OffLoadReport;
 
@@ -46,7 +46,8 @@ public class GetReadingReportDBData extends AsyncTask<Activity, Integer, Integer
                 }
             }
         }
-        ((ReadingReportActivity) (activities[0])).setupRecyclerView(counterReportDtos, offLoadReports);
+//        ((ReadingReportActivity) (activities[0])).setupRecyclerView(counterReportDtos, offLoadReports);
+        ReadingReportFragment.newInstance().setupRecyclerView(counterReportDtos, offLoadReports);
         return null;
     }
 }

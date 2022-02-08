@@ -7,6 +7,7 @@ import static com.leon.counter_reading.helpers.Constants.GALLERY_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
+import static com.leon.counter_reading.utils.CustomFile.rotateImage;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -158,7 +159,7 @@ public class SettingChangeAvatarFragment extends Fragment {
 
     private void prepareImage() {
         try {
-            BITMAP_SELECTED_IMAGE = CustomFile.rotateImage(MediaStore.Images.Media.getBitmap(activity.getContentResolver(), PHOTO_URI), 90);
+            BITMAP_SELECTED_IMAGE = rotateImage(MediaStore.Images.Media.getBitmap(activity.getContentResolver(), PHOTO_URI), 90);
             binding.imageViewAvatar.setImageBitmap(BITMAP_SELECTED_IMAGE);
             binding.buttonChangeDelete.setVisibility(View.VISIBLE);
         } catch (IOException e) {

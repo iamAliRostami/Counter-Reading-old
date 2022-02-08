@@ -39,6 +39,7 @@ import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.voice.PrepareMultimedia;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -113,6 +114,8 @@ public class DescriptionActivity extends AppCompatActivity {
                 mediaRecorder.stop();
                 try {
                     mediaPlayer = new MediaPlayer();
+                    voice.size = new File(getExternalFilesDir(null).getAbsolutePath() +
+                            getString(R.string.audio_folder) + voice.address).length();
                     mediaPlayer.setDataSource(getExternalFilesDir(null).getAbsolutePath() +
                             getString(R.string.audio_folder) + voice.address);
                     mediaPlayer.prepare();

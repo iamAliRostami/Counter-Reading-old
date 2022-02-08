@@ -1,5 +1,7 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.BundleEnum.ZONE_ID;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
 import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GALLERY_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
@@ -8,7 +10,10 @@ import static com.leon.counter_reading.helpers.Constants.PHOTO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_WIFI_CODE;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
+import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
+import static com.leon.counter_reading.utils.CustomFile.bitmapToFile;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
@@ -23,6 +28,7 @@ import android.os.Debug;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 
@@ -34,23 +40,19 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityReportForbidBinding;
-import com.leon.counter_reading.enums.BundleEnum;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.fragments.dialog.HighQualityFragment;
-import com.leon.counter_reading.helpers.MyApplication;
+import com.leon.counter_reading.fragments.dialog.ShowFragmentDialog;
 import com.leon.counter_reading.tables.ForbiddenDto;
-import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.PermissionManager;
-import com.leon.counter_reading.utils.forbid.PrepareForbid;
+import com.leon.counter_reading.utils.forbid.PrepareForbidOld;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,9 +68,8 @@ public class ReportForbidActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MyApplication.onActivitySetTheme(this, MyApplication.getApplicationComponent()
-                        .SharedPreferenceModel().getIntData(SharedReferenceKeys.THEME_STABLE.getValue()),
-                true);
+        onActivitySetTheme(this, getApplicationComponent().SharedPreferenceModel()
+                .getIntData(THEME_STABLE.getValue()), true);
         super.onCreate(savedInstanceState);
         binding = ActivityReportForbidBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -135,7 +136,7 @@ public class ReportForbidActivity extends AppCompatActivity {
 
     private void initialize() {
         if (getIntent().getExtras() != null) {
-            zoneId = getIntent().getExtras().getInt(BundleEnum.ZONE_ID.getValue());
+            zoneId = getIntent().getExtras().getInt(ZONE_ID.getValue());
             getIntent().getExtras().clear();
         }
         binding.textViewHome.setText(getString(R.string.number).concat(DifferentCompanyManager
@@ -262,29 +263,34 @@ public class ReportForbidActivity extends AppCompatActivity {
         });
     }
 
+    private int getDigits(String number) {
+        if (!TextUtils.isEmpty(number) && TextUtils.isDigitsOnly(number)) {
+            return Integer.parseInt(number);
+        } else {
+            return 0;
+        }
+    }
+
     private void sendForbid() {
         double latitude = 0, longitude = 0, accuracy = 0;
         if (getLocationTracker(activity).getCurrentLocation() != null) {
             latitude = getLocationTracker(activity).getCurrentLocation().getLatitude();
-            longitude = getLocationTracker(activity).getCurrentLocation().getLatitude();
-            accuracy = getLocationTracker(activity).getCurrentLocation().getLatitude();
+            longitude = getLocationTracker(activity).getCurrentLocation().getLongitude();
+            accuracy = getLocationTracker(activity).getCurrentLocation().getAccuracy();
         }
         forbiddenDto.prepareToSend(accuracy, longitude, latitude,
                 binding.editTextPostalCode.getText().toString(),
                 binding.editTextDescription.getText().toString(),
                 binding.editTextPreAccount.getText().toString(),
                 binding.editTextNextAccount.getText().toString(),
-                binding.editTextAhadNumber.getText().toString(), zoneId);
-        new PrepareForbid(activity, forbiddenDto, zoneId).execute(activity);
+                getDigits(binding.editTextAhadNumber.getText().toString()), zoneId);
+        new PrepareForbidOld(activity, forbiddenDto, zoneId).execute(activity);
     }
 
     private void setOnImageViewTakenClickListener() {
-        binding.imageViewTaken.setOnClickListener(v -> {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            HighQualityFragment highQualityFragment =
-                    HighQualityFragment.newInstance(forbiddenDto.bitmaps.get(forbiddenDto.bitmaps.size() - 1));
-            highQualityFragment.show(fragmentTransaction, "Image # 2");
-        });
+        binding.imageViewTaken.setOnClickListener(v ->
+                ShowFragmentDialog.ShowFragmentDialogOnce(activity, "Image # 1",
+                        HighQualityFragment.newInstance(forbiddenDto.bitmaps.get(forbiddenDto.bitmaps.size() - 1))));
     }
 
     private void setOnButtonPhotoClickListener() {
@@ -301,28 +307,6 @@ public class ReportForbidActivity extends AppCompatActivity {
             builder.setNegativeButton(R.string.camera, (dialog, which) -> {
                 dialog.dismiss();
                 openSomeActivityForResult();
-//                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                if (cameraIntent.resolveActivity(activity.getPackageManager()) != null) {
-//                    // Create the File where the photo should go
-//                    File photoFile = null;
-//                    try {
-//                        photoFile = createImageFile(activity);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                    // Continue only if the File was successfully created
-//                    if (photoFile != null) {
-//                        PHOTO_URI = FileProvider.getUriForFile(activity,
-//                                BuildConfig.APPLICATION_ID.concat(".provider"),
-//                                photoFile);
-//                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, PHOTO_URI);
-//                        try {
-//                            startActivityForResult(cameraIntent, CAMERA_REQUEST);
-//                        } catch (ActivityNotFoundException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
             });
             builder.setNeutralButton("", (dialog, which) -> dialog.dismiss());
             builder.create().show();
@@ -361,8 +345,7 @@ public class ReportForbidActivity extends AppCompatActivity {
                     forbiddenDto.bitmaps.add(bitmap);
                     binding.relativeLayoutImage.setVisibility(View.VISIBLE);
                     binding.imageViewTaken.setImageBitmap(bitmap);
-                    forbiddenDto.File.add(CustomFile.bitmapToFile(bitmap, activity));
-
+                    forbiddenDto.File.add(bitmapToFile(bitmap, activity));
                 }
             });
 
@@ -404,7 +387,7 @@ public class ReportForbidActivity extends AppCompatActivity {
                 forbiddenDto.bitmaps.add(bitmap);
                 binding.relativeLayoutImage.setVisibility(View.VISIBLE);
                 binding.imageViewTaken.setImageBitmap(bitmap);
-                forbiddenDto.File.add(CustomFile.bitmapToFile(bitmap, activity));
+                forbiddenDto.File.add(bitmapToFile(bitmap, activity));
             }
         }
     }

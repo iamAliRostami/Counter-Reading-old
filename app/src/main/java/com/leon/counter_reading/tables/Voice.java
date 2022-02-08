@@ -12,7 +12,8 @@ public class Voice {
     @PrimaryKey(autoGenerate = true)
     public int id;
     public int trackNumber;
-//    public int size;
+    public long size;
+
     public String OnOffLoadId;
     public String Description;
     public String address;

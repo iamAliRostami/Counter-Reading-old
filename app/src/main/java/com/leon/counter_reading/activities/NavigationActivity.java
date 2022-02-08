@@ -1,6 +1,9 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
 import static com.leon.counter_reading.helpers.Constants.readingData;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -16,11 +19,9 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityNavigationBinding;
 import com.leon.counter_reading.enums.BundleEnum;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
-import com.leon.counter_reading.utils.navigation.Navigating;
+import com.leon.counter_reading.utils.navigation.NavigatingOld;
 
 public class NavigationActivity extends AppCompatActivity {
     private ActivityNavigationBinding binding;
@@ -30,8 +31,8 @@ public class NavigationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MyApplication.onActivitySetTheme(this, MyApplication.getApplicationComponent().SharedPreferenceModel()
-                .getIntData(SharedReferenceKeys.THEME_STABLE.getValue()), true);
+        onActivitySetTheme(this, getApplicationComponent().SharedPreferenceModel()
+                .getIntData(THEME_STABLE.getValue()), true);
         super.onCreate(savedInstanceState);
         binding = ActivityNavigationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -100,7 +101,7 @@ public class NavigationActivity extends AppCompatActivity {
             } else {
                 int possibleEmpty = binding.editTextEmpty.getText().length() > 0 ?
                         Integer.parseInt(binding.editTextEmpty.getText().toString()) : 0;
-                new Navigating(position, onOffLoadDto.id, possibleEmpty,
+                new NavigatingOld(position, onOffLoadDto.id, possibleEmpty,
                         binding.editTextAccount.getText().toString(),
                         binding.editTextMobile.getText().toString(),
                         binding.editTextPhone.getText().toString(),

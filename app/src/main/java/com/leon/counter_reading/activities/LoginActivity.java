@@ -30,7 +30,6 @@ import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
-import com.leon.counter_reading.utils.Crypto;
 import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
@@ -208,15 +207,19 @@ public class LoginActivity extends AppCompatActivity {
                 counter = 0;
             username = binding.editTextUsername.getText().toString();
             password = binding.editTextPassword.getText().toString();
-            if (isLogin && isNetworkAvailable(activity)) {
-                counter++;
-                if (counter < 4)
-                    new AttemptLogin(username, password, getSerial(activity),
-                            binding.checkBoxSave.isChecked(), binding.buttonLogin).execute(activity);
-                else
-                    offlineLogin();
-            } else {
-                new AttemptRegister(username, password, getSerial(activity), binding.buttonLogin).execute(activity);
+            if (isNetworkAvailable(activity)) {
+                if (isLogin/* && isNetworkAvailable(activity)*/) {
+                    counter++;
+                    if (counter < 4)
+                        new AttemptLogin(username, password, getSerial(activity),
+                                binding.checkBoxSave.isChecked(), binding.buttonLogin).execute(activity);
+                    else
+                        offlineLogin();
+                } else {
+                    new AttemptRegister(username, password, getSerial(activity), binding.buttonLogin).execute(activity);
+                }
+            }else {
+                new CustomToast().warning(activity.getString(R.string.turn_internet_on));
             }
         }
     }
