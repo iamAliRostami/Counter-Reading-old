@@ -155,8 +155,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
 
         @Override
         public void executeIncomplete(Response<MultimediaUploadResponse> response) {
-            CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(activity);
-            String error = customErrorHandlingNew.getErrorMessageDefault(response);
+            final CustomErrorHandling errorHandling = new CustomErrorHandling(activity);
+            final String error = errorHandling.getErrorMessageDefault(response);
             new CustomToast().warning(error, Toast.LENGTH_LONG);
             saveImages(false, activity);
             setResult(activity, result);
@@ -173,8 +173,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
         @Override
         public void executeError(Throwable t) {
             if (!HttpClientWrapper.cancel) {
-                CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(activity);
-                String error = customErrorHandlingNew.getErrorMessageTotal(t);
+                final CustomErrorHandling errorHandling = new CustomErrorHandling(activity);
+                final String error = errorHandling.getErrorMessageTotal(t);
                 new CustomToast().error(error, Toast.LENGTH_LONG);
             }
             saveImages(false, activity);
