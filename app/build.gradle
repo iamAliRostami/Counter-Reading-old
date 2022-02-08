@@ -88,7 +88,7 @@ android {
     }
     buildFeatures {
         dataBinding = true
-        viewBinding = true
+        viewBinding true
     }
 
     dexOptions {
@@ -133,7 +133,7 @@ dependencies {
     // Libraries For Dependency Injection Using Dagger 2
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
-    implementation 'com.google.dagger:dagger:2.11'
+    implementation 'com.google.dagger:dagger:2.38.1'
     implementation 'com.google.dagger:dagger-android:2.38.1'
 
     implementation 'com.auth0.android:jwtdecode:2.0.0'
@@ -151,5 +151,4 @@ dependencies {
 
     implementation 'me.jahnen:libaums:0.8.0'
     implementation 'com.gu.android:toolargetool:0.3.0'
-
 }

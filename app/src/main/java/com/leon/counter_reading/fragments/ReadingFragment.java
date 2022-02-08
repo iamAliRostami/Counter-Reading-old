@@ -19,7 +19,7 @@ import static com.leon.counter_reading.utils.DifferentCompanyManager.getLockNumb
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
 import static com.leon.counter_reading.utils.PermissionManager.checkStoragePermission;
-import static com.leon.counter_reading.utils.PermissionManager.gpsEnabledNew;
+import static com.leon.counter_reading.utils.PermissionManager.enableGps;
 
 import android.app.Activity;
 import android.content.Context;
@@ -325,7 +325,7 @@ public class ReadingFragment extends Fragment {
     }
 
     private void checkPermissions() {
-        if (gpsEnabledNew(activity))
+        if (enableGps(activity))
             if (!checkLocationPermission(getContext())) {
                 askLocationPermission();
             } else if (!checkStoragePermission(getContext())) {

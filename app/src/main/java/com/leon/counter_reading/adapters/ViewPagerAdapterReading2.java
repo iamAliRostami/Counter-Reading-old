@@ -394,7 +394,7 @@ public class ViewPagerAdapterReading2 extends RecyclerView.Adapter<ReadingViewHo
     }
 
     private void checkPermissions(ReadingViewHolder holder, int position) {
-        if (PermissionManager.gpsEnabledNew(activity))
+        if (PermissionManager.enableGps(activity))
             if (!checkLocationPermission(getContext())) {
                 askLocationPermission(holder, position);
             } else if (!checkStoragePermission(getContext())) {
