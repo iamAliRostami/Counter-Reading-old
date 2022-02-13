@@ -67,9 +67,9 @@ public class OnOffLoadDto {
     public int possibleEmpty;
     public int possibleKarbariCode;
     public String description;
-//    @Ignore
+    //    @Ignore
     public String phoneDateTime;
-//    @Ignore
+    //    @Ignore
     public String locationDateTime;
     //TODO
     public String d1;

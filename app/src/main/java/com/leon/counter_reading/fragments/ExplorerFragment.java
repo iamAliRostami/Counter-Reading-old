@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.github.mjdev.libaums.fs.FileSystem;
 import com.github.mjdev.libaums.fs.UsbFile;
-import com.github.mjdev.libaums.fs.UsbFileOutputStream;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.UsbFilesAdapter;
 import com.leon.counter_reading.adapters.recyclerview.RecyclerItemClickListener;
@@ -36,17 +34,15 @@ import com.leon.counter_reading.utils.downloading.DownloadOffline;
 import com.leon.counter_reading.utils.uploading.CopyTaskParam;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 
 public class ExplorerFragment extends Fragment {
-    private final DownloadOfflineFragment downloadOfflineFragment;
-    private final Deque<UsbFile> dirs = new ArrayDeque<>();
     public static int sortByCurrent;
     public static boolean sortAsc;
+    private final DownloadOfflineFragment downloadOfflineFragment;
+    private final Deque<UsbFile> dirs = new ArrayDeque<>();
     private FragmentExplorerBinding binding;
     private UsbFilesAdapter adapter;
     private RecyclerItemClickListener listener;

@@ -114,7 +114,8 @@ public class ReportPerformanceFragment extends Fragment {
             setButtonState();
         });
     }
-    public void setButtonState(){
+
+    public void setButtonState() {
         binding.buttonSubmit.setEnabled(true);
     }
 }

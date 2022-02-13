@@ -37,7 +37,6 @@ import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentReportForbidBinding;
 import com.leon.counter_reading.tables.ForbiddenDto;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.forbid.PrepareForbid;
 
 import java.io.File;
@@ -47,10 +46,31 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class ReportForbidFragment extends DialogFragment {
-    private FragmentReportForbidBinding binding;
     private final ForbiddenDto forbiddenDto = new ForbiddenDto();
+    private FragmentReportForbidBinding binding;
+    private final ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null &&
+                        result.getData().getData() != null) {
+                    try {
+                        final InputStream inputStream = requireContext().getContentResolver()
+                                .openInputStream(result.getData().getData());
+                        addImage(compressBitmap(BitmapFactory.decodeStream(inputStream)));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
     private int zoneId;
     private String path;
+    private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    addImage(compressBitmap(BitmapFactory.decodeFile(path)));
+                }
+            });
 
     public ReportForbidFragment() {
     }
@@ -176,7 +196,8 @@ public class ReportForbidFragment extends DialogFragment {
                 binding.editTextNextAccount.setError(getString(R.string.error_format));
                 view = binding.editTextNextAccount;
                 cancel = true;
-            } else */if (binding.editTextPostalCode.getText().length() > 0 &&
+            } else */
+            if (binding.editTextPostalCode.getText().length() > 0 &&
                     binding.editTextPostalCode.getText().length() < 10) {
                 binding.editTextPostalCode.setError(getString(R.string.error_format));
                 view = binding.editTextPostalCode;
@@ -270,40 +291,6 @@ public class ReportForbidFragment extends DialogFragment {
             galleryActivityResultLauncher.launch(galleryIntent);
         }
     }
-
-    private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    addImage(compressBitmap(BitmapFactory.decodeFile(path)));
-//                    final Bitmap bitmap = compressBitmap(BitmapFactory.decodeFile(path));
-//                    forbiddenDto.bitmaps.add(bitmap);
-//                    binding.relativeLayoutImage.setVisibility(View.VISIBLE);
-//                    binding.imageViewTaken.setImageBitmap(bitmap);
-//                    forbiddenDto.File.add(bitmapToFile(bitmap, requireContext()));
-                }
-            });
-
-
-    private final ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null &&
-                        result.getData().getData() != null) {
-                    try {
-                        final InputStream inputStream = requireContext().getContentResolver()
-                                .openInputStream(result.getData().getData());
-                        addImage(compressBitmap(BitmapFactory.decodeStream(inputStream)));
-//                        final Bitmap bitmap = compressBitmap(BitmapFactory.decodeStream(inputStream));
-//                        forbiddenDto.bitmaps.add(bitmap);
-//                        binding.relativeLayoutImage.setVisibility(View.VISIBLE);
-//                        binding.imageViewTaken.setImageBitmap(bitmap);
-//                        forbiddenDto.File.add(bitmapToFile(bitmap, requireContext()));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
 
     private void addImage(final Bitmap bitmap) {
         forbiddenDto.bitmaps.add(bitmap);

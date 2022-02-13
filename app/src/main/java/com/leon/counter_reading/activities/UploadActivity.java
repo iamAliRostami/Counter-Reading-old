@@ -30,9 +30,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class UploadActivity extends BaseActivity {
+    private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
     private ActivityUploadBinding binding;
     private int previousState, currentState;
-    private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
 
     public ArrayList<TrackingDto> getTrackingDtos() {
         return trackingDtos;

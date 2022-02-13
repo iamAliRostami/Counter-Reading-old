@@ -1,7 +1,6 @@
 package com.leon.counter_reading.fragments.dialog;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +10,14 @@ import android.view.WindowManager;
 import androidx.fragment.app.DialogFragment;
 
 import com.leon.counter_reading.databinding.FragmentHighQualityBinding;
-import com.leon.counter_reading.enums.BundleEnum;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 public class HighQualityFragment extends DialogFragment {
-    private FragmentHighQualityBinding binding;
     private final Bitmap bitmap;
+    private FragmentHighQualityBinding binding;
 
     public HighQualityFragment(Bitmap bitmap) {
         this.bitmap = bitmap;

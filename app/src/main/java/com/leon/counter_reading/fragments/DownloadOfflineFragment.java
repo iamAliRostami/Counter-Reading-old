@@ -33,6 +33,24 @@ public class DownloadOfflineFragment extends Fragment implements HomeFragment.Ho
     private FragmentOfflineDownloadBinding binding;
     private PendingIntent permissionIntent;
     private UsbManager usbManager;
+    private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            checkUSBStatus();
+            if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action))
+                removedUSB();
+            if (ACTION_USB_PERMISSION.equals(action)) {
+                synchronized (this) {
+                    final UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                        if (device != null) {
+                            connectDevice();
+                        }
+                    }
+                }
+            }
+        }
+    };
 
     public static DownloadOfflineFragment newInstance() {
         return new DownloadOfflineFragment();
@@ -82,25 +100,6 @@ public class DownloadOfflineFragment extends Fragment implements HomeFragment.Ho
             updateUI();
         }
     }
-
-    private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            checkUSBStatus();
-            if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action))
-                removedUSB();
-            if (ACTION_USB_PERMISSION.equals(action)) {
-                synchronized (this) {
-                    final UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-                        if (device != null) {
-                            connectDevice();
-                        }
-                    }
-                }
-            }
-        }
-    };
 
     private void connectDevice() {
         final UsbMassStorageDevice[] devices = UsbMassStorageDevice.getMassStorageDevices(requireActivity());

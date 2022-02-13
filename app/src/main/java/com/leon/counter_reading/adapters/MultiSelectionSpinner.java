@@ -1,5 +1,6 @@
 package com.leon.counter_reading.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,9 +19,9 @@ import java.util.Arrays;
 
 public class MultiSelectionSpinner extends AppCompatSpinner implements
         DialogInterface.OnMultiChoiceClickListener {
+    ArrayAdapter adapter;
     private ArrayList<MultiSelectionItem> multiSelectionItems = null;
     private boolean[] selection = null;
-    ArrayAdapter adapter;
 
     public MultiSelectionSpinner(Context context) {
         super(context);
@@ -48,6 +49,7 @@ public class MultiSelectionSpinner extends AppCompatSpinner implements
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean performClick() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

@@ -11,7 +11,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -20,7 +19,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ILocationTracking;
 import com.leon.counter_reading.tables.SavedLocation;
 
@@ -51,6 +49,14 @@ public class LocationTrackingGoogle extends Service implements ILocationTracking
             instance = new LocationTrackingGoogle(activity);
         }
         return instance;
+    }
+
+    public static LocationTrackingGoogle getInstance() {
+        return instance;
+    }
+
+    public static void setInstance(LocationTrackingGoogle instance) {
+        LocationTrackingGoogle.instance = instance;
     }
 
     void startFusedLocation(Activity activity) {
@@ -113,7 +119,6 @@ public class LocationTrackingGoogle extends Service implements ILocationTracking
         return location;
     }
 
-
     @Override
     public IBinder onBind(Intent intent) {
         stopFusedLocation();
@@ -124,13 +129,5 @@ public class LocationTrackingGoogle extends Service implements ILocationTracking
     public void onDestroy() {
         super.onDestroy();
         stopFusedLocation();
-    }
-
-    public static LocationTrackingGoogle getInstance() {
-        return instance;
-    }
-
-    public static void setInstance(LocationTrackingGoogle instance) {
-        LocationTrackingGoogle.instance = instance;
     }
 }

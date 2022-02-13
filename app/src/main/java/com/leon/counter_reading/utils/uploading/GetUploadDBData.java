@@ -3,10 +3,10 @@ package com.leon.counter_reading.utils.uploading;
 import android.app.Activity;
 import android.os.AsyncTask;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.activities.UploadActivity;
-import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
+import com.leon.counter_reading.helpers.MyApplication;
+import com.leon.counter_reading.tables.TrackingDto;
 
 import java.util.ArrayList;
 

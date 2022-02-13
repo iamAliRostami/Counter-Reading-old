@@ -32,7 +32,7 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
     private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
     private final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
     private final ArrayList<ForbiddenDto> forbiddenDtos = new ArrayList<>();
-        private final int trackNumber;
+    private final int trackNumber;
     private final String id;
 
     public PrepareOffLoadOffline(Activity activity, int trackNumber, String id) {

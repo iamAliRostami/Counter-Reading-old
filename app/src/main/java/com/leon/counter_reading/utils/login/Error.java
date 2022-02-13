@@ -1,7 +1,6 @@
 package com.leon.counter_reading.utils.login;
 
 import android.app.Activity;
-import android.view.View;
 import android.widget.Toast;
 
 import com.leon.counter_reading.infrastructure.ICallbackError;

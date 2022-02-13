@@ -12,8 +12,6 @@ import android.os.AsyncTask;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
-import com.leon.counter_reading.enums.DialogType;
-import com.leon.counter_reading.enums.OffloadStateEnum;
 import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;

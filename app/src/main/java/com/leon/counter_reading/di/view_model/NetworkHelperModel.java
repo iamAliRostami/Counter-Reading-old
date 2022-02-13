@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 import java.io.File;
@@ -166,17 +166,17 @@ public final class NetworkHelperModel {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(new OkHttpClient.Builder()
-                                .readTimeout(readTimeout, TIME_UNIT)
-                                .writeTimeout(writeTimeout, TIME_UNIT)
-                                .connectTimeout(connectTimeout, TIME_UNIT)
-                                .retryOnConnectionFailure(RETRY_ENABLED)
-                                .addInterceptor(chain -> {
-                                    Request request = chain.request().newBuilder()
-                                            .addHeader("Authorization", "Bearer " + s)
-                                            .build();
-                                    return chain.proceed(request);
-                                })
-                                .addInterceptor(interceptor).build()
+                        .readTimeout(readTimeout, TIME_UNIT)
+                        .writeTimeout(writeTimeout, TIME_UNIT)
+                        .connectTimeout(connectTimeout, TIME_UNIT)
+                        .retryOnConnectionFailure(RETRY_ENABLED)
+                        .addInterceptor(chain -> {
+                            Request request = chain.request().newBuilder()
+                                    .addHeader("Authorization", "Bearer " + s)
+                                    .build();
+                            return chain.proceed(request);
+                        })
+                        .addInterceptor(interceptor).build()
                 )
                 .addConverterFactory(GsonConverterFactory.create(MyApplication.getApplicationComponent().Gson()))
                 .build();

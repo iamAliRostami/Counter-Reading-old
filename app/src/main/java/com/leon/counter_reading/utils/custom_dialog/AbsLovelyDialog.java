@@ -203,6 +203,10 @@ public abstract class AbsLovelyDialog<T extends AbsLovelyDialog> {
         return dialogView.findViewById(id);
     }
 
+    public TextView getMessageView() {
+        return messageView;
+    }
+
     protected class ClickListenerDecorator implements View.OnClickListener {
 
         private final View.OnClickListener clickListener;
@@ -228,10 +232,6 @@ public abstract class AbsLovelyDialog<T extends AbsLovelyDialog> {
                 dismiss();
             }
         }
-    }
-
-    public TextView getMessageView() {
-        return messageView;
     }
 }
 

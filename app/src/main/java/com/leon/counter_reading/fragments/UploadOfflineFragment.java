@@ -114,13 +114,6 @@ public class UploadOfflineFragment extends Fragment {
         });
     }
 
-    private class Inline implements CustomDialogModel.Inline {
-        @Override
-        public void inline() {
-            sendOnOffLoad();
-        }
-    }
-
     private void sendOnOffLoad() {
         new PrepareOffLoadOffline(activity,
                 trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
@@ -133,5 +126,12 @@ public class UploadOfflineFragment extends Fragment {
         super.onDestroy();
         trackingDtos.clear();
         items = null;
+    }
+
+    private class Inline implements CustomDialogModel.Inline {
+        @Override
+        public void inline() {
+            sendOnOffLoad();
+        }
     }
 }

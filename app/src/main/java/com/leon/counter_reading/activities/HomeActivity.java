@@ -1,5 +1,7 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.helpers.Constants.POSITION;
+
 import android.content.Intent;
 import android.os.Debug;
 import android.view.View;
@@ -13,7 +15,6 @@ import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityHomeBinding;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 
-import static com.leon.counter_reading.helpers.Constants.POSITION;
 public class HomeActivity extends BaseActivity {
     private ActivityHomeBinding binding;
     private boolean exit = false;

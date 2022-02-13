@@ -5,16 +5,12 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.TOKEN;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
-import com.leon.counter_reading.enums.BundleEnum;
-import com.leon.counter_reading.enums.ProgressType;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.fragments.dialog.TakePhotoFragment;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
@@ -41,15 +37,13 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
     private final ArrayList<Image> images;
     private final String description;
     private final boolean result;
-    private final int position;
 
-    public PrepareMultimedia(Activity activity, int position, boolean result, String description,
-                             ArrayList<Image> images) {
+    public PrepareMultimedia(ArrayList<Image> images, String description, boolean result,
+                             Activity activity) {
         super();
         customProgressModel = getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
         this.description = description;
-        this.position = position;
         this.result = result;
         this.images = images;
     }
@@ -90,20 +84,14 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
                     new UploadImages(activity), new UploadImagesIncomplete(activity),
                     new UploadImagesError(activity));
         } else if (result) {
-            setResult(activity, true);
+            setResult();
         } else {
             activity.runOnUiThread(() ->
                     new CustomToast().warning(activity.getString(R.string.there_is_no_images), Toast.LENGTH_LONG));
         }
     }
 
-    private void setResult(Activity activity, boolean result) {
-//        if (result) {
-//            Intent intent = new Intent();
-//            intent.putExtra(BundleEnum.POSITION.getValue(), position);
-//            activity.setResult(Activity.RESULT_OK, intent);
-//        }
-//        activity.finish();
+    private void setResult() {
         TakePhotoFragment.newInstance().setResult();
 
     }
@@ -142,7 +130,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
                 new CustomToast().warning(activity.getString(R.string.error_upload), Toast.LENGTH_LONG);
             }
             saveImages(response.body() != null && response.body().status == 200, activity);
-            setResult(activity, result);
+            setResult();
         }
     }
 
@@ -159,7 +147,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
             final String error = errorHandling.getErrorMessageDefault(response);
             new CustomToast().warning(error, Toast.LENGTH_LONG);
             saveImages(false, activity);
-            setResult(activity, result);
+            setResult();
         }
     }
 
@@ -178,7 +166,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
                 new CustomToast().error(error, Toast.LENGTH_LONG);
             }
             saveImages(false, activity);
-            setResult(activity, result);
+            setResult();
         }
     }
 }

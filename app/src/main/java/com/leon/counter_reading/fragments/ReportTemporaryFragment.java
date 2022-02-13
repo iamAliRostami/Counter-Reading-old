@@ -1,5 +1,7 @@
 package com.leon.counter_reading.fragments;
 
+import static com.leon.counter_reading.helpers.Constants.POSITION;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +14,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.activities.ReportActivity;
@@ -25,7 +26,6 @@ import com.leon.counter_reading.tables.CounterStateDto;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import static com.leon.counter_reading.helpers.Constants.POSITION;
 
 public class ReportTemporaryFragment extends Fragment {
     private FragmentReportTemporaryBinding binding;

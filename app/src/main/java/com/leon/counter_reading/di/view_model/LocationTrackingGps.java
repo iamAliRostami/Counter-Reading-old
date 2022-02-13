@@ -12,7 +12,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,13 +30,9 @@ public class LocationTrackingGps extends Service implements LocationListener, IL
     private double longitude;
 
     public LocationTrackingGps() {
-//        this.context = context;
         getLocation();
     }
 
-    //    public static LocationTrackingGps getInstance() {
-//        return instance;
-//    }
     public static synchronized LocationTrackingGps getInstance() {
         if (instance == null) {
             instance = new LocationTrackingGps();
@@ -46,64 +41,51 @@ public class LocationTrackingGps extends Service implements LocationListener, IL
         return instance;
     }
 
+    public static void setInstance(LocationTrackingGps instance) {
+        LocationTrackingGps.instance = instance;
+    }
+
     @SuppressLint("MissingPermission")
     @Override
     public Location getLocation() {
         try {
-//            Log.e("here", "1");
             locationManager = (LocationManager) MyApplication.getContext().getSystemService(LOCATION_SERVICE);
-
-            // get GPS status
             boolean checkGPS = locationManager
                     .isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-            // get network provider status
             boolean checkNetwork = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             if (checkGPS || checkNetwork) {
-//                Log.e("here", "2");
-                // if GPS Enabled get lat/long using GPS Services
                 if (checkGPS) {
-//                    Log.e("here", "3");
                     locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                     if (locationManager != null) {
-//                        Log.e("here", "4");
                         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                         if (location != null) {
-//                            Log.e("here", "5");
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
                         }
                     }
                 }
                 if (checkNetwork) {
-//                    Log.e("here", "6");
                     if (locationManager != null) {
-//                        Log.e("here", "7");
                         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
                                 MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                     }
                     if (locationManager != null) {
-//                        Log.e("here", "8");
                         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                     }
                     if (location != null) {
-//                        Log.e("here", "9");
                         latitude = location.getLatitude();
                         longitude = location.getLongitude();
                     }
                 }
-            } /*else {
-//                Toast.makeText(context, "No Service Provider is available", Toast.LENGTH_SHORT).show();
-            }*/
+            }
         } catch (Exception e) {
             e.printStackTrace();
-//            Log.e("error", e.toString());
         }
         return location;
     }
@@ -154,14 +136,13 @@ public class LocationTrackingGps extends Service implements LocationListener, IL
             try {
                 instance.addLocation(location);
             } catch (Exception e) {
-                Log.e("error", e.getMessage());
+                e.printStackTrace();
             }
 
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        Log.e("onStatusChanged", String.valueOf(status));
     }
 
     @Override
@@ -172,17 +153,12 @@ public class LocationTrackingGps extends Service implements LocationListener, IL
     @Override
     public void onProviderDisabled(@NonNull String provider) {
         new CustomToast().error("مکانیابی شما با مشکل مواجه شده است. \nپیش از ادامه ی کار موضوع را به پشتیبان اطلاع دهید.", Toast.LENGTH_LONG);
-        Log.e("onStatusChanged", provider);
     }
 
     public void stopListener() {
         if (locationManager != null) {
             locationManager.removeUpdates(LocationTrackingGps.this);
         }
-    }
-
-    public static void setInstance(LocationTrackingGps instance) {
-        LocationTrackingGps.instance = instance;
     }
 
     @Override

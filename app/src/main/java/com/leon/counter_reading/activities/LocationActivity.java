@@ -46,11 +46,11 @@ import java.util.ArrayList;
 
 public class LocationActivity extends BaseActivity {
     private final ArrayList<SavedLocation.LocationOnMap> savedLocations = new ArrayList<>();
+    private final ArrayList<Marker> markers = new ArrayList<>();
     private ActivityLocationBinding binding;
     private Activity activity;
     private ISharedPreferenceManager sharedPreferenceManager;
     private ShowOnMap showOnMap;
-    private final ArrayList<Marker> markers = new ArrayList<>();
 
     @Override
     protected void initialize() {

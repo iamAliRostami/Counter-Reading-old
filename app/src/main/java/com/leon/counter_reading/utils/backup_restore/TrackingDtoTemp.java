@@ -30,6 +30,7 @@ public class TrackingDtoTemp {
 
     public String x;
     public String y;
+
     public TrackingDto getTrackingDto() {
         TrackingDto trackingDto = new TrackingDto();
         trackingDto.id = id;

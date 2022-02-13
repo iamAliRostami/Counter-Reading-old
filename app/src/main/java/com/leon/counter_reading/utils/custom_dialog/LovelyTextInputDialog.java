@@ -47,7 +47,7 @@ public class LovelyTextInputDialog extends AbsLovelyDialog<LovelyTextInputDialog
     }
 
     public EditText getEditTextNumber() {
-            return editText1;
+        return editText1;
     }
 
     public LovelyTextInputDialog configureEditText(@NonNull ViewConfigurator<EditText> viewConfigurator) {

@@ -22,6 +22,7 @@ import static com.leon.counter_reading.utils.PermissionManager.enableMobileWifi;
 import static com.leon.counter_reading.utils.PermissionManager.enableNetwork;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -79,6 +80,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
 
     protected abstract void initialize();
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();

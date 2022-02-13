@@ -1,7 +1,6 @@
 package com.leon.counter_reading.utils.voice;
 
 import static android.app.Activity.RESULT_OK;
-
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -14,7 +13,6 @@ import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.ProgressType;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;

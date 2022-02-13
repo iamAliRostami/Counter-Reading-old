@@ -21,8 +21,6 @@ public class SavedLocation {
         public final double longitude;
         public final double latitude;
 
-//        public LocationOnMap() {
-//        }
 
         public LocationOnMap(double longitude, double latitude) {
             this.longitude = longitude;

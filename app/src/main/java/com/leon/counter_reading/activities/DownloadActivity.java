@@ -3,7 +3,6 @@ package com.leon.counter_reading.activities;
 import static com.leon.counter_reading.helpers.Constants.ALL_FILES_ACCESS_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.SETTING_REQUEST;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;

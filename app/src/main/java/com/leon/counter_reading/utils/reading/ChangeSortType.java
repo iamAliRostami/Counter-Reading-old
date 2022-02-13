@@ -9,9 +9,7 @@ import android.os.AsyncTask;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.helpers.MyApplication;
-import com.leon.counter_reading.tables.OnOffLoadDto;
 
-import java.util.ArrayList;
 import java.util.Collections;
 
 public class ChangeSortType extends AsyncTask<Activity, Void, Void> {

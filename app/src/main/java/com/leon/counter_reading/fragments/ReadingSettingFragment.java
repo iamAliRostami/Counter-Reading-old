@@ -20,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class ReadingSettingFragment extends Fragment {
-    private FragmentReadingSettingBinding binding;
     private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
+    private FragmentReadingSettingBinding binding;
 
     public ReadingSettingFragment(ArrayList<TrackingDto> trackingDtos) {
         this.trackingDtos.addAll(trackingDtos);

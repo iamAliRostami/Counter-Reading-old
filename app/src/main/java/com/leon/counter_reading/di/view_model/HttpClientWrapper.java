@@ -5,7 +5,6 @@ import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailabl
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;

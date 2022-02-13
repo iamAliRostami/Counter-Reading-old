@@ -25,6 +25,7 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_reading_report.xml" value="0.536" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_report.xml" value="0.26614583333333336" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_report_forbid.xml" value="0.23984375" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_start.xml" value="0.365625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_take_photo.xml" value="0.39375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/base_app_bar.xml" value="0.39375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/dialog_text_input.xml" value="0.39375" />
@@ -52,6 +53,7 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_road_map.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_take_photo.xml" value="0.4" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_upload.xml" value="0.39375" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/item_devices.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/item_image.xml" value="0.39375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/item_navigation_drawer.xml" value="0.2075" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/item_navigation_drawer_profile.xml" value="0.2075" />

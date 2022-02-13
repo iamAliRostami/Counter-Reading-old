@@ -110,7 +110,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
                     new UploadVoices(voice), new UploadVoicesIncomplete(), new UploadMultimediaError());
         } else {
             activity.runOnUiThread(() ->
-                    new CustomToast().info(activity.getString(R.string.there_is_no_voices),Toast.LENGTH_LONG));
+                    new CustomToast().info(activity.getString(R.string.there_is_no_voices), Toast.LENGTH_LONG));
         }
     }
 

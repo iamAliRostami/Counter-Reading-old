@@ -34,7 +34,7 @@ public class Navigating extends AsyncTask<Activity, Void, Void> {
     protected Void doInBackground(Activity... activities) {
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(uuid,
                 possibleEshterak, possibleMobile, possibleEmpty, phoneNumber,
-                        serialNumber, address);
+                serialNumber, address);
         NavigationFragment.newInstance().readingActivity.setResult(position, uuid);
         return null;
     }

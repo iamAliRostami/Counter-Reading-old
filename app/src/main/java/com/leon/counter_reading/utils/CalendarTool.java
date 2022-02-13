@@ -1,7 +1,6 @@
 package com.leon.counter_reading.utils;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 
