@@ -121,40 +121,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initialize() {
-        //TODO
-        final TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        try {
-            for (final CellInfo info : tm.getAllCellInfo()) {
-                if (info instanceof CellInfoGsm) {
-                    final CellSignalStrengthGsm cell = ((CellInfoGsm) info).getCellSignalStrength();
-                    Log.e("signal 1", String.valueOf(cell.getDbm()));
-                    // do what you need
-                } else if (info instanceof CellInfoCdma) {
-                    final CellSignalStrengthCdma cell = ((CellInfoCdma) info).getCellSignalStrength();
-                    Log.e("signal 2", String.valueOf(cell.getDbm()));
-                    // do what you need
-                } else if (info instanceof CellInfoLte) {
-                    final CellSignalStrengthLte cell = ((CellInfoLte) info).getCellSignalStrength();
-                    Log.e("signal 3", String.valueOf(cell.getDbm()));
-                    // do what you need
-                } else if (info instanceof CellInfoWcdma) {
-                    final CellSignalStrengthWcdma cell = ((CellInfoWcdma)info).getCellSignalStrength();
-                    Log.e("signal 4", String.valueOf(cell.getDbm()));
-                    // do what you need
-                } else {
-                    throw new Exception("Unknown type of cell signal!");
-                }
-            }
-
-
-//            final CellInfoGsm info = (CellInfoGsm) tm.getAllCellInfo().get(0);
-//            CellSignalStrengthGsm cell = info.getCellSignalStrength();
-//            Log.e("signal", String.valueOf(cell.getDbm()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
         binding.textViewVersion.setText(getString(R.string.version).concat(" ").concat(getAndroidVersion())
                 .concat(" *** ").concat(BuildConfig.VERSION_NAME));
         initializeTextViewCompanyName();
