@@ -16,6 +16,8 @@ import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
+import static com.leon.counter_reading.utils.KeyboardUtils.hideKeyboard;
+import static com.leon.counter_reading.utils.KeyboardUtils.showKeyboard1;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.annotation.SuppressLint;
@@ -575,7 +577,7 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
             } else {
                 item.setChecked(!item.isChecked());
                 FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
-                KeyboardUtils.showKeyboard1(activity);
+                showKeyboard1(activity);
             }
         } else if (id == R.id.menu_last) {
             if (readingData.onOffLoadDtos.isEmpty()) {
@@ -630,14 +632,14 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
     protected void onResume() {
         super.onResume();
         if (isReading && !readingData.onOffLoadDtos.isEmpty() && FOCUS_ON_EDIT_TEXT) {
-            KeyboardUtils.showKeyboard1(this);
+            showKeyboard1(this);
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        KeyboardUtils.hideKeyboard(this);
+        hideKeyboard(this);
     }
 
     @Override

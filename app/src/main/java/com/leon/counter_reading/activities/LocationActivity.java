@@ -30,7 +30,6 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityLocationBinding;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.tables.SavedLocation;
 import com.leon.counter_reading.utils.CustomToast;
@@ -90,7 +89,7 @@ public class LocationActivity extends BaseActivity {
     }
 
     private void checkPermissions() {
-        if (PermissionManager.gpsEnabled(this))
+        if (PermissionManager.enableGpsForResult(this))
             if (!checkLocationPermission(getApplicationContext())) {
                 askLocationPermission();
             } else if (!checkStoragePermission(getApplicationContext())) {
@@ -175,7 +174,7 @@ public class LocationActivity extends BaseActivity {
             if (requestCode == REQUEST_NETWORK_CODE) {
                 if (isNetworkAvailable(getApplicationContext()))
                     checkPermissions();
-                else PermissionManager.setMobileWifiEnabled(this);
+                else PermissionManager.enableMobileWifi(this);
             }
             if (requestCode == REQUEST_WIFI_CODE) {
                 if (isNetworkAvailable(getApplicationContext()))

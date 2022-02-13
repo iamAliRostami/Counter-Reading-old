@@ -78,7 +78,7 @@ public class ReportForbidActivity extends AppCompatActivity {
     }
 
     private void checkPermissions() {
-        if (PermissionManager.gpsEnabled(this))
+        if (PermissionManager.enableGpsForResult(this))
             if (!PermissionManager.checkLocationPermission(getApplicationContext())) {
                 askLocationPermission();
             } else if (!PermissionManager.checkCameraPermission(getApplicationContext())) {
@@ -358,7 +358,7 @@ public class ReportForbidActivity extends AppCompatActivity {
             if (requestCode == REQUEST_NETWORK_CODE) {
                 if (isNetworkAvailable(getApplicationContext()))
                     checkPermissions();
-                else PermissionManager.setMobileWifiEnabled(this);
+                else PermissionManager.enableMobileWifi(this);
             }
             if (requestCode == REQUEST_WIFI_CODE) {
                 if (isNetworkAvailable(getApplicationContext()))

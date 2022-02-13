@@ -1,21 +1,48 @@
 package com.leon.counter_reading.activities;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.READ_PHONE_STATE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.AVATAR;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
+import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
 import static com.leon.counter_reading.helpers.MyApplication.getAndroidVersion;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getSerial;
+import static com.leon.counter_reading.helpers.MyApplication.setActivityComponent;
 import static com.leon.counter_reading.utils.Crypto.decrypt;
+import static com.leon.counter_reading.utils.CustomFile.loadImage;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
+import static com.leon.counter_reading.utils.PermissionManager.enableGpsForResult;
+import static com.leon.counter_reading.utils.PermissionManager.forceClose;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
+import static com.leon.counter_reading.utils.login.SetProxy.insertProxy;
+import static com.leon.counter_reading.utils.login.TwoStepVerification.insertPersonalCode;
 
-import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Debug;
+import android.telephony.CellInfo;
+import android.telephony.CellInfoCdma;
+import android.telephony.CellInfoGsm;
+import android.telephony.CellInfoLte;
+import android.telephony.CellInfoWcdma;
+import android.telephony.CellSignalStrengthCdma;
+import android.telephony.CellSignalStrengthGsm;
+import android.telephony.CellSignalStrengthLte;
+import android.telephony.CellSignalStrengthWcdma;
+import android.telephony.TelephonyManager;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -27,17 +54,11 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityLoginBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.DialogType;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
-import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
-import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.login.AttemptLogin;
 import com.leon.counter_reading.utils.login.AttemptRegister;
-import com.leon.counter_reading.utils.login.SetProxy;
-import com.leon.counter_reading.utils.login.TwoStepVerification;
 
 import java.util.ArrayList;
 
@@ -54,21 +75,29 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         activity = this;
-        MyApplication.setActivityComponent(activity);
+        setActivityComponent(activity);
         checkReadPhoneStatePermission();
     }
 
-    void checkReadPhoneStatePermission() {
-        if (ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            initialize();
-        } else {
+    private void checkReadPhoneStatePermission() {
+        if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             askReadPhoneStatusPermission();
+        } else if (enableGpsForResult(this)) {
+            initialize();
         }
     }
 
-    void askReadPhoneStatusPermission() {
-        PermissionListener permissionlistener = new PermissionListener() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == PackageManager.PERMISSION_GRANTED) {
+            if (requestCode == GPS_CODE) checkReadPhoneStatePermission();
+        }
+    }
+
+    private void askReadPhoneStatusPermission() {
+        final PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(activity.getString(R.string.access_granted));
@@ -77,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                PermissionManager.forceClose(activity);
+                forceClose(activity);
             }
         };
         new TedPermission(activity)
@@ -87,10 +116,11 @@ public class LoginActivity extends AppCompatActivity {
                 .setDeniedMessage(activity.getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(activity.getString(R.string.close))
                 .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(Manifest.permission.READ_PHONE_STATE).check();
+                .setPermissions(READ_PHONE_STATE, ACCESS_FINE_LOCATION)
+                .check();
     }
 
-    void initialize() {
+    private void initialize() {
         binding.textViewVersion.setText(getString(R.string.version).concat(" ").concat(getAndroidVersion())
                 .concat(" *** ").concat(BuildConfig.VERSION_NAME));
         initializeTextViewCompanyName();
@@ -98,9 +128,10 @@ public class LoginActivity extends AppCompatActivity {
         binding.imageViewPassword.setImageResource(R.drawable.img_password);
         binding.imageViewLogo.setImageResource(R.drawable.img_login_logo);
 
-        if (sharedPreferenceManager.checkIsNotEmpty(SharedReferenceKeys.AVATAR.getValue())) {
-            binding.imageViewPerson.setImageBitmap(CustomFile.loadImage(activity, MyApplication.getApplicationComponent().SharedPreferenceModel().getStringData(SharedReferenceKeys.AVATAR.getValue())));
-        } else
+        if (sharedPreferenceManager.checkIsNotEmpty(AVATAR.getValue()))
+            binding.imageViewPerson.setImageBitmap(loadImage(activity, getApplicationComponent()
+                    .SharedPreferenceModel().getStringData(AVATAR.getValue())));
+        else
             binding.imageViewPerson.setImageResource(R.drawable.img_profile);
 
         binding.imageViewUsername.setImageResource(R.drawable.img_user);
@@ -113,46 +144,44 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initializeTextViewCompanyName() {
-
-        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
-        textViewCompanyName.setOnClickListener(v -> SetProxy.insertProxy(activity));
+        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        textViewCompanyName.setOnClickListener(v -> insertProxy(activity));
     }
 
     private void setEditTextUsernameOnFocusChangeListener() {
         binding.editTextUsername.setOnFocusChangeListener((view, b) -> {
             binding.editTextUsername.setHint("");
             if (b) {
-                binding.linearLayoutUsername.setBackground(
-                        ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_black_2));
-                binding.editTextPassword.setTextColor(
-                        ContextCompat.getColor(activity, R.color.black));
+                binding.linearLayoutUsername.setBackground(ContextCompat
+                        .getDrawable(getApplicationContext(), R.drawable.border_black_2));
+                binding.editTextPassword.setTextColor(ContextCompat.getColor(activity, R.color.black));
             } else {
-                binding.linearLayoutUsername.setBackground(
-                        ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_gray_2));
+                binding.linearLayoutUsername.setBackground(ContextCompat
+                        .getDrawable(getApplicationContext(), R.drawable.border_gray_2));
                 binding.editTextPassword.setTextColor(ContextCompat.getColor(activity, R.color.gray));
             }
         });
     }
 
-    void setEditTextPasswordOnFocusChangeListener() {
+    private void setEditTextPasswordOnFocusChangeListener() {
         binding.editTextPassword.setOnFocusChangeListener((view, b) -> {
             binding.editTextPassword.setHint("");
             if (b) {
-                binding.linearLayoutPassword.setBackground(ContextCompat.getDrawable(
-                        getApplicationContext(), R.drawable.border_black_2));
+                binding.linearLayoutPassword.setBackground(ContextCompat
+                        .getDrawable(getApplicationContext(), R.drawable.border_black_2));
                 binding.editTextPassword.setTextColor(ContextCompat.getColor(
                         getApplicationContext(), R.color.black));
             } else {
-                binding.linearLayoutPassword.setBackground(ContextCompat.getDrawable(
-                        getApplicationContext(), R.drawable.border_gray_2));
-                binding.editTextPassword.setTextColor(ContextCompat.getColor(
-                        getApplicationContext(), R.color.gray));
+                binding.linearLayoutPassword.setBackground(ContextCompat
+                        .getDrawable(getApplicationContext(), R.drawable.border_gray_2));
+                binding.editTextPassword.setTextColor(ContextCompat.getColor(getApplicationContext(),
+                        R.color.gray));
             }
         });
     }
 
-    void setOnImageViewPasswordClickListener() {
+    private void setOnImageViewPasswordClickListener() {
         binding.imageViewPassword.setOnClickListener(v ->
                 binding.imageViewPassword.setOnClickListener(view -> {
                     if (binding.editTextPassword.getInputType() != InputType.TYPE_CLASS_TEXT) {
@@ -163,30 +192,30 @@ public class LoginActivity extends AppCompatActivity {
                 }));
     }
 
-    void setOnImageViewPerson() {
+    private void setOnImageViewPerson() {
         binding.imageViewPerson.setOnClickListener(view ->
                 new CustomDialogModel(DialogType.Green, activity, getSerial(activity),
                         MyApplication.getContext().getString(R.string.serial),
                         MyApplication.getContext().getString(R.string.dear_user),
                         MyApplication.getContext().getString(R.string.accepted)));
         binding.imageViewPerson.setOnLongClickListener(view -> {
-            TwoStepVerification.insertPersonalCode(activity);
+            insertPersonalCode(activity);
             return false;
         });
     }
 
-    void setOnButtonLongCLickListener() {
+    private void setOnButtonLongCLickListener() {
         binding.buttonLogin.setOnLongClickListener(v -> {
             attempt(false);
             return false;
         });
     }
 
-    void setOnButtonLoginClickListener() {
+    private void setOnButtonLoginClickListener() {
         binding.buttonLogin.setOnClickListener(v -> attempt(true));
     }
 
-    void attempt(boolean isLogin) {
+    private void attempt(boolean isLogin) {
         View view;
         boolean cancel = false;
         if (binding.editTextUsername.getText().length() < 1) {
@@ -208,7 +237,7 @@ public class LoginActivity extends AppCompatActivity {
             username = binding.editTextUsername.getText().toString();
             password = binding.editTextPassword.getText().toString();
             if (isNetworkAvailable(activity)) {
-                if (isLogin/* && isNetworkAvailable(activity)*/) {
+                if (isLogin) {
                     counter++;
                     if (counter < 4)
                         new AttemptLogin(username, password, getSerial(activity),
@@ -218,22 +247,21 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     new AttemptRegister(username, password, getSerial(activity), binding.buttonLogin).execute(activity);
                 }
-            }else {
+            } else {
                 new CustomToast().warning(activity.getString(R.string.turn_internet_on));
             }
         }
     }
 
-    void offlineLogin() {
-        if (sharedPreferenceManager.getStringData(SharedReferenceKeys.USERNAME.getValue()).equals(username) &&
-                decrypt(sharedPreferenceManager.getStringData(SharedReferenceKeys.PASSWORD.getValue()))
-                        .equals(password)) {
+    private void offlineLogin() {
+        if (sharedPreferenceManager.getStringData(USERNAME.getValue()).equals(username) &&
+                decrypt(sharedPreferenceManager.getStringData(PASSWORD.getValue())).equals(password)) {
             new CustomToast().info(getString(R.string.check_connection), Toast.LENGTH_LONG);
-            Intent intent = new Intent(activity, HomeActivity.class);
+            final Intent intent = new Intent(activity, HomeActivity.class);
             startActivity(intent);
             finish();
-        } else if (!sharedPreferenceManager.checkIsNotEmpty(SharedReferenceKeys.USERNAME.getValue()) ||
-                !sharedPreferenceManager.checkIsNotEmpty(SharedReferenceKeys.PASSWORD.getValue())
+        } else if (!sharedPreferenceManager.checkIsNotEmpty(USERNAME.getValue()) ||
+                !sharedPreferenceManager.checkIsNotEmpty(PASSWORD.getValue())
         ) {
             new CustomToast().warning(getString(R.string.offline_error_empty), Toast.LENGTH_LONG);
         } else {
@@ -242,14 +270,14 @@ public class LoginActivity extends AppCompatActivity {
         counter = 0;
     }
 
-    void loadPreference() {
-        sharedPreferenceManager = MyApplication.getApplicationComponent().SharedPreferenceModel();
-        if (sharedPreferenceManager.checkIsNotEmpty(SharedReferenceKeys.USERNAME.getValue()) &&
-                sharedPreferenceManager.checkIsNotEmpty(SharedReferenceKeys.PASSWORD.getValue())) {
+    private void loadPreference() {
+        sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
+        if (sharedPreferenceManager.checkIsNotEmpty(USERNAME.getValue()) &&
+                sharedPreferenceManager.checkIsNotEmpty(PASSWORD.getValue())) {
             binding.editTextUsername.setText(sharedPreferenceManager.getStringData(
-                    SharedReferenceKeys.USERNAME.getValue()));
-            binding.editTextPassword.setText(decrypt(sharedPreferenceManager.getStringData(
-                    SharedReferenceKeys.PASSWORD.getValue())));
+                    USERNAME.getValue()));
+            binding.editTextPassword.setText(decrypt(sharedPreferenceManager
+                    .getStringData(PASSWORD.getValue())));
         }
     }
 
@@ -261,13 +289,6 @@ public class LoginActivity extends AppCompatActivity {
         binding.imageViewUsername.setImageDrawable(null);
         binding = null;
         activity = null;
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
         super.onDestroy();
     }
 

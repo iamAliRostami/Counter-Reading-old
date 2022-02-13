@@ -1,7 +1,10 @@
 package com.leon.counter_reading.base_items;
 
+import static com.leon.counter_reading.di.view_model.MyDatabaseClientModel.migration;
 import static com.leon.counter_reading.enums.BundleEnum.THEME;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.DISPLAY_NAME;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.USER_CODE;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.PHOTO_PERMISSIONS;
@@ -9,19 +12,22 @@ import static com.leon.counter_reading.helpers.Constants.POSITION;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_WIFI_CODE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
+import static com.leon.counter_reading.helpers.MyApplication.setActivityComponent;
 import static com.leon.counter_reading.utils.PermissionManager.checkCameraPermission;
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
+import static com.leon.counter_reading.utils.PermissionManager.enableGpsForResult;
+import static com.leon.counter_reading.utils.PermissionManager.enableMobileWifi;
+import static com.leon.counter_reading.utils.PermissionManager.enableNetwork;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Debug;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -56,10 +62,6 @@ import com.leon.counter_reading.adapters.items.DrawerItem;
 import com.leon.counter_reading.databinding.ActivityBaseBinding;
 import com.leon.counter_reading.di.view_model.LocationTrackingGoogle;
 import com.leon.counter_reading.di.view_model.LocationTrackingGps;
-import com.leon.counter_reading.di.view_model.MyDatabaseClientModel;
-import com.leon.counter_reading.enums.BundleEnum;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.PermissionManager;
@@ -97,11 +99,11 @@ public abstract class BaseActivity extends AppCompatActivity implements
         initializeBase();
         if (isNetworkAvailable(getApplicationContext()))
             checkPermissions();
-        else PermissionManager.enableNetwork(this);
+        else enableNetwork(this);
     }
 
     private void checkPermissions() {
-        if (PermissionManager.gpsEnabled(this))
+        if (enableGpsForResult(this))
             if (!checkLocationPermission(getApplicationContext())) {
                 askLocationPermission();
             } else if (!checkCameraPermission(getApplicationContext())) {
@@ -112,7 +114,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     private void askStoragePermission() {
-        PermissionListener permissionlistener = new PermissionListener() {
+        final PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(getString(R.string.access_granted));
@@ -135,13 +137,13 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     private void askLocationPermission() {
-        PermissionListener permissionlistener = new PermissionListener() {
+        final PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(getString(R.string.access_granted));
                 LocationTrackingGps.setInstance(null);
                 LocationTrackingGoogle.setInstance(null);
-                MyApplication.setActivityComponent(activity);
+                setActivityComponent(activity);
                 checkPermissions();
             }
 
@@ -179,7 +181,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         binding.imageViewHeader.setOnClickListener(v -> {
             if (POSITION != -1) {
                 POSITION = -1;
-                Intent intent = new Intent(MyApplication.getContext(), HomeActivity.class);
+                Intent intent = new Intent(getContext(), HomeActivity.class);
                 startActivity(intent);
                 finish();
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -187,7 +189,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 binding.drawerLayout.closeDrawer(GravityCompat.START);
         });
         binding.recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(MyApplication.getContext(),
+                new RecyclerItemClickListener(getContext(),
                         binding.recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -235,28 +237,24 @@ public abstract class BaseActivity extends AppCompatActivity implements
         );
     }
 
-    @SuppressLint("RtlHardcoded")
     private void initializeBase() {
         activity = this;
-        MyApplication.setActivityComponent(activity);
-        MyDatabaseClientModel.migration(activity);
-        TextView textView = findViewById(R.id.text_view_title);
-        textView.setText(sharedPreferenceManager.getStringData(
-                SharedReferenceKeys.DISPLAY_NAME.getValue()).
-                concat(" (").concat(sharedPreferenceManager.getStringData(
-                SharedReferenceKeys.USER_CODE.getValue())).concat(")"));
-        binding.textViewVersion.setText(getString(R.string.version).concat(" ")
-                .concat(BuildConfig.VERSION_NAME));
-
+        setActivityComponent(activity);
+        migration(activity);
+        final TextView textView = findViewById(R.id.text_view_title);
+        textView.setText(sharedPreferenceManager.getStringData(DISPLAY_NAME.getValue()).
+                concat(" (").concat(sharedPreferenceManager.getStringData(USER_CODE.getValue()))
+                .concat(")"));
+        binding.textViewVersion.setText(getString(R.string.version).concat(" ").concat(BuildConfig.VERSION_NAME));
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (POSITION == 1) {
-            View view = getLayoutInflater().inflate(R.layout.reading_header, null);
+            final View view = getLayoutInflater().inflate(R.layout.reading_header, null);
             toolbar.addView(view);
         }
         fillDrawerListView();
         setOnDrawerItemClick();
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle
                 (this, binding.drawerLayout, toolbar, R.string.navigation_drawer_open,
                         R.string.navigation_drawer_close) {
             @Override
@@ -267,16 +265,16 @@ public abstract class BaseActivity extends AppCompatActivity implements
         binding.drawerLayout.addDrawerListener(toggle);
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         toggle.syncState();
-        toolbar.setNavigationOnClickListener(view1 -> binding.drawerLayout.openDrawer(Gravity.RIGHT));
+        toolbar.setNavigationOnClickListener(view1 -> binding.drawerLayout.openDrawer(GravityCompat.START));
     }
 
     private void fillDrawerListView() {
-        List<DrawerItem> dataList = DrawerItem.createItemList(
+        final List<DrawerItem> dataList = DrawerItem.createItemList(
                 getResources().getStringArray(R.array.menu),
                 getResources().obtainTypedArray(R.array.icons));
-        NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(this, dataList);
+        final NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(this, dataList);
         binding.recyclerView.setAdapter(adapter);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(MyApplication.getContext()));
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         binding.recyclerView.setNestedScrollingEnabled(true);
     }
 
@@ -284,18 +282,14 @@ public abstract class BaseActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == PackageManager.PERMISSION_GRANTED) {
-            if (requestCode == GPS_CODE) {
-                checkPermissions();
-            }
+            if (requestCode == GPS_CODE) checkPermissions();
             if (requestCode == REQUEST_NETWORK_CODE) {
-                if (isNetworkAvailable(getApplicationContext()))
-                    checkPermissions();
-                else PermissionManager.setMobileWifiEnabled(this);
+                if (isNetworkAvailable(getApplicationContext())) checkPermissions();
+                else enableMobileWifi(this);
             }
             if (requestCode == REQUEST_WIFI_CODE) {
-                if (isNetworkAvailable(getApplicationContext()))
-                    checkPermissions();
-                else PermissionManager.enableNetwork(this);
+                if (isNetworkAvailable(getApplicationContext())) checkPermissions();
+                else enableNetwork(this);
             }
         }
     }

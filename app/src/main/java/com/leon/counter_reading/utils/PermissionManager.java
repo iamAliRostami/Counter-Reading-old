@@ -2,8 +2,12 @@ package com.leon.counter_reading.utils;
 
 import static android.content.Context.TELEPHONY_SERVICE;
 import static com.leon.counter_reading.helpers.Constants.CARRIER_PRIVILEGE_STATUS;
+import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
+import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
+import static com.leon.counter_reading.helpers.Constants.REQUEST_WIFI_CODE;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -12,8 +16,15 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.provider.Settings;
+import android.telephony.CellInfo;
+import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
+import android.telephony.CellInfoLte;
+import android.telephony.CellInfoWcdma;
+import android.telephony.CellSignalStrengthCdma;
 import android.telephony.CellSignalStrengthGsm;
+import android.telephony.CellSignalStrengthLte;
+import android.telephony.CellSignalStrengthWcdma;
 import android.telephony.TelephonyManager;
 
 import androidx.appcompat.app.AlertDialog;
@@ -24,10 +35,8 @@ import androidx.core.location.LocationManagerCompat;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.helpers.Constants;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class PermissionManager {
     public static boolean checkRecorderPermission(Context context) {
@@ -51,7 +60,7 @@ public class PermissionManager {
     }
 
     public static void askRecorderPermission(Activity activity) {
-        PermissionListener permissionlistener = new PermissionListener() {
+        final PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(activity.getString(R.string.access_granted));
@@ -70,11 +79,9 @@ public class PermissionManager {
                 .setDeniedMessage(activity.getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(activity.getString(R.string.close))
                 .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.RECORD_AUDIO,
+                .setPermissions(Manifest.permission.RECORD_AUDIO,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).check();
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
     }
 
     public static boolean checkCameraPermission(Context context) {
@@ -98,7 +105,7 @@ public class PermissionManager {
     }
 
     public static void askCameraPermission(Activity activity) {
-        PermissionListener permissionlistener = new PermissionListener() {
+        final PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(activity.getString(R.string.access_granted));
@@ -132,13 +139,14 @@ public class PermissionManager {
     public static void checkStoragePermission(Activity activity) {
         if (ActivityCompat.checkSelfPermission(activity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.checkSelfPermission(activity,
+                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             askStoragePermission(activity);
         }
     }
 
     public static void askStoragePermission(Activity activity) {
-        PermissionListener permissionlistener = new PermissionListener() {
+        final PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(activity.getString(R.string.access_granted));
@@ -157,10 +165,8 @@ public class PermissionManager {
                 .setDeniedMessage(activity.getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(activity.getString(R.string.close))
                 .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).check();
+                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
     }
 
     public static boolean checkLocationPermission(Context context) {
@@ -181,7 +187,7 @@ public class PermissionManager {
     }
 
     public static void askLocationPermission(Activity activity) {
-        PermissionListener permissionlistener = new PermissionListener() {
+        final PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(activity.getString(R.string.access_granted));
@@ -199,26 +205,22 @@ public class PermissionManager {
                 .setDeniedMessage(activity.getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(activity.getString(R.string.close))
                 .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                ).check();
+                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION).check();
     }
 
-    public static boolean gpsEnabled(Activity activity) {
-        LocationManager locationManager = (LocationManager)
+    public static boolean enableGpsForResult(Activity activity) {
+        final LocationManager locationManager = (LocationManager)
                 activity.getSystemService(Context.LOCATION_SERVICE);
-        boolean enabled =
-                LocationManagerCompat.isLocationEnabled(Objects.requireNonNull(locationManager));
-//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
+        final boolean enabled = LocationManagerCompat.isLocationEnabled(locationManager);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
         if (!enabled) {
             alertDialog.setCancelable(false);
             alertDialog.setTitle(activity.getString(R.string.gps_setting));
             alertDialog.setMessage(R.string.active_gps);
             alertDialog.setPositiveButton(R.string.setting, (dialog, which) -> {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                activity.startActivityForResult(intent, Constants.GPS_CODE);
+                activity.startActivityForResult(intent, GPS_CODE);
             });
             alertDialog.setNegativeButton(R.string.close, (dialog, which) -> {
                 dialog.cancel();
@@ -229,12 +231,11 @@ public class PermissionManager {
         return enabled;
     }
 
-    public static boolean gpsEnabledNew(Activity activity) {
-        LocationManager locationManager = (LocationManager)
+    public static boolean enableGps(Activity activity) {
+        final LocationManager locationManager = (LocationManager)
                 activity.getSystemService(Context.LOCATION_SERVICE);
-        boolean enabled = LocationManagerCompat.isLocationEnabled(locationManager);
-//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
+        final boolean enabled = LocationManagerCompat.isLocationEnabled(locationManager);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
         if (!enabled) {
             alertDialog.setCancelable(false);
             alertDialog.setTitle(activity.getString(R.string.gps_setting));
@@ -253,25 +254,47 @@ public class PermissionManager {
     }
 
     public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager = ((ConnectivityManager)
+       final ConnectivityManager connectivityManager = ((ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE));
+        return getSignalStatus(context) || (connectivityManager.getActiveNetworkInfo() != null &&
+                connectivityManager.getActiveNetworkInfo().isConnectedOrConnecting());
+    }
 
-//        TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-//        CellInfoGsm cellinfogsm = (CellInfoGsm)telephonyManager.getAllCellInfo().get(0);
-//        CellSignalStrengthGsm cellSignalStrengthGsm = cellinfogsm.getCellSignalStrength();
-//        cellSignalStrengthGsm.getDbm();
-
-        return connectivityManager.getActiveNetworkInfo() != null &&
-                connectivityManager.getActiveNetworkInfo().isConnectedOrConnecting();
+    @SuppressLint("MissingPermission")
+    private static boolean getSignalStatus(Context context) {
+        final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        boolean outOfService = true;
+        try {
+            for (int i = 0; i < tm.getAllCellInfo().size() && outOfService; i++) {
+                final CellInfo info = tm.getAllCellInfo().get(i);
+                if (info instanceof CellInfoGsm) {
+                    final CellSignalStrengthGsm cell = ((CellInfoGsm) info).getCellSignalStrength();
+                    outOfService = cell.getDbm() <= -110;
+                } else if (info instanceof CellInfoCdma) {
+                    final CellSignalStrengthCdma cell = ((CellInfoCdma) info).getCellSignalStrength();
+                    outOfService = cell.getDbm() <= -110;
+                } else if (info instanceof CellInfoLte) {
+                    final CellSignalStrengthLte cell = ((CellInfoLte) info).getCellSignalStrength();
+                    outOfService = cell.getDbm() <= -110;
+                } else if (info instanceof CellInfoWcdma) {
+                    final CellSignalStrengthWcdma cell = ((CellInfoWcdma) info).getCellSignalStrength();
+                    outOfService = cell.getDbm() <= -110;
+                }/* else {
+                    throw new Exception("Unknown type of cell signal!");
+                }*/
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return outOfService;
     }
 
     public static void enableNetwork(Activity activity) {
-//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
         alertDialog.setCancelable(false);
         alertDialog.setTitle(activity.getString(R.string.network_setting));
         alertDialog.setMessage(R.string.active_network);
-        alertDialog.setPositiveButton(R.string.setting, (dialog, which) -> setMobileDataEnabled(activity));
+        alertDialog.setPositiveButton(R.string.setting, (dialog, which) -> enableMobileData(activity));
         alertDialog.setNegativeButton(R.string.close, (dialog, which) -> {
             dialog.cancel();
             forceClose(activity);
@@ -279,14 +302,13 @@ public class PermissionManager {
         alertDialog.show();
     }
 
-    public static void setMobileDataEnabled(Activity activity) {
-        activity.startActivityForResult(
-                new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS), Constants.REQUEST_NETWORK_CODE);
+    public static void enableMobileData(Activity activity) {
+        activity.startActivityForResult(new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS),
+                REQUEST_NETWORK_CODE);
     }
 
-    public static void setMobileWifiEnabled(Activity activity) {
-        activity.startActivityForResult(
-                new Intent(Settings.ACTION_WIFI_SETTINGS), Constants.REQUEST_WIFI_CODE);
+    public static void enableMobileWifi(Activity activity) {
+        activity.startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), REQUEST_WIFI_CODE);
     }
 
     public static void forceClose(Activity activity) {
@@ -295,11 +317,11 @@ public class PermissionManager {
     }
 
     public static boolean hasCarrierPrivileges(Activity activity) {
-        TelephonyManager tm = (TelephonyManager)
+        final TelephonyManager tm = (TelephonyManager)
                 new ContextWrapper(activity).getSystemService(TELEPHONY_SERVICE);
-        boolean isCarrier = tm.hasCarrierPrivileges();
+        final boolean isCarrier = tm.hasCarrierPrivileges();
         if (!isCarrier) {
-            int hasPermission = ActivityCompat.checkSelfPermission(activity,
+            final int hasPermission = ActivityCompat.checkSelfPermission(activity,
                     "android.permission.READ_PRIVILEGED_PHONE_STATE");
             if (hasPermission != PackageManager.PERMISSION_GRANTED) {
                 if (!activity.shouldShowRequestPermissionRationale("android.permission.READ_PRIVILEGED_PHONE_STATE")) {

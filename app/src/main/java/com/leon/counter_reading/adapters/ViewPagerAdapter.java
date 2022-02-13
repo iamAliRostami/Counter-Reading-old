@@ -6,7 +6,7 @@ import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
 import static com.leon.counter_reading.utils.PermissionManager.checkStoragePermission;
-import static com.leon.counter_reading.utils.PermissionManager.gpsEnabledNew;
+import static com.leon.counter_reading.utils.PermissionManager.enableGps;
 
 import android.app.Activity;
 import android.content.Context;
@@ -229,7 +229,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     }
 
     private void checkPermissions(ReadingViewHolder holder, int position) {
-        if (gpsEnabledNew(activity))
+        if (enableGps(activity))
             if (!checkLocationPermission(getContext())) {
                 askLocationPermission(holder, position);
             } else if (!checkStoragePermission(getContext())) {

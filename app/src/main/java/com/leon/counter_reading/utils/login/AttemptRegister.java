@@ -1,14 +1,13 @@
 package com.leon.counter_reading.utils.login;
 
 import static com.leon.counter_reading.di.view_model.HttpClientWrapper.callHttpAsync;
+import static com.leon.counter_reading.enums.ProgressType.SHOW;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.view.View;
 
-import com.leon.counter_reading.activities.LoginActivity;
-import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.tables.LoginFeedBack;
@@ -39,9 +38,8 @@ public class AttemptRegister extends AsyncTask<Activity, Activity, Void> {
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
         final Call<LoginFeedBack> call = iAbfaService.register(new LoginInfo(username, password, serial));
         activities[0].runOnUiThread(() ->
-                callHttpAsync(call, ProgressType.SHOW.getValue(), activities[0],
-                        new RegisterCompleted(), new Incomplete(activities[0]),
-                        new Error(activities[0])));
+                callHttpAsync(call, SHOW.getValue(), activities[0], new RegisterCompleted(),
+                        new Incomplete(activities[0]), new Error(activities[0])));
         return null;
     }
 
