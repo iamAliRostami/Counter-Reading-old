@@ -22,14 +22,12 @@ import static com.leon.counter_reading.utils.PermissionManager.enableMobileWifi;
 import static com.leon.counter_reading.utils.PermissionManager.enableNetwork;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Debug;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;

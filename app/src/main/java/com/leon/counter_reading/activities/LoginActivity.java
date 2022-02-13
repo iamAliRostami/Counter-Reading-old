@@ -1,8 +1,11 @@
 package com.leon.counter_reading.activities;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.READ_PHONE_STATE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AVATAR;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
+import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
 import static com.leon.counter_reading.helpers.MyApplication.getAndroidVersion;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getSerial;
@@ -11,22 +14,35 @@ import static com.leon.counter_reading.utils.Crypto.decrypt;
 import static com.leon.counter_reading.utils.CustomFile.loadImage;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
+import static com.leon.counter_reading.utils.PermissionManager.enableGpsForResult;
 import static com.leon.counter_reading.utils.PermissionManager.forceClose;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
 import static com.leon.counter_reading.utils.login.SetProxy.insertProxy;
 import static com.leon.counter_reading.utils.login.TwoStepVerification.insertPersonalCode;
 
-import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Debug;
+import android.telephony.CellInfo;
+import android.telephony.CellInfoCdma;
+import android.telephony.CellInfoGsm;
+import android.telephony.CellInfoLte;
+import android.telephony.CellInfoWcdma;
+import android.telephony.CellSignalStrengthCdma;
+import android.telephony.CellSignalStrengthGsm;
+import android.telephony.CellSignalStrengthLte;
+import android.telephony.CellSignalStrengthWcdma;
+import android.telephony.TelephonyManager;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -64,11 +80,19 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkReadPhoneStatePermission() {
-        if (ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            initialize();
-        } else {
+        if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             askReadPhoneStatusPermission();
+        } else if (enableGpsForResult(this)) {
+            initialize();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == PackageManager.PERMISSION_GRANTED) {
+            if (requestCode == GPS_CODE) checkReadPhoneStatePermission();
         }
     }
 
@@ -92,10 +116,45 @@ public class LoginActivity extends AppCompatActivity {
                 .setDeniedMessage(activity.getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(activity.getString(R.string.close))
                 .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(Manifest.permission.READ_PHONE_STATE).check();
+                .setPermissions(READ_PHONE_STATE, ACCESS_FINE_LOCATION)
+                .check();
     }
 
-    void initialize() {
+    private void initialize() {
+        //TODO
+        final TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        try {
+            for (final CellInfo info : tm.getAllCellInfo()) {
+                if (info instanceof CellInfoGsm) {
+                    final CellSignalStrengthGsm cell = ((CellInfoGsm) info).getCellSignalStrength();
+                    Log.e("signal 1", String.valueOf(cell.getDbm()));
+                    // do what you need
+                } else if (info instanceof CellInfoCdma) {
+                    final CellSignalStrengthCdma cell = ((CellInfoCdma) info).getCellSignalStrength();
+                    Log.e("signal 2", String.valueOf(cell.getDbm()));
+                    // do what you need
+                } else if (info instanceof CellInfoLte) {
+                    final CellSignalStrengthLte cell = ((CellInfoLte) info).getCellSignalStrength();
+                    Log.e("signal 3", String.valueOf(cell.getDbm()));
+                    // do what you need
+                } else if (info instanceof CellInfoWcdma) {
+                    final CellSignalStrengthWcdma cell = ((CellInfoWcdma)info).getCellSignalStrength();
+                    Log.e("signal 4", String.valueOf(cell.getDbm()));
+                    // do what you need
+                } else {
+                    throw new Exception("Unknown type of cell signal!");
+                }
+            }
+
+
+//            final CellInfoGsm info = (CellInfoGsm) tm.getAllCellInfo().get(0);
+//            CellSignalStrengthGsm cell = info.getCellSignalStrength();
+//            Log.e("signal", String.valueOf(cell.getDbm()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         binding.textViewVersion.setText(getString(R.string.version).concat(" ").concat(getAndroidVersion())
                 .concat(" *** ").concat(BuildConfig.VERSION_NAME));
         initializeTextViewCompanyName();
@@ -139,7 +198,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    void setEditTextPasswordOnFocusChangeListener() {
+    private void setEditTextPasswordOnFocusChangeListener() {
         binding.editTextPassword.setOnFocusChangeListener((view, b) -> {
             binding.editTextPassword.setHint("");
             if (b) {
@@ -156,7 +215,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    void setOnImageViewPasswordClickListener() {
+    private void setOnImageViewPasswordClickListener() {
         binding.imageViewPassword.setOnClickListener(v ->
                 binding.imageViewPassword.setOnClickListener(view -> {
                     if (binding.editTextPassword.getInputType() != InputType.TYPE_CLASS_TEXT) {
@@ -167,7 +226,7 @@ public class LoginActivity extends AppCompatActivity {
                 }));
     }
 
-    void setOnImageViewPerson() {
+    private void setOnImageViewPerson() {
         binding.imageViewPerson.setOnClickListener(view ->
                 new CustomDialogModel(DialogType.Green, activity, getSerial(activity),
                         MyApplication.getContext().getString(R.string.serial),
@@ -179,18 +238,18 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    void setOnButtonLongCLickListener() {
+    private void setOnButtonLongCLickListener() {
         binding.buttonLogin.setOnLongClickListener(v -> {
             attempt(false);
             return false;
         });
     }
 
-    void setOnButtonLoginClickListener() {
+    private void setOnButtonLoginClickListener() {
         binding.buttonLogin.setOnClickListener(v -> attempt(true));
     }
 
-    void attempt(boolean isLogin) {
+    private void attempt(boolean isLogin) {
         View view;
         boolean cancel = false;
         if (binding.editTextUsername.getText().length() < 1) {
@@ -228,7 +287,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    void offlineLogin() {
+    private void offlineLogin() {
         if (sharedPreferenceManager.getStringData(USERNAME.getValue()).equals(username) &&
                 decrypt(sharedPreferenceManager.getStringData(PASSWORD.getValue())).equals(password)) {
             new CustomToast().info(getString(R.string.check_connection), Toast.LENGTH_LONG);
@@ -245,7 +304,7 @@ public class LoginActivity extends AppCompatActivity {
         counter = 0;
     }
 
-    void loadPreference() {
+    private void loadPreference() {
         sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
         if (sharedPreferenceManager.checkIsNotEmpty(USERNAME.getValue()) &&
                 sharedPreferenceManager.checkIsNotEmpty(PASSWORD.getValue())) {
