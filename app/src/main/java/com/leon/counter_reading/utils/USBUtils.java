@@ -20,7 +20,7 @@ import java.util.HashMap;
 public class USBUtils {
 
     private static final HashMap<String, Integer> sMimeIcons = new HashMap<>();
-    public static Comparator<UsbFile> comparator = new Comparator<UsbFile>() {
+    public static final Comparator<UsbFile> comparator = new Comparator<UsbFile>() {
         @Override
         public int compare(UsbFile lhs, UsbFile rhs) {
             switch (ExplorerFragment.sortByCurrent) {

@@ -8,7 +8,7 @@ import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.enums.ProgressType;
-import com.leon.counter_reading.fragments.SettingUpdateFragment;
+import com.leon.counter_reading.fragments.setting.SettingUpdateFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
@@ -32,7 +32,7 @@ public class GetUpdateInfo {
 }
 
 class UpdateInfo implements ICallback<LastInfo> {
-    SettingUpdateFragment settingUpdateFragment;
+    final SettingUpdateFragment settingUpdateFragment;
 
     public UpdateInfo(SettingUpdateFragment settingUpdateFragment) {
         this.settingUpdateFragment = settingUpdateFragment;
@@ -47,7 +47,7 @@ class UpdateInfo implements ICallback<LastInfo> {
 }
 
 class UpdateInfoIncomplete implements ICallbackIncomplete<LastInfo> {
-    Context context;
+    final Context context;
 
     public UpdateInfoIncomplete(Context context) {
         this.context = context;

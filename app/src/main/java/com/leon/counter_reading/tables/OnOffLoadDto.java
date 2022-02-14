@@ -83,6 +83,7 @@ public class OnOffLoadDto {
 
     public int attemptCount;
     public boolean isLocked;
+    public boolean isDeleted;
 
     public int highLowStateId;
     public boolean isBazdid;

@@ -99,7 +99,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
     }
 
     class UploadVoice implements ICallback<MultimediaUploadResponse> {
-        Activity activity;
+        final Activity activity;
 
         public UploadVoice(Activity activity) {
             this.activity = activity;
@@ -118,7 +118,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
     }
 
     class UploadVoiceIncomplete implements ICallbackIncomplete<MultimediaUploadResponse> {
-        Activity activity;
+        final Activity activity;
 
         public UploadVoiceIncomplete(Activity activity) {
             this.activity = activity;
@@ -135,7 +135,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
     }
 
     class uploadVoiceError implements ICallbackError {
-        Activity activity;
+        final Activity activity;
 
         public uploadVoiceError(Activity activity) {
             this.activity = activity;

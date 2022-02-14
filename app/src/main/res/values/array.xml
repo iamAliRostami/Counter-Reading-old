@@ -37,7 +37,7 @@
     <!--    <string name="radif">ردیف</string>-->
 
 
-    <string-array name="sortby">
+    <string-array name="sort_by">
 
         <item>@string/name</item>
         <item>@string/date</item>

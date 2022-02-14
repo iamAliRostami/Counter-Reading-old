@@ -201,20 +201,18 @@ public class CustomFile {
         }
     }
 
-    public static boolean copyImages(final Image image, final int trackNumber, final Context context) {
+    public static void copyImages(final Image image, final int trackNumber, final Context context) {
         if (isExternalStorageWritable()) {
             final File storageDir = new File(Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + trackNumber + "/images");
-            if (!storageDir.exists()) if (!storageDir.mkdirs()) return false;
-            boolean saved = false;
+            if (!storageDir.exists()) if (!storageDir.mkdirs()) return;
             File from = new File(context.getExternalFilesDir(null).getAbsolutePath() +
                     context.getString(R.string.camera_folder) + image.address);
             File to = new File(storageDir + "/" + image.address);
-            saved = from.renameTo(to);
-            return saved;
+            if (!from.renameTo(to))
+                new CustomToast().warning(context.getString(R.string.error_external_storage_is_not_writable));
         } else {
             new CustomToast().warning(context.getString(R.string.error_external_storage_is_not_writable));
-            return false;
         }
     }
 

@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 public class MultiSelectionSpinner extends AppCompatSpinner implements
         DialogInterface.OnMultiChoiceClickListener {
-    ArrayAdapter adapter;
+    final ArrayAdapter adapter;
     private ArrayList<MultiSelectionItem> multiSelectionItems = null;
     private boolean[] selection = null;
 

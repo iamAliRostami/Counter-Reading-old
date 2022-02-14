@@ -1,5 +1,7 @@
 package com.leon.counter_reading.utils.reading;
 
+import static com.leon.counter_reading.enums.OffloadStateEnum.SENT;
+import static com.leon.counter_reading.enums.OffloadStateEnum.SENT_WITH_ERROR;
 import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
@@ -23,10 +25,9 @@ public class Sent extends AsyncTask<Activity, Integer, Integer> {
     @Override
     protected Integer doInBackground(Activity... activities) {
         try {
-            //TODO
             getApplicationComponent().MyDatabase().offLoadReportDao().updateOffLoadReportByIsSent(true);
-            int state = offLoadResponses.isValid ? OffloadStateEnum.SENT.getValue() :
-                    OffloadStateEnum.SENT_WITH_ERROR.getValue();
+            final int state = offLoadResponses.isValid ? SENT.getValue() :
+                    SENT_WITH_ERROR.getValue();
             getApplicationComponent().MyDatabase().onOffLoadDao()
                     .updateOnOffLoad(state, offLoadResponses.targetObject);
             String[] targetObject = offLoadResponses.targetObject;

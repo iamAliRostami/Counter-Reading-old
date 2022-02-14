@@ -1,4 +1,4 @@
-package com.leon.counter_reading.fragments;
+package com.leon.counter_reading.fragments.report;
 
 import android.app.Activity;
 import android.os.Bundle;

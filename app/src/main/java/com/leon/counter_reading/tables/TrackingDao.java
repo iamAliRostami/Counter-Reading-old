@@ -41,9 +41,14 @@ public interface TrackingDao {
     @Query("Update TrackingDto Set isArchive = :isArchive, isActive = :isActive Where id = :id")
     void updateTrackingDtoByArchive(String id, boolean isArchive, boolean isActive);
 
-    @Query("Update TrackingDto Set isArchive = :isArchive, isActive = :isActive")
-    void updateTrackingDtoByArchive(boolean isArchive, boolean isActive);
+    @Query("Update TrackingDto Set isArchive = :isArchive, isActive = :isActive, isDeleted = :isDeleted Where id = :id")
+    void updateTrackingDtoByArchive(String id, boolean isArchive, boolean isActive, boolean isDeleted);
 
+    @Query("Update TrackingDto Set isArchive = :isArchive, isActive = :isActive, isDeleted = :isDeleted")
+    void updateTrackingDtoByArchive(boolean isArchive, boolean isActive, boolean isDeleted);
+
+    //    @Query("Update TrackingDto Set isArchive = :isArchive, isActive = :isActive Where id = :id")
+//    void updateTrackingDtoByArchive(String id, boolean isArchive, boolean isActive);
     @Query("DELETE FROM TrackingDto WHERE trackNumber = :trackNumber AND isArchive = :isArchive")
     void deleteTrackingDto(int trackNumber, boolean isArchive);
 

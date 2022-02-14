@@ -175,7 +175,7 @@ public class ExplorerFragment extends Fragment {
         stringBuilder.setSpan(new ForegroundColorSpan(requireContext().getColor(R.color.text_color_dark)),
                 0, titleText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         builder.setTitle(stringBuilder);
-        builder.setItems(R.array.sortby, (dialog, which) -> {
+        builder.setItems(R.array.sort_by, (dialog, which) -> {
             sortByCurrent = which;
             updateSortUI(true);
             dialog.dismiss();

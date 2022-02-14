@@ -32,7 +32,7 @@ public class GetUpdateFile {
 }
 
 class Update implements ICallback<ResponseBody> {
-    Activity activity;
+    final Activity activity;
 
     public Update(Activity activity) {
         this.activity = activity;
@@ -47,7 +47,7 @@ class Update implements ICallback<ResponseBody> {
 }
 
 class UpdateIncomplete implements ICallbackIncomplete<ResponseBody> {
-    Context context;
+    final Context context;
 
     public UpdateIncomplete(Context context) {
         this.context = context;

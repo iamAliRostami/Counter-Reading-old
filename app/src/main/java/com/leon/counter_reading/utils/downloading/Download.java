@@ -51,7 +51,7 @@ public class Download extends AsyncTask<Activity, Void, Void> {
 }
 
 class DownloadCompleted implements ICallback<ReadingData> {
-    Activity activity;
+    final Activity activity;
 
     public DownloadCompleted(Activity activity) {
         this.activity = activity;

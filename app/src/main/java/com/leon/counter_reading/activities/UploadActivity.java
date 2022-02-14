@@ -20,7 +20,7 @@ import com.leon.counter_reading.adapters.ViewPagerAdapterTab;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityUploadBinding;
 import com.leon.counter_reading.enums.UploadType;
-import com.leon.counter_reading.fragments.UploadFragment;
+import com.leon.counter_reading.fragments.upload.UploadFragment;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.DepthPageTransformer;
 import com.leon.counter_reading.utils.DifferentCompanyManager;

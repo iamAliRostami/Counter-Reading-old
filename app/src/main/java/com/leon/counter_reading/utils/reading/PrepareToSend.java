@@ -5,6 +5,8 @@ import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.OffloadStateEnum.INSERTED;
 import static com.leon.counter_reading.helpers.Constants.OFFLINE_ATTEMPT;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.getContext;
+import static com.leon.counter_reading.helpers.MyApplication.setErrorCounter;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -81,10 +83,9 @@ class offLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
             new Sent(response.body()).execute(activity);
         } else if (response.body() != null) {
             try {
-                MyApplication.setErrorCounter(MyApplication.getErrorCounter() + 1);
-                CustomErrorHandling customErrorHandling = new CustomErrorHandling(MyApplication.getContext());
-                String error = customErrorHandling.getErrorMessage(response.body().status);
-//                String error = customErrorHandling.getErrorMessage(response.body().status);
+                setErrorCounter(MyApplication.getErrorCounter() + 1);
+                CustomErrorHandling errorHandling = new CustomErrorHandling(activity);
+                final String error = errorHandling.getErrorMessage(response.body().status);
                 new CustomToast().error(error);
             } catch (Exception e) {
                 activity.runOnUiThread(() -> new CustomDialogModel(Red,
@@ -98,7 +99,7 @@ class offLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
 }
 
 class offLoadError implements ICallbackError {
-    Activity activity;
+    final Activity activity;
 
     public offLoadError(Activity activity) {
         this.activity = activity;
@@ -109,7 +110,7 @@ class offLoadError implements ICallbackError {
         if (MyApplication.getErrorCounter() <
                 DifferentCompanyManager.getShowError(DifferentCompanyManager.getActiveCompanyName())) {
             try {
-                CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(MyApplication.getContext());
+                CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(getContext());
                 String error = customErrorHandlingNew.getErrorMessageTotal(t);
                 new CustomToast().error(error);
             } catch (Exception e) {
@@ -120,7 +121,7 @@ class offLoadError implements ICallbackError {
                         activity.getString(R.string.accepted)));
             }
         }
-        MyApplication.setErrorCounter(MyApplication.getErrorCounter() + 1);
+        setErrorCounter(MyApplication.getErrorCounter() + 1);
         offlineAttempts++;
         if (offlineAttempts == OFFLINE_ATTEMPT) {
             activity.runOnUiThread(() -> new CustomToast().warning("حالت آفلاین فعال گردید."));
@@ -129,7 +130,7 @@ class offLoadError implements ICallbackError {
 }
 
 class offLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadResponses> {
-    Activity activity;
+    final Activity activity;
 
     public offLoadDataIncomplete(Activity activity) {
         this.activity = activity;
@@ -139,7 +140,7 @@ class offLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadR
     public void executeIncomplete(Response<OnOffLoadDto.OffLoadResponses> response) {
         if (response != null) {
             try {
-                CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(MyApplication.getContext());
+                CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(getContext());
                 String error = customErrorHandlingNew.getErrorMessageDefault(response);
                 new CustomToast().error(error);
             } catch (Exception e) {

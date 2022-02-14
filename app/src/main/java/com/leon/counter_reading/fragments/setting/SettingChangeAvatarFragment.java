@@ -1,4 +1,4 @@
-package com.leon.counter_reading.fragments;
+package com.leon.counter_reading.fragments.setting;
 
 import static android.app.Activity.RESULT_OK;
 import static com.leon.counter_reading.helpers.Constants.BITMAP_SELECTED_IMAGE;

@@ -62,7 +62,7 @@ public class GetReportDBData extends AsyncTask<Activity, Integer, Integer> {
                     setupViewPager(counterStateDtos, trackingDtos,
                             zero, normal, high, low, total, isMane, unread));
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         return null;

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/border_gray_3"
     android:padding="@dimen/medium_dp"
-    tools:context=".fragments.ReportPerformanceFragment">
+    tools:context=".fragments.report.ReportPerformanceFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

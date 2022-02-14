@@ -1,4 +1,4 @@
-package com.leon.counter_reading.fragments;
+package com.leon.counter_reading.fragments.reading_setting;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

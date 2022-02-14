@@ -3,6 +3,7 @@ package com.leon.counter_reading.fragments;
 import static com.leon.counter_reading.helpers.Constants.ACTION_USB_PERMISSION;
 import static com.leon.counter_reading.utils.USBUtils.isMassStorageDevice;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -69,6 +70,7 @@ public class DownloadOfflineFragment extends Fragment implements HomeFragment.Ho
         return binding.getRoot();
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     void initialize() {
         permissionIntent = PendingIntent.getBroadcast(requireContext(), 0,
                 new Intent(ACTION_USB_PERMISSION), 0);

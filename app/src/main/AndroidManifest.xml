@@ -86,7 +86,15 @@
         tools:ignore="UnusedAttribute,LockedOrientationActivity">
         <activity
             android:name=".activities.StartActivity"
-            android:exported="false" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.HelpActivity"
             android:exported="true"
@@ -157,13 +165,7 @@
             android:name=".activities.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".activities.LoginActivity"
             android:screenOrientation="portrait"

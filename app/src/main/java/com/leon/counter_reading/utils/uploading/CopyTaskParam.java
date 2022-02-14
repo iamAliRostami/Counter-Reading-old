@@ -5,8 +5,8 @@ import com.github.mjdev.libaums.fs.UsbFile;
 import java.io.File;
 
 public class CopyTaskParam {
-    public UsbFile from;
-    public File to;
+    public final UsbFile from;
+    public final File to;
     public int position;
 
     public CopyTaskParam(UsbFile from, File to) {

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.LoginActivity">
+    tools:context=".fragments.LoginFragment">
 
     <View
         android:id="@+id/view_top"
@@ -19,14 +19,14 @@
         android:background="?attr/colorPrimaryDark" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="@dimen/_150sdp"
         android:layout_height="@dimen/_150sdp"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:id="@+id/card_view"
+        android:layout_marginTop="@dimen/_50sdp"
         app:cardCornerRadius="@dimen/_75sdp"
         app:cardElevation="0dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/_50sdp"
         app:cardUseCompatPadding="true">
 
         <ImageView
@@ -38,14 +38,6 @@
             android:src="@drawable/img_profile"
             tools:ignore="ContentDescription" />
     </androidx.cardview.widget.CardView>
-
-<!--    <ImageView-->
-<!--        android:layout_width="@dimen/_100sdp"-->
-<!--        android:layout_height="@dimen/_100sdp"-->
-<!--        android:background="@drawable/round_outline"-->
-<!--        android:src="@drawable/img_background"-->
-<!--        android:src="@drawable/img_background"-->
-<!--        tools:ignore="ContentDescription" />-->
 
     <LinearLayout
         android:id="@+id/linear_layout_username"
@@ -143,4 +135,5 @@
         android:textColor="@color/text_color_dark" />
 
     <include layout="@layout/footer" />
+
 </RelativeLayout>

@@ -19,10 +19,8 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-        );
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         if (!splashLoaded) {
             binding = ActivitySplashBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
@@ -36,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    void initialize() {
+    private void initialize() {
         binding.imageViewSplashScreen.setImageResource(R.drawable.img_splash);
     }
 
