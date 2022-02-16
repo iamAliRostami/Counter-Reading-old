@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/background_spinner.xml" value="0.1875" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border.xml" value="0.1875" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_black_2.xml" value="0.1875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_gray_1.xml" value="0.42421875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_gray_2.xml" value="0.42421875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_gray_3.xml" value="0.42421875" />
@@ -10,6 +13,10 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_gray_5.xml" value="0.42421875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_gray_6.xml" value="0.42421875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_gray_7.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_white_1.xml" value="0.1875" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_white_2.xml" value="0.1875" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_white_3.xml" value="0.2505" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_yellow_white.xml" value="0.1875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/cabinet.xml" value="0.42421875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/line.xml" value="0.42421875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_base.xml" value="0.39375" />
@@ -33,7 +40,7 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/dialog_text_input.xml" value="0.39375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/footer.xml" value="0.365625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_are_you_sure.xml" value="0.2625" />
-        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_basic.xml" value="0.4" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_basic.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_counter_place.xml" value="0.365625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_delete.xml" value="0.24921875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_download.xml" value="0.536" />

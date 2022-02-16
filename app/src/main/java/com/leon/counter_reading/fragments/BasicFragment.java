@@ -5,12 +5,15 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.PROXY;
 import static com.leon.counter_reading.helpers.MyApplication.getAndroidVersion;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getSerial;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
 
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -76,6 +79,9 @@ public class BasicFragment extends Fragment {
         binding.editTextProxy.setText(getApplicationComponent().SharedPreferenceModel().getStringData(PROXY.getValue()));
         binding.textViewAndroidVersion.setText(getAndroidVersion());
         binding.textViewAppVersion.setText(BuildConfig.VERSION_NAME);
+
+        final TextView textViewCompanyName = requireActivity().findViewById(R.id.text_view_company_name);
+        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
     }
 
     private int getDigits(String number) {
