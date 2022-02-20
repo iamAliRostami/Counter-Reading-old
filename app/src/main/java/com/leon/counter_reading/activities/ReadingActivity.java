@@ -619,5 +619,4 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
         Runtime.getRuntime().gc();
         System.gc();
     }
-
 }

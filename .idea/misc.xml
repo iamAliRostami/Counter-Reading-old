@@ -19,7 +19,7 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_yellow_white.xml" value="0.1875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/cabinet.xml" value="0.42421875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/line.xml" value="0.42421875" />
-        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_base.xml" value="0.39375" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_base.xml" value="0.2" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_camera.xml" value="0.39375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_counter_place.xml" value="0.365625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/activity_download.xml" value="0.536" />
@@ -77,6 +77,7 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/list_item.xml" value="0.6" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/progress_bar.xml" value="0.24375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/progress_bar_new.xml" value="0.24375" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/reading_header.xml" value="0.20008550662676358" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/row_listdevices.xml" value="0.19375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/title_dialog.xml" value="0.190625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/toolbar.xml" value="0.2625" />

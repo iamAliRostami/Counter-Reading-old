@@ -200,9 +200,9 @@ public class TakePhotoFragment extends DialogFragment {
     }
 
     public void setResult() {
-        dismiss();
         if (result)
             readingActivity.setPhotoResult(position);
+        dismiss();
     }
 
     public interface Callback {

@@ -149,6 +149,7 @@
         <activity
             android:name=".activities.ReadingActivity"
             android:screenOrientation="portrait"
+            android:label=""
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".activities.LocationActivity"
