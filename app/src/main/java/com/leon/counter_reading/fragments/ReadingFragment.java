@@ -353,7 +353,7 @@ public class ReadingFragment extends Fragment {
     }
 
     private void attemptSend() {
-        if (canBeEmpty && lockProcess(canBeEmpty)) {
+        if (canBeEmpty && lockProcess(true)) {
             canBeEmpty();
         } else {
             canNotBeEmpty();
