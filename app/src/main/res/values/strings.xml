@@ -274,4 +274,7 @@
     <string name="error_on_usb">Error reading USB. Check FAT32 format.</string>
     <string name="size">سایز</string>
     <string name="sort_by">مرتب سازی بر اساس</string>
+    <string name="http_https">http:// یا https://</string>
+    <string name="app_version">نسخه برنامه</string>
+    <string name="android_version">نسخه ی اندروید</string>
 </resources>

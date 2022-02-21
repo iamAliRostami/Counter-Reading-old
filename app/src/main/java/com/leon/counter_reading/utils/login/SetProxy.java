@@ -2,6 +2,9 @@ package com.leon.counter_reading.utils.login;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
+import static com.leon.counter_reading.enums.SharedReferenceKeys.PROXY;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.app.Activity;
 import android.content.Context;
 import android.text.InputType;
@@ -25,7 +28,7 @@ public class SetProxy {
                 .setCancelable(false)
                 .setInputType(InputType.TYPE_CLASS_TEXT)
                 .setHint("http:// یا https://")
-                .setInitialInput(MyApplication.getApplicationComponent().SharedPreferenceModel().getStringData(SharedReferenceKeys.PROXY.getValue()))
+                .setInitialInput(getApplicationComponent().SharedPreferenceModel().getStringData(PROXY.getValue()))
                 .setInputFilter(R.string.error_format, text -> {
                     String proxy = lovelyTextInputDialog.getEditTextNumber().getText().toString();
                     return proxy.length() == 0 || proxy.startsWith("https://") || proxy.startsWith("http://")/**/;
@@ -35,8 +38,8 @@ public class SetProxy {
                     InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                     String personalCode = lovelyTextInputDialog.getEditTextNumber().getText().toString();
-                    MyApplication.getApplicationComponent().SharedPreferenceModel()
-                            .putData(SharedReferenceKeys.PROXY.getValue(), personalCode);
+                    getApplicationComponent().SharedPreferenceModel()
+                            .putData(PROXY.getValue(), personalCode);
                 })
                 .setNegativeButton(R.string.close, v -> {
                     InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
@@ -47,11 +50,11 @@ public class SetProxy {
     }
 
     public static void showProxy(Activity activity) {
-        if (MyApplication.getApplicationComponent().SharedPreferenceModel()
-                .getIntData(SharedReferenceKeys.PROXY.getValue()) > 0) {
+        if (getApplicationComponent().SharedPreferenceModel()
+                .getIntData(PROXY.getValue()) > 0) {
             CustomDialogModel customDialogModel = new CustomDialogModel(DialogType.Green, activity,
-                    MyApplication.getApplicationComponent().SharedPreferenceModel()
-                            .getStringData(SharedReferenceKeys.PROXY.getValue()),
+                    getApplicationComponent().SharedPreferenceModel()
+                            .getStringData(PROXY.getValue()),
                     MyApplication.getContext().getString(R.string.proxy),
                     MyApplication.getContext().getString(R.string.dear_user),
                     MyApplication.getContext().getString(R.string.accepted));

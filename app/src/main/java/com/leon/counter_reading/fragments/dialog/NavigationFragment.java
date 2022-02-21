@@ -25,9 +25,9 @@ import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.navigation.Navigating;
 
 public class NavigationFragment extends DialogFragment {
+    private static NavigationFragment instance;
     public Callback readingActivity;
     private FragmentNavigationBinding binding;
-    private static NavigationFragment instance;
     private OnOffLoadDto onOffLoadDto;
     private int position;
 

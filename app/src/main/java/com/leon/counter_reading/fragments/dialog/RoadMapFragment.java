@@ -47,7 +47,7 @@ public class RoadMapFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("here","onCreate");
+        Log.e("here", "onCreate");
         if (getArguments() != null) {
             latitude = getArguments().getDouble(BundleEnum.LATITUDE.getValue());
             longitude = getArguments().getDouble(BundleEnum.LONGITUDE.getValue());
@@ -59,7 +59,7 @@ public class RoadMapFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentRoadMapBinding.inflate(inflater, container, false);
-        Log.e("here","onCreateView");
+        Log.e("here", "onCreateView");
         initialize();
         return binding.getRoot();
     }

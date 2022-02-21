@@ -53,7 +53,7 @@ public class ReadingViewHolder extends RecyclerView.ViewHolder {
         textViewBranch = itemView.findViewById(R.id.text_view_branch);
         textViewSiphon = itemView.findViewById(R.id.text_view_siphon);
         textViewName = itemView.findViewById(R.id.text_view_name);
-        textViewSerial = itemView.findViewById(R.id.text_view_serial);
+        textViewSerial = itemView.findViewById(R.id.edit_text_serial);
 
         buttonSubmit = itemView.findViewById(R.id.button_submit);
     }
@@ -80,7 +80,7 @@ public class ReadingViewHolder extends RecyclerView.ViewHolder {
         textViewBranch = itemView.findViewById(R.id.text_view_branch);
         textViewSiphon = itemView.findViewById(R.id.text_view_siphon);
         textViewName = itemView.findViewById(R.id.text_view_name);
-        textViewSerial = itemView.findViewById(R.id.text_view_serial);
+        textViewSerial = itemView.findViewById(R.id.edit_text_serial);
 
         buttonSubmit = itemView.findViewById(R.id.button_submit);
     }

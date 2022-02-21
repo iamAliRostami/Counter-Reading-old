@@ -38,46 +38,36 @@ public class Constants {
     public static final long MIN_TIME_BW_UPDATES = 10000;
     public static final long FASTEST_INTERVAL = 10000;
     public static final int MAX_IMAGE_SIZE = 100000;
-    public static long CURRENT_IMAGE_SIZE;
-
-    public static int POSITION = -1;
-    public static Bitmap BITMAP_SELECTED_IMAGE;
-    public static Uri PHOTO_URI;
-
-    public static boolean FOCUS_ON_EDIT_TEXT;
     public static final ArrayList<Integer> IS_MANE = new ArrayList<>();
-
     public static final String[] STORAGE_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
     public static final String[] PHOTO_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
     public static final String[] RECORD_AUDIO_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
-
     public static final String[] LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION};
     public static final String PHONE_PERMISSIONS = "android.permission.READ_PRIVILEGED_PHONE_STATE";
-
     public static final String ACTION_USB_PERMISSION = "com.leon.counter_reading.activities.USB_PERMISSION";
-
     public static final int INTERFACE_SUBCLASS = 6;
-
     public static final int INTERFACE_PROTOCOL = 80;
     public final static int SORT_BY_NAME = 0;
     public final static int SORT_BY_DATE = 1;
     public final static int SORT_BY_SIZE = 2;
     public final static File otgViewerCachePath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/OTGViewer/cache");
     public final static File otgViewerPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/OTGViewer");
-    public static String zipAddress;
     public final static int ZIP_ROOT = 7896;
     public final static int OFFLINE_ATTEMPT = 5;
-
-
     public static final ReadingData readingData = new ReadingData(), readingDataTemp = new ReadingData();
-
     public static final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
     public static final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
     public static final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
     public static final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
+    public static long CURRENT_IMAGE_SIZE;
+    public static int POSITION = -1;
+    public static Bitmap BITMAP_SELECTED_IMAGE;
+    public static Uri PHOTO_URI;
+    public static boolean FOCUS_ON_EDIT_TEXT;
+    public static String zipAddress;
 
 }

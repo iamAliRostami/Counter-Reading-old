@@ -237,7 +237,7 @@ public class OfflineUtils {
 
     public static String canCreateFile(String directory) {
         final String FILE_DIR = directory + File.separator + "hoang.txt";
-        File tempFile = null;
+        File tempFile;
         try {
             tempFile = new File(FILE_DIR);
             FileOutputStream fos = new FileOutputStream(tempFile);
@@ -246,10 +246,6 @@ public class OfflineUtils {
             fos.close();
         } catch (Exception e) {
             return null;
-        } finally {
-            if (tempFile != null && tempFile.exists() && tempFile.isFile()) {
-                tempFile = null;
-            }
         }
         return directory;
     }

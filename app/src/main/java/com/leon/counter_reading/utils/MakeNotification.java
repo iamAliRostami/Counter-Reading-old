@@ -53,7 +53,7 @@ public class MakeNotification {
                                              int smallIcon, int actionIcon) {
         Intent intent = new Intent(context, aClass);
         intent.setAction(actionName);
-        PendingIntent pendingIntent = PendingIntent.getService(context, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        @SuppressLint("UnspecifiedImmutableFlag") PendingIntent pendingIntent = PendingIntent.getService(context, (int) System.currentTimeMillis(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "2")
                 .setSmallIcon(smallIcon)
                 .setContentTitle(title)

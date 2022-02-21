@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/border_gray_3"
-    tools:context="com.leon.counter_reading.fragments.ReportTotalFragment">
+    tools:context="com.leon.counter_reading.fragments.report.ReportTotalFragment">
 
     <LinearLayout
         android:id="@+id/linear_layout_total"

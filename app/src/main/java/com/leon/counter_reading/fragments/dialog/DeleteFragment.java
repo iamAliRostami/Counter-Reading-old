@@ -14,7 +14,6 @@ import android.view.WindowManager;
 
 import androidx.fragment.app.DialogFragment;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentDeleteBinding;
 import com.leon.counter_reading.enums.BundleEnum;
@@ -62,7 +61,7 @@ public class DeleteFragment extends DialogFragment {
         return binding.getRoot();
     }
 
-   private void initialize() {
+    private void initialize() {
         makeRing(activity, NotificationType.SAVE);
         setOnImageViewPasswordClickListener();
         setOnButtonsClickListener();
@@ -90,12 +89,12 @@ public class DeleteFragment extends DialogFragment {
                 ) {
                     if (id.isEmpty()) {
                         getApplicationComponent().MyDatabase().
-                                trackingDao().updateTrackingDtoByArchive(true, false);
-//                        getApplicationComponent().MyDatabase().
-//                                trackingDao().updateTrackingDtoByArchive("4a5005b2-3fb8-4e03-a8a2-1ece4374a672", false, false);
+                                trackingDao().updateTrackingDtoByArchive(true, false, true);
+/*                        getApplicationComponent().MyDatabase().
+                                trackingDao().updateTrackingDtoByArchive("4a5005b2-3fb8-4e03-a8a2-1ece4374a672", false, false);*/
                     } else {
                         getApplicationComponent().MyDatabase().
-                                trackingDao().updateTrackingDtoByArchive(id, true, false);
+                                trackingDao().updateTrackingDtoByArchive(id, true, false, true);
                     }
                     Intent intent = activity.getIntent();
                     activity.finish();

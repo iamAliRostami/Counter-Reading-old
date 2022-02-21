@@ -3,6 +3,7 @@ package com.leon.counter_reading.fragments;
 import static com.leon.counter_reading.helpers.Constants.ACTION_USB_PERMISSION;
 import static com.leon.counter_reading.utils.USBUtils.isMassStorageDevice;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -33,6 +34,24 @@ public class DownloadOfflineFragment extends Fragment implements HomeFragment.Ho
     private FragmentOfflineDownloadBinding binding;
     private PendingIntent permissionIntent;
     private UsbManager usbManager;
+    private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            checkUSBStatus();
+            if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action))
+                removedUSB();
+            if (ACTION_USB_PERMISSION.equals(action)) {
+                synchronized (this) {
+                    final UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                        if (device != null) {
+                            connectDevice();
+                        }
+                    }
+                }
+            }
+        }
+    };
 
     public static DownloadOfflineFragment newInstance() {
         return new DownloadOfflineFragment();
@@ -51,6 +70,7 @@ public class DownloadOfflineFragment extends Fragment implements HomeFragment.Ho
         return binding.getRoot();
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     void initialize() {
         permissionIntent = PendingIntent.getBroadcast(requireContext(), 0,
                 new Intent(ACTION_USB_PERMISSION), 0);
@@ -82,25 +102,6 @@ public class DownloadOfflineFragment extends Fragment implements HomeFragment.Ho
             updateUI();
         }
     }
-
-    private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            checkUSBStatus();
-            if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action))
-                removedUSB();
-            if (ACTION_USB_PERMISSION.equals(action)) {
-                synchronized (this) {
-                    final UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-                        if (device != null) {
-                            connectDevice();
-                        }
-                    }
-                }
-            }
-        }
-    };
 
     private void connectDevice() {
         final UsbMassStorageDevice[] devices = UsbMassStorageDevice.getMassStorageDevices(requireActivity());

@@ -1,4 +1,4 @@
-package com.leon.counter_reading.fragments;
+package com.leon.counter_reading.fragments.report;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -114,7 +114,8 @@ public class ReportPerformanceFragment extends Fragment {
             setButtonState();
         });
     }
-    public void setButtonState(){
+
+    public void setButtonState() {
         binding.buttonSubmit.setEnabled(true);
     }
 }

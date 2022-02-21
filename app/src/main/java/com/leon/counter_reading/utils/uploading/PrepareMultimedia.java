@@ -11,7 +11,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.ProgressType;
-import com.leon.counter_reading.fragments.UploadFragment;
+import com.leon.counter_reading.fragments.upload.UploadFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
@@ -110,7 +110,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
                     new UploadVoices(voice), new UploadVoicesIncomplete(), new UploadMultimediaError());
         } else {
             activity.runOnUiThread(() ->
-                    new CustomToast().info(activity.getString(R.string.there_is_no_voices),Toast.LENGTH_LONG));
+                    new CustomToast().info(activity.getString(R.string.there_is_no_voices), Toast.LENGTH_LONG));
         }
     }
 

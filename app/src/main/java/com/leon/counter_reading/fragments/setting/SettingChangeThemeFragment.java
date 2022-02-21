@@ -1,4 +1,7 @@
-package com.leon.counter_reading.fragments;
+package com.leon.counter_reading.fragments.setting;
+
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,12 +12,12 @@ import android.view.ViewGroup;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.SettingActivity;
 import com.leon.counter_reading.databinding.FragmentSettingChangeThemeBinding;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.utils.CustomToast;
 
 import org.jetbrains.annotations.NotNull;
@@ -72,7 +75,7 @@ public class SettingChangeThemeFragment extends Fragment {
 
     private void setButtonChangeThemeClickListener() {
         binding.buttonChangeTheme.setOnClickListener(view -> {
-            MyApplication.getApplicationComponent().SharedPreferenceModel().putData(SharedReferenceKeys.THEME_STABLE.getValue(), theme);
+            getApplicationComponent().SharedPreferenceModel().putData(THEME_STABLE.getValue(), theme);
             new CustomToast().success(getString(R.string.theme_changed));
             changeTheme();
         });

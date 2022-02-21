@@ -20,6 +20,86 @@ import java.util.HashMap;
 public class USBUtils {
 
     private static final HashMap<String, Integer> sMimeIcons = new HashMap<>();
+    public static final Comparator<UsbFile> comparator = new Comparator<UsbFile>() {
+        @Override
+        public int compare(UsbFile lhs, UsbFile rhs) {
+            switch (ExplorerFragment.sortByCurrent) {
+                case Constants.SORT_BY_NAME:
+                    return sortByName(lhs, rhs);
+                case Constants.SORT_BY_DATE:
+                    return sortByDate(lhs, rhs);
+                case Constants.SORT_BY_SIZE:
+                    return sortBySize(lhs, rhs);
+                default:
+                    break;
+            }
+            return 0;
+        }
+
+        final int extractInt(String s) {
+            int result = 0;
+            try {
+                String num = s.replaceAll("\\D", "");
+                result = num.isEmpty() ? 0 : Integer.parseInt(num);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        final int checkIfDirectory(UsbFile lhs, UsbFile rhs) {
+            if (lhs.isDirectory() && !rhs.isDirectory()) {
+                return -1;
+            }
+
+            if (rhs.isDirectory() && !lhs.isDirectory()) {
+                return 1;
+            }
+
+            return 0;
+        }
+
+        final int sortByName(UsbFile lhs, UsbFile rhs) {
+            int result;
+            int dir = checkIfDirectory(lhs, rhs);
+            if (dir != 0)
+                return dir;
+            // Check if there is any number
+            final String lhsNum = lhs.getName().replaceAll("\\D", "");
+            final String rhsNum = rhs.getName().replaceAll("\\D", "");
+            int lhsRes;
+            int rhsRes;
+            if (!lhsNum.isEmpty() && !rhsNum.isEmpty()) {
+                lhsRes = extractInt(lhs.getName());
+                rhsRes = extractInt(rhs.getName());
+                return lhsRes - rhsRes;
+            }
+            result = lhs.getName().compareToIgnoreCase(rhs.getName());
+            return result;
+        }
+
+        int sortByDate(UsbFile lhs, UsbFile rhs) {
+            long result;
+            final int dir = checkIfDirectory(lhs, rhs);
+            if (dir != 0)
+                return dir;
+            result = lhs.lastModified() - rhs.lastModified();
+            return (int) result;
+        }
+
+        int sortBySize(UsbFile lhs, UsbFile rhs) {
+            long result = 0;
+            final int dir = checkIfDirectory(lhs, rhs);
+            if (dir != 0)
+                return dir;
+            try {
+                result = lhs.getLength() - rhs.getLength();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return (int) result;
+        }
+    };
 
     static {
         int icon;
@@ -223,87 +303,6 @@ public class USBUtils {
                 return false;
         }
     }
-
-    public static Comparator<UsbFile> comparator = new Comparator<UsbFile>() {
-        @Override
-        public int compare(UsbFile lhs, UsbFile rhs) {
-            switch (ExplorerFragment.sortByCurrent) {
-                case Constants.SORT_BY_NAME:
-                    return sortByName(lhs, rhs);
-                case Constants.SORT_BY_DATE:
-                    return sortByDate(lhs, rhs);
-                case Constants.SORT_BY_SIZE:
-                    return sortBySize(lhs, rhs);
-                default:
-                    break;
-            }
-            return 0;
-        }
-
-        final int extractInt(String s) {
-            int result = 0;
-            try {
-                String num = s.replaceAll("\\D", "");
-                result = num.isEmpty() ? 0 : Integer.parseInt(num);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return result;
-        }
-
-        final int checkIfDirectory(UsbFile lhs, UsbFile rhs) {
-            if (lhs.isDirectory() && !rhs.isDirectory()) {
-                return -1;
-            }
-
-            if (rhs.isDirectory() && !lhs.isDirectory()) {
-                return 1;
-            }
-
-            return 0;
-        }
-
-        final int sortByName(UsbFile lhs, UsbFile rhs) {
-            int result;
-            int dir = checkIfDirectory(lhs, rhs);
-            if (dir != 0)
-                return dir;
-            // Check if there is any number
-            final String lhsNum = lhs.getName().replaceAll("\\D", "");
-            final String rhsNum = rhs.getName().replaceAll("\\D", "");
-            int lhsRes;
-            int rhsRes;
-            if (!lhsNum.isEmpty() && !rhsNum.isEmpty()) {
-                lhsRes = extractInt(lhs.getName());
-                rhsRes = extractInt(rhs.getName());
-                return lhsRes - rhsRes;
-            }
-            result = lhs.getName().compareToIgnoreCase(rhs.getName());
-            return result;
-        }
-
-        int sortByDate(UsbFile lhs, UsbFile rhs) {
-            long result;
-            final int dir = checkIfDirectory(lhs, rhs);
-            if (dir != 0)
-                return dir;
-            result = lhs.lastModified() - rhs.lastModified();
-            return (int) result;
-        }
-
-        int sortBySize(UsbFile lhs, UsbFile rhs) {
-            long result = 0;
-            final int dir = checkIfDirectory(lhs, rhs);
-            if (dir != 0)
-                return dir;
-            try {
-                result = lhs.getLength() - rhs.getLength();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return (int) result;
-        }
-    };
 
     private static void add(String mimeType, int resId) {
         if (sMimeIcons.put(mimeType, resId) != null) {

@@ -1,7 +1,6 @@
 package com.leon.counter_reading.tables;
 
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -34,6 +33,8 @@ public class TrackingDto {
     public boolean isActive;
     public boolean isArchive;
     public boolean isLocked;
+    public boolean isDeleted;
+
     public String x;
     public String y;
 
@@ -49,7 +50,7 @@ public class TrackingDto {
         String[] items = new String[trackingDtos.size() + 1];
         items[0] = last;
         for (int i = 0; i < trackingDtos.size(); i++) {
-            items[i+1] = String.valueOf(trackingDtos.get(i).trackNumber);
+            items[i + 1] = String.valueOf(trackingDtos.get(i).trackNumber);
         }
         return items;
     }

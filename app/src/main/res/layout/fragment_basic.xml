@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.BasicFragment">
+
+    <View
+        android:id="@+id/view_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_120sdp"
+        android:background="?attr/colorPrimary" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linear_layout_footer"
+        android:layout_below="@id/view_top">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/linear_layout_serial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/low_dp"
+                android:background="@drawable/border_white_2"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/text_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:labelFor="@id/text_view_serial"
+                    android:text="@string/serial"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <TextView
+                    android:id="@+id/text_view_serial"
+                    style="@style/InputPossible"
+                    android:layout_margin="@dimen/low_dp"
+                    android:textSize="@dimen/text_size_medium" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_app_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_layout_serial"
+                android:layout_margin="@dimen/low_dp"
+                android:background="@drawable/border_white_2"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/text_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:labelFor="@id/text_view_app_version"
+                    android:text="@string/app_version"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <TextView
+                    android:id="@+id/text_view_app_version"
+                    style="@style/InputPossible"
+                    android:layout_margin="@dimen/low_dp"
+                    android:textSize="@dimen/text_size_medium" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_android_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_layout_app_version"
+                android:layout_margin="@dimen/low_dp"
+                android:background="@drawable/border_white_2"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/text_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/android_version"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <TextView
+                    android:id="@+id/text_view_android_version"
+                    style="@style/InputPossible"
+                    android:layout_margin="@dimen/low_dp"
+                    android:textSize="@dimen/text_size_medium" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/relative_layout_proxy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_layout_android_version"
+                android:layout_margin="@dimen/low_dp"
+                android:background="@drawable/border_white_2"
+                android:orientation="vertical"
+                android:padding="@dimen/medium_dp">
+
+                <TextView
+                    android:id="@+id/text_view_proxy"
+                    style="@style/text_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:labelFor="@id/edit_text_proxy"
+                    android:text="@string/enter_proxy"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <EditText
+                    android:id="@+id/edit_text_proxy"
+                    style="@style/InputPossible"
+                    android:layout_width="match_parent"
+                    android:layout_below="@id/text_view_proxy"
+                    android:hint="@string/http_https"
+                    android:inputType="text"
+                    android:padding="@dimen/low_dp"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:ignore="LabelFor" />
+
+                <Button
+                    android:id="@+id/button_submit_proxy"
+                    style="@style/ButtonSubmit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/edit_text_proxy"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/submit"
+                    android:textSize="@dimen/text_size_medium" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relative_layout_personal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relative_layout_proxy"
+                android:layout_margin="@dimen/low_dp"
+                android:background="@drawable/border_white_2"
+                android:orientation="vertical"
+                android:padding="@dimen/medium_dp">
+
+                <TextView
+                    android:id="@+id/text_view_personal"
+                    style="@style/text_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:labelFor="@id/edit_text_personal_code"
+                    android:text="@string/enter_personal_code"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <EditText
+                    android:id="@+id/edit_text_personal_code"
+                    style="@style/InputPossible"
+                    android:layout_width="match_parent"
+                    android:layout_below="@id/text_view_personal"
+                    android:inputType="text"
+                    android:padding="@dimen/low_dp"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <Button
+                    android:id="@+id/button_submit_personal"
+                    style="@style/ButtonSubmit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/edit_text_personal_code"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/submit"
+                    android:textSize="@dimen/text_size_medium" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+    <include layout="@layout/footer" />
+</RelativeLayout>

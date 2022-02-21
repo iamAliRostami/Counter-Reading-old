@@ -42,15 +42,24 @@ import java.util.ArrayList;
 
 public class TakePhotoFragment extends DialogFragment {
     public static int replace = 0;
+    private static TakePhotoFragment instance;
+    private final ArrayList<Image> images = new ArrayList<>();
     public Callback readingActivity;
     private FragmentTakePhotoBinding binding;
     private ImageViewAdapter imageViewAdapter;
     private String uuid;
     private String path;
+    private final ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    prepareImage();
+                    binding.buttonSaveSend.setEnabled(true);
+                }
+                imageViewAdapter.notifyDataSetChanged();
+            });
     private boolean result;
     private int position, trackNumber;
-    private final ArrayList<Image> images = new ArrayList<>();
-    private static TakePhotoFragment instance;
 
     public TakePhotoFragment() {
     }
@@ -126,8 +135,8 @@ public class TakePhotoFragment extends DialogFragment {
     private void setOnButtonSendClickListener() {
         binding.buttonSaveSend.setOnClickListener(v -> {
             binding.buttonSaveSend.setEnabled(false);
-            new PrepareMultimedia(requireActivity(), position, result,
-                    binding.editTextDescription.getText().toString(), images).execute(requireActivity());
+            new PrepareMultimedia(images, binding.editTextDescription.getText().toString(), result,
+                    requireActivity()).execute(requireActivity());
         });
     }
 
@@ -152,16 +161,6 @@ public class TakePhotoFragment extends DialogFragment {
             }
         }
     }
-
-    private final ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    prepareImage();
-                    binding.buttonSaveSend.setEnabled(true);
-                }
-                imageViewAdapter.notifyDataSetChanged();
-            });
 
     private void prepareImage() {
         final Image image = new Image();
@@ -201,9 +200,9 @@ public class TakePhotoFragment extends DialogFragment {
     }
 
     public void setResult() {
-        dismiss();
         if (result)
             readingActivity.setPhotoResult(position);
+        dismiss();
     }
 
     public interface Callback {

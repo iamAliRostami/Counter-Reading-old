@@ -1,5 +1,12 @@
 package com.leon.counter_reading.utils.reading;
 
+import static com.leon.counter_reading.enums.OffloadStateEnum.SENT;
+import static com.leon.counter_reading.enums.ReadStatusEnum.ALL;
+import static com.leon.counter_reading.enums.ReadStatusEnum.ALL_MANE;
+import static com.leon.counter_reading.enums.ReadStatusEnum.ALL_MANE_UNREAD;
+import static com.leon.counter_reading.enums.ReadStatusEnum.READ;
+import static com.leon.counter_reading.enums.ReadStatusEnum.STATE;
+import static com.leon.counter_reading.enums.ReadStatusEnum.UNREAD;
 import static com.leon.counter_reading.helpers.Constants.IS_MANE;
 import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
@@ -12,7 +19,6 @@ import android.widget.Toast;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
-import com.leon.counter_reading.enums.OffloadStateEnum;
 import com.leon.counter_reading.enums.ReadStatusEnum;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.TrackingDto;
@@ -71,22 +77,21 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
 
         for (int j = 0; j < readingData.trackingDtos.size(); j++) {
             final String id = readingData.trackingDtos.get(j).id;
-            if (readStatus == ReadStatusEnum.ALL.getValue()) {
+            if (readStatus == ALL.getValue()) {
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().getAllOnOffLoadByTracking(id));
-            } else if (readStatus == ReadStatusEnum.STATE.getValue()) {
+            } else if (readStatus == STATE.getValue()) {
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
                         getAllOnOffLoadByHighLowAndTracking(id, highLow));
-            } else if (readStatus == ReadStatusEnum.UNREAD.getValue()) {
+            } else if (readStatus == UNREAD.getValue()) {
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
                         getAllOnOffLoadNotRead(0, id));
-            } else if (readStatus == ReadStatusEnum.READ.getValue()) {
+            } else if (readStatus == READ.getValue()) {
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
-                        getAllOnOffLoadRead(OffloadStateEnum.SENT.getValue(), id));
-            } else if (readStatus == ReadStatusEnum.ALL_MANE_UNREAD.getValue()) {
+                        getAllOnOffLoadRead(SENT.getValue(), id));
+            } else if (readStatus == ALL_MANE_UNREAD.getValue()) {
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
                         getOnOffLoadReadByIsManeNotRead(IS_MANE, 0, id));
-
-            } else if (readStatus == ReadStatusEnum.ALL_MANE.getValue()) {
+            } else if (readStatus == ALL_MANE.getValue()) {
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
                         getOnOffLoadReadByIsMane(IS_MANE, id));
             }

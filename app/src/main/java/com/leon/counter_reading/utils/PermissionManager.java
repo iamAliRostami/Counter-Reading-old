@@ -254,7 +254,7 @@ public class PermissionManager {
     }
 
     public static boolean isNetworkAvailable(Context context) {
-       final ConnectivityManager connectivityManager = ((ConnectivityManager)
+        final ConnectivityManager connectivityManager = ((ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE));
         return getSignalStatus(context) || (connectivityManager.getActiveNetworkInfo() != null &&
                 connectivityManager.getActiveNetworkInfo().isConnectedOrConnecting());

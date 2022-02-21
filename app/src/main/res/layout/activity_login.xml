@@ -7,7 +7,7 @@
     tools:context=".activities.LoginActivity">
 
     <View
-        android:id="@+id/image_view_top"
+        android:id="@+id/view_top"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_120sdp"
         android:background="?attr/colorPrimary" />
@@ -15,7 +15,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/_10sdp"
-        android:layout_below="@id/image_view_top"
+        android:layout_below="@id/view_top"
         android:background="?attr/colorPrimaryDark" />
 
     <androidx.cardview.widget.CardView

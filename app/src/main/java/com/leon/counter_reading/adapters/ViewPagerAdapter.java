@@ -434,12 +434,14 @@ public class ViewPagerAdapter extends PagerAdapter {
         container.removeView((ScrollView) object);
         container = null;
     }
+
     @Override
     public void destroyItem(@NonNull View collection, int position, Object o) {
-        View view = (View)o;
+        View view = (View) o;
         ((ViewPager) collection).removeView(view);
         view = null;
     }
+
     @Override
     public int getItemPosition(@NonNull Object object) {
         return PagerAdapter.POSITION_NONE;

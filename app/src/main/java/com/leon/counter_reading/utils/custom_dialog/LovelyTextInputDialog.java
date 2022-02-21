@@ -47,7 +47,7 @@ public class LovelyTextInputDialog extends AbsLovelyDialog<LovelyTextInputDialog
     }
 
     public EditText getEditTextNumber() {
-            return editText1;
+        return editText1;
     }
 
     public LovelyTextInputDialog configureEditText(@NonNull ViewConfigurator<EditText> viewConfigurator) {
@@ -179,7 +179,7 @@ public class LovelyTextInputDialog extends AbsLovelyDialog<LovelyTextInputDialog
             String text = editText1.getText().toString();
 
             if (filter != null) {
-                boolean isWrongInput = !filter.check(text);
+                boolean isWrongInput = filter.check(text);
                 if (isWrongInput) {
                     setError();
                     return;

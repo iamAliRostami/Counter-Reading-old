@@ -7,6 +7,7 @@ public enum DownloadType {
     SPECIAL(3);
 
     private final int value;
+
     DownloadType(final int newValue) {
         value = newValue;
     }

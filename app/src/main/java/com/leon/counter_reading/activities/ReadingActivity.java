@@ -24,7 +24,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Bundle;
 import android.os.Debug;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -65,7 +64,6 @@ import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DepthPageTransformer2;
-import com.leon.counter_reading.utils.KeyboardUtils;
 import com.leon.counter_reading.utils.login.TwoStepVerification;
 import com.leon.counter_reading.utils.reading.ChangeSortType;
 import com.leon.counter_reading.utils.reading.GetBundle;
@@ -87,6 +85,7 @@ import java.util.ArrayList;
 public class ReadingActivity extends BaseActivity implements ReadingFragment.Callback,
         TakePhotoFragment.Callback, ReadingReportFragment.Callback, CounterPlaceFragment.Callback,
         NavigationFragment.Callback {
+    public static int offlineAttempts = 0;
     private int[] imageSrc;
     private ActivityReadingBinding binding;
     private Activity activity;
@@ -95,7 +94,6 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
     private int readStatus = 0, highLow = 1;
     private boolean isReading = false, isShowing = false;
     private ViewPagerStateAdapter2 viewPagerAdapterReading;
-    public static int offlineAttempts = 0;
 
     @Override
     protected void initialize() {
@@ -111,12 +109,6 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
         new GetReadingDBData(activity, readStatus, highLow, sharedPreferenceManager.
                 getBoolData(SORT_TYPE.getValue())).execute(activity);
     }
-
-//    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.clear();
-//    }
 
     private void updateOnOffLoad(int position, int counterStateCode, int counterStatePosition) {
         readingData.onOffLoadDtos.get(position).isBazdid = true;
@@ -298,16 +290,6 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber,
                         position, true));
-//        Intent intent = new Intent(activity, TakePhotoActivity.class);
-//        intent.putExtra(BILL_ID.getValue(),
-//                readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-//        intent.putExtra(TRACKING.getValue(),
-//                readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
-//        intent.putExtra(POSITION.getValue(), position);
-//        intent.putExtra(IMAGE.getValue(), true);
-//        intent.putExtra(SENT.getValue(),
-//                readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0);
-//        startActivityForResult(intent, CAMERA);
     }
 
     private void attemptSend(int position, boolean isForm, boolean isImage) {
@@ -459,14 +441,6 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
                             .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
                                     readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                                     readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber));
-//                    Intent intent = new Intent(activity, TakePhotoActivity.class);
-//                    intent.putExtra(SENT.getValue(),
-//                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0);
-//                    intent.putExtra(BILL_ID.getValue(),
-//                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-//                    intent.putExtra(TRACKING.getValue(),
-//                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
-//                    startActivity(intent);
                 }
             });
 
@@ -481,15 +455,6 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber,
                             binding.viewPager.getCurrentItem(),
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).zoneId));
-//                    Intent intent = new Intent(activity, ReadingReportActivity.class);
-//                    intent.putExtra(BILL_ID.getValue(),
-//                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-//                    intent.putExtra(TRACKING.getValue(),
-//                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
-//                    intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
-//                    intent.putExtra(BundleEnum.ZONE_ID.getValue(),
-//                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).zoneId);
-//                    startActivityForResult(intent, REPORT);
                 }
             });
 
@@ -530,19 +495,11 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
             } else {
                 ShowFragmentDialogOnce(activity, "NAVIGATION", NavigationFragment
                         .newInstance(binding.viewPager.getCurrentItem()));
-//                intent = new Intent(activity, NavigationActivity.class);
-//                intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
-//                startActivityForResult(intent, NAVIGATION);
             }
         } else if (id == R.id.menu_report_forbid) {
             ShowFragmentDialogOnce(activity, "REPORT_FORBID", ReportForbidFragment.newInstance(
                     readingData.onOffLoadDtos.size() > 0 ? readingData.onOffLoadDtos
                             .get(binding.viewPager.getCurrentItem()).zoneId : 0));
-//            intent = new Intent(activity, ReportForbidActivity.class);
-//            if (readingData.onOffLoadDtos.size() > 0)
-//                intent.putExtra(BundleEnum.ZONE_ID.getValue(), readingData.onOffLoadDtos.
-//                        get(binding.viewPager.getCurrentItem()).zoneId);
-//            startActivity(intent);
         } else if (id == R.id.menu_description) {
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
@@ -562,11 +519,6 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-//                intent = new Intent(activity, CounterPlaceActivity.class);
-//                intent.putExtra(BILL_ID.getValue(),
-//                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-//                intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
-//                startActivityForResult(intent, COUNTER_LOCATION);
                 ShowFragmentDialogOnce(activity, "COUNTER_PLACE", CounterPlaceFragment
                         .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                                 binding.viewPager.getCurrentItem()));
@@ -667,5 +619,4 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
         Runtime.getRuntime().gc();
         System.gc();
     }
-
 }

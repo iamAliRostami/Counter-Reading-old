@@ -11,11 +11,11 @@ import android.view.WindowManager;
 
 import androidx.fragment.app.DialogFragment;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentAhadBinding;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.NotificationType;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 import org.jetbrains.annotations.NotNull;

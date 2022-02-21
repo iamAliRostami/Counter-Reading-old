@@ -6,7 +6,7 @@
     android:layout_marginLeft="@dimen/large_dp"
     android:layout_marginRight="@dimen/large_dp"
     android:padding="@dimen/large_dp"
-    tools:context=".fragments.SettingChangeAvatarFragment">
+    tools:context=".fragments.setting.SettingChangeAvatarFragment">
 
     <ImageView
         android:id="@+id/image_view_avatar"

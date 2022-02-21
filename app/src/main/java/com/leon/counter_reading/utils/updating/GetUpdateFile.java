@@ -3,12 +3,12 @@ package com.leon.counter_reading.utils.updating;
 import android.app.Activity;
 import android.content.Context;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.enums.ProgressType;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackIncomplete;
@@ -32,7 +32,7 @@ public class GetUpdateFile {
 }
 
 class Update implements ICallback<ResponseBody> {
-    Activity activity;
+    final Activity activity;
 
     public Update(Activity activity) {
         this.activity = activity;
@@ -47,7 +47,7 @@ class Update implements ICallback<ResponseBody> {
 }
 
 class UpdateIncomplete implements ICallbackIncomplete<ResponseBody> {
-    Context context;
+    final Context context;
 
     public UpdateIncomplete(Context context) {
         this.context = context;

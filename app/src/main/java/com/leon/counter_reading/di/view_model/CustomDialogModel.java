@@ -7,10 +7,10 @@ import android.view.WindowManager;
 
 import androidx.core.content.ContextCompat;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.HomeActivity;
 import com.leon.counter_reading.enums.DialogType;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.utils.custom_dialog.LovelyStandardDialog;
 
 import javax.inject.Inject;

@@ -19,7 +19,8 @@
     <GridView
         android:id="@+id/grid_view_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/edit_text_description"
         android:layout_below="@id/text_view_not_sent"
         android:background="@drawable/border_gray_3"
         android:gravity="center"
@@ -32,7 +33,7 @@
         android:id="@+id/edit_text_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/grid_view_image"
+        android:layout_above="@id/button_save_send"
         android:layout_marginTop="@dimen/medium_dp"
         android:layout_marginBottom="@dimen/medium_dp"
         android:background="@drawable/border_gray_3"
@@ -49,9 +50,7 @@
         style="@style/ButtonWarning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edit_text_description"
-        android:layout_alignParentBottom="false"
+        android:layout_alignParentBottom="true"
         android:text="@string/save_send" />
-
 
 </RelativeLayout>

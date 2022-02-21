@@ -1,4 +1,4 @@
-package com.leon.counter_reading.fragments;
+package com.leon.counter_reading.fragments.upload;
 
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
@@ -32,11 +32,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class UploadFragment extends Fragment {
-    private FragmentUploadBinding binding;
-    private Activity activity;
     private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
     private final int[] imageSrc = {R.drawable.img_upload_on, R.drawable.img_upload_off,
             R.drawable.img_multimedia};
+    private FragmentUploadBinding binding;
+    private Activity activity;
     private int type;
     private String[] items;
 
@@ -159,13 +159,6 @@ public class UploadFragment extends Fragment {
         });
     }
 
-    private class Inline implements CustomDialogModel.Inline {
-        @Override
-        public void inline() {
-            sendOnOffLoad();
-        }
-    }
-
     private void sendOnOffLoad() {
         if (type == UploadType.NORMAL.getValue()) {
             binding.buttonUpload.setEnabled(true);
@@ -190,5 +183,12 @@ public class UploadFragment extends Fragment {
         super.onDestroy();
         trackingDtos.clear();
         items = null;
+    }
+
+    private class Inline implements CustomDialogModel.Inline {
+        @Override
+        public void inline() {
+            sendOnOffLoad();
+        }
     }
 }

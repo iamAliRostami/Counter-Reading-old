@@ -124,49 +124,6 @@ public class CustomFile {
         }
         return null;
     }
-//    public static Bitmap compressBitmap(Bitmap original) {
-//        try {
-//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//            original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-//            if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
-//                Log.e("Size 1", String.valueOf(stream.toByteArray().length));
-////            int qualityPercent = Math.max((int) ((double)
-////                    stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
-//                final int qualityPercent;
-//                if (stream.toByteArray().length > 4000000)
-//                    qualityPercent = Math.max((int) ((double)
-//                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 12)), 20);
-//                else if (stream.toByteArray().length > 3000000)
-//                    qualityPercent = Math.max((int) ((double)
-//                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 10)), 20);
-//                else if (stream.toByteArray().length > 2000000)
-//                    qualityPercent = Math.max((int) ((double)
-//                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 8)), 20);
-//                else if (stream.toByteArray().length > 1000000)
-//                    qualityPercent = Math.max((int) ((double)
-//                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 6)), 20);
-//                else if (stream.toByteArray().length > 500000)
-////                    qualityPercent = Math.max((int) ((double)
-////                            stream.toByteArray().length / (MAX_IMAGE_SIZE * 8)), 20);
-//                    qualityPercent = stream.toByteArray().length / MAX_IMAGE_SIZE;
-//                else if (stream.toByteArray().length > 200000)
-//                    qualityPercent = stream.toByteArray().length / (MAX_IMAGE_SIZE * 2);
-//                else
-//                    qualityPercent = Math.max((int) ((double)
-//                            stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
-//                original = Bitmap.createScaledBitmap(original
-//                        , (int) ((double) original.getWidth() * qualityPercent / 100)
-//                        , (int) ((double) original.getHeight() * qualityPercent / 100), false);
-//                stream = new ByteArrayOutputStream();
-//                original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-//            }
-//            CURRENT_IMAGE_SIZE = stream.toByteArray().length;
-//            return original;
-//        } catch (Exception e) {
-//            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
-//        }
-//        return null;
-//    }
 
     public static ByteArrayInputStream compressBitmapIS(Bitmap original) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -244,20 +201,18 @@ public class CustomFile {
         }
     }
 
-    public static boolean copyImages(final Image image, final int trackNumber, final Context context) {
+    public static void copyImages(final Image image, final int trackNumber, final Context context) {
         if (isExternalStorageWritable()) {
             final File storageDir = new File(Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + trackNumber + "/images");
-            if (!storageDir.exists()) if (!storageDir.mkdirs()) return false;
-            boolean saved = false;
+            if (!storageDir.exists()) if (!storageDir.mkdirs()) return;
             File from = new File(context.getExternalFilesDir(null).getAbsolutePath() +
                     context.getString(R.string.camera_folder) + image.address);
             File to = new File(storageDir + "/" + image.address);
-            saved = from.renameTo(to);
-            return saved;
+            if (!from.renameTo(to))
+                new CustomToast().warning(context.getString(R.string.error_external_storage_is_not_writable));
         } else {
             new CustomToast().warning(context.getString(R.string.error_external_storage_is_not_writable));
-            return false;
         }
     }
 
@@ -477,7 +432,5 @@ public class CustomFile {
             ioException.printStackTrace();
         }
         return text.toString();
-//        Gson gson = new GsonBuilder().create();
-//        return gson.fromJson(json, ReadingData.class);
     }
 }

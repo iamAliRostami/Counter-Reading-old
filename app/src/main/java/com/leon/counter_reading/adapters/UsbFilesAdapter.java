@@ -45,6 +45,33 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         refresh();
     }
 
+    public static boolean isText(UsbFile entry) {
+        if (entry.isDirectory())
+            return false;
+        try {
+            return isTextInner(entry.getName());
+        } catch (StringIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean isText(File entry) {
+        return isTextInner(entry.getName());
+    }
+
+    private static boolean isTextInner(String name) {
+        boolean result = false;
+        int index = name.lastIndexOf(".");
+        if (index > 0) {
+            String ext = name.substring(index);
+            if (ext.equalsIgnoreCase(".txt")) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     public void refresh() throws IOException {
         usbFiles.clear();
@@ -104,33 +131,6 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void setCurrentDir(UsbFile dir) {
         currentDir = dir;
-    }
-
-    public static boolean isText(UsbFile entry) {
-        if (entry.isDirectory())
-            return false;
-        try {
-            return isTextInner(entry.getName());
-        } catch (StringIndexOutOfBoundsException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public static boolean isText(File entry) {
-        return isTextInner(entry.getName());
-    }
-
-    private static boolean isTextInner(String name) {
-        boolean result = false;
-        int index = name.lastIndexOf(".");
-        if (index > 0) {
-            String ext = name.substring(index);
-            if (ext.equalsIgnoreCase(".txt")) {
-                result = true;
-            }
-        }
-        return result;
     }
 
 

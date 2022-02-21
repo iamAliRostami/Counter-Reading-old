@@ -14,7 +14,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.ProgressType;
-import com.leon.counter_reading.fragments.UploadFragment;
+import com.leon.counter_reading.fragments.upload.UploadFragment;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
@@ -170,7 +170,7 @@ class OffLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
     @Override
     public void execute(Response<OnOffLoadDto.OffLoadResponses> response) {
         if (response.body() != null && response.body().status == 200) {
-            int state = response.body().isValid ? SENT.getValue() : SENT_WITH_ERROR.getValue();
+           final int state = response.body().isValid ? SENT.getValue() : SENT_WITH_ERROR.getValue();
             getApplicationComponent().MyDatabase().onOffLoadDao().
                     updateOnOffLoad(state, response.body().targetObject);
             getApplicationComponent().MyDatabase().trackingDao().

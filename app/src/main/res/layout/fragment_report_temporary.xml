@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/border_gray_3"
-    tools:context="com.leon.counter_reading.fragments.ReportTemporaryFragment">
+    tools:context="com.leon.counter_reading.fragments.report.ReportTemporaryFragment">
 
     <ImageView
         android:id="@+id/image_view_temporary"

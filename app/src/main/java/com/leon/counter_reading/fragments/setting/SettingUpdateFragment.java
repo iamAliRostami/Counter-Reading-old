@@ -1,4 +1,4 @@
-package com.leon.counter_reading.fragments;
+package com.leon.counter_reading.fragments.setting;
 
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 

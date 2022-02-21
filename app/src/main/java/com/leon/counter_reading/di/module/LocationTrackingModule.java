@@ -18,7 +18,7 @@ public class LocationTrackingModule {
     private LocationTrackingGps locationTrackingGps;
 
     public LocationTrackingModule(Activity activity) {
-        if (CheckSensor.checkSensor(activity,true))
+        if (CheckSensor.checkSensor(activity, true))
             locationTrackingGoogle = LocationTrackingGoogle.getInstance(activity);
         else
             locationTrackingGps = LocationTrackingGps.getInstance();

@@ -72,10 +72,6 @@ public class ReadingFragment extends Fragment {
     private int position, counterStateCode, counterStatePosition;
     private boolean canBeEmpty, canLessThanPre, isMakoos, isMane;
 
-    public static ReadingFragment newInstance(int position) {
-        return new ReadingFragment(position);
-    }
-
     public ReadingFragment() {
     }
 
@@ -84,6 +80,10 @@ public class ReadingFragment extends Fragment {
         this.onOffLoadDto = Constants.onOffLoadDtos.get(position);
         this.readingConfigDefaultDto = Constants.readingConfigDefaultDtos.get(position);
         this.karbariDto = Constants.karbariDtos.get(position);
+    }
+
+    public static ReadingFragment newInstance(int position) {
+        return new ReadingFragment(position);
     }
 
     private static Bundle putBundle(int position) {
@@ -353,7 +353,7 @@ public class ReadingFragment extends Fragment {
     }
 
     private void attemptSend() {
-        if (canBeEmpty && lockProcess(canBeEmpty)) {
+        if (canBeEmpty && lockProcess(true)) {
             canBeEmpty();
         } else {
             canNotBeEmpty();

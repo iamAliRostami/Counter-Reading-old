@@ -1,6 +1,6 @@
 package com.leon.counter_reading.adapters;
 
-import static com.leon.counter_reading.activities.TakePhotoActivity.replace;
+import static com.leon.counter_reading.fragments.dialog.TakePhotoFragment.replace;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.annotation.SuppressLint;

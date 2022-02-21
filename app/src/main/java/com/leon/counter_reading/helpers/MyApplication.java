@@ -31,7 +31,6 @@ import com.leon.counter_reading.di.module.LocationTrackingModule;
 import com.leon.counter_reading.di.module.MyDatabaseModule;
 import com.leon.counter_reading.di.module.NetworkModule;
 import com.leon.counter_reading.di.module.SharedPreferenceModule;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.enums.SharedReferenceNames;
 import com.leon.counter_reading.infrastructure.ILocationTracking;
 import com.leon.counter_reading.utils.locating.CheckSensor;
@@ -49,66 +48,11 @@ public class MyApplication extends Application {
     private static ApplicationComponent applicationComponent;
     private static ActivityComponent activityComponent;
 
-    @Override
-    public void onCreate() {
-        appContext = getApplicationContext();
-        Toasty.Config.getInstance()
-                .tintIcon(true)
-                .setToastTypeface(Typeface.createFromAsset(appContext.getAssets(), FONT_NAME))
-                .setTextSize(TOAST_TEXT_SIZE)
-                .allowQueue(true).apply();
-        applicationComponent = DaggerApplicationComponent
-                .builder()
-                .networkModule(new NetworkModule())
-                .flashModule(new FlashModule(appContext))
-                .customProgressModule(new CustomProgressModule())
-                .myDatabaseModule(new MyDatabaseModule(appContext))
-                .sharedPreferenceModule(new SharedPreferenceModule(appContext, SharedReferenceNames.ACCOUNT))
-                .build();
-        applicationComponent.inject(this);
-        super.onCreate();
-        if (!BuildConfig.BUILD_TYPE.equals("release")) {
-            setupYandex();
-        } else {
-            TooLargeTool.startLogging(this);
-            setupLeakCanary();
-        }
-    }
-
-//    private com.squareup.leakcanary.RefWatcher refWatcher;
-
-    protected void setupLeakCanary() {
-        /*if (com.squareup.leakcanary.LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        refWatcher = com.squareup.leakcanary.LeakCanary.install(this);*/
-    }
-
-
-    protected void setupYandex() {
-        UserProfile userProfile = UserProfile.newBuilder()
-                .apply(Attribute.name().withValue(applicationComponent.SharedPreferenceModel()
-                        .getStringData(USERNAME.getValue()))).build();
-        YandexMetricaConfig config = com.yandex.metrica.YandexMetricaConfig
-                .newConfigBuilder("6d39e473-5c5c-4163-9c4c-21eb91758e8f").withLogs()
-                .withAppVersion(BuildConfig.VERSION_NAME).build();
-        YandexMetrica.activate(appContext, config);
-        YandexMetrica.enableActivityAutoTracking(this);
-        YandexMetrica.activate(getApplicationContext(), config);
-//        YandexMetrica.setUserProfileID("id 784");
-        YandexMetrica.reportUserProfile(userProfile);
-//        throw new RuntimeException("Test Force Crash"); // Force a crash
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
-
     public static ActivityComponent getActivityComponent() {
         return activityComponent;
     }
+
+//    private com.squareup.leakcanary.RefWatcher refWatcher;
 
     public static void setActivityComponent(Activity activity) {
         activityComponent = DaggerActivityComponent
@@ -165,7 +109,7 @@ public class MyApplication extends Application {
     }
 
     public static String getDBName() {
-        return "MyDatabase_13";
+        return "MyDatabase_14";
     }
 
     public static String getAndroidVersion() {
@@ -185,5 +129,59 @@ public class MyApplication extends Application {
             serial = Settings.Secure.getString(new ContextWrapper(activity).getContentResolver(),
                     Settings.Secure.ANDROID_ID);
         return serial;
+    }
+
+    @Override
+    public void onCreate() {
+        appContext = getApplicationContext();
+        Toasty.Config.getInstance()
+                .tintIcon(true)
+                .setToastTypeface(Typeface.createFromAsset(appContext.getAssets(), FONT_NAME))
+                .setTextSize(TOAST_TEXT_SIZE)
+                .allowQueue(true).apply();
+        applicationComponent = DaggerApplicationComponent
+                .builder()
+                .networkModule(new NetworkModule())
+                .flashModule(new FlashModule(appContext))
+                .customProgressModule(new CustomProgressModule())
+                .myDatabaseModule(new MyDatabaseModule(appContext))
+                .sharedPreferenceModule(new SharedPreferenceModule(appContext, SharedReferenceNames.ACCOUNT))
+                .build();
+        applicationComponent.inject(this);
+        super.onCreate();
+        if (!BuildConfig.BUILD_TYPE.equals("release")) {
+            setupYandex();
+        } else {
+            TooLargeTool.startLogging(this);
+            setupLeakCanary();
+        }
+    }
+
+    protected void setupLeakCanary() {
+        /*if (com.squareup.leakcanary.LeakCanary.isInAnalyzerProcess(this)) {
+            return;
+        }
+        refWatcher = com.squareup.leakcanary.LeakCanary.install(this);*/
+    }
+
+    protected void setupYandex() {
+        UserProfile userProfile = UserProfile.newBuilder()
+                .apply(Attribute.name().withValue(applicationComponent.SharedPreferenceModel()
+                        .getStringData(USERNAME.getValue()))).build();
+        YandexMetricaConfig config = com.yandex.metrica.YandexMetricaConfig
+                .newConfigBuilder("6d39e473-5c5c-4163-9c4c-21eb91758e8f").withLogs()
+                .withAppVersion(BuildConfig.VERSION_NAME).build();
+        YandexMetrica.activate(appContext, config);
+        YandexMetrica.enableActivityAutoTracking(this);
+        YandexMetrica.activate(getApplicationContext(), config);
+//        YandexMetrica.setUserProfileID("id 784");
+        YandexMetrica.reportUserProfile(userProfile);
+//        throw new RuntimeException("Test Force Crash"); // Force a crash
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

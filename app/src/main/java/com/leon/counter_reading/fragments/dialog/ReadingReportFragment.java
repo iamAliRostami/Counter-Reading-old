@@ -25,10 +25,10 @@ import com.leon.counter_reading.utils.reporting.GetReadingReportDBData;
 import java.util.ArrayList;
 
 public class ReadingReportFragment extends DialogFragment {
+    private static ReadingReportFragment instance;
     private FragmentReadingReportBinding binding;
     private String uuid;
     private int position, trackNumber, zoneId;
-    private static ReadingReportFragment instance;
     private Callback readingActivity;
 
     public ReadingReportFragment() {

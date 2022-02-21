@@ -1,6 +1,5 @@
 package com.leon.counter_reading.utils.reading;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 
 import com.leon.counter_reading.helpers.MyApplication;

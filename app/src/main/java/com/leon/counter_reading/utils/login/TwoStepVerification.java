@@ -2,6 +2,9 @@ package com.leon.counter_reading.utils.login;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
+import static com.leon.counter_reading.enums.SharedReferenceKeys.PERSONAL_CODE;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.inputmethod.InputMethodManager;
@@ -29,8 +32,8 @@ public class TwoStepVerification {
                     InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                     int personalCode = Integer.parseInt(lovelyTextInputDialog.getEditTextNumber().getText().toString());
-                    MyApplication.getApplicationComponent().SharedPreferenceModel()
-                            .putData(SharedReferenceKeys.PERSONAL_CODE.getValue(), personalCode);
+                    getApplicationComponent().SharedPreferenceModel()
+                            .putData(PERSONAL_CODE.getValue(), personalCode);
                 })
                 .setNegativeButton(R.string.close, v -> {
                     InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
@@ -40,12 +43,12 @@ public class TwoStepVerification {
     }
 
     public static void showPersonalCode(Activity activity) {
-        if (MyApplication.getApplicationComponent().SharedPreferenceModel()
-                .getIntData(SharedReferenceKeys.PERSONAL_CODE.getValue()) > 0) {
+        if (getApplicationComponent().SharedPreferenceModel()
+                .getIntData(PERSONAL_CODE.getValue()) > 0) {
             CalendarTool calendarTool = new CalendarTool();
             String verificationCode = //TODO concat or plus
-                    String.valueOf(MyApplication.getApplicationComponent().SharedPreferenceModel()
-                            .getIntData(SharedReferenceKeys.PERSONAL_CODE.getValue()) + 1313 *
+                    String.valueOf(getApplicationComponent().SharedPreferenceModel()
+                            .getIntData(PERSONAL_CODE.getValue()) + 1313 *
                             calendarTool.getIranianMonth() * calendarTool.getIranianDay());
             CustomDialogModel customDialogModel = new CustomDialogModel(DialogType.Green, activity,
                     verificationCode,

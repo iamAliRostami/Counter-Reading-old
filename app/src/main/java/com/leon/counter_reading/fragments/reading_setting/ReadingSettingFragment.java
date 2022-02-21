@@ -1,4 +1,4 @@
-package com.leon.counter_reading.fragments;
+package com.leon.counter_reading.fragments.reading_setting;
 
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
@@ -20,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class ReadingSettingFragment extends Fragment {
-    private FragmentReadingSettingBinding binding;
     private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
+    private FragmentReadingSettingBinding binding;
 
     public ReadingSettingFragment(ArrayList<TrackingDto> trackingDtos) {
         this.trackingDtos.addAll(trackingDtos);
