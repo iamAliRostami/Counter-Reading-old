@@ -1,5 +1,9 @@
 package com.leon.counter_reading.fragments.dialog;
 
+import static com.leon.counter_reading.enums.BundleEnum.ON_OFF_LOAD;
+import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.enums.NotificationType.OTHER;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.app.Activity;
@@ -20,10 +24,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentPossibleBinding;
-import com.leon.counter_reading.enums.BundleEnum;
-import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.KarbariDto;
@@ -51,18 +52,17 @@ public class PossibleFragment extends DialogFragment {
 
     public static PossibleFragment newInstance(OnOffLoadDto onOffLoadDto, int position, boolean justMobile) {
         PossibleFragment.justMobile = justMobile;
-        PossibleFragment fragment = new PossibleFragment();
+        final PossibleFragment fragment = new PossibleFragment();
         fragment.setArguments(putBundle(onOffLoadDto, position));
         fragment.setCancelable(false);
         return fragment;
     }
 
     static Bundle putBundle(OnOffLoadDto onOffLoadDto, int position) {
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-        String json1 = gson.toJson(onOffLoadDto);
-        args.putString(BundleEnum.ON_OFF_LOAD.getValue(), json1);
-        args.putInt(BundleEnum.POSITION.getValue(), position);
+        final Bundle args = new Bundle();
+        String json = new Gson().toJson(onOffLoadDto);
+        args.putString(ON_OFF_LOAD.getValue(), json);
+        args.putInt(POSITION.getValue(), position);
         return args;
     }
 
@@ -74,10 +74,9 @@ public class PossibleFragment extends DialogFragment {
 
     private void getBundle() {
         if (getArguments() != null) {
-            Gson gson = new Gson();
-            onOffLoadDto = gson.fromJson(getArguments().getString(
-                    BundleEnum.ON_OFF_LOAD.getValue()), OnOffLoadDto.class);
-            position = getArguments().getInt(BundleEnum.POSITION.getValue());
+            onOffLoadDto = new Gson().fromJson(getArguments().getString(ON_OFF_LOAD.getValue()),
+                    OnOffLoadDto.class);
+            position = getArguments().getInt(POSITION.getValue());
             getArguments().clear();
         }
     }
@@ -92,13 +91,20 @@ public class PossibleFragment extends DialogFragment {
     }
 
     private void initialize() {
-        makeRing(activity, NotificationType.OTHER);
-        sharedPreferenceManager = MyApplication.getApplicationComponent().SharedPreferenceModel();
+        makeRing(activity, OTHER);
+        sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
         if (justMobile) {
+            binding.linearLayoutOldEshterak.setVisibility(View.VISIBLE);
+            binding.linearLayoutOldRadif.setVisibility(View.VISIBLE);
+            binding.linearLayoutFatherName.setVisibility(View.VISIBLE);
             binding.linearLayoutMobile.setVisibility(View.VISIBLE);
             binding.editTextMobile.setVisibility(View.VISIBLE);
             binding.textViewMobile.setVisibility(View.VISIBLE);
 
+//            binding.textViewOldRadif.setText(String.valueOf(onOffLoadDto.oldRadif));
+            binding.textViewOldRadif.setText(onOffLoadDto.oldRadif != null ? String.valueOf(onOffLoadDto.oldRadif) : "-");
+            binding.textViewOldEshterak.setText(onOffLoadDto.oldEshterak != null ? onOffLoadDto.oldEshterak : "-");
+            binding.textViewFatherName.setText(onOffLoadDto.fatherName != null ? onOffLoadDto.fatherName : "-");
             binding.textViewMobile.setText(onOffLoadDto.mobile != null ? onOffLoadDto.mobile : "-");
             binding.editTextMobile.setText(onOffLoadDto.possibleMobile);
 
@@ -226,10 +232,9 @@ public class PossibleFragment extends DialogFragment {
         binding.textViewMobile.setText(onOffLoadDto.mobile != null ? onOffLoadDto.mobile : "-");
 
         if (sharedPreferenceManager.getBoolData(SharedReferenceKeys.READING_REPORT.getValue())) {
-            counterReportDtos = new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase()
+            counterReportDtos = new ArrayList<>(getApplicationComponent().MyDatabase()
                     .counterReportDao().getAllCounterReportByZone(onOffLoadDto.zoneId));
-            offLoadReports = new ArrayList<>(MyApplication
-                    .getApplicationComponent().MyDatabase().offLoadReportDao()
+            offLoadReports = new ArrayList<>(getApplicationComponent().MyDatabase().offLoadReportDao()
                     .getAllOffLoadReportById(onOffLoadDto.id, onOffLoadDto.trackNumber));
             binding.textViewReport.setOnClickListener(v -> setOnTextViewCounterStateClickListener());
         } else {
@@ -259,20 +264,19 @@ public class PossibleFragment extends DialogFragment {
                 .setTopTitle(R.string.reports)
                 .setItemsMultiChoice(itemNames, selection, (positions, items) -> {
                     for (int i = 0; i < offLoadReports.size(); i++)
-                        MyApplication.getApplicationComponent().MyDatabase().offLoadReportDao().
+                        getApplicationComponent().MyDatabase().offLoadReportDao().
                                 deleteOffLoadReport(offLoadReports.get(i).reportId,
                                         onOffLoadDto.trackNumber, onOffLoadDto.id);
 
                     for (int i = 0; i < positions.size(); i++) {
                         OffLoadReport offLoadReport = new OffLoadReport(onOffLoadDto.id,
                                 onOffLoadDto.trackNumber, counterReportDtos.get(positions.get(i)).id);
-                        MyApplication.getApplicationComponent().MyDatabase().offLoadReportDao()
+                        getApplicationComponent().MyDatabase().offLoadReportDao()
                                 .insertOffLoadReport(offLoadReport);
                     }
-                    counterReportDtos = new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase()
+                    counterReportDtos = new ArrayList<>(getApplicationComponent().MyDatabase()
                             .counterReportDao().getAllCounterReportByZone(onOffLoadDto.zoneId));
-                    offLoadReports = new ArrayList<>(MyApplication
-                            .getApplicationComponent().MyDatabase().offLoadReportDao()
+                    offLoadReports = new ArrayList<>(getApplicationComponent().MyDatabase().offLoadReportDao()
                             .getAllOffLoadReportById(onOffLoadDto.id, onOffLoadDto.trackNumber));
                 })
                 .setConfirmButtonText(getString(R.string.ok).concat(" ").concat(getString(R.string.reports)))
@@ -337,7 +341,6 @@ public class PossibleFragment extends DialogFragment {
             else {
                 dismiss();
                 ((ReadingActivity) activity).updateOnOffLoadByNavigation(position, onOffLoadDto, justMobile);
-
             }
         });
         binding.buttonClose.setOnClickListener(v -> dismiss());
@@ -353,7 +356,7 @@ public class PossibleFragment extends DialogFragment {
 
     private void initializeSpinner() {
         if (sharedPreferenceManager.getBoolData(SharedReferenceKeys.KARBARI.getValue())) {
-            karbariDtos = new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase()
+            karbariDtos = new ArrayList<>(getApplicationComponent().MyDatabase()
                     .karbariDao().getAllKarbariDto());
             karbariDtosTemp = new ArrayList<>(karbariDtos);
             String[] items = new String[karbariDtosTemp.size() + 1];
