@@ -23,6 +23,7 @@ public class TrackingDto {
     public String toEshterak;
     public String fromDate;
     public String toDate;
+    public String archiveDateTime;
     public int itemQuantity;
     public int alalHesabPercent;
     public int imagePercent;
@@ -39,7 +40,7 @@ public class TrackingDto {
     public String y;
 
     public static ArrayList<String> getTrackingDtoItems(ArrayList<TrackingDto> trackingDtos) {
-        ArrayList<String> items = new ArrayList<>();
+        final ArrayList<String> items = new ArrayList<>();
         for (TrackingDto trackingDto : trackingDtos) {
             items.add(String.valueOf(trackingDto.trackNumber));
         }
@@ -47,7 +48,7 @@ public class TrackingDto {
     }
 
     public static String[] getTrackingDtoItems(ArrayList<TrackingDto> trackingDtos, String last) {
-        String[] items = new String[trackingDtos.size() + 1];
+        final String[] items = new String[trackingDtos.size() + 1];
         items[0] = last;
         for (int i = 0; i < trackingDtos.size(); i++) {
             items[i + 1] = String.valueOf(trackingDtos.get(i).trackNumber);

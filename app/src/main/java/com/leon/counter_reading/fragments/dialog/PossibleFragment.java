@@ -3,6 +3,7 @@ package com.leon.counter_reading.fragments.dialog;
 import static com.leon.counter_reading.enums.BundleEnum.ON_OFF_LOAD;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.NotificationType.OTHER;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.KARBARI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
@@ -36,7 +37,6 @@ import com.leon.counter_reading.utils.custom_dialog.LovelyChoiceDialog;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class PossibleFragment extends DialogFragment {
     private static boolean justMobile = false;
@@ -100,7 +100,6 @@ public class PossibleFragment extends DialogFragment {
             binding.linearLayoutMobile.setVisibility(View.VISIBLE);
             binding.editTextMobile.setVisibility(View.VISIBLE);
             binding.textViewMobile.setVisibility(View.VISIBLE);
-
 //            binding.textViewOldRadif.setText(String.valueOf(onOffLoadDto.oldRadif));
             binding.textViewOldRadif.setText(onOffLoadDto.oldRadif != null ? String.valueOf(onOffLoadDto.oldRadif) : "-");
             binding.textViewOldEshterak.setText(onOffLoadDto.oldEshterak != null ? onOffLoadDto.oldEshterak : "-");
@@ -288,7 +287,7 @@ public class PossibleFragment extends DialogFragment {
         binding.buttonSubmit.setOnClickListener(v -> {
             boolean cancel = false;
             View view = null;
-            if (sharedPreferenceManager.getBoolData(SharedReferenceKeys.KARBARI.getValue())) {
+            if (sharedPreferenceManager.getBoolData(KARBARI.getValue())) {
                 int position = binding.spinnerKarbari.getSelectedItemPosition() - 1;
                 if (position >= 0)
                     onOffLoadDto.possibleKarbariCode = karbariDtosTemp.get(position).moshtarakinId;
@@ -355,7 +354,7 @@ public class PossibleFragment extends DialogFragment {
     }
 
     private void initializeSpinner() {
-        if (sharedPreferenceManager.getBoolData(SharedReferenceKeys.KARBARI.getValue())) {
+        if (sharedPreferenceManager.getBoolData(KARBARI.getValue())) {
             karbariDtos = new ArrayList<>(getApplicationComponent().MyDatabase()
                     .karbariDao().getAllKarbariDto());
             karbariDtosTemp = new ArrayList<>(karbariDtos);
@@ -364,7 +363,7 @@ public class PossibleFragment extends DialogFragment {
                 items[i + 1] = karbariDtosTemp.get(i).title;
             }
             items[0] = getString(R.string.select_one);
-            SpinnerCustomAdapter karbariAdapter = new SpinnerCustomAdapter(activity, items);
+            final SpinnerCustomAdapter karbariAdapter = new SpinnerCustomAdapter(activity, items);
             binding.spinnerKarbari.setAdapter(karbariAdapter);
             binding.spinnerKarbari.setSelection(onOffLoadDto.counterStatePosition + 1);
         } else {
@@ -378,10 +377,12 @@ public class PossibleFragment extends DialogFragment {
 
     @Override
     public void onResume() {
-        WindowManager.LayoutParams params = Objects.requireNonNull(getDialog()).getWindow().getAttributes();
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        getDialog().getWindow().setAttributes(params);
+        if (getDialog() != null) {
+            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            getDialog().getWindow().setAttributes(params);
+        }
         super.onResume();
     }
 

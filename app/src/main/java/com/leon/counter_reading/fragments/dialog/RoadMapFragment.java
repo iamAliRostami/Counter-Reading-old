@@ -1,11 +1,12 @@
 package com.leon.counter_reading.fragments.dialog;
 
+import static com.leon.counter_reading.enums.BundleEnum.LATITUDE;
+import static com.leon.counter_reading.enums.BundleEnum.LONGITUDE;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.leon.counter_reading.databinding.FragmentRoadMapBinding;
-import com.leon.counter_reading.enums.BundleEnum;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
@@ -28,7 +28,6 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class RoadMapFragment extends DialogFragment {
     private FragmentRoadMapBinding binding;
@@ -36,10 +35,10 @@ public class RoadMapFragment extends DialogFragment {
     private double longitude;
 
     public static RoadMapFragment newInstance(String param1, String param2) {
-        RoadMapFragment fragment = new RoadMapFragment();
-        Bundle args = new Bundle();
-        args.putDouble(BundleEnum.LONGITUDE.getValue(), Double.parseDouble(param1));
-        args.putDouble(BundleEnum.LATITUDE.getValue(), Double.parseDouble(param2));
+        final RoadMapFragment fragment = new RoadMapFragment();
+        final Bundle args = new Bundle();
+        args.putDouble(LONGITUDE.getValue(), Double.parseDouble(param1));
+        args.putDouble(LATITUDE.getValue(), Double.parseDouble(param2));
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,10 +46,9 @@ public class RoadMapFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("here", "onCreate");
         if (getArguments() != null) {
-            latitude = getArguments().getDouble(BundleEnum.LATITUDE.getValue());
-            longitude = getArguments().getDouble(BundleEnum.LONGITUDE.getValue());
+            latitude = getArguments().getDouble(LATITUDE.getValue());
+            longitude = getArguments().getDouble(LONGITUDE.getValue());
             getArguments().clear();
         }
     }
@@ -59,7 +57,6 @@ public class RoadMapFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentRoadMapBinding.inflate(inflater, container, false);
-        Log.e("here", "onCreateView");
         initialize();
         return binding.getRoot();
     }
@@ -84,7 +81,7 @@ public class RoadMapFragment extends DialogFragment {
             }
             final GeoPoint endPoint = new GeoPoint(latitude, longitude);
             mapController.setCenter(startPoint);
-            MyLocationNewOverlay locationOverlay =
+            final MyLocationNewOverlay locationOverlay =
                     new MyLocationNewOverlay(new GpsMyLocationProvider(requireActivity()), binding.mapView);
             locationOverlay.enableMyLocation();
             binding.mapView.getOverlays().add(locationOverlay);
@@ -117,10 +114,12 @@ public class RoadMapFragment extends DialogFragment {
 
     @Override
     public void onResume() {
-        WindowManager.LayoutParams params = Objects.requireNonNull(getDialog()).getWindow().getAttributes();
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        getDialog().getWindow().setAttributes(params);
+        if (getDialog() != null) {
+            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            getDialog().getWindow().setAttributes(params);
+        }
         super.onResume();
     }
 }

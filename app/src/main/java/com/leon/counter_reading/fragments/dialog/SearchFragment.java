@@ -23,8 +23,6 @@ import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 public class SearchFragment extends DialogFragment {
     private FragmentSearchBinding binding;
     private int type;
@@ -115,10 +113,12 @@ public class SearchFragment extends DialogFragment {
 
     @Override
     public void onResume() {
-        WindowManager.LayoutParams params = Objects.requireNonNull(getDialog()).getWindow().getAttributes();
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        getDialog().getWindow().setAttributes(params);
+        if (getDialog() != null) {
+            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            getDialog().getWindow().setAttributes(params);
+        }
         super.onResume();
     }
 

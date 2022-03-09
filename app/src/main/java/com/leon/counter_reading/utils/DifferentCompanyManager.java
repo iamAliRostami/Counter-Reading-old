@@ -1,10 +1,20 @@
 package com.leon.counter_reading.utils;
 
 
+import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.location.Location;
+
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.enums.CompanyNames;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.helpers.MyApplication;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class DifferentCompanyManager {
 
@@ -402,5 +412,31 @@ public class DifferentCompanyManager {
             default:
                 throw new UnsupportedOperationException();
         }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public static String getExpireDate(CompanyNames companyNames, Activity activity) {
+        final Location location = getLocationTracker(activity).getCurrentLocation();
+        Date date = new Date(location != null ? location.getTime() :
+                Calendar.getInstance().getTimeInMillis());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        switch (companyNames) {
+            case ZONE1:
+            case ZONE2:
+            case ZONE3:
+            case ZONE4:
+            case ZONE5:
+            case ZONE6:
+            case TSW:
+            case TE:
+            case TSE:
+            case TOWNS_WEST:
+            case ESF:
+                calendar.add(Calendar.DAY_OF_YEAR, -20);
+        }
+        date = new Date(calendar.getTimeInMillis());
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        return Converters.replaceNonstandardDigits(dateFormatter.format(date));
     }
 }

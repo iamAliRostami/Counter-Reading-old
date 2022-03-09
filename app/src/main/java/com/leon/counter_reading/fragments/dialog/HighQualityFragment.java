@@ -13,8 +13,6 @@ import com.leon.counter_reading.databinding.FragmentHighQualityBinding;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 public class HighQualityFragment extends DialogFragment {
     private final Bitmap bitmap;
     private FragmentHighQualityBinding binding;
@@ -46,11 +44,12 @@ public class HighQualityFragment extends DialogFragment {
 
     @Override
     public void onResume() {
-        WindowManager.LayoutParams params = Objects.requireNonNull(
-                Objects.requireNonNull(getDialog()).getWindow()).getAttributes();
-        params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        Objects.requireNonNull(getDialog().getWindow()).setAttributes(params);
+        if (getDialog() != null) {
+            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            getDialog().getWindow().setAttributes(params);
+        }
         super.onResume();
     }
 }
