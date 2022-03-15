@@ -3,6 +3,8 @@ package com.leon.counter_reading.fragments;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.HighLowStateEnum.HIGH;
 import static com.leon.counter_reading.enums.HighLowStateEnum.LOW;
+import static com.leon.counter_reading.enums.HighLowStateEnum.NORMAL;
+import static com.leon.counter_reading.enums.HighLowStateEnum.ZERO;
 import static com.leon.counter_reading.enums.NotificationType.NOT_SAVE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
 import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
@@ -16,10 +18,14 @@ import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad1;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad2;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhadTotal;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getLockNumber;
+import static com.leon.counter_reading.utils.KeyboardUtils.hideKeyboard;
+import static com.leon.counter_reading.utils.KeyboardUtils.showKeyboard1;
+import static com.leon.counter_reading.utils.KeyboardUtils.showKeyboard2;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
 import static com.leon.counter_reading.utils.PermissionManager.checkStoragePermission;
 import static com.leon.counter_reading.utils.PermissionManager.enableGps;
+import static com.leon.counter_reading.utils.reading.Counting.checkHighLowMakoos;
 
 import android.app.Activity;
 import android.content.Context;
@@ -45,7 +51,6 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingBinding;
-import com.leon.counter_reading.enums.HighLowStateEnum;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
 import com.leon.counter_reading.helpers.Constants;
@@ -54,7 +59,6 @@ import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.utils.CustomToast;
-import com.leon.counter_reading.utils.KeyboardUtils;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.reading.Counting;
 
@@ -99,7 +103,7 @@ public class ReadingFragment extends Fragment {
             this.readingConfigDefaultDto = Constants.readingConfigDefaultDtos.get(position);
             this.karbariDto = Constants.karbariDtos.get(position);
         } catch (Exception e) {
-            Intent intent = requireActivity().getIntent();
+            final Intent intent = requireActivity().getIntent();
             requireActivity().finish();
             startActivity(intent);
         }
@@ -172,9 +176,9 @@ public class ReadingFragment extends Fragment {
         if (onOffLoadDto.isLocked) {
             binding.editTextNumber.setFocusable(false);
             binding.editTextNumber.setEnabled(false);
-        } else if (b.length > 0 && b[0]) KeyboardUtils.showKeyboard1(activity);
-        else if (FOCUS_ON_EDIT_TEXT) KeyboardUtils.showKeyboard2(activity);
-        else KeyboardUtils.hideKeyboard(activity);
+        } else if (b.length > 0 && b[0]) showKeyboard1(activity);
+        else if (FOCUS_ON_EDIT_TEXT) showKeyboard2(activity);
+        else hideKeyboard(activity);
         binding.editTextNumber.requestFocus();
     }
 
@@ -366,7 +370,8 @@ public class ReadingFragment extends Fragment {
                     counterStateCode, counterStatePosition);
         } else {
             View view = binding.editTextNumber;
-            if (binding.editTextNumber.getText().toString().contains(".") || binding.editTextNumber.getText().toString().contains(",")) {
+            if (binding.editTextNumber.getText().toString().contains(".") ||
+                    binding.editTextNumber.getText().toString().contains(",")) {
                 makeRing(activity, NOT_SAVE);
                 binding.editTextNumber.setError(getString(R.string.error_format));
                 view.requestFocus();
@@ -386,7 +391,8 @@ public class ReadingFragment extends Fragment {
 
     private void canNotBeEmpty() {
         View view = binding.editTextNumber;
-        if (binding.editTextNumber.getText().toString().contains(".") || binding.editTextNumber.getText().toString().contains(",")) {
+        if (binding.editTextNumber.getText().toString().contains(".") ||
+                binding.editTextNumber.getText().toString().contains(",")) {
             makeRing(activity, NOT_SAVE);
             binding.editTextNumber.setError(getString(R.string.error_format));
             view.requestFocus();
@@ -429,10 +435,10 @@ public class ReadingFragment extends Fragment {
     private void notEmptyIsMakoos(int currentNumber) {
         Integer type = null;
         if (currentNumber == onOffLoadDto.preNumber) {
-            type = HighLowStateEnum.ZERO.getValue();
+            type = ZERO.getValue();
         } else {
-            int status = Counting.checkHighLowMakoos(onOffLoadDto, karbariDto,
-                    readingConfigDefaultDto, currentNumber);
+            int status = checkHighLowMakoos(onOffLoadDto, karbariDto, readingConfigDefaultDto,
+                    currentNumber);
             switch (status) {
                 case 1:
                     type = HIGH.getValue();
@@ -442,8 +448,7 @@ public class ReadingFragment extends Fragment {
                     break;
                 case 0:
                     ((ReadingActivity) activity).updateOnOffLoadByCounterNumber(position,
-                            currentNumber, counterStateCode, counterStatePosition,
-                            HighLowStateEnum.NORMAL.getValue());
+                            currentNumber, counterStateCode, counterStatePosition, NORMAL.getValue());
                     break;
             }
         }
@@ -457,7 +462,7 @@ public class ReadingFragment extends Fragment {
     private void notEmpty(int currentNumber) {
         Integer type = null;
         if (currentNumber == onOffLoadDto.preNumber) {
-            type = HighLowStateEnum.ZERO.getValue();
+            type = ZERO.getValue();
         } else {
             int status = Counting.checkHighLow(onOffLoadDto, karbariDto, readingConfigDefaultDto,
                     currentNumber);
@@ -470,8 +475,7 @@ public class ReadingFragment extends Fragment {
                     break;
                 case 0:
                     ((ReadingActivity) activity).updateOnOffLoadByCounterNumber(position,
-                            currentNumber, counterStateCode, counterStatePosition,
-                            HighLowStateEnum.NORMAL.getValue());
+                            currentNumber, counterStateCode, counterStatePosition, NORMAL.getValue());
                     break;
             }
         }
@@ -510,10 +514,8 @@ public class ReadingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (FOCUS_ON_EDIT_TEXT && binding != null) {
-            View viewFocus = binding.editTextNumber;
-            viewFocus.requestFocus();
-        }
+        if (FOCUS_ON_EDIT_TEXT && binding != null)
+            binding.editTextNumber.requestFocus();
     }
 
     @Override

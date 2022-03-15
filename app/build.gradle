@@ -17,8 +17,8 @@ android {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
         targetSdkVersion 32
-        versionCode 64
-        versionName "1.00.11.06"
+        versionCode 65
+        versionName "1.00.12.24"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config
@@ -146,9 +146,11 @@ dependencies {
     implementation 'com.github.GrenderG:Toasty:1.5.0'
     implementation 'com.github.blackfizz:eazegraph:1.2.3@aar'
 
-    implementation 'com.yandex.android:mobmetricalib:4.0.0'
+    implementation 'com.yandex.android:mobmetricalib:4.2.0'
     implementation 'com.yandex.android:mobmetricalib-ndk-crashes:1.1.0'
 
     implementation 'me.jahnen:libaums:0.8.0'
     implementation 'com.gu.android:toolargetool:0.3.0'
+
+    implementation 'com.github.livefront:bridge:v2.0.2'
 }
