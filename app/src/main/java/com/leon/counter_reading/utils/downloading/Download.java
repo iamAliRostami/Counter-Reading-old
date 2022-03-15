@@ -1,12 +1,14 @@
 package com.leon.counter_reading.utils.downloading;
 
+import static com.leon.counter_reading.enums.ProgressType.SHOW;
+import static com.leon.counter_reading.helpers.MyApplication.getContext;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
-import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.fragments.DownloadFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
@@ -31,12 +33,12 @@ public class Download extends AsyncTask<Activity, Void, Void> {
 
     @Override
     protected Void doInBackground(Activity... activities) {
-        Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
-        IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
+        final Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
+        final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
         //TODO
-        Call<ReadingData> call = iAbfaService.loadData(BuildConfig.VERSION_CODE);
+        final Call<ReadingData> call = iAbfaService.loadData(BuildConfig.VERSION_CODE);
         activities[0].runOnUiThread(() ->
-                HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW.getValue(), activities[0],
+                HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activities[0],
                         new DownloadCompleted(activities[0]), new DownloadIncomplete(), new DownloadError()));
         return null;
     }
@@ -60,8 +62,8 @@ class DownloadCompleted implements ICallback<ReadingData> {
     @Override
     public void execute(Response<ReadingData> response) {
         if (response != null && response.body() != null) {
-            ReadingData readingData = response.body();
-            ReadingData readingDataTemp = response.body();
+            final ReadingData readingData = response.body();
+            final ReadingData readingDataTemp = response.body();
             new SaveDownloadData().savedData(activity, readingData, readingDataTemp);
         }
     }
@@ -70,10 +72,10 @@ class DownloadCompleted implements ICallback<ReadingData> {
 class DownloadIncomplete implements ICallbackIncomplete<ReadingData> {
     @Override
     public void executeIncomplete(Response<ReadingData> response) {
-        CustomErrorHandling customErrorHandling = new CustomErrorHandling(MyApplication.getContext());
-        String error = customErrorHandling.getErrorMessageDefault(response);
+        final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+        String error = errorHandling.getErrorMessageDefault(response);
         if (response.code() == 400) {
-            CustomErrorHandling.APIError apiError = customErrorHandling.parseError(response);
+            CustomErrorHandling.APIError apiError = errorHandling.parseError(response);
             error = apiError.message();
         }
         new CustomToast().warning(error, Toast.LENGTH_LONG);
@@ -83,8 +85,7 @@ class DownloadIncomplete implements ICallbackIncomplete<ReadingData> {
 class DownloadError implements ICallbackError {
     @Override
     public void executeError(Throwable t) {
-        CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(MyApplication.getContext());
-        String error = customErrorHandlingNew.getErrorMessageTotal(t);
-        new CustomToast().error(error, Toast.LENGTH_LONG);
+        final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+        new CustomToast().error(errorHandling.getErrorMessageTotal(t), Toast.LENGTH_LONG);
     }
 }

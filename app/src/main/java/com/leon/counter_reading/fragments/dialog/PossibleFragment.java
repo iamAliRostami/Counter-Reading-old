@@ -101,7 +101,7 @@ public class PossibleFragment extends DialogFragment {
             binding.editTextMobile.setVisibility(View.VISIBLE);
             binding.textViewMobile.setVisibility(View.VISIBLE);
 //            binding.textViewOldRadif.setText(String.valueOf(onOffLoadDto.oldRadif));
-            binding.textViewOldRadif.setText(onOffLoadDto.oldRadif != null ? String.valueOf(onOffLoadDto.oldRadif) : "-");
+            binding.textViewOldRadif.setText(onOffLoadDto.oldRadif != null ? onOffLoadDto.oldRadif : "-");
             binding.textViewOldEshterak.setText(onOffLoadDto.oldEshterak != null ? onOffLoadDto.oldEshterak : "-");
             binding.textViewFatherName.setText(onOffLoadDto.fatherName != null ? onOffLoadDto.fatherName : "-");
             binding.textViewMobile.setText(onOffLoadDto.mobile != null ? onOffLoadDto.mobile : "-");

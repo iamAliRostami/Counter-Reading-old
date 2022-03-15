@@ -14,7 +14,7 @@ public class OnOffLoadDto {
     public String id;
     public String billId;
     public int radif;
-    public Integer oldRadif;
+    public String oldRadif;
     public String eshterak;
     public String oldEshterak;
     public String qeraatCode;

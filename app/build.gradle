@@ -17,8 +17,8 @@ android {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
         targetSdkVersion 32
-        versionCode 65
-        versionName "1.00.12.24"
+        versionCode 66
+        versionName "1.00.12.25"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config
@@ -45,7 +45,7 @@ android {
             debuggable true
             signingConfig signingConfigs.config
             buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
-                    "com.leon.counter_reading.enums.CompanyNames.ESF"
+                    "com.leon.counter_reading.enums.CompanyNames.TSE"
         }
         esf {
 //            debuggable true
