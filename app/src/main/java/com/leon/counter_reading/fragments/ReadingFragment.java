@@ -25,6 +25,7 @@ import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
 import static com.leon.counter_reading.utils.PermissionManager.checkStoragePermission;
 import static com.leon.counter_reading.utils.PermissionManager.enableGps;
+import static com.leon.counter_reading.utils.PermissionManager.forceClose;
 import static com.leon.counter_reading.utils.reading.Counting.checkHighLowMakoos;
 
 import android.app.Activity;
@@ -59,7 +60,6 @@ import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.utils.CustomToast;
-import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.reading.Counting;
 
 import org.jetbrains.annotations.NotNull;
@@ -261,7 +261,7 @@ public class ReadingFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int i, long id) {
                 counterStatePosition = i;
                 counterStateCode = counterStateDtos.get(counterStatePosition).id;
-                CounterStateDto counterStateDto = counterStateDtos.get(counterStatePosition);
+                final CounterStateDto counterStateDto = counterStateDtos.get(counterStatePosition);
                 binding.editTextNumber.setEnabled(counterStateDto.canEnterNumber
                         || counterStateDto.shouldEnterNumber);
                 if (!(counterStateDto.canEnterNumber || counterStateDto.shouldEnterNumber))
@@ -283,7 +283,7 @@ public class ReadingFragment extends Fragment {
     }
 
     private void askLocationPermission() {
-        PermissionListener permissionlistener = new PermissionListener() {
+        final PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(getString(R.string.access_granted));
@@ -306,7 +306,7 @@ public class ReadingFragment extends Fragment {
     }
 
     private void askStoragePermission() {
-        PermissionListener permissionlistener = new PermissionListener() {
+        final PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(getString(R.string.access_granted));
@@ -315,7 +315,7 @@ public class ReadingFragment extends Fragment {
 
             @Override
             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                PermissionManager.forceClose(activity);
+                forceClose(activity);
             }
         };
         new TedPermission(activity)
@@ -390,7 +390,7 @@ public class ReadingFragment extends Fragment {
     }
 
     private void canNotBeEmpty() {
-        View view = binding.editTextNumber;
+        final View view = binding.editTextNumber;
         if (binding.editTextNumber.getText().toString().contains(".") ||
                 binding.editTextNumber.getText().toString().contains(",")) {
             makeRing(activity, NOT_SAVE);

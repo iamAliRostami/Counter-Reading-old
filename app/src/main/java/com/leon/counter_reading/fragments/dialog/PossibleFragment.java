@@ -135,7 +135,7 @@ public class PossibleFragment extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                ArrayList<String> itemsTemp = new ArrayList<>();
+                final ArrayList<String> itemsTemp = new ArrayList<>();
                 itemsTemp.add(getString(R.string.select_one));
                 karbariDtosTemp.clear();
                 for (int j = 0; j < karbariDtos.size(); j++) {
@@ -144,9 +144,9 @@ public class PossibleFragment extends DialogFragment {
                         itemsTemp.add(karbariDtos.get(j).title);
                     }
                 }
-                String[] items = itemsTemp.toArray(new String[0]);
-                SpinnerCustomAdapter spinnerCustomAdapterKarbari = new SpinnerCustomAdapter(activity, items);
-                binding.spinnerKarbari.setAdapter(spinnerCustomAdapterKarbari);
+                final String[] items = itemsTemp.toArray(new String[0]);
+                final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(activity, items);
+                binding.spinnerKarbari.setAdapter(adapter);
             }
 
             @Override
