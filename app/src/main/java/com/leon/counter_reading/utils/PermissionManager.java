@@ -279,6 +279,39 @@ public class PermissionManager {
                 } else if (info instanceof CellInfoWcdma) {
                     final CellSignalStrengthWcdma cell = ((CellInfoWcdma) info).getCellSignalStrength();
                     outOfService = cell.getDbm() <= -110;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        return true;
+        return outOfService;
+    }
+
+    @SuppressLint("MissingPermission")
+    public static int getSignal(Context context) {
+        final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        boolean outOfService = true;
+        int signal = 0;
+        try {
+            for (int i = 0; i < tm.getAllCellInfo().size() && outOfService; i++) {
+                final CellInfo info = tm.getAllCellInfo().get(i);
+                if (info instanceof CellInfoGsm) {
+                    final CellSignalStrengthGsm cell = ((CellInfoGsm) info).getCellSignalStrength();
+                    signal = cell.getDbm();
+                    outOfService = signal <= -110;
+                } else if (info instanceof CellInfoCdma) {
+                    final CellSignalStrengthCdma cell = ((CellInfoCdma) info).getCellSignalStrength();
+                    signal = cell.getDbm();
+                    outOfService = signal <= -110;
+                } else if (info instanceof CellInfoLte) {
+                    final CellSignalStrengthLte cell = ((CellInfoLte) info).getCellSignalStrength();
+                    signal = cell.getDbm();
+                    outOfService = signal <= -110;
+                } else if (info instanceof CellInfoWcdma) {
+                    final CellSignalStrengthWcdma cell = ((CellInfoWcdma) info).getCellSignalStrength();
+                    signal = cell.getDbm();
+                    outOfService = signal <= -110;
                 }/* else {
                     throw new Exception("Unknown type of cell signal!");
                 }*/
@@ -286,7 +319,7 @@ public class PermissionManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return outOfService;
+        return signal;
     }
 
     public static void enableNetwork(Activity activity) {

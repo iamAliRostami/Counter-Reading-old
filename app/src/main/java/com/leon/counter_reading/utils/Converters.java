@@ -21,4 +21,23 @@ public class Converters {
         Gson gson = new Gson();
         return gson.toJson(list);
     }
+
+    public static String replaceNonstandardDigits(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+        final StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            final char ch = input.charAt(i);
+            if (isNonstandardDigit(ch)) {
+                final int numericValue = Character.getNumericValue(ch);
+                if (numericValue >= 0) builder.append(numericValue);
+            } else builder.append(ch);
+        }
+        return builder.toString();
+    }
+
+    private static boolean isNonstandardDigit(char ch) {
+        return Character.isDigit(ch) && !(ch >= '0' && ch <= '9');
+    }
 }

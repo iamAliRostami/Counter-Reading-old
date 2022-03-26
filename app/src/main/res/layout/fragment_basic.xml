@@ -5,21 +5,17 @@
     android:layout_height="match_parent"
     tools:context=".fragments.BasicFragment">
 
-    <View
-        android:id="@+id/view_top"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_120sdp"
-        android:background="?attr/colorPrimary" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/linear_layout_footer"
-        android:layout_below="@id/view_top">
+        android:layout_alignParentTop="true"
+        android:fillViewport="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
             <LinearLayout
                 android:id="@+id/linear_layout_serial"
@@ -47,10 +43,58 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linear_layout_app_version"
+                android:id="@+id/linear_layout_android_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/linear_layout_serial"
+                android:layout_margin="@dimen/low_dp"
+                android:background="@drawable/border_white_2"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/text_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/android_version"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <TextView
+                    android:id="@+id/text_view_android_version"
+                    style="@style/InputPossible"
+                    android:layout_margin="@dimen/low_dp"
+                    android:textSize="@dimen/text_size_medium" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_signal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_layout_android_version"
+                android:layout_margin="@dimen/low_dp"
+                android:background="@drawable/border_white_2"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/text_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/signal"
+                    android:textSize="@dimen/text_size_medium" />
+
+                <TextView
+                    android:id="@+id/text_view_signal"
+                    style="@style/InputPossible"
+                    android:layout_margin="@dimen/low_dp"
+                    android:textSize="@dimen/text_size_medium" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_app_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_layout_signal"
                 android:layout_margin="@dimen/low_dp"
                 android:background="@drawable/border_white_2"
                 android:orientation="vertical">
@@ -71,36 +115,11 @@
                     android:textSize="@dimen/text_size_medium" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/linear_layout_android_version"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear_layout_app_version"
-                android:layout_margin="@dimen/low_dp"
-                android:background="@drawable/border_white_2"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/text_bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/android_version"
-                    android:textSize="@dimen/text_size_medium" />
-
-                <TextView
-                    android:id="@+id/text_view_android_version"
-                    style="@style/InputPossible"
-                    android:layout_margin="@dimen/low_dp"
-                    android:textSize="@dimen/text_size_medium" />
-
-            </LinearLayout>
-
             <RelativeLayout
                 android:id="@+id/relative_layout_proxy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/linear_layout_android_version"
+                android:layout_below="@id/linear_layout_app_version"
                 android:layout_margin="@dimen/low_dp"
                 android:background="@drawable/border_white_2"
                 android:orientation="vertical"

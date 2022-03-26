@@ -23,6 +23,7 @@ import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentBasicBinding;
 import com.leon.counter_reading.utils.CustomToast;
+import com.leon.counter_reading.utils.PermissionManager;
 
 public class BasicFragment extends Fragment {
     private FragmentBasicBinding binding;
@@ -79,9 +80,26 @@ public class BasicFragment extends Fragment {
         binding.editTextProxy.setText(getApplicationComponent().SharedPreferenceModel().getStringData(PROXY.getValue()));
         binding.textViewAndroidVersion.setText(getAndroidVersion());
         binding.textViewAppVersion.setText(BuildConfig.VERSION_NAME);
+        binding.textViewSignal.setText(getSignal());
 
         final TextView textViewCompanyName = requireActivity().findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+    }
+
+    private String getSignal() {
+        final int signal = PermissionManager.getSignal(requireContext());
+        if (signal < -110)
+            return "بدون آنتن";
+        else if (signal < -100)
+            return "بسیار ضعیف";
+        else if (signal < -90)
+            return "ضعیف";
+        else if (signal < -75)
+            return "متوسط";
+        else if (signal < -60)
+            return "خوب";
+        else
+            return "عالی";
     }
 
     private int getDigits(String number) {

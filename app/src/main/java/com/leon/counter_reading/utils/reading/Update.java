@@ -26,7 +26,7 @@ public class Update extends AsyncTask<Activity, Void, Void> {
     @SuppressLint("SimpleDateFormat")
     @Override
     protected Void doInBackground(Activity... activities) {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss:SSS");
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss:SSS");
 
         if (location != null) {
             onOffLoadDto.x = location.getLongitude();

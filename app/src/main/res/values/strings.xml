@@ -277,4 +277,8 @@
     <string name="http_https">http:// یا https://</string>
     <string name="app_version">نسخه برنامه</string>
     <string name="android_version">نسخه ی اندروید</string>
+    <string name="signal">وضعیت آنتن</string>
+    <string name="old_eshterak">اشتراک قدیمی</string>
+    <string name="father_name">نام پدر</string>
+    <string name="old_radif">ردیف قدیمی</string>
 </resources>

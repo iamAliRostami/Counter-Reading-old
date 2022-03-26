@@ -1,5 +1,7 @@
 package com.leon.counter_reading.fragments.reading_setting;
 
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +14,6 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingSettingDeleteBinding;
 import com.leon.counter_reading.fragments.dialog.DeleteFragment;
-import com.leon.counter_reading.fragments.dialog.ShowFragmentDialog;
 import com.leon.counter_reading.tables.TrackingDto;
 
 import org.jetbrains.annotations.NotNull;
@@ -49,18 +50,17 @@ public class ReadingSettingDeleteFragment extends Fragment {
     void initialize() {
         initializeSpinner();
         setOnButtonDeleteClickListener();
-        binding.imageViewDelete.setImageDrawable(ContextCompat
-                .getDrawable(requireContext(), R.drawable.img_delete));
+        binding.imageViewDelete.setImageDrawable(ContextCompat.getDrawable(requireContext(),
+                R.drawable.img_delete));
     }
 
     void setOnButtonDeleteClickListener() {
         binding.buttonDelete.setOnClickListener(v -> {
             if (binding.spinner.getSelectedItemPosition() == 0) {
-                ShowFragmentDialog.ShowFragmentDialogOnce(requireContext(), "DELETE_DIALOG",
-                        DeleteFragment.newInstance(""));
+                ShowFragmentDialogOnce(requireContext(), "DELETE_DIALOG", DeleteFragment.newInstance(""));
             } else {
-                ShowFragmentDialog.ShowFragmentDialogOnce(requireContext(), "DELETE_DIALOG",
-                        DeleteFragment.newInstance(trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id));
+                ShowFragmentDialogOnce(requireContext(), "DELETE_DIALOG", DeleteFragment
+                        .newInstance(trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id));
             }
         });
     }
@@ -73,7 +73,7 @@ public class ReadingSettingDeleteFragment extends Fragment {
             }
         }
         items[0] = getString(R.string.all_items);
-        SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
+        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
         binding.spinner.setAdapter(adapter);
     }
 

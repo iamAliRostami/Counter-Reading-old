@@ -14,10 +14,13 @@ public class OnOffLoadDto {
     public String id;
     public String billId;
     public int radif;
+    public String oldRadif;
     public String eshterak;
+    public String oldEshterak;
     public String qeraatCode;
     public String firstName;
     public String sureName;
+    public String fatherName;
     public String address;
     public String pelak;
     public int karbariCode;

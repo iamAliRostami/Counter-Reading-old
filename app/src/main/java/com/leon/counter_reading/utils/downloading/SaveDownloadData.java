@@ -1,5 +1,10 @@
 package com.leon.counter_reading.utils.downloading;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.utils.Converters.replaceNonstandardDigits;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getExpireDate;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
@@ -18,11 +23,13 @@ import com.leon.counter_reading.utils.MyDatabase;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 public class SaveDownloadData {
     public void savedData(Activity activity, ReadingData readingData, ReadingData readingDataTemp) {
-        final MyDatabase myDatabase = MyApplication.getApplicationComponent().MyDatabase();
+        deleteExpiredData(activity);
+        final MyDatabase myDatabase = getApplicationComponent().MyDatabase();
 //            long startTime = Calendar.getInstance().getTimeInMillis();
         for (int i = 0; i < readingData.trackingDtos.size(); i++) {
             if (myDatabase.trackingDao().getTrackingDtoArchiveCountByTrackNumber(readingData
@@ -79,7 +86,7 @@ public class SaveDownloadData {
         }
         myDatabase.qotrDictionaryDao().insertQotrDictionaries(readingData.qotrDictionary);
 
-        ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>(
+        final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>(
                 myDatabase.readingConfigDefaultDao().getReadingConfigDefaultDtos());
         for (int j = 0; j < readingConfigDefaultDtos.size(); j++) {
             for (int i = 0; i < readingDataTemp.readingConfigDefaultDtos.size(); i++) {
@@ -95,7 +102,7 @@ public class SaveDownloadData {
         if (readingData.counterReportDtos.size() > 0) {
             myDatabase.counterReportDao().insertAllCounterStateReport(readingData.counterReportDtos);
         }
-        String message = String.format(MyApplication.getContext().getString(R.string.download_message),
+        final String message = String.format(MyApplication.getContext().getString(R.string.download_message),
                 readingData.trackingDtos.size(), readingData.onOffLoadDtos.size());
         showMessage(activity, message, DialogType.Green);
     }
@@ -113,9 +120,9 @@ public class SaveDownloadData {
     private boolean downloadArchive(Activity activity, ReadingData readingData, MyDatabase myDatabase,
                                     int i) {
         try {
-            final String time = (new SimpleDateFormat(activity
-                    .getString(R.string.save_format_name))).format(new Date())
-                    .concat(String.valueOf(new Random().nextInt(1000)));
+            final String time = replaceNonstandardDigits(new SimpleDateFormat(activity
+                    .getString(R.string.save_format_name))
+                    .format(new Date()).concat(String.valueOf(new Random().nextInt(1000))));
             final String query = "CREATE TABLE %s AS %s;";
             final String queryTrackDto = String.format(query, "TrackingDto_".concat(time),
                     String.format("SELECT * FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1",
@@ -129,7 +136,7 @@ public class SaveDownloadData {
                 cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryOnOffLoad);
                 cursor.moveToFirst();
                 myDatabase.trackingDao().deleteTrackingDto(readingData.trackingDtos.get(i).trackNumber, true);
-                myDatabase.onOffLoadDao().deleteOnOffLoad(readingData.trackingDtos.get(i).trackNumber);
+                myDatabase.onOffLoadDao().deleteOnOffLoads(readingData.trackingDtos.get(i).trackNumber);
                 return true;
             } catch (Exception e) {
                 new CustomToast().error(e.getMessage());
@@ -139,6 +146,12 @@ public class SaveDownloadData {
             new CustomToast().error(e.getMessage());
             return false;
         }
+    }
 
+    private void deleteExpiredData(Activity activity) {
+        final List<Integer> trackNumbers = getApplicationComponent().MyDatabase().trackingDao()
+                .getTrackingDtosExpired(true, getExpireDate(getActiveCompanyName(), activity));
+        getApplicationComponent().MyDatabase().trackingDao().deleteTrackingDtos(trackNumbers);
+        getApplicationComponent().MyDatabase().onOffLoadDao().deleteOnOffLoads(trackNumbers);
     }
 }

@@ -125,5 +125,8 @@ public interface OnOffLoadDao {
     void updateOnOffLoadByLock(String id, String trackingId, boolean isLocked);
 
     @Query("DELETE FROM OnOffLoadDto WHERE trackNumber = :trackNumber")
-    void deleteOnOffLoad(int trackNumber);
+    void deleteOnOffLoads(int trackNumber);
+
+    @Query("DELETE FROM OnOffLoadDto WHERE trackNumber in (:trackNumbers)")
+    void deleteOnOffLoads(List<Integer> trackNumbers);
 }

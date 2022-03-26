@@ -1,6 +1,8 @@
 package com.leon.counter_reading.fragments;
 
 
+import static com.leon.counter_reading.enums.BundleEnum.TYPE;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +26,7 @@ public class DownloadFragment extends Fragment {
     public static DownloadFragment newInstance(int type) {
         DownloadFragment fragment = new DownloadFragment();
         Bundle args = new Bundle();
-        args.putInt(BundleEnum.TYPE.getValue(), type);
+        args.putInt(TYPE.getValue(), type);
         fragment.setArguments(args);
         return fragment;
     }
@@ -33,7 +35,7 @@ public class DownloadFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            type = getArguments().getInt(BundleEnum.TYPE.getValue());
+            type = getArguments().getInt(TYPE.getValue());
         }
     }
 

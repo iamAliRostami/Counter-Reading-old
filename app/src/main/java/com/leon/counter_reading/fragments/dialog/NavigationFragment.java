@@ -40,7 +40,7 @@ public class NavigationFragment extends DialogFragment {
 
     public static NavigationFragment newInstance(int position) {
         instance = new NavigationFragment();
-        Bundle args = new Bundle();
+        final Bundle args = new Bundle();
         args.putInt(POSITION.getValue(), position);
         instance.setArguments(args);
         return instance;
@@ -179,8 +179,7 @@ public class NavigationFragment extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 11 && s.toString().substring(0, 2).contains("09")) {
-                    final View view = binding.editTextSerialCounter;
-                    view.requestFocus();
+                    binding.editTextSerialCounter.requestFocus();
                 } else binding.editTextMobile.setError(getString(R.string.error_format));
             }
         });
@@ -195,10 +194,7 @@ public class NavigationFragment extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().length() == 15) {
-                    final View view = binding.editTextAddress;
-                    view.requestFocus();
-                }
+                if (s.toString().length() == 15) binding.editTextAddress.requestFocus();
             }
         });
     }
@@ -226,7 +222,7 @@ public class NavigationFragment extends DialogFragment {
 
     public void onResume() {
         if (getDialog() != null) {
-            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);

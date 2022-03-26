@@ -41,7 +41,7 @@ public class ReadingReportFragment extends DialogFragment {
     public static ReadingReportFragment newInstance(String uuid, int trackingNumber, int position,
                                                     int zoneId) {
         instance = new ReadingReportFragment();
-        Bundle args = new Bundle();
+        final Bundle args = new Bundle();
         args.putString(BILL_ID.getValue(), uuid);
         args.putInt(TRACKING.getValue(), trackingNumber);
         args.putInt(POSITION.getValue(), position);
@@ -93,7 +93,7 @@ public class ReadingReportFragment extends DialogFragment {
 
     public void onResume() {
         if (getDialog() != null) {
-            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);

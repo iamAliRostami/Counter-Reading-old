@@ -76,8 +76,8 @@ public class ReportForbidFragment extends DialogFragment {
     }
 
     public static ReportForbidFragment newInstance(int zone) {
-        ReportForbidFragment fragment = new ReportForbidFragment();
-        Bundle args = new Bundle();
+        final ReportForbidFragment fragment = new ReportForbidFragment();
+        final Bundle args = new Bundle();
         args.putInt(ZONE_ID.getValue(), zone);
         fragment.setArguments(args);
         return fragment;
@@ -301,7 +301,7 @@ public class ReportForbidFragment extends DialogFragment {
 
     public void onResume() {
         if (getDialog() != null) {
-            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);

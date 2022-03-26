@@ -1,5 +1,8 @@
 package com.leon.counter_reading.fragments.dialog;
 
+import static com.leon.counter_reading.enums.BundleEnum.COUNTER_STATE_CODE;
+import static com.leon.counter_reading.enums.BundleEnum.COUNTER_STATE_POSITION;
+import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.os.Bundle;
@@ -13,12 +16,9 @@ import androidx.fragment.app.DialogFragment;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.databinding.FragmentSerialBinding;
-import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.NotificationType;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 public class SerialFragment extends DialogFragment {
     private int position;
@@ -27,11 +27,11 @@ public class SerialFragment extends DialogFragment {
     private FragmentSerialBinding binding;
 
     public static SerialFragment newInstance(int position, int counterStateCode, int counterStatePosition) {
-        SerialFragment fragment = new SerialFragment();
-        Bundle args = new Bundle();
-        args.putInt(BundleEnum.POSITION.getValue(), position);
-        args.putInt(BundleEnum.COUNTER_STATE_CODE.getValue(), counterStateCode);
-        args.putInt(BundleEnum.COUNTER_STATE_POSITION.getValue(), counterStatePosition);
+        final SerialFragment fragment = new SerialFragment();
+        final Bundle args = new Bundle();
+        args.putInt(POSITION.getValue(), position);
+        args.putInt(COUNTER_STATE_CODE.getValue(), counterStateCode);
+        args.putInt(COUNTER_STATE_POSITION.getValue(), counterStatePosition);
         fragment.setArguments(args);
         fragment.setCancelable(false);
         return fragment;
@@ -41,9 +41,9 @@ public class SerialFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            position = getArguments().getInt(BundleEnum.POSITION.getValue());
-            counterStateCode = getArguments().getInt(BundleEnum.COUNTER_STATE_CODE.getValue());
-            counterStatePosition = getArguments().getInt(BundleEnum.COUNTER_STATE_POSITION.getValue());
+            position = getArguments().getInt(POSITION.getValue());
+            counterStateCode = getArguments().getInt(COUNTER_STATE_CODE.getValue());
+            counterStatePosition = getArguments().getInt(COUNTER_STATE_POSITION.getValue());
             getArguments().clear();
         }
     }
@@ -79,10 +79,12 @@ public class SerialFragment extends DialogFragment {
 
     @Override
     public void onResume() {
-        WindowManager.LayoutParams params = Objects.requireNonNull(getDialog()).getWindow().getAttributes();
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        getDialog().getWindow().setAttributes(params);
+        if (getDialog() != null) {
+            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            getDialog().getWindow().setAttributes(params);
+        }
         super.onResume();
     }
 

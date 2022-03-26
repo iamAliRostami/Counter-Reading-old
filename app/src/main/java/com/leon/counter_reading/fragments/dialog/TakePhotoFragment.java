@@ -41,25 +41,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class TakePhotoFragment extends DialogFragment {
-    public static int replace = 0;
-    private static TakePhotoFragment instance;
-    private final ArrayList<Image> images = new ArrayList<>();
     public Callback readingActivity;
+
+    public static int replace = 0;
+
+    private static TakePhotoFragment instance;
+
     private FragmentTakePhotoBinding binding;
+    private final ArrayList<Image> images = new ArrayList<>();
     private ImageViewAdapter imageViewAdapter;
-    private String uuid;
-    private String path;
-    private final ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    prepareImage();
-                    binding.buttonSaveSend.setEnabled(true);
-                }
-                imageViewAdapter.notifyDataSetChanged();
-            });
-    private boolean result;
     private int position, trackNumber;
+    private String uuid, path;
+    private boolean result;
 
     public TakePhotoFragment() {
     }
@@ -111,8 +104,8 @@ public class TakePhotoFragment extends DialogFragment {
             position = getArguments().getInt(POSITION.getValue());
             trackNumber = getArguments().getInt(TRACKING.getValue());
             result = getArguments().getBoolean(IMAGE.getValue());
-            binding.textViewNotSent.setVisibility(getArguments()
-                    .getBoolean(SENT.getValue()) ? View.GONE : View.VISIBLE);
+            binding.textViewNotSent.setVisibility(getArguments().getBoolean(SENT.getValue()) ?
+                    View.GONE : View.VISIBLE);
             getArguments().clear();
         }
         imageSetup();
@@ -133,6 +126,12 @@ public class TakePhotoFragment extends DialogFragment {
     }
 
     private void setOnButtonSendClickListener() {
+//        final Camera mCamera = Camera.open();
+//        final Camera.Parameters params = mCamera.getParameters();
+//        final List<Camera.Size> sizes = params.getSupportedPictureSizes();
+//        for (Camera.Size size : sizes) {
+//            Log.i("Available resolution: ", +size.width + " " + size.height);
+//        }
         binding.buttonSaveSend.setOnClickListener(v -> {
             binding.buttonSaveSend.setEnabled(false);
             new PrepareMultimedia(images, binding.editTextDescription.getText().toString(), result,
@@ -140,7 +139,7 @@ public class TakePhotoFragment extends DialogFragment {
         });
     }
 
-    public void openSomeActivityForResult() {
+    public void openCameraForResult() {
         final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(requireContext().getPackageManager()) != null) {
             File photoFile = null;
@@ -154,7 +153,8 @@ public class TakePhotoFragment extends DialogFragment {
                     path = photoFile.getPath();
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(requireContext(),
                             BuildConfig.APPLICATION_ID.concat(".provider"), photoFile));
-                    someActivityResultLauncher.launch(cameraIntent);
+                    cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                    cameraActivityResultLauncher.launch(cameraIntent);
                 } catch (Exception e) {
                     new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
                 }
@@ -162,21 +162,26 @@ public class TakePhotoFragment extends DialogFragment {
         }
     }
 
+    private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    prepareImage();
+                    imageViewAdapter.notifyDataSetChanged();
+                }
+                binding.buttonSaveSend.setEnabled(true);
+            });
+
     private void prepareImage() {
         final Image image = new Image();
         try {
             image.bitmap = compressBitmap(BitmapFactory.decodeFile(path));
-            if (image.bitmap != null) {
-                image.size = CURRENT_IMAGE_SIZE;
-            }
+            if (image.bitmap != null) image.size = CURRENT_IMAGE_SIZE;
             image.OnOffLoadId = uuid;
             image.trackNumber = trackNumber;
             if (replace > 0) {
                 getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
                 images.set(replace - 1, image);
-            } else {
-                images.add(image);
-            }
+            } else images.add(image);
         } catch (Exception e) {
             new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
         }
@@ -191,7 +196,7 @@ public class TakePhotoFragment extends DialogFragment {
     @Override
     public void onResume() {
         if (getDialog() != null) {
-            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);

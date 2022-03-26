@@ -1,5 +1,10 @@
 package com.leon.counter_reading.fragments.dialog;
 
+import static com.leon.counter_reading.enums.BundleEnum.COUNTER_STATE_CODE;
+import static com.leon.counter_reading.enums.BundleEnum.COUNTER_STATE_POSITION;
+import static com.leon.counter_reading.enums.BundleEnum.NUMBER;
+import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.enums.BundleEnum.TYPE;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.os.Bundle;
@@ -20,8 +25,6 @@ import com.leon.counter_reading.enums.NotificationType;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 public class AreYouSureFragment extends DialogFragment {
     private FragmentAreYouSureBinding binding;
     private int position, currentNumber, type, counterStateCode, counterStatePosition;
@@ -29,13 +32,13 @@ public class AreYouSureFragment extends DialogFragment {
     public static AreYouSureFragment newInstance(int position, int number, int type,
                                                  int counterStateCode, int counterStatePosition
     ) {
-        AreYouSureFragment fragment = new AreYouSureFragment();
-        Bundle args = new Bundle();
-        args.putInt(BundleEnum.POSITION.getValue(), position);
-        args.putInt(BundleEnum.NUMBER.getValue(), number);
-        args.putInt(BundleEnum.TYPE.getValue(), type);
-        args.putInt(BundleEnum.COUNTER_STATE_CODE.getValue(), counterStateCode);
-        args.putInt(BundleEnum.COUNTER_STATE_POSITION.getValue(), counterStatePosition);
+        final AreYouSureFragment fragment = new AreYouSureFragment();
+        final Bundle args = new Bundle();
+        args.putInt(POSITION.getValue(), position);
+        args.putInt(NUMBER.getValue(), number);
+        args.putInt(TYPE.getValue(), type);
+        args.putInt(COUNTER_STATE_CODE.getValue(), counterStateCode);
+        args.putInt(COUNTER_STATE_POSITION.getValue(), counterStatePosition);
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,11 +47,11 @@ public class AreYouSureFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            currentNumber = getArguments().getInt(BundleEnum.NUMBER.getValue());
-            position = getArguments().getInt(BundleEnum.POSITION.getValue());
-            type = getArguments().getInt(BundleEnum.TYPE.getValue());
-            counterStateCode = getArguments().getInt(BundleEnum.COUNTER_STATE_CODE.getValue());
-            counterStatePosition = getArguments().getInt(BundleEnum.COUNTER_STATE_POSITION.getValue());
+            currentNumber = getArguments().getInt(NUMBER.getValue());
+            position = getArguments().getInt(POSITION.getValue());
+            type = getArguments().getInt(TYPE.getValue());
+            counterStateCode = getArguments().getInt(COUNTER_STATE_CODE.getValue());
+            counterStatePosition = getArguments().getInt(COUNTER_STATE_POSITION.getValue());
             getArguments().clear();
         }
     }
@@ -92,10 +95,12 @@ public class AreYouSureFragment extends DialogFragment {
 
     @Override
     public void onResume() {
-        WindowManager.LayoutParams params = Objects.requireNonNull(getDialog()).getWindow().getAttributes();
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        getDialog().getWindow().setAttributes(params);
+        if (getDialog() != null) {
+            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            getDialog().getWindow().setAttributes(params);
+        }
         super.onResume();
     }
 

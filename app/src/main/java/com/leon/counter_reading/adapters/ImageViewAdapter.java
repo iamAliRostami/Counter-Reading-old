@@ -1,7 +1,10 @@
 package com.leon.counter_reading.adapters;
 
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
 import static com.leon.counter_reading.fragments.dialog.TakePhotoFragment.replace;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getImageNumber;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,10 +19,8 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.holder.ImageViewHolder;
 import com.leon.counter_reading.fragments.dialog.HighQualityFragment;
-import com.leon.counter_reading.fragments.dialog.ShowFragmentDialog;
 import com.leon.counter_reading.fragments.dialog.TakePhotoFragment;
 import com.leon.counter_reading.tables.Image;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,7 @@ public class ImageViewAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return DifferentCompanyManager.getImageNumber(DifferentCompanyManager.getActiveCompanyName());
+        return getImageNumber(getActiveCompanyName());
     }
 
     @Override
@@ -72,15 +73,12 @@ public class ImageViewAdapter extends BaseAdapter {
             holder.imageView.setImageBitmap(bitmap[0]);
             holder.textViewSize.setText(String.valueOf(images.get(position).size / 1024).concat(" کیلوبایت"));
             holder.imageView.setOnLongClickListener(v -> {
-                if (bitmap[0] != null) {
-                    ShowFragmentDialog.ShowFragmentDialogOnce(context, "Image # 1",
-                            HighQualityFragment.newInstance(bitmap[0]));
-                }
+                if (bitmap[0] != null)
+                    ShowFragmentDialogOnce(context, "Image # 1", HighQualityFragment.newInstance(bitmap[0]));
                 return false;
             });
             holder.imageViewDelete.setOnClickListener(v -> {
-                getApplicationComponent().MyDatabase()
-                        .imageDao().deleteImage(images.get(position).id);
+                getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(position).id);
                 images.remove(position);
                 notifyDataSetChanged();
                 bitmap[0] = null;
@@ -92,7 +90,7 @@ public class ImageViewAdapter extends BaseAdapter {
     }
 
     private void imagePicker() {
-        TakePhotoFragment.newInstance().openSomeActivityForResult();
+        TakePhotoFragment.newInstance().openCameraForResult();
     }
 }
 

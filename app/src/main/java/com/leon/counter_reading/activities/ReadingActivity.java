@@ -3,6 +3,17 @@ package com.leon.counter_reading.activities;
 import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.ACCOUNT;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.ADDRESS;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_1;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_2;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_EMPTY;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_TOTAL;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.IMAGE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.KARBARI;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.MOBILE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.READING_REPORT;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.SERIAL;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SORT_TYPE;
 import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
 import static com.leon.counter_reading.helpers.Constants.CAMERA;
@@ -293,23 +304,22 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
     }
 
     private void attemptSend(int position, boolean isForm, boolean isImage) {
-        if (isForm
-                && (sharedPreferenceManager.getBoolData(SharedReferenceKeys.SERIAL.getValue())
-                || sharedPreferenceManager.getBoolData(SharedReferenceKeys.AHAD_2.getValue())
-                || sharedPreferenceManager.getBoolData(SharedReferenceKeys.AHAD_1.getValue())
-                || sharedPreferenceManager.getBoolData(SharedReferenceKeys.AHAD_TOTAL.getValue())
-                || sharedPreferenceManager.getBoolData(SharedReferenceKeys.AHAD_EMPTY.getValue())
-                || sharedPreferenceManager.getBoolData(SharedReferenceKeys.KARBARI.getValue())
-                || sharedPreferenceManager.getBoolData(SharedReferenceKeys.ADDRESS.getValue())
-                || sharedPreferenceManager.getBoolData(SharedReferenceKeys.ACCOUNT.getValue())
-                || sharedPreferenceManager.getBoolData(SharedReferenceKeys.READING_REPORT.getValue())
-                || sharedPreferenceManager.getBoolData(SharedReferenceKeys.MOBILE.getValue()))) {
+        if (isForm && (sharedPreferenceManager.getBoolData(SERIAL.getValue())
+                || sharedPreferenceManager.getBoolData(AHAD_2.getValue())
+                || sharedPreferenceManager.getBoolData(AHAD_1.getValue())
+                || sharedPreferenceManager.getBoolData(AHAD_TOTAL.getValue())
+                || sharedPreferenceManager.getBoolData(AHAD_EMPTY.getValue())
+                || sharedPreferenceManager.getBoolData(KARBARI.getValue())
+                || sharedPreferenceManager.getBoolData(ADDRESS.getValue())
+                || sharedPreferenceManager.getBoolData(ACCOUNT.getValue())
+                || sharedPreferenceManager.getBoolData(READING_REPORT.getValue())
+                || sharedPreferenceManager.getBoolData(MOBILE.getValue()))) {
             showPossible(position);
-        } else if (isImage && sharedPreferenceManager.getBoolData(SharedReferenceKeys.IMAGE.getValue())) {
+        } else if (isImage && sharedPreferenceManager.getBoolData(IMAGE.getValue())) {
             showImage(position);
         } else {
             if (!isShowing) {
-                CounterStateDto counterStateDto = readingData.counterStateDtos.get(readingData
+                final CounterStateDto counterStateDto = readingData.counterStateDtos.get(readingData
                         .onOffLoadDtos.get(position).counterStatePosition);
                 if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
                         counterStateDto.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {

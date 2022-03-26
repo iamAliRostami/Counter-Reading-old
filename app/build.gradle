@@ -17,8 +17,8 @@ android {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
         targetSdkVersion 32
-        versionCode 64
-        versionName "1.00.11.06"
+        versionCode 66
+        versionName "1.00.12.25"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config
@@ -106,7 +106,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
-    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'com.google.code.gson:gson:2.9.0'
 
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -123,7 +123,7 @@ dependencies {
     implementation 'com.facebook.shimmer:shimmer:0.5.0@aar'
 
     implementation 'org.osmdroid:osmdroid-android:6.1.11@aar'
-    implementation 'com.github.MKergall:osmbonuspack:6.3'
+    implementation 'com.github.MKergall:osmbonuspack:6.6.0'
 
     implementation 'android.arch.persistence.room:runtime:1.1.1'
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
@@ -136,7 +136,7 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.38.1'
     implementation 'com.google.dagger:dagger-android:2.38.1'
 
-    implementation 'com.auth0.android:jwtdecode:2.0.0'
+    implementation 'com.auth0.android:jwtdecode:2.0.1'
     implementation 'gun0912.ted:tedpermission:1.0.3'
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
@@ -146,9 +146,11 @@ dependencies {
     implementation 'com.github.GrenderG:Toasty:1.5.0'
     implementation 'com.github.blackfizz:eazegraph:1.2.3@aar'
 
-    implementation 'com.yandex.android:mobmetricalib:4.0.0'
+    implementation 'com.yandex.android:mobmetricalib:4.2.0'
     implementation 'com.yandex.android:mobmetricalib-ndk-crashes:1.1.0'
 
     implementation 'me.jahnen:libaums:0.8.0'
     implementation 'com.gu.android:toolargetool:0.3.0'
+
+    implementation 'com.github.livefront:bridge:v2.0.2'
 }

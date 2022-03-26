@@ -8,8 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
+        android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
@@ -26,6 +25,66 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_old_radif"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/low_dp"
+                    android:background="@drawable/border_gray_6"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/medium_dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/TitlePossible"
+                        android:text="@string/old_radif" />
+
+                    <TextView
+                        android:id="@+id/text_view_old_radif"
+                        style="@style/TitlePossible"
+                        android:layout_width="match_parent" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_old_eshterak"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/low_dp"
+                    android:background="@drawable/border_gray_6"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/medium_dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/TitlePossible"
+                        android:text="@string/old_eshterak" />
+
+                    <TextView
+                        android:id="@+id/text_view_old_eshterak"
+                        style="@style/TitlePossible"
+                        android:layout_width="match_parent" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_father_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/low_dp"
+                    android:background="@drawable/border_gray_6"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/medium_dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/TitlePossible"
+                        android:text="@string/father_name" />
+
+                    <TextView
+                        android:id="@+id/text_view_father_name"
+                        style="@style/TitlePossible"
+                        android:layout_width="match_parent" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/linear_layout_mobile"
@@ -170,37 +229,36 @@
                     style="@style/InputPossible"
                     android:inputType="number"
                     android:maxLength="9"
-                    tools:ignore="Autofill,LabelFor" />
+                    tools:ignore="LabelFor" />
 
                 <EditText
                     android:id="@+id/edit_text_ahad_2"
                     style="@style/InputPossible"
                     android:inputType="number"
                     android:maxLength="9"
-                    tools:ignore="Autofill,LabelFor" />
+                    tools:ignore="LabelFor" />
 
                 <EditText
                     android:id="@+id/edit_text_ahad_total"
                     style="@style/InputPossible"
                     android:inputType="number"
-                    android:maxLength="9"
-                    tools:ignore="Autofill,LabelFor" />
+                    android:maxLength="9" />
 
                 <EditText
                     android:id="@+id/edit_text_description"
                     style="@style/InputPossible"
                     android:hint="@string/description"
-                    tools:ignore="Autofill,TextFields" />
+                    tools:ignore="TextFields" />
 
                 <TextView
                     android:id="@+id/text_view_report"
                     style="@style/InputPossible"
                     android:layout_width="match_parent"
-                    android:textSize="@dimen/text_size_large"
                     android:layout_marginLeft="@dimen/small_dp"
                     android:layout_marginRight="@dimen/small_dp"
                     android:background="@drawable/border_gray_6"
-                    android:text="@string/reports"/>
+                    android:text="@string/reports"
+                    android:textSize="@dimen/text_size_large" />
             </LinearLayout>
         </ScrollView>
 
@@ -220,7 +278,6 @@
                 style="@style/ButtonSubmit.Fragment.Error"
                 android:text="@string/close"
                 android:visibility="gone" />
-
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

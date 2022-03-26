@@ -1,6 +1,10 @@
 package com.leon.counter_reading.utils;
 
+import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
+
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.location.Location;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -367,5 +371,13 @@ public class CalendarTool {
         gDay = (i % 153) / 5 + 1;
         gMonth = ((i / 153) % 12) + 1;
         gYear = j / 1461 - 100100 + (8 - gMonth) / 6;
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public static String getDate(Activity activity) {
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        final Location location = getLocationTracker(activity).getCurrentLocation();
+        return Converters.replaceNonstandardDigits(dateFormatter.format(new Date(location != null ? location.getTime() :
+                Calendar.getInstance().getTimeInMillis())));
     }
 }

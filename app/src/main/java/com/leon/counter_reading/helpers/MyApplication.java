@@ -2,9 +2,11 @@ package com.leon.counter_reading.helpers;
 
 import static android.os.Build.UNKNOWN;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
+import static com.leon.counter_reading.enums.SharedReferenceNames.ACCOUNT;
 import static com.leon.counter_reading.helpers.Constants.FONT_NAME;
 import static com.leon.counter_reading.helpers.Constants.TOAST_TEXT_SIZE;
 import static com.leon.counter_reading.utils.PermissionManager.hasCarrierPrivileges;
+import static com.leon.counter_reading.utils.locating.CheckSensor.checkSensor;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -31,9 +33,7 @@ import com.leon.counter_reading.di.module.LocationTrackingModule;
 import com.leon.counter_reading.di.module.MyDatabaseModule;
 import com.leon.counter_reading.di.module.NetworkModule;
 import com.leon.counter_reading.di.module.SharedPreferenceModule;
-import com.leon.counter_reading.enums.SharedReferenceNames;
 import com.leon.counter_reading.infrastructure.ILocationTracking;
-import com.leon.counter_reading.utils.locating.CheckSensor;
 import com.yandex.metrica.YandexMetrica;
 import com.yandex.metrica.YandexMetricaConfig;
 import com.yandex.metrica.profile.Attribute;
@@ -56,15 +56,12 @@ public class MyApplication extends Application {
 
     public static void setActivityComponent(Activity activity) {
         activityComponent = DaggerActivityComponent
-                .builder()
-                .customDialogModule(new CustomDialogModule(activity))
-                .locationTrackingModule(new LocationTrackingModule(activity))
-                .build();
+                .builder().customDialogModule(new CustomDialogModule(activity))
+                .locationTrackingModule(new LocationTrackingModule(activity)).build();
     }
 
     public static ILocationTracking getLocationTracker(Activity activity) {
-        return CheckSensor.checkSensor(activity, false) ?
-                activityComponent.LocationTrackingGoogle() :
+        return checkSensor(activity, false) ? activityComponent.LocationTrackingGoogle() :
                 activityComponent.LocationTrackingGps();
     }
 
@@ -81,7 +78,7 @@ public class MyApplication extends Application {
     }
 
     public static void setErrorCounter(int errorCounter) {
-        MyApplication.ERROR_COUNTER = errorCounter;
+        ERROR_COUNTER = errorCounter;
     }
 
     public static void onActivitySetTheme(Activity activity, int theme, boolean actionBar) {
@@ -109,12 +106,12 @@ public class MyApplication extends Application {
     }
 
     public static String getDBName() {
-        return "MyDatabase_14";
+        return "MyDatabase_18";
     }
 
     public static String getAndroidVersion() {
-        String release = Build.VERSION.RELEASE;
-        int sdkVersion = Build.VERSION.SDK_INT;
+        final String release = Build.VERSION.RELEASE;
+        final int sdkVersion = Build.VERSION.SDK_INT;
         return "Android SDK: " + sdkVersion + " (" + release + ")";
     }
 
@@ -134,19 +131,15 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         appContext = getApplicationContext();
-        Toasty.Config.getInstance()
-                .tintIcon(true)
+        Toasty.Config.getInstance().tintIcon(true)
                 .setToastTypeface(Typeface.createFromAsset(appContext.getAssets(), FONT_NAME))
-                .setTextSize(TOAST_TEXT_SIZE)
-                .allowQueue(true).apply();
+                .setTextSize(TOAST_TEXT_SIZE).allowQueue(true).apply();
         applicationComponent = DaggerApplicationComponent
-                .builder()
-                .networkModule(new NetworkModule())
+                .builder().networkModule(new NetworkModule())
                 .flashModule(new FlashModule(appContext))
                 .customProgressModule(new CustomProgressModule())
                 .myDatabaseModule(new MyDatabaseModule(appContext))
-                .sharedPreferenceModule(new SharedPreferenceModule(appContext, SharedReferenceNames.ACCOUNT))
-                .build();
+                .sharedPreferenceModule(new SharedPreferenceModule(appContext, ACCOUNT)).build();
         applicationComponent.inject(this);
         super.onCreate();
         if (!BuildConfig.BUILD_TYPE.equals("release")) {

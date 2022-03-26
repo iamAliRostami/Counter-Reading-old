@@ -61,7 +61,7 @@ public class StartActivity extends AppCompatActivity implements SplashFragment.C
     private void displayView(int position, boolean... isLogin) {
         final String tag = Integer.toString(position);
         final Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
-        if (isLogin.length == 0  && fragment != null && fragment.isVisible()) return;
+        if (isLogin.length == 0 && fragment != null && fragment.isVisible()) return;
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -90,6 +90,8 @@ public class StartActivity extends AppCompatActivity implements SplashFragment.C
 
     @Override
     public void onBackPressed() {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(String.valueOf(BASIC_FRAGMENT));
+        if (fragment != null && fragment.isVisible()) displayView(LOGIN_FRAGMENT);
     }
 
     @Override

@@ -1,5 +1,9 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Debug;
@@ -17,10 +21,8 @@ import com.leon.counter_reading.databinding.ActivityReadingSettingBinding;
 import com.leon.counter_reading.fragments.reading_setting.ReadingPossibleSettingFragment;
 import com.leon.counter_reading.fragments.reading_setting.ReadingSettingDeleteFragment;
 import com.leon.counter_reading.fragments.reading_setting.ReadingSettingFragment;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.DepthPageTransformer;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 import java.util.ArrayList;
 
@@ -33,16 +35,17 @@ public class ReadingSettingActivity extends BaseActivity {
     @Override
     protected void initialize() {
         binding = ActivityReadingSettingBinding.inflate(getLayoutInflater());
-        View childLayout = binding.getRoot();
-        ConstraintLayout parentLayout = findViewById(R.id.base_Content);
+        final View childLayout = binding.getRoot();
+        final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
 
-        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
+        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
 
         activity = this;
-        trackingDtos.addAll(MyApplication.getApplicationComponent().MyDatabase().
-                trackingDao().getTrackingDtoNotArchive(false));
+
+        trackingDtos.addAll(getApplicationComponent().MyDatabase().trackingDao()
+                .getTrackingDtoNotArchive(false));
         setupViewPager();
         initializeTextViews();
     }
@@ -66,8 +69,8 @@ public class ReadingSettingActivity extends BaseActivity {
     void textViewNavigation() {
         binding.textViewNavigation.setOnClickListener(view -> {
             setColor();
-            binding.textViewNavigation.setBackground(
-                    ContextCompat.getDrawable(activity, R.drawable.border_white_2));
+            binding.textViewNavigation.setBackground(ContextCompat.getDrawable(activity,
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(1);
         });
@@ -76,8 +79,8 @@ public class ReadingSettingActivity extends BaseActivity {
     void textViewDelete() {
         binding.textViewDelete.setOnClickListener(view -> {
             setColor();
-            binding.textViewDelete.setBackground(
-                    ContextCompat.getDrawable(activity, R.drawable.border_white_2));
+            binding.textViewDelete.setBackground(ContextCompat.getDrawable(activity,
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(2);
         });
@@ -105,7 +108,7 @@ public class ReadingSettingActivity extends BaseActivity {
     }
 
     private void setupViewPager() {
-        ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
+        final ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
         adapter.addFragment(ReadingSettingFragment.newInstance(trackingDtos));
         adapter.addFragment(new ReadingPossibleSettingFragment());
         adapter.addFragment(ReadingSettingDeleteFragment.newInstance(trackingDtos));
@@ -129,7 +132,7 @@ public class ReadingSettingActivity extends BaseActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                int currentPage = binding.viewPager.getCurrentItem();
+                final int currentPage = binding.viewPager.getCurrentItem();
                 if (currentPage == 2 || currentPage == 0) {
                     previousState = currentState;
                     currentState = state;
@@ -158,14 +161,6 @@ public class ReadingSettingActivity extends BaseActivity {
     protected void onDestroy() {
         trackingDtos = null;
         binding = null;
-//        MyDatabaseClient.getInstance(MyApplication.getContext()).destroyDatabase();
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
         super.onDestroy();
     }
 }
