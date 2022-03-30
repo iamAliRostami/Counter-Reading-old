@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/arrow_down.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/arrow_up.xml" value="0.2" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/background_spinner.xml" value="0.1875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border.xml" value="0.1875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_black_2.xml" value="0.1875" />
@@ -52,7 +54,7 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_navigation.xml" value="0.365625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_offline_download.xml" value="0.4" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_possible.xml" value="0.4" />
-        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_reading.xml" value="0.2625" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_reading.xml" value="0.12" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_reading_1.xml" value="0.365625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_reading_possible_setting.xml" value="0.39375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_reading_report.xml" value="0.365625" />
@@ -83,7 +85,7 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/title_dialog.xml" value="0.190625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/toolbar.xml" value="0.2625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/menu/keyboard_menu.xml" value="0.365625" />
-        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/menu/reading_menu.xml" value="0.39375" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/menu/reading_menu.xml" value="0.176" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/menu/setting_menu.xml" value="0.2625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/xml/device_filter.xml" value="0.39375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading/app/src/main/res/drawable/background_spinner.xml" value="0.39609375" />
@@ -161,6 +163,7 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading/app/src/main/res/layout/progress_bar.xml" value="0.24375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading/app/src/main/res/layout/toolbar.xml" value="0.24375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading/app/src/main/res/menu/reading_menu.xml" value="0.24375" />
+        <entry key="..\:/Programming/.gradle/caches/transforms-3/33959cc2308fa6f56fc39575a3ee987c/transformed/jetified-PersianRangeDatePicker-1.2.1/res/drawable/ic_vector_arrow_down.xml" value="0.2535" />
         <entry key="..\:/Programming/sdk/platforms/android-31/data/res/layout/simple_spinner_item.xml" value="0.2" />
       </map>
     </option>

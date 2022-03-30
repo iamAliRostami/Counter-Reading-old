@@ -69,7 +69,6 @@
     <string name="design_by">طراحی و پیاده سازی</string>
     <string name="website">وب سایت</string>
     <string name="start">شروع</string>
-    <string name="_0">0</string>
     <string name="send">ارسال</string>
     <string name="description">توضیحات</string>
     <string name="distribution">توزیع قبض</string>
@@ -281,4 +280,15 @@
     <string name="old_eshterak">اشتراک قدیمی</string>
     <string name="father_name">نام پدر</string>
     <string name="old_radif">ردیف قدیمی</string>
+    <string name="_0">0</string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
+    <string name="_5">5</string>
+    <string name="_6">6</string>
+    <string name="_7">7</string>
+    <string name="_8">8</string>
+    <string name="_9">9</string>
+    <string name="backspace">×</string>
 </resources>

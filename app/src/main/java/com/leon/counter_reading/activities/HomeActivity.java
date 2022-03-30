@@ -19,7 +19,7 @@ public class HomeActivity extends BaseActivity {
     private ActivityHomeBinding binding;
     private boolean exit = false;
 
-    View.OnClickListener onClickListener = v -> {
+    private final View.OnClickListener onClickListener = v -> {
         int id = v.getId();
         Intent intent = new Intent();
         if (id == R.id.linear_layout_download) {

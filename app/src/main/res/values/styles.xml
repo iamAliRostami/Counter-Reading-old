@@ -214,6 +214,18 @@
         <item name="android:textSize">@dimen/text_size_large</item>
     </style>
 
+    <style name="ButtonKeyboard">
+        <item name="android:textColor">@color/text_color_dark</item>
+        <item name="android:textStyle">bold</item>
+        <item name="background">@drawable/border_gray_5</item>
+        <item name="android:background">@drawable/border_gray_5</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_margin">@dimen/low_dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <style name="ButtonSubmit.Fragment">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -233,6 +245,7 @@
         <item name="android:padding">@dimen/low_dp</item>
         <item name="android:layout_margin">@dimen/low_dp</item>
     </style>
+
     <style name="ButtonSubmit.Fragment.Warning">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -241,6 +254,7 @@
         <item name="android:padding">@dimen/low_dp</item>
         <item name="android:layout_margin">@dimen/low_dp</item>
     </style>
+
     <style name="ButtonWarning">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

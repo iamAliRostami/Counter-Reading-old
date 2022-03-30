@@ -19,7 +19,6 @@ import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowF
 import static com.leon.counter_reading.helpers.Constants.CAMERA;
 import static com.leon.counter_reading.helpers.Constants.COUNTER_LOCATION;
 import static com.leon.counter_reading.helpers.Constants.DESCRIPTION;
-import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
 import static com.leon.counter_reading.helpers.Constants.NAVIGATION;
 import static com.leon.counter_reading.helpers.Constants.OFFLINE_ATTEMPT;
 import static com.leon.counter_reading.helpers.Constants.REPORT;
@@ -27,8 +26,6 @@ import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
-import static com.leon.counter_reading.utils.KeyboardUtils.hideKeyboard;
-import static com.leon.counter_reading.utils.KeyboardUtils.showKeyboard1;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.annotation.SuppressLint;
@@ -59,7 +56,6 @@ import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.enums.OffloadStateEnum;
 import com.leon.counter_reading.enums.SearchTypeEnum;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.fragments.ReadingFragment;
 import com.leon.counter_reading.fragments.dialog.CounterPlaceFragment;
 import com.leon.counter_reading.fragments.dialog.NavigationFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
@@ -93,9 +89,8 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 
-public class ReadingActivity extends BaseActivity implements ReadingFragment.Callback,
-        TakePhotoFragment.Callback, ReadingReportFragment.Callback, CounterPlaceFragment.Callback,
-        NavigationFragment.Callback {
+public class ReadingActivity extends BaseActivity implements TakePhotoFragment.Callback,
+        ReadingReportFragment.Callback, CounterPlaceFragment.Callback, NavigationFragment.Callback {
     public static int offlineAttempts = 0;
     private int[] imageSrc;
     private ActivityReadingBinding binding;
@@ -103,7 +98,7 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
     private IFlashLightManager flashLightManager;
     private ISharedPreferenceManager sharedPreferenceManager;
     private int readStatus = 0, highLow = 1;
-    private boolean isReading = false, isShowing = false;
+    private boolean isShowing = false;
     private ViewPagerStateAdapter2 viewPagerAdapterReading;
 
     @Override
@@ -253,7 +248,6 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
             setOnPageChangeListener();
         });
         setupViewPagerAdapter();
-        isReading = true;
     }
 
     private void setupViewPagerAdapter() {
@@ -533,15 +527,7 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
                         .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                                 binding.viewPager.getCurrentItem()));
             }
-        } else if (id == R.id.menu_keyboard) {
-            if (readingData.onOffLoadDtos.isEmpty()) {
-                showNoEshterakFound();
-            } else {
-                item.setChecked(!item.isChecked());
-                FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
-                showKeyboard1(activity);
-            }
-        } else if (id == R.id.menu_last) {
+        }else if (id == R.id.menu_last) {
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
@@ -581,27 +567,8 @@ public class ReadingActivity extends BaseActivity implements ReadingFragment.Cal
     }
 
     @Override
-    public int getCurrentPageNumber() {
-        return binding.viewPager.getCurrentItem();
-    }
-
-    @Override
     public void setPhotoResult(int position) {
         attemptSend(position, false, false);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (isReading && !readingData.onOffLoadDtos.isEmpty() && FOCUS_ON_EDIT_TEXT) {
-            showKeyboard1(this);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        hideKeyboard(this);
     }
 
     @Override
