@@ -357,8 +357,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:paddingStart="@dimen/large_dp"
-        android:paddingEnd="@dimen/large_dp"
+        android:paddingStart="@dimen/medium_dp"
+        android:paddingEnd="@dimen/medium_dp"
         android:src="@drawable/arrow_up"
         tools:ignore="ContentDescription" />
 

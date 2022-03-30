@@ -61,14 +61,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class ReadingFragment extends Fragment {
-    //    private Callback readingActivity;
     private FragmentReadingBinding binding;
     private Activity activity;
     private KarbariDto karbariDto;
     private OnOffLoadDto onOffLoadDto;
     private ReadingConfigDefaultDto readingConfigDefaultDto;
     private int position, counterStateCode, counterStatePosition;
-    private boolean canBeEmpty, canLessThanPre, isMakoos, isMane, canEnterNumber;
+    private boolean isMakoos, isMane, canLessThanPre, canEnterNumber, shouldEnterNumber;
 
     public ReadingFragment() {
     }
@@ -150,22 +149,19 @@ public class ReadingFragment extends Fragment {
     }
 
     private void initialize() {
-        binding.editTextNumber.setOnLongClickListener(view -> {
-            binding.editTextNumber.setText("");
-            return false;
-        });
+        binding.editTextNumber.setOnLongClickListener(onLongClickListener);
         if (onOffLoadDto.counterNumber != null)
             binding.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
         initializeViews();
         initializeSpinner();
         initializeEditText();
-        onButtonSubmitClickListener();
+        setOnButtonSubmitClickListener();
         setOnKeyboardButtonsClickListener();
     }
 
-    public void initializeEditText() {
+    private void initializeEditText() {
         if (onOffLoadDto.isLocked) binding.relativeLayoutKeyboard.setVisibility(View.GONE);
-        else if (FOCUS_ON_EDIT_TEXT && (!canBeEmpty || canEnterNumber))
+        else if (FOCUS_ON_EDIT_TEXT && (shouldEnterNumber || canEnterNumber))
             binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
         else binding.relativeLayoutKeyboard.setVisibility(View.GONE);
     }
@@ -186,17 +182,15 @@ public class ReadingFragment extends Fragment {
         else binding.textViewRadif.setVisibility(View.GONE);
 
         binding.textViewAhad1.setText(String.valueOf(onOffLoadDto.ahadMaskooniOrAsli));
-
         binding.textViewAhad2.setText(String.valueOf(onOffLoadDto.ahadTejariOrFari));
         binding.textViewAhadTotal.setText(String.valueOf(onOffLoadDto.ahadSaierOrAbBaha));
 
-        if (readingConfigDefaultDto.isOnQeraatCode) {
+        if (readingConfigDefaultDto.isOnQeraatCode)
             binding.textViewCode.setText(onOffLoadDto.qeraatCode);
-        } else binding.textViewCode.setText(onOffLoadDto.eshterak);
-        if (karbariDto.title == null) {
+        else binding.textViewCode.setText(onOffLoadDto.eshterak);
+        if (karbariDto.title == null)
             new CustomToast().warning("کاربری اشتراک ".concat(onOffLoadDto.eshterak).concat(" به درستی بارگیری نشده است."));
-        } else
-            binding.textViewKarbari.setText(karbariDto.title);
+        else binding.textViewKarbari.setText(karbariDto.title);
         if (onOffLoadDto.qotr == null)
             new CustomToast().warning("قطر اشتراک ".concat(onOffLoadDto.eshterak).concat(" به درستی بارگیری نشده است."));
         else
@@ -206,23 +200,11 @@ public class ReadingFragment extends Fragment {
         else
             binding.textViewSiphon.setText(onOffLoadDto.sifoonQotr.equals("مشخص نشده") ? "-" : onOffLoadDto.sifoonQotr);
 
-        if (onOffLoadDto.counterNumberShown) {
+        if (onOffLoadDto.counterNumberShown)
             binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber));
-        }
-        binding.textViewPreNumber.setOnClickListener(v -> {
-            if (onOffLoadDto.hasPreNumber) {
-                activity.runOnUiThread(() ->
-                        binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber)));
-                ((ReadingActivity) activity).updateOnOffLoadByPreNumber(position);
-            } else {
-                new CustomToast().warning(getString(R.string.can_not_show_pre));
-            }
-        });
-        binding.textViewAddress.setOnLongClickListener(v -> {
-            ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG", PossibleFragment
-                    .newInstance(onOffLoadDto, position, true));
-            return false;
-        });
+
+        binding.textViewPreNumber.setOnClickListener(onClickListener);
+        binding.textViewAddress.setOnLongClickListener(onLongClickListener);
     }
 
     private void initializeSpinner() {
@@ -247,19 +229,17 @@ public class ReadingFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int i, long id) {
                 counterStatePosition = i;
-                counterStateCode = counterStateDtos.get(counterStatePosition).id;
                 final CounterStateDto counterStateDto = counterStateDtos.get(counterStatePosition);
-//                binding.relativeLayoutKeyboard.setVisibility(counterStateDto.canEnterNumber
-//                        || counterStateDto.shouldEnterNumber ? View.VISIBLE : View.GONE);
-                binding.imageButtonShowKeyboard.setVisibility(counterStateDto.canEnterNumber
-                        || counterStateDto.shouldEnterNumber ? View.VISIBLE : View.GONE);
-                if (!(counterStateDto.canEnterNumber || counterStateDto.shouldEnterNumber))
-                    binding.editTextNumber.setText("");
+                counterStateCode = counterStateDto.id;
                 isMane = counterStateDto.isMane;
-                canBeEmpty = !counterStateDto.shouldEnterNumber;
+                shouldEnterNumber = counterStateDto.shouldEnterNumber;
                 canEnterNumber = counterStateDto.canEnterNumber;
                 canLessThanPre = counterStateDto.canNumberBeLessThanPre;
                 isMakoos = counterStateDto.title.equals("معکوس");
+
+                binding.imageButtonShowKeyboard.setVisibility(canEnterNumber || shouldEnterNumber ?
+                        View.VISIBLE : View.GONE);
+                if (!canEnterNumber && !shouldEnterNumber) binding.editTextNumber.setText("");
                 initializeEditText();
             }
 
@@ -269,24 +249,24 @@ public class ReadingFragment extends Fragment {
         });
     }
 
-    private void onButtonSubmitClickListener() {
-        binding.buttonSubmit.setOnClickListener(v -> checkPermissions());
+    private void setOnButtonSubmitClickListener() {
+        binding.buttonSubmit.setOnClickListener(onClickListener);
     }
 
     private void setOnKeyboardButtonsClickListener() {
-        binding.buttonKeyboard0.setOnClickListener(onKeyboardButtonClickListener);
-        binding.buttonKeyboard1.setOnClickListener(onKeyboardButtonClickListener);
-        binding.buttonKeyboard2.setOnClickListener(onKeyboardButtonClickListener);
-        binding.buttonKeyboard3.setOnClickListener(onKeyboardButtonClickListener);
-        binding.buttonKeyboard4.setOnClickListener(onKeyboardButtonClickListener);
-        binding.buttonKeyboard5.setOnClickListener(onKeyboardButtonClickListener);
-        binding.buttonKeyboard6.setOnClickListener(onKeyboardButtonClickListener);
-        binding.buttonKeyboard7.setOnClickListener(onKeyboardButtonClickListener);
-        binding.buttonKeyboard8.setOnClickListener(onKeyboardButtonClickListener);
-        binding.buttonKeyboard9.setOnClickListener(onKeyboardButtonClickListener);
-        binding.buttonKeyboardBackspace.setOnClickListener(onKeyboardButtonClickListener);
-        binding.imageButtonHideKeyboard.setOnClickListener(onKeyboardButtonClickListener);
-        binding.imageButtonShowKeyboard.setOnClickListener(onKeyboardButtonClickListener);
+        binding.buttonKeyboard0.setOnClickListener(onClickListener);
+        binding.buttonKeyboard1.setOnClickListener(onClickListener);
+        binding.buttonKeyboard2.setOnClickListener(onClickListener);
+        binding.buttonKeyboard3.setOnClickListener(onClickListener);
+        binding.buttonKeyboard4.setOnClickListener(onClickListener);
+        binding.buttonKeyboard5.setOnClickListener(onClickListener);
+        binding.buttonKeyboard6.setOnClickListener(onClickListener);
+        binding.buttonKeyboard7.setOnClickListener(onClickListener);
+        binding.buttonKeyboard8.setOnClickListener(onClickListener);
+        binding.buttonKeyboard9.setOnClickListener(onClickListener);
+        binding.buttonKeyboardBackspace.setOnClickListener(onClickListener);
+        binding.imageButtonHideKeyboard.setOnClickListener(onClickListener);
+        binding.imageButtonShowKeyboard.setOnClickListener(onClickListener);
     }
 
     private void askLocationPermission() {
@@ -363,7 +343,7 @@ public class ReadingFragment extends Fragment {
     }
 
     private void attemptSend() {
-        if (canBeEmpty && lockProcess(true)) {
+        if (!shouldEnterNumber && lockProcess(true)) {
             canBeEmpty();
         } else {
             canNotBeEmpty();
@@ -392,7 +372,7 @@ public class ReadingFragment extends Fragment {
             makeRing(activity, NOT_SAVE);
             binding.editTextNumber.setError(getString(R.string.counter_empty));
             binding.editTextNumber.requestFocus();
-        } else if (lockProcess(canBeEmpty)) {
+        } else if (lockProcess(!shouldEnterNumber)) {
             final int currentNumber = getDigits(binding.editTextNumber.getText().toString());
             final int use = currentNumber - onOffLoadDto.preNumber;
             if (canLessThanPre) {
@@ -476,34 +456,9 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-//        if (readingActivity.getCurrentPageNumber() == position) {
-//            inflater.inflate(R.menu.keyboard_menu, menu);
-//            menu.getItem(0).setChecked(FOCUS_ON_EDIT_TEXT);
-//        }
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        if (item.getItemId() == R.id.menu_keyboard) {
-//            item.setChecked(!item.isChecked());
-//            FOCUS_ON_EDIT_TEXT = item.isChecked();
-//            initializeEditText();
-////            binding.relativeLayoutKeyboard.setVisibility(item.isChecked() ? View.VISIBLE : View.GONE);
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-//    @Override
-//    public void onAttach(@NonNull Context context) {
-//        super.onAttach(context);
-//        if (context instanceof Activity) readingActivity = (Callback) context;
-//    }
-
     @SuppressLint("NonConstantResourceId")
-    private final View.OnClickListener onKeyboardButtonClickListener = v -> {
-        final int id = v.getId();
+    private final View.OnClickListener onClickListener = view -> {
+        final int id = view.getId();
         switch (id) {
             case R.id.image_button_show_keyboard:
             case R.id.image_button_hide_keyboard:
@@ -514,6 +469,15 @@ public class ReadingFragment extends Fragment {
                 if (binding.editTextNumber.getText().toString().length() > 0)
                     binding.editTextNumber.setText(binding.editTextNumber.getText().toString()
                             .substring(0, binding.editTextNumber.getText().toString().length() - 1));
+                break;
+            case R.id.text_view_pre_number:
+                if (onOffLoadDto.hasPreNumber) {
+                    activity.runOnUiThread(() ->
+                            binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber)));
+                    ((ReadingActivity) activity).updateOnOffLoadByPreNumber(position);
+                } else {
+                    new CustomToast().warning(getString(R.string.can_not_show_pre));
+                }
                 break;
             case R.id.button_keyboard_0:
                 binding.editTextNumber.setText(binding.editTextNumber.getText().toString().concat("0"));
@@ -545,7 +509,26 @@ public class ReadingFragment extends Fragment {
             case R.id.button_keyboard_9:
                 binding.editTextNumber.setText(binding.editTextNumber.getText().toString().concat("9"));
                 break;
+            case R.id.button_submit:
+                checkPermissions();
+                break;
+
         }
+    };
+
+    @SuppressLint("NonConstantResourceId")
+    private final View.OnLongClickListener onLongClickListener = view -> {
+        final int id = view.getId();
+        switch (id) {
+            case R.id.edit_text_address:
+                ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG", PossibleFragment
+                        .newInstance(onOffLoadDto, position, true));
+                break;
+            case R.id.edit_text_number:
+                binding.editTextNumber.setText("");
+                break;
+        }
+        return false;
     };
 
     @Override
