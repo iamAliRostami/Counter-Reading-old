@@ -45,7 +45,7 @@ android {
             debuggable true
             signingConfig signingConfigs.config
             buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
-                    "com.leon.counter_reading.enums.CompanyNames.TSE"
+                    "com.leon.counter_reading.enums.CompanyNames.ESF"
         }
         esf {
 //            debuggable true
