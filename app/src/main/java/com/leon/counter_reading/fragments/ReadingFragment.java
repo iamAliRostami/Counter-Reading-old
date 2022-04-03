@@ -160,10 +160,12 @@ public class ReadingFragment extends Fragment {
     }
 
     private void initializeEditText() {
-        if (onOffLoadDto.isLocked) binding.relativeLayoutKeyboard.setVisibility(View.GONE);
-        else if (FOCUS_ON_EDIT_TEXT && (shouldEnterNumber || canEnterNumber))
+        if (onOffLoadDto.isLocked)
+            binding.relativeLayoutKeyboard.setVisibility(View.GONE);
+        else if (/*FOCUS_ON_EDIT_TEXT &&*/ (shouldEnterNumber || canEnterNumber))
             binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
-        else binding.relativeLayoutKeyboard.setVisibility(View.GONE);
+        else
+            binding.relativeLayoutKeyboard.setVisibility(View.GONE);
     }
 
     private void initializeViews() {
