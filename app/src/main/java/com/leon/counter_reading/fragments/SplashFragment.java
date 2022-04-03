@@ -49,7 +49,8 @@ public class SplashFragment extends Fragment {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
-                    requireActivity().runOnUiThread(() -> startActivity.splashLoaded());
+//                    requireActivity().runOnUiThread(() -> startActivity.splashLoaded());
+                    startActivity.splashLoaded();
                 }
             }
         };

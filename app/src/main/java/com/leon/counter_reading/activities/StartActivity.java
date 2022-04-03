@@ -73,7 +73,8 @@ public class StartActivity extends AppCompatActivity implements SplashFragment.C
             fragmentTransaction.addToBackStack(null);
         }
         fragmentTransaction.commitAllowingStateLoss();
-        getFragmentManager().executePendingTransactions();
+        runOnUiThread(() -> getFragmentManager().executePendingTransactions());
+//        getFragmentManager().executePendingTransactions();
     }
 
     private Fragment getFragment(int position) {

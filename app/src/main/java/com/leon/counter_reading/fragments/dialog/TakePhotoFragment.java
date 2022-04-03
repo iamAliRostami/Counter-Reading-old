@@ -41,18 +41,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class TakePhotoFragment extends DialogFragment {
-    public Callback readingActivity;
-
     public static int replace = 0;
 
     private static TakePhotoFragment instance;
 
+    private Callback readingActivity;
     private FragmentTakePhotoBinding binding;
-    private final ArrayList<Image> images = new ArrayList<>();
     private ImageViewAdapter imageViewAdapter;
     private int position, trackNumber;
     private String uuid, path;
     private boolean result;
+    private final ArrayList<Image> images = new ArrayList<>();
 
     public TakePhotoFragment() {
     }
@@ -141,17 +140,17 @@ public class TakePhotoFragment extends DialogFragment {
 
     public void openCameraForResult() {
         final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(requireContext().getPackageManager()) != null) {
+        if (getContext() != null && cameraIntent.resolveActivity(getContext().getPackageManager()) != null) {
             File photoFile = null;
             try {
-                photoFile = createImageFile(requireContext());
+                photoFile = createImageFile(getContext());
             } catch (IOException e) {
                 new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
             }
             if (photoFile != null) {
                 try {
                     path = photoFile.getPath();
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(requireContext(),
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(),
                             BuildConfig.APPLICATION_ID.concat(".provider"), photoFile));
                     cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                     cameraActivityResultLauncher.launch(cameraIntent);
@@ -159,6 +158,8 @@ public class TakePhotoFragment extends DialogFragment {
                     new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
                 }
             }
+        } else {
+            new CustomToast().error("به صفحه ی عکس را بسته و مجددا باز کنید.", Toast.LENGTH_LONG);
         }
     }
 
@@ -205,9 +206,13 @@ public class TakePhotoFragment extends DialogFragment {
     }
 
     public void setResult() {
-        if (result)
-            readingActivity.setPhotoResult(position);
-        dismiss();
+        try {
+            if (result)
+                readingActivity.setPhotoResult(position);
+            dismiss();
+        } catch (Exception e) {
+            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+        }
     }
 
     public interface Callback {

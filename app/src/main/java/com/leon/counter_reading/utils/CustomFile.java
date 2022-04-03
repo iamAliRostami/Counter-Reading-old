@@ -55,7 +55,12 @@ import okhttp3.ResponseBody;
 public class CustomFile {
 
     public static boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
+        String state = "";
+        try {
+            state = Environment.getExternalStorageState();
+        } catch (Exception e) {
+            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+        }
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 

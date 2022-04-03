@@ -85,6 +85,7 @@ public class ImageViewAdapter extends BaseAdapter {
             });
         } else {
             holder.imageView.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.img_camera));
+            holder.textViewSize.setText("");
         }
         return view;
     }

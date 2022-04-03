@@ -93,7 +93,6 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
 
     private void setResult() {
         TakePhotoFragment.newInstance().setResult();
-
     }
 
     private void saveImages(boolean isSent, Activity activity) {
