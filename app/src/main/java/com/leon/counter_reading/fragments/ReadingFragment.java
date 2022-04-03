@@ -109,7 +109,8 @@ public class ReadingFragment extends Fragment {
         try {
             outState.clear();
             outState.putAll(putBundle(position));
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
         }
     }
 
