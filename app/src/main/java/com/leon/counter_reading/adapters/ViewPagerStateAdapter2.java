@@ -20,7 +20,6 @@ import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.utils.CustomToast;
 
 public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
-
     public ViewPagerStateAdapter2(@NonNull FragmentActivity fragmentActivity, ReadingData readingData) {
         super(fragmentActivity);
         karbariDtos.clear();
