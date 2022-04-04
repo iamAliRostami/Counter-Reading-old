@@ -155,7 +155,7 @@ public class ReadingFragment extends Fragment {
             binding.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
         initializeViews();
         initializeSpinner();
-        initializeEditText();
+//        initializeEditText();
         setOnButtonSubmitClickListener();
         setOnKeyboardButtonsClickListener();
     }
@@ -163,7 +163,7 @@ public class ReadingFragment extends Fragment {
     private void initializeEditText() {
         if (onOffLoadDto.isLocked)
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
-        else if (/*FOCUS_ON_EDIT_TEXT &&*/ (shouldEnterNumber || canEnterNumber))
+        else if (FOCUS_ON_EDIT_TEXT && (shouldEnterNumber || canEnterNumber))
             binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
         else
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
