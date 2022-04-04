@@ -68,12 +68,12 @@
         android:visibility="gone"
         android:textSize="@dimen/text_size_large" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/linear_layout_above"
-        android:layoutDirection="locale" />
+<!--    <androidx.viewpager2.widget.ViewPager2-->
+<!--        android:id="@+id/view_pager"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_below="@id/linear_layout_above"-->
+<!--        android:layoutDirection="locale" />-->
     <FrameLayout
         android:id="@+id/container_body"
         android:layout_width="match_parent"
