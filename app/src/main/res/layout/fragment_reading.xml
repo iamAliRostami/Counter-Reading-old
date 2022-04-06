@@ -7,10 +7,10 @@
     tools:context="com.leon.counter_reading.fragments.ReadingFragment">
 
     <ScrollView
-        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/relative_layout_keyboard">
+        android:layout_above="@id/relative_layout_keyboard"
+        android:layout_alignParentTop="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -275,8 +275,6 @@
                     android:layout_marginBottom="@dimen/small_dp"
                     android:layout_weight="1"
                     android:background="@drawable/border_yellow_white"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
                     android:gravity="center"
                     android:hint="@string/_0"
                     android:maxLength="9"
@@ -357,8 +355,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:paddingStart="@dimen/medium_dp"
-        android:paddingEnd="@dimen/medium_dp"
+        android:paddingStart="@dimen/huge_dp"
+        android:paddingEnd="@dimen/huge_dp"
         android:src="@drawable/arrow_up"
         tools:ignore="ContentDescription" />
 

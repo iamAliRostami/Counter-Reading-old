@@ -31,6 +31,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -151,6 +153,7 @@ public class ReadingFragment extends Fragment {
 
     private void initialize() {
         binding.editTextNumber.setOnLongClickListener(onLongClickListener);
+        binding.editTextNumber.setOnClickListener(onClickListener);
         if (onOffLoadDto.counterNumber != null)
             binding.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
         initializeViews();
@@ -515,6 +518,10 @@ public class ReadingFragment extends Fragment {
             case R.id.button_submit:
                 checkPermissions();
                 break;
+            case R.id.edit_text_number:
+                if (!onOffLoadDto.isLocked)
+                    binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
+                break;
 
         }
     };
@@ -533,6 +540,22 @@ public class ReadingFragment extends Fragment {
         }
         return false;
     };
+
+    @Override
+    public void onResume() {
+        if (getView() != null) {
+            getView().setFocusableInTouchMode(true);
+            getView().requestFocus();
+            getView().setOnKeyListener((view, i, keyEvent) -> {
+                if (keyEvent.getAction() == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_BACK) {
+                    binding.relativeLayoutKeyboard.setVisibility(View.GONE);
+                    return true;
+                }
+                return false;
+            });
+        }
+        super.onResume();
+    }
 
     @Override
     public void onDestroyView() {
