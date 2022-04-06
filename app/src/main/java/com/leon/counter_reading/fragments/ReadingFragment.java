@@ -151,6 +151,7 @@ public class ReadingFragment extends Fragment {
 
     private void initialize() {
         binding.editTextNumber.setOnLongClickListener(onLongClickListener);
+        binding.editTextNumber.setOnClickListener(onClickListener);
         if (onOffLoadDto.counterNumber != null)
             binding.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
         initializeViews();
@@ -514,6 +515,10 @@ public class ReadingFragment extends Fragment {
                 break;
             case R.id.button_submit:
                 checkPermissions();
+                break;
+            case R.id.edit_text_number:
+                if (!onOffLoadDto.isLocked)
+                    binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
                 break;
 
         }

@@ -1,5 +1,7 @@
 package com.leon.counter_reading.utils.reading;
 
+import static com.leon.counter_reading.enums.SearchTypeEnum.BODY_COUNTER;
+import static com.leon.counter_reading.enums.SearchTypeEnum.ESHTERAK;
 import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 
@@ -37,7 +39,7 @@ public class Search extends AsyncTask<Activity, Void, Void> {
             boolean found = false;
             int i = 0;
             if (goToPage) {
-                if (type == SearchTypeEnum.ESHTERAK.getValue()) {
+                if (type == ESHTERAK.getValue()) {
                     while (i < readingData.onOffLoadDtos.size() && !found) {
                         found = readingData.onOffLoadDtos.get(i).eshterak.contains(key);
                         i++;
@@ -47,7 +49,7 @@ public class Search extends AsyncTask<Activity, Void, Void> {
                         found = String.valueOf(readingData.onOffLoadDtos.get(i).radif).contains(key);
                         i++;
                     }
-                } else if (type == SearchTypeEnum.BODY_COUNTER.getValue()) {
+                } else if (type == BODY_COUNTER.getValue()) {
                     while (i < readingData.onOffLoadDtos.size() && !found) {
                         found = readingData.onOffLoadDtos.get(i).counterSerial.contains(key);
                         i++;
@@ -60,7 +62,7 @@ public class Search extends AsyncTask<Activity, Void, Void> {
                             new CustomToast().warning(activities[0].getString(R.string.data_not_found)));
             } else {
                 readingData.onOffLoadDtos.clear();
-                if (type == SearchTypeEnum.ESHTERAK.getValue()) {
+                if (type == ESHTERAK.getValue()) {
                     for (int j = 0; j < readingDataTemp.onOffLoadDtos.size(); j++) {
                         if (readingDataTemp.onOffLoadDtos.get(j).eshterak.toLowerCase().contains(key))
                             readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(j));
@@ -70,7 +72,7 @@ public class Search extends AsyncTask<Activity, Void, Void> {
                         if (String.valueOf(readingDataTemp.onOffLoadDtos.get(j).radif).contains(key))
                             readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(j));
                     }
-                } else if (type == SearchTypeEnum.BODY_COUNTER.getValue()) {
+                } else if (type == BODY_COUNTER.getValue()) {
                     for (int j = 0; j < readingDataTemp.onOffLoadDtos.size(); j++) {
                         if (readingDataTemp.onOffLoadDtos.get(j).counterSerial.toLowerCase().contains(key))
                             readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(j));
