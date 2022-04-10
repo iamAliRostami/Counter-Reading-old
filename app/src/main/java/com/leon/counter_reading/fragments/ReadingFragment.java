@@ -31,7 +31,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -548,7 +547,9 @@ public class ReadingFragment extends Fragment {
             getView().requestFocus();
             getView().setOnKeyListener((view, i, keyEvent) -> {
                 if (keyEvent.getAction() == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_BACK) {
-                    binding.relativeLayoutKeyboard.setVisibility(View.GONE);
+                    if (binding.relativeLayoutKeyboard.getVisibility() == View.VISIBLE)
+                        binding.relativeLayoutKeyboard.setVisibility(View.GONE);
+                    else requireActivity().onBackPressed();
                     return true;
                 }
                 return false;

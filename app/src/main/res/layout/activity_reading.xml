@@ -65,22 +65,19 @@
         android:gravity="center"
         android:text="@string/data_not_found"
         android:textColor="@color/red"
-        android:textSize="@dimen/text_size_large"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:textSize="@dimen/text_size_large" />
 
-
-    <FrameLayout
-        android:id="@+id/container_body"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/linear_layout_above"
-        android:clickable="true"
-        android:focusable="true"
         android:layoutDirection="locale" />
-
-    <LinearLayout
-        android:id="@+id/linear_layout_test"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal" />
+    <!--    <FrameLayout-->
+    <!--        android:id="@+id/container_body"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:layout_below="@id/linear_layout_above"-->
+    <!--        android:layoutDirection="locale" />-->
 </RelativeLayout>
