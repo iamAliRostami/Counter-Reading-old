@@ -529,7 +529,7 @@ public class ReadingFragment extends Fragment {
     private final View.OnLongClickListener onLongClickListener = view -> {
         final int id = view.getId();
         switch (id) {
-            case R.id.edit_text_address:
+            case R.id.text_view_address:
                 ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG", PossibleFragment
                         .newInstance(onOffLoadDto, position, true));
                 break;
