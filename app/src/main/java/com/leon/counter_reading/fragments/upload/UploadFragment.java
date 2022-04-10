@@ -80,11 +80,11 @@ public class UploadFragment extends Fragment {
             binding.textViewMultimedia.setVisibility(View.VISIBLE);
             setMultimediaInfo(activity);
         } else {
-            if (type == NORMAL.getValue())
-                binding.textViewOfflineWarning.setVisibility(View.GONE);
             items = TrackingDto.getTrackingDtoItems(trackingDtos, getString(R.string.select_one));
             setupSpinner();
         }
+        if (type != OFFLINE.getValue())
+            binding.textViewOfflineWarning.setVisibility(View.GONE);
         binding.imageViewUpload.setImageResource(imageSrc[type > -1 ? type : 0]);
         setOnButtonUploadClickListener();
     }
@@ -118,7 +118,7 @@ public class UploadFragment extends Fragment {
             trackNumber = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber;
             total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId);
             unread = myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackingId);
-            ArrayList<Integer> isManes = new ArrayList<>(myDatabase.counterStateDao().
+            final ArrayList<Integer> isManes = new ArrayList<>(myDatabase.counterStateDao().
                     getCounterStateDtosIsMane(true,
                             trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId));
             for (int i = 0; i < isManes.size(); i++) {
