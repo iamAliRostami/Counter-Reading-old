@@ -104,8 +104,8 @@ public class UploadFragment extends Fragment {
     }
 
     private void setupSpinner() {
-        SpinnerCustomAdapter spinnerCustomAdapter = new SpinnerCustomAdapter(activity, items);
-        binding.spinner.setAdapter(spinnerCustomAdapter);
+        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(activity, items);
+        binding.spinner.setAdapter(adapter);
     }
 
     private boolean checkOnOffLoad() {
