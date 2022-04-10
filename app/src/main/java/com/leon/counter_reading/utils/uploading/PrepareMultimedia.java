@@ -1,5 +1,6 @@
 package com.leon.counter_reading.utils.uploading;
 
+import static com.leon.counter_reading.enums.ProgressType.SHOW_CANCELABLE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -10,7 +11,6 @@ import android.widget.Toast;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
-import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.fragments.upload.UploadFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
@@ -102,11 +102,11 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
 
     private void uploadVoice(Activity activity) {
         if (voice.size() > 0) {
-            Retrofit retrofit = getApplicationComponent().Retrofit();
-            IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-            Call<MultimediaUploadResponse> call = iAbfaService.voiceUploadMultiple(
+            final Retrofit retrofit = getApplicationComponent().Retrofit();
+            final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
+            final Call<MultimediaUploadResponse> call = iAbfaService.voiceUploadMultiple(
                     voiceMultiples.File, voiceMultiples.OnOffLoadId, voiceMultiples.Description);
-            HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW_CANCELABLE.getValue(), activity,
+            HttpClientWrapper.callHttpAsync(call, SHOW_CANCELABLE.getValue(), activity,
                     new UploadVoices(voice), new UploadVoicesIncomplete(), new UploadMultimediaError());
         } else {
             activity.runOnUiThread(() ->
@@ -116,11 +116,11 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
 
     private void uploadImages(Activity activity) {
         if (images.size() > 0) {
-            Retrofit retrofit = getApplicationComponent().Retrofit();
-            IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-            Call<MultimediaUploadResponse> call = iAbfaService.fileUploadMultiple(
+            final Retrofit retrofit = getApplicationComponent().Retrofit();
+            final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
+            final Call<MultimediaUploadResponse> call = iAbfaService.fileUploadMultiple(
                     imageMultiples.File, imageMultiples.OnOffLoadId, imageMultiples.Description);
-            HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW_CANCELABLE.getValue(), activity,
+            HttpClientWrapper.callHttpAsync(call, SHOW_CANCELABLE.getValue(), activity,
                     new UploadImages(images, activity, uploadFragment), new UploadImagesIncomplete(),
                     new UploadMultimediaError());
         } else {
