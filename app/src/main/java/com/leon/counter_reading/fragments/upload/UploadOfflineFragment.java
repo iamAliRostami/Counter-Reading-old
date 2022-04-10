@@ -1,5 +1,8 @@
 package com.leon.counter_reading.fragments.upload;
 
+import static com.leon.counter_reading.enums.DialogType.YellowRedirect;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -69,7 +72,7 @@ public class UploadOfflineFragment extends Fragment {
         int total, mane = 0, unread, alalPercent, imagesCount, voicesCount, trackNumber;
         String trackingId;
         double alalMane;
-        MyDatabase myDatabase = MyApplication.getApplicationComponent().MyDatabase();
+        MyDatabase myDatabase = getApplicationComponent().MyDatabase();
         if (binding.spinner.getSelectedItemPosition() != 0) {
             trackNumber = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber;
             trackingId = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id;
@@ -99,8 +102,7 @@ public class UploadOfflineFragment extends Fragment {
             String message = String.format(getString(R.string.unuploaded_multimedia),
                     imagesCount, voicesCount).concat("\n")
                     .concat(getString(R.string.recommend_multimedia));
-            new CustomDialogModel(DialogType.YellowRedirect, activity, message,
-                    getString(R.string.dear_user),
+            new CustomDialogModel(YellowRedirect, activity, message,getString(R.string.dear_user),
                     getString(R.string.upload), getString(R.string.confirm), new Inline());
             return false;
         }

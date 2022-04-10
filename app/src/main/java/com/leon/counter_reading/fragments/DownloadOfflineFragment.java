@@ -1,5 +1,7 @@
 package com.leon.counter_reading.fragments;
 
+import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
+import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_DETACHED;
 import static com.leon.counter_reading.helpers.Constants.ACTION_USB_PERMISSION;
 import static com.leon.counter_reading.utils.USBUtils.isMassStorageDevice;
 
@@ -38,7 +40,7 @@ public class DownloadOfflineFragment extends Fragment implements HomeFragment.Ho
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
             checkUSBStatus();
-            if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action))
+            if (ACTION_USB_DEVICE_DETACHED.equals(action))
                 removedUSB();
             if (ACTION_USB_PERMISSION.equals(action)) {
                 synchronized (this) {
@@ -141,8 +143,8 @@ public class DownloadOfflineFragment extends Fragment implements HomeFragment.Ho
     public void onResume() {
         super.onResume();
         final IntentFilter filter = new IntentFilter();
-        filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
-        filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+        filter.addAction(ACTION_USB_DEVICE_ATTACHED);
+        filter.addAction(ACTION_USB_DEVICE_DETACHED);
         filter.addAction(ACTION_USB_PERMISSION);
         requireContext().registerReceiver(usbReceiver, filter);
         checkUSBStatus();

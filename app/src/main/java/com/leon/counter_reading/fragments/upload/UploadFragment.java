@@ -1,5 +1,10 @@
 package com.leon.counter_reading.fragments.upload;
 
+import static com.leon.counter_reading.enums.BundleEnum.TYPE;
+import static com.leon.counter_reading.enums.DialogType.YellowRedirect;
+import static com.leon.counter_reading.enums.UploadType.MULTIMEDIA;
+import static com.leon.counter_reading.enums.UploadType.NORMAL;
+import static com.leon.counter_reading.enums.UploadType.OFFLINE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -16,9 +21,6 @@ import com.leon.counter_reading.activities.UploadActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentUploadBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
-import com.leon.counter_reading.enums.BundleEnum;
-import com.leon.counter_reading.enums.DialogType;
-import com.leon.counter_reading.enums.UploadType;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.MyDatabase;
@@ -43,7 +45,7 @@ public class UploadFragment extends Fragment {
     public static UploadFragment newInstance(int type) {
         UploadFragment fragment = new UploadFragment();
         Bundle args = new Bundle();
-        args.putInt(BundleEnum.TYPE.getValue(), type);
+        args.putInt(TYPE.getValue(), type);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,7 +61,7 @@ public class UploadFragment extends Fragment {
         trackingDtos.clear();
         trackingDtos.addAll(((UploadActivity) activity).getTrackingDtos());
         if (getArguments() != null) {
-            type = getArguments().getInt(BundleEnum.TYPE.getValue());
+            type = getArguments().getInt(TYPE.getValue());
             getArguments().clear();
         }
     }
@@ -73,11 +75,13 @@ public class UploadFragment extends Fragment {
     }
 
     private void initialize() {
-        if (type == UploadType.MULTIMEDIA.getValue()) {
+        if (type == MULTIMEDIA.getValue()) {
             binding.spinner.setVisibility(View.GONE);
             binding.textViewMultimedia.setVisibility(View.VISIBLE);
             setMultimediaInfo(activity);
         } else {
+            if (type == NORMAL.getValue())
+                binding.textViewOfflineWarning.setVisibility(View.GONE);
             items = TrackingDto.getTrackingDtoItems(trackingDtos, getString(R.string.select_one));
             setupSpinner();
         }
@@ -134,12 +138,11 @@ public class UploadFragment extends Fragment {
             String message = String.format(getString(R.string.darsad_alal_1), alalPercent, new DecimalFormat("###.##").format(alalMane), mane);
             new CustomToast().info(message, Toast.LENGTH_LONG);
             return false;
-        } else if (type != UploadType.OFFLINE.getValue() && (imagesCount > 0 || voicesCount > 0)) {
+        } else if (type != OFFLINE.getValue() && (imagesCount > 0 || voicesCount > 0)) {
             String message = String.format(getString(R.string.unuploaded_multimedia),
                     imagesCount, voicesCount).concat("\n")
                     .concat(getString(R.string.recommend_multimedia));
-            new CustomDialogModel(DialogType.YellowRedirect, activity, message,
-                    getString(R.string.dear_user),
+            new CustomDialogModel(YellowRedirect, activity, message, getString(R.string.dear_user),
                     getString(R.string.upload), getString(R.string.confirm), new Inline());
             return false;
         }
@@ -148,7 +151,7 @@ public class UploadFragment extends Fragment {
 
     private void setOnButtonUploadClickListener() {
         binding.buttonUpload.setOnClickListener(v -> {
-            if (type == UploadType.MULTIMEDIA.getValue()) {
+            if (type == MULTIMEDIA.getValue()) {
                 binding.buttonUpload.setEnabled(true);
                 new PrepareMultimedia(activity, this, false).execute(activity);
             } else {
@@ -160,13 +163,13 @@ public class UploadFragment extends Fragment {
     }
 
     private void sendOnOffLoad() {
-        if (type == UploadType.NORMAL.getValue()) {
+        if (type == NORMAL.getValue()) {
             binding.buttonUpload.setEnabled(true);
             new PrepareOffLoad(activity,
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id, this)
                     .execute(activity);
-        } else if (type == UploadType.OFFLINE.getValue()) {
+        } else if (type == OFFLINE.getValue()) {
             new PrepareOffLoadOffline(activity,
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)

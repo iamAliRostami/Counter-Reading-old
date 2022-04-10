@@ -291,4 +291,5 @@
     <string name="_8">8</string>
     <string name="_9">9</string>
     <string name="backspace">×</string>
+    <string name="offline_warning">پیش از بارگذاری آفلاین با اپراتور خود هماهنگ فرمایید. در غیر این صورت مسئولیت از دست رفتن اطلاعات قرائت به عهده ی شما میباشد.</string>
 </resources>

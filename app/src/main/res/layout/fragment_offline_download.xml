@@ -22,7 +22,7 @@
         android:src="@drawable/img_download_off"
         tools:ignore="ContentDescription" />
 
-    <TextView
+    <Button
         android:id="@+id/button_download"
         style="@style/ButtonSubmit.Fragment.Warning"
         android:layout_alignParentBottom="true"
