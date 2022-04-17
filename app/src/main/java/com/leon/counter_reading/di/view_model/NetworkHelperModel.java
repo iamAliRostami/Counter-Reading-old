@@ -1,5 +1,10 @@
 package com.leon.counter_reading.di.view_model;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getBaseUrl;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getLocalBaseUrl;
+
 import android.content.Context;
 
 import com.google.gson.Gson;
@@ -57,8 +62,8 @@ public final class NetworkHelperModel {
 //                        .setLevel(HttpLoggingInterceptor.Level.BODY))
                 .cache(cache).build();
         return new Retrofit.Builder()
-                .baseUrl(DifferentCompanyManager.getBaseUrl(
-                        DifferentCompanyManager.getActiveCompanyName()))
+                .baseUrl(getBaseUrl(
+                        getActiveCompanyName()))
                 .client(client).addConverterFactory(GsonConverterFactory
                         .create(new GsonBuilder().setLenient().create())).build();
     }
@@ -123,24 +128,24 @@ public final class NetworkHelperModel {
     @Inject
     public Retrofit getInstance(boolean b, int denominator, String... s) {
         String baseUrl = b ?
-                DifferentCompanyManager.getBaseUrl(DifferentCompanyManager.getActiveCompanyName()) :
-                DifferentCompanyManager.getLocalBaseUrl(DifferentCompanyManager.getActiveCompanyName());
+                getBaseUrl(getActiveCompanyName()) :
+                getLocalBaseUrl(getActiveCompanyName());
         if (s.length == 0)
             return new Retrofit.Builder()
                     .baseUrl(baseUrl)
-                    .client(MyApplication.getApplicationComponent().NetworkHelperModel().getHttpClient())
+                    .client(getApplicationComponent().NetworkHelperModel().getHttpClient())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create(MyApplication.getApplicationComponent().Gson()))
+                    .addConverterFactory(GsonConverterFactory.create(getApplicationComponent().Gson()))
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .build();
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
-                    .client(MyApplication.getApplicationComponent().NetworkHelperModel().getHttpClient(denominator, s))
+                    .client(getApplicationComponent().NetworkHelperModel().getHttpClient(denominator, s))
 //                    .client(s[1] != null ?
 //                            NetworkHelper.getHttpClient(denominator, s[0], s[1]) :
 //                            NetworkHelper.getHttpClient(denominator, s[0]))
-                    .addConverterFactory(GsonConverterFactory.create(MyApplication.getApplicationComponent().Gson()))
+                    .addConverterFactory(GsonConverterFactory.create(getApplicationComponent().Gson()))
                     .build();
         }
         return retrofit;
@@ -161,8 +166,8 @@ public final class NetworkHelperModel {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.level(HttpLoggingInterceptor.Level.BODY);
         String baseUrl = b ?
-                DifferentCompanyManager.getBaseUrl(DifferentCompanyManager.getActiveCompanyName()) :
-                DifferentCompanyManager.getLocalBaseUrl(DifferentCompanyManager.getActiveCompanyName());
+                getBaseUrl(getActiveCompanyName()) :
+                getLocalBaseUrl(getActiveCompanyName());
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(new OkHttpClient.Builder()
@@ -178,7 +183,7 @@ public final class NetworkHelperModel {
                         })
                         .addInterceptor(interceptor).build()
                 )
-                .addConverterFactory(GsonConverterFactory.create(MyApplication.getApplicationComponent().Gson()))
+                .addConverterFactory(GsonConverterFactory.create(getApplicationComponent().Gson()))
                 .build();
     }
 
