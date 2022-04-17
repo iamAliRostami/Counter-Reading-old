@@ -25,6 +25,8 @@ import com.leon.counter_reading.databinding.FragmentBasicBinding;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.PermissionManager;
 
+import java.util.regex.Pattern;
+
 public class BasicFragment extends Fragment {
     private FragmentBasicBinding binding;
 
@@ -61,10 +63,10 @@ public class BasicFragment extends Fragment {
         });
 
         binding.buttonSubmitProxy.setOnClickListener(view -> {
-            if (proxyValidation()) {
-                final String proxy = binding.editTextProxy.getText().toString()
-                        .concat(binding.editTextProxy.getText().toString().endsWith("/") ? "" : "/");
-                getApplicationComponent().SharedPreferenceModel().putData(PROXY.getValue(), proxy);
+            final String ip = binding.editTextProxy.getText().toString();
+            if (ip.length() == 0 || (proxyValidation(ip) && validate(ip.substring(ip.indexOf("//") + 2)))) {
+//                ip = ip.concat(ip.endsWith("/") ? "" : "/");
+                getApplicationComponent().SharedPreferenceModel().putData(PROXY.getValue(), ip);
                 new CustomToast().success("پروکسی با موفقیت تنظیم شد.", Toast.LENGTH_LONG);
             } else {
                 binding.editTextProxy.requestFocus();
@@ -83,8 +85,12 @@ public class BasicFragment extends Fragment {
         binding.textViewAppVersion.setText(BuildConfig.VERSION_NAME);
         binding.textViewSignal.setText(getSignal());
 
-        final TextView textViewCompanyName = requireActivity().findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        try {
+            final TextView textViewCompanyName = requireActivity().findViewById(R.id.text_view_company_name);
+            textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private String getSignal() {
@@ -111,8 +117,15 @@ public class BasicFragment extends Fragment {
         }
     }
 
-    private boolean proxyValidation() {
-        final String proxy = binding.editTextProxy.getText().toString();
-        return proxy.length() == 0 || proxy.startsWith("https://") || proxy.startsWith("http://");
+    private boolean proxyValidation(final String ip) {
+        return ip.length() == 0 || ip.startsWith("https://") || ip.startsWith("http://");
+    }
+
+    private static final Pattern PATTERN_SIMPLE = Pattern.compile("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)(\\.(?!$)|$)){4}$");
+
+    private static final Pattern PATTERN_WITH_PORT = Pattern.compile("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):(\\d{1,5})");
+
+    public static boolean validate(final String ip) {
+        return PATTERN_SIMPLE.matcher(ip).matches() || PATTERN_WITH_PORT.matcher(ip).matches();
     }
 }
