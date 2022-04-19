@@ -287,10 +287,14 @@ public class LoginFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        binding.imageViewPerson.setImageDrawable(null);
-        binding.imageViewPassword.setImageDrawable(null);
-        binding.imageViewLogo.setImageDrawable(null);
-        binding.imageViewUsername.setImageDrawable(null);
+        try {
+            binding.imageViewPerson.setImageDrawable(null);
+            binding.imageViewPassword.setImageDrawable(null);
+            binding.imageViewLogo.setImageDrawable(null);
+            binding.imageViewUsername.setImageDrawable(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.onDestroy();
     }
 }

@@ -31,6 +31,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -153,6 +154,10 @@ public class ReadingFragment extends Fragment {
     private void initialize() {
         binding.editTextNumber.setOnLongClickListener(onLongClickListener);
         binding.editTextNumber.setOnClickListener(onClickListener);
+
+//        binding.editTextNumber.setId(View.generateViewId());
+//        Log.e("custom id ", String.valueOf(binding.editTextNumber.getId()));
+
         if (onOffLoadDto.counterNumber != null)
             binding.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
         initializeViews();

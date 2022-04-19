@@ -1,5 +1,13 @@
 package com.leon.counter_reading.fragments.report;
 
+import static com.leon.counter_reading.enums.BundleEnum.READ_STATUS;
+import static com.leon.counter_reading.enums.BundleEnum.TYPE;
+import static com.leon.counter_reading.enums.HighLowStateEnum.HIGH;
+import static com.leon.counter_reading.enums.HighLowStateEnum.LOW;
+import static com.leon.counter_reading.enums.HighLowStateEnum.NORMAL;
+import static com.leon.counter_reading.enums.HighLowStateEnum.ZERO;
+import static com.leon.counter_reading.enums.ReadStatusEnum.READ;
+import static com.leon.counter_reading.enums.ReadStatusEnum.STATE;
 import static com.leon.counter_reading.helpers.Constants.POSITION;
 
 import android.annotation.SuppressLint;
@@ -17,8 +25,6 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.databinding.FragmentReportTotalBinding;
 import com.leon.counter_reading.enums.BundleEnum;
-import com.leon.counter_reading.enums.HighLowStateEnum;
-import com.leon.counter_reading.enums.ReadStatusEnum;
 
 import org.eazegraph.lib.models.PieModel;
 import org.jetbrains.annotations.NotNull;
@@ -29,23 +35,23 @@ public class ReportTotalFragment extends Fragment {
     private Activity activity;
     @SuppressLint("NonConstantResourceId")
     View.OnClickListener onClickListener = v -> {
-        Intent intent = new Intent(getActivity(), ReadingActivity.class);
-        intent.putExtra(BundleEnum.READ_STATUS.getValue(), ReadStatusEnum.STATE.getValue());
+        final Intent intent = new Intent(getActivity(), ReadingActivity.class);
+        intent.putExtra(READ_STATUS.getValue(), STATE.getValue());
         switch (v.getId()) {
             case R.id.linear_layout_normal:
-                intent.putExtra(BundleEnum.TYPE.getValue(), HighLowStateEnum.NORMAL.getValue());
+                intent.putExtra(TYPE.getValue(), NORMAL.getValue());
                 break;
             case R.id.linear_layout_zero:
-                intent.putExtra(BundleEnum.TYPE.getValue(), HighLowStateEnum.ZERO.getValue());
+                intent.putExtra(TYPE.getValue(), ZERO.getValue());
                 break;
             case R.id.linear_layout_high:
-                intent.putExtra(BundleEnum.TYPE.getValue(), HighLowStateEnum.HIGH.getValue());
+                intent.putExtra(TYPE.getValue(), HIGH.getValue());
                 break;
             case R.id.linear_layout_low:
-                intent.putExtra(BundleEnum.TYPE.getValue(), HighLowStateEnum.LOW.getValue());
+                intent.putExtra(TYPE.getValue(), LOW.getValue());
                 break;
             default:
-                intent.putExtra(BundleEnum.READ_STATUS.getValue(), ReadStatusEnum.READ.getValue());
+                intent.putExtra(READ_STATUS.getValue(), READ.getValue());
         }
         POSITION = 1;
         startActivity(intent);
@@ -53,7 +59,7 @@ public class ReportTotalFragment extends Fragment {
     };
 
     public static ReportTotalFragment newInstance(int zero, int normal, int high, int low) {
-        ReportTotalFragment fragment = new ReportTotalFragment();
+        final ReportTotalFragment fragment = new ReportTotalFragment();
         fragment.setArguments(putBundle(zero, normal, high, low));
         return fragment;
     }
