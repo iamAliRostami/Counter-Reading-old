@@ -9,6 +9,7 @@ import static com.leon.counter_reading.helpers.Constants.CURRENT_IMAGE_SIZE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
+import static com.leon.counter_reading.utils.CustomFile.saveTempBitmap;
 
 import android.app.Activity;
 import android.content.Context;
@@ -32,7 +33,6 @@ import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.adapters.ImageViewAdapter;
 import com.leon.counter_reading.databinding.FragmentTakePhotoBinding;
 import com.leon.counter_reading.tables.Image;
-import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.photo.PrepareMultimedia;
 
@@ -112,11 +112,11 @@ public class TakePhotoFragment extends DialogFragment {
     private void imageSetup() {
         images.clear();
         if (!result) {
-            images.addAll(getApplicationComponent().MyDatabase()
-                    .imageDao().getImagesByOnOffLoadId(uuid));
-            for (int i = 0; i < images.size(); i++) {
-                images.get(i).bitmap = CustomFile.loadImage(requireContext(), images.get(i).address);
-            }
+            images.addAll(getApplicationComponent().MyDatabase().imageDao().getImagesByOnOffLoadId(uuid));
+            //TODO
+//            for (int i = 0; i < images.size(); i++) {
+//                images.get(i).bitmap = loadImage(requireContext(), images.get(i).address);
+//            }
         }
         imageViewAdapter = new ImageViewAdapter(requireContext(), images);
         binding.gridViewImage.setAdapter(imageViewAdapter);
@@ -167,8 +167,12 @@ public class TakePhotoFragment extends DialogFragment {
     private void prepareImage() {
         final Image image = new Image();
         try {
-            image.bitmap = compressBitmap(BitmapFactory.decodeFile(path));
-            if (image.bitmap != null) image.size = CURRENT_IMAGE_SIZE;
+            //TODO
+//            image.bitmap = compressBitmap(BitmapFactory.decodeFile(path));
+//            if (image.bitmap != null) image.size = CURRENT_IMAGE_SIZE;
+//            image.address = path;
+            image.address = saveTempBitmap(compressBitmap(BitmapFactory.decodeFile(path)), requireContext());
+            image.size = CURRENT_IMAGE_SIZE;
             image.OnOffLoadId = uuid;
             image.trackNumber = trackNumber;
             if (replace > 0) {

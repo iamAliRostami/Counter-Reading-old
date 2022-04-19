@@ -23,6 +23,6 @@ public class Image {
     public boolean isArchived;
     @Ignore
     public MultipartBody.Part File;
-    @Ignore
-    public Bitmap bitmap;
+//    @Ignore
+//    public Bitmap bitmap;
 }

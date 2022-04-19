@@ -157,7 +157,7 @@ public class CustomFile {
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 
-    public static String saveTempBitmap(Bitmap bitmap, Context context) {
+    public static String saveTempBitmap(final Bitmap bitmap, Context context) {
         if (isExternalStorageWritable()) {
             return saveImage(bitmap, context);
         } else {
@@ -167,12 +167,12 @@ public class CustomFile {
     }
 
     @SuppressLint("SimpleDateFormat")
-    static String saveImage(Bitmap bitmapImage, Context context) {
-        File mediaStorageDir = new File(context.getExternalFilesDir(null) + context.getString(R.string.camera_folder));
+    static String saveImage(final Bitmap bitmapImage, Context context) {
+        final File mediaStorageDir = new File(context.getExternalFilesDir(null) + context.getString(R.string.camera_folder));
         if (!mediaStorageDir.exists()) if (!mediaStorageDir.mkdirs()) return null;
-        String timeStamp = (new SimpleDateFormat(context.getString(R.string.save_format_name_melli))).format(new Date());
-        String fileNameToSave = "JPEG_" + timeStamp + ".jpg";
-        File file = new File(mediaStorageDir, fileNameToSave);
+        final String timeStamp = (new SimpleDateFormat(context.getString(R.string.save_format_name_melli))).format(new Date());
+        final String fileNameToSave = "JPEG_" + timeStamp + ".jpg";
+        final File file = new File(mediaStorageDir, fileNameToSave);
         if (file.exists()) if (!file.delete()) return null;
         try {
             final FileOutputStream out = new FileOutputStream(file);

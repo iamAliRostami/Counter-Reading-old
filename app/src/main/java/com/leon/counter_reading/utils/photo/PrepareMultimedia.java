@@ -3,8 +3,11 @@ package com.leon.counter_reading.utils.photo;
 import static com.leon.counter_reading.enums.ProgressType.SHOW_CANCELABLE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.TOKEN;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.utils.CustomFile.bitmapToFile;
+import static com.leon.counter_reading.utils.CustomFile.loadImage;
 
 import android.app.Activity;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -20,7 +23,6 @@ import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.tables.ImageGrouped;
 import com.leon.counter_reading.tables.MultimediaUploadResponse;
 import com.leon.counter_reading.utils.CustomErrorHandling;
-import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 
 import java.util.ArrayList;
@@ -53,9 +55,10 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
         imageGrouped.File.clear();
         for (int i = 0; i < images.size(); i++) {
             images.get(i).Description = description;
-            if (!images.get(i).isSent && images.get(i).File == null) {
-                imageGrouped.File.add(CustomFile.bitmapToFile(images.get(i).bitmap, activities[0]));
-            }
+            if (!images.get(i).isSent && images.get(i).File == null) //TODO
+//                imageGrouped.File.add(bitmapToFile(images.get(i).bitmap, activities[0]));
+//                imageGrouped.File.add(bitmapToFile(BitmapFactory.decodeFile(images.get(i).address), activities[0]));
+            imageGrouped.File.add(bitmapToFile(loadImage(activities[0], images.get(i).address), activities[0]));
         }
         return activities[0];
     }
@@ -99,16 +102,16 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
 //        for (int j = 0; j < 200; j++)//TODO
         for (int i = 0; i < images.size(); i++) {
             if (!images.get(i).isSent) {
-                images.get(i).isSent = isSent;//TODO
-                if (getApplicationComponent().MyDatabase().imageDao().getImagesById(images.get(i).id)
-                        .size() > 0) {
+                images.get(i).isSent = isSent;
+                if (getApplicationComponent().MyDatabase().imageDao().getImagesById(images.get(i).id).size() > 0)
                     getApplicationComponent().MyDatabase().imageDao().updateImage(images.get(i));
-                } else {
-                    String address = CustomFile.saveTempBitmap(images.get(i).bitmap, activity);
-                    if (!address.equals(activity.getString(R.string.error_external_storage_is_not_writable))) {
-                        images.get(i).address = address;
-                        getApplicationComponent().MyDatabase().imageDao().insertImage(images.get(i));
-                    }
+                else {
+                    //TODO
+//                    final String address = saveTempBitmap(images.get(i).bitmap, activity);
+//                    if (!address.equals(activity.getString(R.string.error_external_storage_is_not_writable))) {
+//                        images.get(i).address = address;
+                    getApplicationComponent().MyDatabase().imageDao().insertImage(images.get(i));
+//                    }
                 }
             }
         }

@@ -2,6 +2,10 @@ package com.leon.counter_reading.utils.uploading;
 
 import static com.leon.counter_reading.enums.ProgressType.SHOW_CANCELABLE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.getContext;
+import static com.leon.counter_reading.utils.CustomFile.bitmapToFile;
+import static com.leon.counter_reading.utils.CustomFile.loadImage;
+import static com.leon.counter_reading.utils.CustomFile.prepareVoiceToSend;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -23,7 +27,6 @@ import com.leon.counter_reading.tables.MultimediaUploadResponse;
 import com.leon.counter_reading.tables.Voice;
 import com.leon.counter_reading.tables.VoiceMultiple;
 import com.leon.counter_reading.utils.CustomErrorHandling;
-import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 
 import java.util.ArrayList;
@@ -61,21 +64,21 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
                     getVoicesByBySent(false));
 //        long startTime = Calendar.getInstance().getTimeInMillis();
         for (int i = 0; i < images.size(); i++) {
-            final Bitmap bitmap = CustomFile.loadImage(activities[0], images.get(i).address);
+            final Bitmap bitmap = loadImage(activities[0], images.get(i).address);
             if (bitmap != null) {
                 imageMultiples.Description.add(RequestBody.create(images.get(i).Description,
                         MediaType.parse("text/plain")));
                 imageMultiples.OnOffLoadId.add(RequestBody.create(images.get(i).OnOffLoadId,
                         MediaType.parse("text/plain")));
-                imageMultiples.File.add(CustomFile.bitmapToFile(bitmap, activities[0]));
+                imageMultiples.File.add(bitmapToFile(bitmap, activities[0]));
             } else {
                 getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(i).id);
             }
         }
         for (int i = 0; i < voice.size(); i++) {
-            voice.get(i).File = CustomFile.prepareVoiceToSend(
-                    activities[0].getExternalFilesDir(null).getAbsolutePath() +
-                            activities[0].getString(R.string.audio_folder) + voice.get(i).address);
+            voice.get(i).File = prepareVoiceToSend(activities[0]
+                    .getExternalFilesDir(null).getAbsolutePath() +
+                    activities[0].getString(R.string.audio_folder) + voice.get(i).address);
             if (voice.get(i).File != null) {
                 voiceMultiples.OnOffLoadId.add(RequestBody.create(voice.get(i).OnOffLoadId,
                         MediaType.parse("text/plain")));
@@ -187,8 +190,8 @@ class UploadVoices implements ICallback<MultimediaUploadResponse> {
 class UploadImagesIncomplete implements ICallbackIncomplete<MultimediaUploadResponse> {
     @Override
     public void executeIncomplete(Response<MultimediaUploadResponse> response) {
-        CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(MyApplication.getContext());
-        String error = customErrorHandlingNew.getErrorMessageDefault(response);
+        CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+        String error = errorHandling.getErrorMessageDefault(response);
         new CustomToast().warning(error, Toast.LENGTH_LONG);
     }
 }
@@ -196,8 +199,8 @@ class UploadImagesIncomplete implements ICallbackIncomplete<MultimediaUploadResp
 class UploadVoicesIncomplete implements ICallbackIncomplete<MultimediaUploadResponse> {
     @Override
     public void executeIncomplete(Response<MultimediaUploadResponse> response) {
-        CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(MyApplication.getContext());
-        String error = customErrorHandlingNew.getErrorMessageDefault(response);
+        CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+        String error = errorHandling.getErrorMessageDefault(response);
         new CustomToast().warning(error, Toast.LENGTH_LONG);
     }
 }
@@ -206,8 +209,8 @@ class UploadMultimediaError implements ICallbackError {
     @Override
     public void executeError(Throwable t) {
         if (!HttpClientWrapper.cancel) {
-            final CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(MyApplication.getContext());
-            final String error = customErrorHandlingNew.getErrorMessageTotal(t);
+            final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+            final String error = errorHandling.getErrorMessageTotal(t);
             new CustomToast().error(error, Toast.LENGTH_LONG);
         }
     }
