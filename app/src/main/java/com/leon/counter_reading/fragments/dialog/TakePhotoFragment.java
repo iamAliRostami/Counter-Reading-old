@@ -123,12 +123,6 @@ public class TakePhotoFragment extends DialogFragment {
     }
 
     private void setOnButtonSendClickListener() {
-//        final Camera mCamera = Camera.open();
-//        final Camera.Parameters params = mCamera.getParameters();
-//        final List<Camera.Size> sizes = params.getSupportedPictureSizes();
-//        for (Camera.Size size : sizes) {
-//            Log.i("Available resolution: ", +size.width + " " + size.height);
-//        }
         binding.buttonSaveSend.setOnClickListener(v -> {
             binding.buttonSaveSend.setEnabled(false);
             new PrepareMultimedia(images, binding.editTextDescription.getText().toString(), result,
