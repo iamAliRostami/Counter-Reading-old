@@ -42,9 +42,7 @@ import java.util.ArrayList;
 
 public class TakePhotoFragment extends DialogFragment {
     public static int replace = 0;
-
     private static TakePhotoFragment instance;
-
     private Callback readingActivity;
     private FragmentTakePhotoBinding binding;
     private ImageViewAdapter imageViewAdapter;
