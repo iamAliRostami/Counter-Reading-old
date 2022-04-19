@@ -31,7 +31,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +67,7 @@ public class ReadingFragment extends Fragment {
     private KarbariDto karbariDto;
     private OnOffLoadDto onOffLoadDto;
     private ReadingConfigDefaultDto readingConfigDefaultDto;
-    private int position, counterStateCode, counterStatePosition;
+    private int position, counterStateCode, counterStatePosition, editTextId, buttonId;
     private boolean isMakoos, isMane, canLessThanPre, canEnterNumber, shouldEnterNumber;
 
     public ReadingFragment() {
