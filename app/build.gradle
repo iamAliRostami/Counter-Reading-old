@@ -150,7 +150,7 @@ dependencies {
     implementation 'com.yandex.android:mobmetricalib-ndk-crashes:1.1.0'
 
     implementation 'me.jahnen:libaums:0.8.0'
-    implementation 'com.gu.android:toolargetool:0.3.0'
+//    implementation 'com.gu.android:toolargetool:0.3.0'
 
-    implementation 'com.github.livefront:bridge:v2.0.2'
+//    implementation 'com.github.livefront:bridge:v2.0.2'
 }

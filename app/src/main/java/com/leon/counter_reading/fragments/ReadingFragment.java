@@ -36,6 +36,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -67,8 +69,10 @@ public class ReadingFragment extends Fragment {
     private KarbariDto karbariDto;
     private OnOffLoadDto onOffLoadDto;
     private ReadingConfigDefaultDto readingConfigDefaultDto;
-    private int position, counterStateCode, counterStatePosition, editTextId, buttonId;
+    private int position, counterStateCode, counterStatePosition, textViewId, buttonId;
     private boolean isMakoos, isMane, canLessThanPre, canEnterNumber, shouldEnterNumber;
+    private TextView textView;
+    private Button button;
 
     public ReadingFragment() {
     }
@@ -151,17 +155,23 @@ public class ReadingFragment extends Fragment {
     }
 
     private void initialize() {
-        binding.editTextNumber.setOnLongClickListener(onLongClickListener);
-        binding.editTextNumber.setOnClickListener(onClickListener);
+        binding.editTextNumber.setId(View.generateViewId());
+        textViewId = binding.editTextNumber.getId();
+        textView = binding.editTextNumber;
+        textView.setOnLongClickListener(onLongClickListener);
+        textView.setOnClickListener(onClickListener);
 
-//        binding.editTextNumber.setId(View.generateViewId());
-//        Log.e("custom id ", String.valueOf(binding.editTextNumber.getId()));
+
+//        binding.buttonSubmit.setId(View.generateViewId());
+//        binding.buttonSubmit.setId(position);
+//        Log.e("custom id", String.valueOf(binding.buttonSubmit.getId()));
+//        buttonId = binding.buttonSubmit.getId();
+//        button = requireActivity().findViewById(buttonId);
 
         if (onOffLoadDto.counterNumber != null)
-            binding.editTextNumber.setText(String.valueOf(onOffLoadDto.counterNumber));
+            textView.setText(String.valueOf(onOffLoadDto.counterNumber));
         initializeViews();
         initializeSpinner();
-//        initializeEditText();
         setOnButtonSubmitClickListener();
         setOnKeyboardButtonsClickListener();
     }
@@ -248,7 +258,7 @@ public class ReadingFragment extends Fragment {
 
                 binding.imageButtonShowKeyboard.setVisibility(canEnterNumber || shouldEnterNumber ?
                         View.VISIBLE : View.GONE);
-                if (!canEnterNumber && !shouldEnterNumber) binding.editTextNumber.setText("");
+                if (!canEnterNumber && !shouldEnterNumber) textView.setText("");
                 initializeEditText();
             }
 
@@ -360,36 +370,36 @@ public class ReadingFragment extends Fragment {
     }
 
     private void canBeEmpty() {
-        if (binding.editTextNumber.getText().toString().isEmpty() || isMane) {
+        if (textView.getText().toString().isEmpty() || isMane) {
             ((ReadingActivity) activity).updateOnOffLoadWithoutCounterNumber(position,
                     counterStateCode, counterStatePosition);
         } else {
-            final int currentNumber = getDigits(binding.editTextNumber.getText().toString());
+            final int currentNumber = getDigits(textView.getText().toString());
             final int use = currentNumber - onOffLoadDto.preNumber;
             if (canLessThanPre) {
                 lessThanPre(currentNumber);
             } else if (use < 0) {
                 makeRing(activity, NOT_SAVE);
-                binding.editTextNumber.setError(getString(R.string.less_than_pre));
-                binding.editTextNumber.requestFocus();
+                textView.setError(getString(R.string.less_than_pre));
+                textView.requestFocus();
             }
         }
     }
 
     private void canNotBeEmpty() {
-        if (binding.editTextNumber.getText().toString().isEmpty()) {
+        if (textView.getText().toString().isEmpty()) {
             makeRing(activity, NOT_SAVE);
-            binding.editTextNumber.setError(getString(R.string.counter_empty));
-            binding.editTextNumber.requestFocus();
+            textView.setError(getString(R.string.counter_empty));
+            textView.requestFocus();
         } else if (lockProcess(!shouldEnterNumber)) {
-            final int currentNumber = getDigits(binding.editTextNumber.getText().toString());
+            final int currentNumber = getDigits(textView.getText().toString());
             final int use = currentNumber - onOffLoadDto.preNumber;
             if (canLessThanPre) {
                 lessThanPre(currentNumber);
             } else if (use < 0) {
                 makeRing(activity, NOT_SAVE);
-                binding.editTextNumber.setError(getString(R.string.less_than_pre));
-                binding.editTextNumber.requestFocus();
+                textView.setError(getString(R.string.less_than_pre));
+                textView.requestFocus();
             } else {
                 notEmpty(currentNumber);
             }
@@ -475,9 +485,9 @@ public class ReadingFragment extends Fragment {
                 initializeEditText();
                 break;
             case R.id.button_keyboard_backspace:
-                if (binding.editTextNumber.getText().toString().length() > 0)
-                    binding.editTextNumber.setText(binding.editTextNumber.getText().toString()
-                            .substring(0, binding.editTextNumber.getText().toString().length() - 1));
+                if (textView.getText().toString().length() > 0)
+                    textView.setText(textView.getText().toString()
+                            .substring(0, textView.getText().toString().length() - 1));
                 break;
             case R.id.text_view_pre_number:
                 if (onOffLoadDto.hasPreNumber) {
@@ -489,34 +499,34 @@ public class ReadingFragment extends Fragment {
                 }
                 break;
             case R.id.button_keyboard_0:
-                binding.editTextNumber.setText(binding.editTextNumber.getText().toString().concat("0"));
+                textView.setText(textView.getText().toString().concat("0"));
                 break;
             case R.id.button_keyboard_1:
-                binding.editTextNumber.setText(binding.editTextNumber.getText().toString().concat("1"));
+                textView.setText(textView.getText().toString().concat("1"));
                 break;
             case R.id.button_keyboard_2:
-                binding.editTextNumber.setText(binding.editTextNumber.getText().toString().concat("2"));
+                textView.setText(textView.getText().toString().concat("2"));
                 break;
             case R.id.button_keyboard_3:
-                binding.editTextNumber.setText(binding.editTextNumber.getText().toString().concat("3"));
+                textView.setText(textView.getText().toString().concat("3"));
                 break;
             case R.id.button_keyboard_4:
-                binding.editTextNumber.setText(binding.editTextNumber.getText().toString().concat("4"));
+                textView.setText(textView.getText().toString().concat("4"));
                 break;
             case R.id.button_keyboard_5:
-                binding.editTextNumber.setText(binding.editTextNumber.getText().toString().concat("5"));
+                textView.setText(textView.getText().toString().concat("5"));
                 break;
             case R.id.button_keyboard_6:
-                binding.editTextNumber.setText(binding.editTextNumber.getText().toString().concat("6"));
+                textView.setText(textView.getText().toString().concat("6"));
                 break;
             case R.id.button_keyboard_7:
-                binding.editTextNumber.setText(binding.editTextNumber.getText().toString().concat("7"));
+                textView.setText(textView.getText().toString().concat("7"));
                 break;
             case R.id.button_keyboard_8:
-                binding.editTextNumber.setText(binding.editTextNumber.getText().toString().concat("8"));
+                textView.setText(textView.getText().toString().concat("8"));
                 break;
             case R.id.button_keyboard_9:
-                binding.editTextNumber.setText(binding.editTextNumber.getText().toString().concat("9"));
+                textView.setText(textView.getText().toString().concat("9"));
                 break;
             case R.id.button_submit:
                 checkPermissions();
@@ -529,18 +539,13 @@ public class ReadingFragment extends Fragment {
         }
     };
 
-    @SuppressLint("NonConstantResourceId")
     private final View.OnLongClickListener onLongClickListener = view -> {
         final int id = view.getId();
-        switch (id) {
-            case R.id.text_view_address:
-                ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG", PossibleFragment
-                        .newInstance(onOffLoadDto, position, true));
-                break;
-            case R.id.edit_text_number:
-                binding.editTextNumber.setText("");
-                break;
-        }
+        if (id == R.id.text_view_address)
+            ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG", PossibleFragment
+                    .newInstance(onOffLoadDto, position, true));
+        else if (id == textViewId)
+            textView.setText("");
         return false;
     };
 

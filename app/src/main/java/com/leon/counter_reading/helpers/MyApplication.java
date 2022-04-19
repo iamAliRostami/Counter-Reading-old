@@ -19,7 +19,7 @@ import android.provider.Settings;
 
 import androidx.multidex.MultiDex;
 
-import com.gu.toolargetool.TooLargeTool;
+//import com.gu.toolargetool.TooLargeTool;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.component.ActivityComponent;
@@ -145,7 +145,7 @@ public class MyApplication extends Application {
         if (!BuildConfig.BUILD_TYPE.equals("release")) {
             setupYandex();
         } else {
-            TooLargeTool.startLogging(this);
+//            TooLargeTool.startLogging(this);
             setupLeakCanary();
         }
     }
