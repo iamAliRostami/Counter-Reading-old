@@ -72,7 +72,6 @@ public class ReadingFragment extends Fragment {
     private int position, counterStateCode, counterStatePosition, textViewId, buttonId;
     private boolean isMakoos, isMane, canLessThanPre, canEnterNumber, shouldEnterNumber;
     private TextView textView;
-    private Button button;
 
     public ReadingFragment() {
     }
@@ -155,28 +154,31 @@ public class ReadingFragment extends Fragment {
     }
 
     private void initialize() {
-        binding.editTextNumber.setId(View.generateViewId());
-        textViewId = binding.editTextNumber.getId();
-        textView = binding.editTextNumber;
-        textView.setOnLongClickListener(onLongClickListener);
-        textView.setOnClickListener(onClickListener);
-
-
-//        binding.buttonSubmit.setId(View.generateViewId());
-//        binding.buttonSubmit.setId(position);
-//        Log.e("custom id", String.valueOf(binding.buttonSubmit.getId()));
-//        buttonId = binding.buttonSubmit.getId();
-//        button = requireActivity().findViewById(buttonId);
-
-        if (onOffLoadDto.counterNumber != null)
-            textView.setText(String.valueOf(onOffLoadDto.counterNumber));
+        initializeTextViewNumber();
         initializeViews();
         initializeSpinner();
-        setOnButtonSubmitClickListener();
+        initializeButtonSubmit();
         setOnKeyboardButtonsClickListener();
     }
 
-    private void initializeEditText() {
+    private void initializeTextViewNumber() {
+        binding.editTextNumber.setId(View.generateViewId());
+        textView = binding.editTextNumber;
+        textView.setOnLongClickListener(onLongClickListener);
+        textView.setOnClickListener(onClickListener);
+        textViewId = textView.getId();
+        if (onOffLoadDto.counterNumber != null)
+            textView.setText(String.valueOf(onOffLoadDto.counterNumber));
+    }
+
+    private void initializeButtonSubmit() {
+        binding.buttonSubmit.setId(View.generateViewId());
+        final Button button = binding.buttonSubmit;
+        buttonId = button.getId();
+        button.setOnClickListener(onClickListener);
+    }
+
+    private void changeKeyboardState() {
         if (onOffLoadDto.isLocked)
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
         else if (FOCUS_ON_EDIT_TEXT && (shouldEnterNumber || canEnterNumber))
@@ -255,21 +257,16 @@ public class ReadingFragment extends Fragment {
                 canEnterNumber = counterStateDto.canEnterNumber;
                 canLessThanPre = counterStateDto.canNumberBeLessThanPre;
                 isMakoos = counterStateDto.title.equals("معکوس");
-
                 binding.imageButtonShowKeyboard.setVisibility(canEnterNumber || shouldEnterNumber ?
                         View.VISIBLE : View.GONE);
                 if (!canEnterNumber && !shouldEnterNumber) textView.setText("");
-                initializeEditText();
+                changeKeyboardState();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-    }
-
-    private void setOnButtonSubmitClickListener() {
-        binding.buttonSubmit.setOnClickListener(onClickListener);
     }
 
     private void setOnKeyboardButtonsClickListener() {
@@ -406,13 +403,6 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-    private int getDigits(String number) {
-        if (!TextUtils.isEmpty(number) && TextUtils.isDigitsOnly(number)) {
-            return Integer.parseInt(number);
-        } else {
-            return 0;
-        }
-    }
 
     private void lessThanPre(int currentNumber) {
         if (!isMakoos)
@@ -475,67 +465,57 @@ public class ReadingFragment extends Fragment {
         }
     }
 
+    private int getDigits(String number) {
+        if (!TextUtils.isEmpty(number) && TextUtils.isDigitsOnly(number)) {
+            return Integer.parseInt(number);
+        } else {
+            return 0;
+        }
+    }
+
     @SuppressLint("NonConstantResourceId")
     private final View.OnClickListener onClickListener = view -> {
         final int id = view.getId();
-        switch (id) {
-            case R.id.image_button_show_keyboard:
-            case R.id.image_button_hide_keyboard:
-                FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
-                initializeEditText();
-                break;
-            case R.id.button_keyboard_backspace:
-                if (textView.getText().toString().length() > 0)
-                    textView.setText(textView.getText().toString()
-                            .substring(0, textView.getText().toString().length() - 1));
-                break;
-            case R.id.text_view_pre_number:
-                if (onOffLoadDto.hasPreNumber) {
-                    activity.runOnUiThread(() ->
-                            binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber)));
-                    ((ReadingActivity) activity).updateOnOffLoadByPreNumber(position);
-                } else {
-                    new CustomToast().warning(getString(R.string.can_not_show_pre));
-                }
-                break;
-            case R.id.button_keyboard_0:
-                textView.setText(textView.getText().toString().concat("0"));
-                break;
-            case R.id.button_keyboard_1:
-                textView.setText(textView.getText().toString().concat("1"));
-                break;
-            case R.id.button_keyboard_2:
-                textView.setText(textView.getText().toString().concat("2"));
-                break;
-            case R.id.button_keyboard_3:
-                textView.setText(textView.getText().toString().concat("3"));
-                break;
-            case R.id.button_keyboard_4:
-                textView.setText(textView.getText().toString().concat("4"));
-                break;
-            case R.id.button_keyboard_5:
-                textView.setText(textView.getText().toString().concat("5"));
-                break;
-            case R.id.button_keyboard_6:
-                textView.setText(textView.getText().toString().concat("6"));
-                break;
-            case R.id.button_keyboard_7:
-                textView.setText(textView.getText().toString().concat("7"));
-                break;
-            case R.id.button_keyboard_8:
-                textView.setText(textView.getText().toString().concat("8"));
-                break;
-            case R.id.button_keyboard_9:
-                textView.setText(textView.getText().toString().concat("9"));
-                break;
-            case R.id.button_submit:
-                checkPermissions();
-                break;
-            case R.id.edit_text_number:
-                if (!onOffLoadDto.isLocked)
-                    binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
-                break;
-
+        if (id == R.id.image_button_show_keyboard || id == R.id.image_button_hide_keyboard) {
+            FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
+            changeKeyboardState();
+        } else if (id == R.id.button_keyboard_backspace) {
+            if (textView.getText().toString().length() > 0)
+                textView.setText(textView.getText().toString()
+                        .substring(0, textView.getText().toString().length() - 1));
+        } else if (id == R.id.text_view_pre_number) {
+            if (onOffLoadDto.hasPreNumber) {
+                activity.runOnUiThread(() ->
+                        binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber)));
+                ((ReadingActivity) activity).updateOnOffLoadByPreNumber(position);
+            } else {
+                new CustomToast().warning(getString(R.string.can_not_show_pre));
+            }
+        } else if (id == R.id.button_keyboard_0) {
+            textView.setText(textView.getText().toString().concat("0"));
+        } else if (id == R.id.button_keyboard_1) {
+            textView.setText(textView.getText().toString().concat("1"));
+        } else if (id == R.id.button_keyboard_2) {
+            textView.setText(textView.getText().toString().concat("2"));
+        } else if (id == R.id.button_keyboard_3) {
+            textView.setText(textView.getText().toString().concat("3"));
+        } else if (id == R.id.button_keyboard_4) {
+            textView.setText(textView.getText().toString().concat("4"));
+        } else if (id == R.id.button_keyboard_5) {
+            textView.setText(textView.getText().toString().concat("5"));
+        } else if (id == R.id.button_keyboard_6) {
+            textView.setText(textView.getText().toString().concat("6"));
+        } else if (id == R.id.button_keyboard_7) {
+            textView.setText(textView.getText().toString().concat("7"));
+        } else if (id == R.id.button_keyboard_8) {
+            textView.setText(textView.getText().toString().concat("8"));
+        } else if (id == R.id.button_keyboard_9) {
+            textView.setText(textView.getText().toString().concat("9"));
+        } else if (id == buttonId) {
+            checkPermissions();
+        } else if (id == R.id.edit_text_number) {
+            if (!onOffLoadDto.isLocked)
+                binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
         }
     };
 
