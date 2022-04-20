@@ -64,7 +64,7 @@ public class BasicFragment extends Fragment {
 
         binding.buttonSubmitProxy.setOnClickListener(view -> {
             final String ip = binding.editTextProxy.getText().toString();
-            if (ip.length() == 0 || (proxyValidation(ip) && validate(ip.substring(ip.indexOf("//") + 2)))) {
+            if (ip.length() == 0 ||/* (proxyValidation(ip) && validate(ip.substring(ip.indexOf("//") + 2)))*/validate(ip)) {
                 getApplicationComponent().SharedPreferenceModel().putData(PROXY.getValue(), ip);
                 new CustomToast().success("پروکسی با موفقیت تنظیم شد.", Toast.LENGTH_LONG);
             } else {
@@ -120,11 +120,13 @@ public class BasicFragment extends Fragment {
         return ip.length() == 0 || ip.startsWith("https://") || ip.startsWith("http://");
     }
 
-    private static final Pattern PATTERN_SIMPLE = Pattern.compile("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)(\\.(?!$)|$)){4}$");
-
-    private static final Pattern PATTERN_WITH_PORT = Pattern.compile("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):(\\d{1,5})");
+    //    private static final Pattern IP_PATTERN = Pattern.compile("(http(s)?)://(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(:(\\d{1,5}))?");
+//    private static final Pattern IP_PATTERN = Pattern.compile("^https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)");
+//    private static final Pattern PATTERN_SIMPLE = Pattern.compile("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)(\\.(?!$)|$)){4}$");
+//    private static final Pattern PATTERN_WITH_PORT = Pattern.compile("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):(\\d{1,5})");
+    private static final Pattern IP_PATTERN = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)");
 
     public static boolean validate(final String ip) {
-        return PATTERN_SIMPLE.matcher(ip).matches() || PATTERN_WITH_PORT.matcher(ip).matches();
+        return IP_PATTERN.matcher(ip).matches();
     }
 }

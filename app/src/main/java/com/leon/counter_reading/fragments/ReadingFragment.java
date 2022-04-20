@@ -26,7 +26,6 @@ import static com.leon.counter_reading.utils.PermissionManager.forceClose;
 import static com.leon.counter_reading.utils.reading.Counting.checkHighLow;
 import static com.leon.counter_reading.utils.reading.Counting.checkHighLowMakoos;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -270,19 +269,19 @@ public class ReadingFragment extends Fragment {
     }
 
     private void setOnKeyboardButtonsClickListener() {
-        binding.buttonKeyboard0.setOnClickListener(onClickListener);
-        binding.buttonKeyboard1.setOnClickListener(onClickListener);
-        binding.buttonKeyboard2.setOnClickListener(onClickListener);
-        binding.buttonKeyboard3.setOnClickListener(onClickListener);
-        binding.buttonKeyboard4.setOnClickListener(onClickListener);
-        binding.buttonKeyboard5.setOnClickListener(onClickListener);
-        binding.buttonKeyboard6.setOnClickListener(onClickListener);
-        binding.buttonKeyboard7.setOnClickListener(onClickListener);
-        binding.buttonKeyboard8.setOnClickListener(onClickListener);
-        binding.buttonKeyboard9.setOnClickListener(onClickListener);
-        binding.buttonKeyboardBackspace.setOnClickListener(onClickListener);
-        binding.imageButtonHideKeyboard.setOnClickListener(onClickListener);
-        binding.imageButtonShowKeyboard.setOnClickListener(onClickListener);
+        binding.buttonKeyboard0.setOnClickListener(onKeyboardClickListener);
+        binding.buttonKeyboard1.setOnClickListener(onKeyboardClickListener);
+        binding.buttonKeyboard2.setOnClickListener(onKeyboardClickListener);
+        binding.buttonKeyboard3.setOnClickListener(onKeyboardClickListener);
+        binding.buttonKeyboard4.setOnClickListener(onKeyboardClickListener);
+        binding.buttonKeyboard5.setOnClickListener(onKeyboardClickListener);
+        binding.buttonKeyboard6.setOnClickListener(onKeyboardClickListener);
+        binding.buttonKeyboard7.setOnClickListener(onKeyboardClickListener);
+        binding.buttonKeyboard8.setOnClickListener(onKeyboardClickListener);
+        binding.buttonKeyboard9.setOnClickListener(onKeyboardClickListener);
+        binding.buttonKeyboardBackspace.setOnClickListener(onKeyboardClickListener);
+        binding.imageButtonHideKeyboard.setOnClickListener(onKeyboardClickListener);
+        binding.imageButtonShowKeyboard.setOnClickListener(onKeyboardClickListener);
     }
 
     private void askLocationPermission() {
@@ -473,8 +472,8 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-    @SuppressLint("NonConstantResourceId")
-    private final View.OnClickListener onClickListener = view -> {
+    private final View.OnClickListener onKeyboardClickListener = view -> {
+//        makeVibrate(requireContext(), 100);
         final int id = view.getId();
         if (id == R.id.image_button_show_keyboard || id == R.id.image_button_hide_keyboard) {
             FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
@@ -483,14 +482,6 @@ public class ReadingFragment extends Fragment {
             if (textView.getText().toString().length() > 0)
                 textView.setText(textView.getText().toString()
                         .substring(0, textView.getText().toString().length() - 1));
-        } else if (id == R.id.text_view_pre_number) {
-            if (onOffLoadDto.hasPreNumber) {
-                activity.runOnUiThread(() ->
-                        binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber)));
-                ((ReadingActivity) activity).updateOnOffLoadByPreNumber(position);
-            } else {
-                new CustomToast().warning(getString(R.string.can_not_show_pre));
-            }
         } else if (id == R.id.button_keyboard_0) {
             textView.setText(textView.getText().toString().concat("0"));
         } else if (id == R.id.button_keyboard_1) {
@@ -511,8 +502,20 @@ public class ReadingFragment extends Fragment {
             textView.setText(textView.getText().toString().concat("8"));
         } else if (id == R.id.button_keyboard_9) {
             textView.setText(textView.getText().toString().concat("9"));
-        } else if (id == buttonId) {
+        }
+    };
+    private final View.OnClickListener onClickListener = view -> {
+        final int id = view.getId();
+        if (id == buttonId) {
             checkPermissions();
+        } else if (id == R.id.text_view_pre_number) {
+            if (onOffLoadDto.hasPreNumber) {
+                activity.runOnUiThread(() ->
+                        binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber)));
+                ((ReadingActivity) activity).updateOnOffLoadByPreNumber(position);
+            } else {
+                new CustomToast().warning(getString(R.string.can_not_show_pre));
+            }
         } else if (id == R.id.edit_text_number) {
             if (!onOffLoadDto.isLocked)
                 binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);

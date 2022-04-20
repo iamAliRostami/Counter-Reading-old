@@ -159,8 +159,8 @@ public class TakePhotoFragment extends DialogFragment {
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     prepareImage();
-                    imageViewAdapter.notifyDataSetChanged();
                 }
+                imageViewAdapter.notifyDataSetChanged();
                 binding.buttonSaveSend.setEnabled(true);
             });
 
