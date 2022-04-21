@@ -440,9 +440,11 @@ public class ReadingActivity extends BaseActivity implements TakePhotoFragment.C
             final ImageView imageViewReverse = findViewById(R.id.image_view_reverse);
             imageViewReverse.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_inverse));
-            imageViewReverse.setOnClickListener(v ->
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode() < 2 ?
-                            AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO));
+            imageViewReverse.setOnClickListener(v -> {
+                new CustomToast().warning("به دلیل تست، تغییر تم میسر نیست.");
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode() < 2 ?
+//                        AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+            });
 
             final ImageView imageViewCamera = findViewById(R.id.image_view_camera);
             imageViewCamera.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
@@ -532,7 +534,6 @@ public class ReadingActivity extends BaseActivity implements TakePhotoFragment.C
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                //TODO
                 ShowFragmentDialogOnce(activity, "COUNTER_PLACE", CounterPlaceFragment
                         .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                                 binding.viewPager.getCurrentItem()));

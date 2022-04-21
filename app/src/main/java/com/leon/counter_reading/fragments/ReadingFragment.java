@@ -354,7 +354,6 @@ public class ReadingFragment extends Fragment {
             ((ReadingActivity) activity).updateOnOffLoadByLock(position);
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
             binding.imageButtonShowKeyboard.setVisibility(View.GONE);
-            //TODO
             return canBeEmpty;
         }
         return true;
