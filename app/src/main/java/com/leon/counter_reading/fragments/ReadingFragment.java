@@ -516,7 +516,7 @@ public class ReadingFragment extends Fragment {
             } else {
                 new CustomToast().warning(getString(R.string.can_not_show_pre));
             }
-        } else if (id == R.id.edit_text_number) {
+        } else if (id == textViewId /*R.id.edit_text_number*/) {
             if (!onOffLoadDto.isLocked)
                 binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
         }
