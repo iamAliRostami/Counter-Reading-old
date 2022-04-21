@@ -379,6 +379,7 @@ public class ReadingFragment extends Fragment {
             } else if (use < 0) {
                 makeRing(activity, NOT_SAVE);
                 textView.setError(getString(R.string.less_than_pre));
+                new CustomToast().warning(getString(R.string.less_than_pre));
                 textView.requestFocus();
             }
         }
@@ -388,6 +389,7 @@ public class ReadingFragment extends Fragment {
         if (textView.getText().toString().isEmpty()) {
             makeRing(activity, NOT_SAVE);
             textView.setError(getString(R.string.counter_empty));
+            new CustomToast().warning(getString(R.string.counter_empty));
             textView.requestFocus();
         } else if (lockProcess(!shouldEnterNumber)) {
             final int currentNumber = getDigits(textView.getText().toString());
@@ -396,6 +398,7 @@ public class ReadingFragment extends Fragment {
                 lessThanPre(currentNumber);
             } else if (use < 0) {
                 makeRing(activity, NOT_SAVE);
+                new CustomToast().warning(getString(R.string.less_than_pre));
                 textView.setError(getString(R.string.less_than_pre));
                 textView.requestFocus();
             } else {

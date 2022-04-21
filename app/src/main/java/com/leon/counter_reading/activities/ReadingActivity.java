@@ -47,6 +47,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Debug;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,9 +55,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.leon.counter_reading.R;
@@ -292,6 +293,15 @@ public class ReadingActivity extends BaseActivity implements TakePhotoFragment.C
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                final FragmentManager manager = getSupportFragmentManager();
+                manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                Log.e("BackStackEntryCount", String.valueOf(manager.getBackStackEntryCount()));
+//                if (manager.getBackStackEntryCount() > 0) {
+//                    while (manager.getBackStackEntryCount() > 0) {
+//                        manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+////                        manager.popBackStackImmediate();
+//                    }
+//                }
                 if (readingData.onOffLoadDtos.get(position).isLocked)
                     new CustomToast().error(getString(R.string.by_mistakes)
                             .concat(readingData.onOffLoadDtos.get(position).eshterak)

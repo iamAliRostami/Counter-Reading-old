@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -208,6 +209,7 @@ public class TakePhotoFragment extends DialogFragment {
                 readingActivity.setPhotoResult(position);
             dismiss();
         } catch (Exception e) {
+            Log.e("error", e.getMessage());
             new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
         }
     }
