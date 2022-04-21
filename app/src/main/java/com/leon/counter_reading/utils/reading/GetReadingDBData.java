@@ -34,7 +34,7 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
 
     public GetReadingDBData(Activity activity, int readStatus, int highLow, boolean sortType) {
         super();
-        customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
+        customProgressModel = getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
 
         readingData.trackingDtos.clear();

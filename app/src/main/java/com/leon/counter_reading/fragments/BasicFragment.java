@@ -65,7 +65,8 @@ public class BasicFragment extends Fragment {
         binding.buttonSubmitProxy.setOnClickListener(view -> {
             final String ip = binding.editTextProxy.getText().toString();
             if (ip.length() == 0 ||/* (proxyValidation(ip) && validate(ip.substring(ip.indexOf("//") + 2)))*/validate(ip)) {
-                getApplicationComponent().SharedPreferenceModel().putData(PROXY.getValue(), ip);
+                getApplicationComponent().SharedPreferenceModel().putData(PROXY.getValue(),
+                        ip.endsWith("/") ? ip : ip.concat("/"));
                 new CustomToast().success("پروکسی با موفقیت تنظیم شد.", Toast.LENGTH_LONG);
             } else {
                 binding.editTextProxy.requestFocus();

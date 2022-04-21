@@ -45,6 +45,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Bundle;
 import android.os.Debug;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -109,6 +110,12 @@ public class ReadingActivity extends BaseActivity implements TakePhotoFragment.C
     private int readStatus = 0, highLow = 1;
     private boolean isShowing = false;
     private ViewPagerStateAdapter2 viewPagerAdapterReading;
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.clear();
+    }
 
     @Override
     protected void initialize() {

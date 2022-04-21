@@ -178,9 +178,10 @@ public class ReadingFragment extends Fragment {
     }
 
     private void changeKeyboardState() {
-        if (onOffLoadDto.isLocked)
+        if (onOffLoadDto.isLocked) {
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
-        else if (FOCUS_ON_EDIT_TEXT && (shouldEnterNumber || canEnterNumber))
+            binding.imageButtonShowKeyboard.setVisibility(View.GONE);
+        } else if (FOCUS_ON_EDIT_TEXT && (shouldEnterNumber || canEnterNumber))
             binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
         else
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
@@ -352,6 +353,8 @@ public class ReadingFragment extends Fragment {
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= getLockNumber(getActiveCompanyName())) {
             ((ReadingActivity) activity).updateOnOffLoadByLock(position);
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
+            binding.imageButtonShowKeyboard.setVisibility(View.GONE);
+            //TODO
             return canBeEmpty;
         }
         return true;
@@ -506,9 +509,8 @@ public class ReadingFragment extends Fragment {
     };
     private final View.OnClickListener onClickListener = view -> {
         final int id = view.getId();
-        if (id == buttonId) {
-            checkPermissions();
-        } else if (id == R.id.text_view_pre_number) {
+        if (id == buttonId) checkPermissions();
+        else if (id == R.id.text_view_pre_number) {
             if (onOffLoadDto.hasPreNumber) {
                 activity.runOnUiThread(() ->
                         binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber)));
@@ -516,10 +518,9 @@ public class ReadingFragment extends Fragment {
             } else {
                 new CustomToast().warning(getString(R.string.can_not_show_pre));
             }
-        } else if (id == textViewId /*R.id.edit_text_number*/) {
+        } else if (id == textViewId /*R.id.edit_text_number*/)
             if (!onOffLoadDto.isLocked)
                 binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
-        }
     };
 
     private final View.OnLongClickListener onLongClickListener = view -> {

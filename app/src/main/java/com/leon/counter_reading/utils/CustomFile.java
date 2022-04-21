@@ -105,6 +105,65 @@ public class CustomFile {
         return stream.toByteArray();
     }
 
+    public static Bitmap compressBitmap(final String path) {
+        try {
+            Bitmap original = BitmapFactory.decodeFile(path);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
+                final int width, height;
+                if (original.getHeight() > original.getWidth()) {
+                    height = 1000;
+                    width = original.getWidth() / (original.getHeight() / height);
+                } else {
+                    width = 1000;
+                    height = original.getHeight() / (original.getWidth() / width);
+                }
+                original = Bitmap.createScaledBitmap(original, width, height, false);
+                stream = new ByteArrayOutputStream();
+                original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+            }
+            CURRENT_IMAGE_SIZE = stream.toByteArray().length;
+            return original;
+        } catch (Exception e) {
+            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+        }
+        return null;
+    }
+
+    public static String saveTempBitmap(final String path, final Context context) {
+        if (isExternalStorageWritable()) {
+            return saveImage(path, context);
+        } else {
+            new CustomToast().warning(context.getString(R.string.error_external_storage_is_not_writable));
+            return context.getString(R.string.error_external_storage_is_not_writable);
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    static String saveImage(final String path, final Context context) {
+        final Bitmap bitmapImage = compressBitmap(path);
+        final File mediaStorageDir = new File(context.getExternalFilesDir(null) + context.getString(R.string.camera_folder));
+        if (!mediaStorageDir.exists()) if (!mediaStorageDir.mkdirs()) return null;
+        final String timeStamp = (new SimpleDateFormat(context.getString(R.string.save_format_name_melli))).format(new Date());
+        final String fileNameToSave = "JPEG_" + timeStamp + ".jpg";
+        final File file = new File(mediaStorageDir, fileNameToSave);
+        if (file.exists()) if (!file.delete()) return null;
+        if (bitmapImage != null) {
+            try {
+                final FileOutputStream out = new FileOutputStream(file);
+                bitmapImage.compress(Bitmap.CompressFormat.JPEG, 80, out);
+                out.flush();
+                out.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        CURRENT_IMAGE_SIZE = file.length();
+        MediaScannerConnection.scanFile(context, new String[]{file.getPath()}, new String[]{"image/jpeg"}, null);
+        return fileNameToSave;
+    }
+
     public static Bitmap compressBitmap(Bitmap original) {
         try {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -156,6 +215,7 @@ public class CustomFile {
         byte[] bytes = s.getBytes();
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
+
 
     public static String saveTempBitmap(final Bitmap bitmap, Context context) {
         if (isExternalStorageWritable()) {

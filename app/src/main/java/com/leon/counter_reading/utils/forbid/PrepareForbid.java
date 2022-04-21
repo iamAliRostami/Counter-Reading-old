@@ -2,6 +2,7 @@ package com.leon.counter_reading.utils.forbid;
 
 import static com.leon.counter_reading.helpers.Constants.CURRENT_IMAGE_SIZE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.utils.CustomFile.saveTempBitmap;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -17,7 +18,6 @@ import com.leon.counter_reading.infrastructure.ICallbackError;
 import com.leon.counter_reading.infrastructure.ICallbackIncomplete;
 import com.leon.counter_reading.tables.ForbiddenDto;
 import com.leon.counter_reading.tables.ForbiddenDtoResponses;
-import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 
 import retrofit2.Call;
@@ -97,10 +97,10 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
         super.onPostExecute(activity);
     }
 
-    void saveForbidden(Activity activity) {
+    private void saveForbidden(Activity activity) {
         if (forbiddenDto.bitmaps.size() > 0)
             for (Bitmap bitmap : forbiddenDto.bitmaps) {
-                final String address = CustomFile.saveTempBitmap(bitmap, activity);
+                final String address = saveTempBitmap(bitmap, activity);
                 if (!address.equals(activity.getString(R.string.error_external_storage_is_not_writable))) {
                     forbiddenDto.address = address;
                     forbiddenDto.size = CURRENT_IMAGE_SIZE;

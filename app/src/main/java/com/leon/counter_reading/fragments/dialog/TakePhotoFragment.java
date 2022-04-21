@@ -7,14 +7,12 @@ import static com.leon.counter_reading.enums.BundleEnum.SENT;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.helpers.Constants.CURRENT_IMAGE_SIZE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 import static com.leon.counter_reading.utils.CustomFile.saveTempBitmap;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -80,6 +78,12 @@ public class TakePhotoFragment extends DialogFragment {
 
     public static TakePhotoFragment newInstance() {
         return instance;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.clear();
     }
 
     @Override
@@ -167,11 +171,8 @@ public class TakePhotoFragment extends DialogFragment {
     private void prepareImage() {
         final Image image = new Image();
         try {
-            //TODO
-//            image.bitmap = compressBitmap(BitmapFactory.decodeFile(path));
-//            if (image.bitmap != null) image.size = CURRENT_IMAGE_SIZE;
-//            image.address = path;
-            image.address = saveTempBitmap(compressBitmap(BitmapFactory.decodeFile(path)), requireContext());
+//            image.address = saveTempBitmap(compressBitmap(BitmapFactory.decodeFile(path)), requireContext());
+            image.address = saveTempBitmap(path, requireContext());
             image.size = CURRENT_IMAGE_SIZE;
             image.OnOffLoadId = uuid;
             image.trackNumber = trackNumber;
