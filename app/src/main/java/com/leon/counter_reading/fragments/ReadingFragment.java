@@ -75,7 +75,7 @@ public class ReadingFragment extends Fragment {
     public ReadingFragment() {
     }
 
-    public ReadingFragment(int position) {
+    private ReadingFragment(int position) {
         this.position = position;
         this.onOffLoadDto = Constants.onOffLoadDtos.get(position);
         this.readingConfigDefaultDto = Constants.readingConfigDefaultDtos.get(position);

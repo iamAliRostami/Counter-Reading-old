@@ -47,7 +47,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Debug;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,6 +57,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.leon.counter_reading.R;
@@ -266,9 +266,14 @@ public class ReadingActivity extends BaseActivity implements TakePhotoFragment.C
     private void setupViewPagerAdapter() {
         runOnUiThread(() -> {
             viewPagerAdapterReading = new ViewPagerStateAdapter2(this, readingData);
+//            viewPagerAdapterReading = new ViewPagerStateAdapter2(getSupportFragmentManager(), readingData);
             try {
                 binding.viewPager.setOffscreenPageLimit(1);
                 binding.viewPager.setAdapter(viewPagerAdapterReading);
+                RecyclerView recyclerView=  ((RecyclerView)(binding.viewPager.getChildAt(0)));
+                if(recyclerView != null) {
+                    recyclerView.setItemViewCacheSize(0);
+                }
                 if (getApplicationComponent().SharedPreferenceModel().getBoolData(RTL_PAGING.getValue()))
                     binding.viewPager.setRotationY(180);
 //                binding.viewPager.setCurrentItem(0);
@@ -295,13 +300,17 @@ public class ReadingActivity extends BaseActivity implements TakePhotoFragment.C
                 super.onPageSelected(position);
                 final FragmentManager manager = getSupportFragmentManager();
                 manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//                Log.e("BackStackEntryCount", String.valueOf(manager.getBackStackEntryCount()));
+//                try {
+//                    manager.executePendingTransactions();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
 //                if (manager.getBackStackEntryCount() > 0) {
 //                    while (manager.getBackStackEntryCount() > 0) {
-//                        manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-////                        manager.popBackStackImmediate();
+//                        manager.popBackStackImmediate();
 //                    }
 //                }
+
                 if (readingData.onOffLoadDtos.get(position).isLocked)
                     new CustomToast().error(getString(R.string.by_mistakes)
                             .concat(readingData.onOffLoadDtos.get(position).eshterak)
