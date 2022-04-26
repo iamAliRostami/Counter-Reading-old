@@ -255,18 +255,18 @@ public class ReportForbidFragment extends DialogFragment {
             builder.setMessage(R.string.select_source);
             builder.setPositiveButton(R.string.gallery, (dialog, which) -> {
                 dialog.dismiss();
-                openGalleryActivityForResult();
+                openGalleryForResult();
             });
             builder.setNegativeButton(R.string.camera, (dialog, which) -> {
                 dialog.dismiss();
-                openCameraActivityForResult();
+                openCameraForResult();
             });
             builder.setNeutralButton("", (dialog, which) -> dialog.dismiss());
             builder.create().show();
         });
     }
 
-    private void openCameraActivityForResult() {
+    private void openCameraForResult() {
         final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(requireContext().getPackageManager()) != null) {
             File photoFile = null;
@@ -284,7 +284,7 @@ public class ReportForbidFragment extends DialogFragment {
         }
     }
 
-    private void openGalleryActivityForResult() {
+    private void openGalleryForResult() {
         final Intent galleryIntent = new Intent("android.intent.action.PICK");
         if (galleryIntent.resolveActivity(requireContext().getPackageManager()) != null) {
             galleryIntent.setType("image/*");

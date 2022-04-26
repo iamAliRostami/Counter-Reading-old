@@ -108,7 +108,7 @@ public class ImageViewAdapter extends BaseAdapter {
     }
 
     private void imagePicker() {
-        TakePhotoFragment.newInstance().openCameraForResult();
+        TakePhotoFragment.newInstance().openResourceForResult();
     }
 }
 

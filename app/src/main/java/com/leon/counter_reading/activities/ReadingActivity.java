@@ -270,8 +270,8 @@ public class ReadingActivity extends BaseActivity implements TakePhotoFragment.C
             try {
                 binding.viewPager.setOffscreenPageLimit(1);
                 binding.viewPager.setAdapter(viewPagerAdapterReading);
-                RecyclerView recyclerView=  ((RecyclerView)(binding.viewPager.getChildAt(0)));
-                if(recyclerView != null) {
+                RecyclerView recyclerView = ((RecyclerView) (binding.viewPager.getChildAt(0)));
+                if (recyclerView != null) {
                     recyclerView.setItemViewCacheSize(0);
                 }
                 if (getApplicationComponent().SharedPreferenceModel().getBoolData(RTL_PAGING.getValue()))
@@ -320,7 +320,8 @@ public class ReadingActivity extends BaseActivity implements TakePhotoFragment.C
     }
 
     private void showImage(int position) {
-        ShowFragmentDialogOnce(activity, "TAKE_PHOTO", TakePhotoFragment
+        ShowFragmentDialogOnce(activity, "TAKE_PHOTO_".concat(readingData.onOffLoadDtos
+                .get(binding.viewPager.getCurrentItem()).eshterak), TakePhotoFragment
                 .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber,
@@ -371,7 +372,8 @@ public class ReadingActivity extends BaseActivity implements TakePhotoFragment.C
     }
 
     private void showPossible(int position) {
-        ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG",
+        ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG_".
+                        concat(readingData.onOffLoadDtos.get(position).eshterak),
                 PossibleFragment.newInstance(readingData.onOffLoadDtos.get(position), position, false));
     }
 
@@ -472,8 +474,10 @@ public class ReadingActivity extends BaseActivity implements TakePhotoFragment.C
                 if (readingData.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
-                    ShowFragmentDialogOnce(activity, "TAKE_PHOTO", TakePhotoFragment
-                            .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
+                    ShowFragmentDialogOnce(activity, "TAKE_PHOTO_"
+                                    .concat(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id),
+                            TakePhotoFragment.newInstance(readingData.onOffLoadDtos
+                                            .get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
                                     readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                                     readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber));
                 }

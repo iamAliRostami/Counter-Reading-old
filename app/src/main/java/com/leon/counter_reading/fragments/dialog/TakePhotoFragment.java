@@ -5,6 +5,7 @@ import static com.leon.counter_reading.enums.BundleEnum.IMAGE;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.SENT;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
+import static com.leon.counter_reading.enums.CompanyNames.TSE;
 import static com.leon.counter_reading.helpers.Constants.CURRENT_IMAGE_SIZE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
@@ -36,7 +37,9 @@ import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.photo.PrepareMultimedia;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class TakePhotoFragment extends DialogFragment {
@@ -110,6 +113,8 @@ public class TakePhotoFragment extends DialogFragment {
                     View.GONE : View.VISIBLE);
             getArguments().clear();
         }
+        if (BuildConfig.COMPANY_NAME == TSE)
+            binding.checkBoxGallery.setVisibility(View.VISIBLE);
         imageSetup();
         setOnButtonSendClickListener();
     }
@@ -135,7 +140,21 @@ public class TakePhotoFragment extends DialogFragment {
         });
     }
 
-    public void openCameraForResult() {
+    public void openResourceForResult() {
+        Log.e("checkBoxGallery", String.valueOf(binding.checkBoxGallery.isChecked()));
+        if (binding.checkBoxGallery.isChecked()) openGalleryForResult();
+        else openCameraForResult();
+    }
+
+    private void openGalleryForResult() {
+        final Intent galleryIntent = new Intent("android.intent.action.PICK");
+        if (galleryIntent.resolveActivity(requireContext().getPackageManager()) != null) {
+            galleryIntent.setType("image/*");
+            galleryResultLauncher.launch(galleryIntent);
+        }
+    }
+
+    private void openCameraForResult() {
         final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (getContext() != null && cameraIntent.resolveActivity(getContext().getPackageManager()) != null) {
             File photoFile = null;
@@ -150,7 +169,7 @@ public class TakePhotoFragment extends DialogFragment {
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(),
                             BuildConfig.APPLICATION_ID.concat(".provider"), photoFile));
                     cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-                    cameraActivityResultLauncher.launch(cameraIntent);
+                    cameraResultLauncher.launch(cameraIntent);
                 } catch (Exception e) {
                     new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
                 }
@@ -160,19 +179,50 @@ public class TakePhotoFragment extends DialogFragment {
         }
     }
 
-    private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> cameraResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    prepareImage();
+                if (result.getResultCode() == Activity.RESULT_OK) prepareImage();
+                imageViewAdapter.notifyDataSetChanged();
+                binding.buttonSaveSend.setEnabled(true);
+            });
+
+    private final ActivityResultLauncher<Intent> galleryResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null &&
+                        result.getData().getData() != null) {
+                    try {
+                        final InputStream inputStream = requireContext().getContentResolver()
+                                .openInputStream(result.getData().getData());
+                        final Image image = new Image();
+                        image.address = saveTempBitmap(inputStream, requireContext());
+                        prepareImage(image);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
                 imageViewAdapter.notifyDataSetChanged();
                 binding.buttonSaveSend.setEnabled(true);
             });
 
+    private void prepareImage(Image image) {
+        try {
+//            image.address = saveTempBitmap(path, requireContext());
+            image.size = CURRENT_IMAGE_SIZE;
+            image.OnOffLoadId = uuid;
+            image.trackNumber = trackNumber;
+            if (replace > 0) {
+                getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
+                images.set(replace - 1, image);
+            } else images.add(image);
+        } catch (Exception e) {
+            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+        }
+    }
+
     private void prepareImage() {
         final Image image = new Image();
         try {
-//            image.address = saveTempBitmap(compressBitmap(BitmapFactory.decodeFile(path)), requireContext());
             image.address = saveTempBitmap(path, requireContext());
             image.size = CURRENT_IMAGE_SIZE;
             image.OnOffLoadId = uuid;

@@ -35,7 +35,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -172,9 +171,9 @@ public class ReadingFragment extends Fragment {
 
     private void initializeButtonSubmit() {
         binding.buttonSubmit.setId(View.generateViewId());
-        final Button button = binding.buttonSubmit;
-        buttonId = button.getId();
-        button.setOnClickListener(onClickListener);
+//        final Button button = binding.buttonSubmit;
+        buttonId = binding.buttonSubmit.getId();
+        binding.buttonSubmit.setOnClickListener(onClickListener);
     }
 
     private void changeKeyboardState() {
@@ -342,22 +341,6 @@ public class ReadingFragment extends Fragment {
             }
     }
 
-    private boolean lockProcess(boolean canBeEmpty) {
-        onOffLoadDto.attemptCount++;
-        if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount + 1 == getLockNumber(getActiveCompanyName()))
-            new CustomToast().error(getString(R.string.mistakes_error), Toast.LENGTH_LONG);
-        if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount == getLockNumber(getActiveCompanyName()))
-            new CustomToast().error(getString(R.string.by_mistakes).
-                    concat(onOffLoadDto.eshterak).concat(getString(R.string.is_locked)), Toast.LENGTH_SHORT);
-        ((ReadingActivity) activity).updateOnOffLoadByAttempt(position);
-        if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= getLockNumber(getActiveCompanyName())) {
-            ((ReadingActivity) activity).updateOnOffLoadByLock(position);
-            binding.relativeLayoutKeyboard.setVisibility(View.GONE);
-            binding.imageButtonShowKeyboard.setVisibility(View.GONE);
-            return canBeEmpty;
-        }
-        return true;
-    }
 
     private void attemptSend() {
         if (!shouldEnterNumber && lockProcess(true)) {
@@ -365,6 +348,30 @@ public class ReadingFragment extends Fragment {
         } else {
             canNotBeEmpty();
         }
+    }
+
+    private boolean lockProcess(final boolean canBeEmpty) {
+        onOffLoadDto.attemptCount++;
+        if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount + 1 == getLockNumber(getActiveCompanyName()))
+            new CustomToast().error(getString(R.string.mistakes_error).concat(onOffLoadDto.eshterak)
+                            .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
+                            .concat(String.valueOf(textViewId))
+                    , Toast.LENGTH_LONG);
+        if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount == getLockNumber(getActiveCompanyName()))
+            new CustomToast().error(getString(R.string.by_mistakes).
+                    concat(onOffLoadDto.eshterak).concat(getString(R.string.is_locked))
+                    .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
+                    .concat(String.valueOf(textViewId)), Toast.LENGTH_SHORT);
+        ((ReadingActivity) activity).updateOnOffLoadByAttempt(position);
+        if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= getLockNumber(getActiveCompanyName())) {
+            onOffLoadDto.isLocked = true;
+            textView.setText("");
+            ((ReadingActivity) activity).updateOnOffLoadByLock(position);
+            binding.relativeLayoutKeyboard.setVisibility(View.GONE);
+            binding.imageButtonShowKeyboard.setVisibility(View.GONE);
+            return canBeEmpty;
+        }
+        return true;
     }
 
     private void canBeEmpty() {
@@ -378,8 +385,12 @@ public class ReadingFragment extends Fragment {
                 lessThanPre(currentNumber);
             } else if (use < 0) {
                 makeRing(activity, NOT_SAVE);
-                textView.setError(getString(R.string.less_than_pre));
-                new CustomToast().warning(getString(R.string.less_than_pre));
+                String message = getString(R.string.less_than_pre);
+                textView.setError(message);
+                message = message.concat("\n").concat(onOffLoadDto.eshterak)
+                        .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
+                        .concat(String.valueOf(textViewId));
+                new CustomToast().warning(message, Toast.LENGTH_LONG);
                 textView.requestFocus();
             }
         }
@@ -388,25 +399,32 @@ public class ReadingFragment extends Fragment {
     private void canNotBeEmpty() {
         if (textView.getText().toString().isEmpty()) {
             makeRing(activity, NOT_SAVE);
-            textView.setError(getString(R.string.counter_empty));
-            new CustomToast().warning(getString(R.string.counter_empty));
+            String message = getString(R.string.counter_empty);
+            textView.setError(message);
+            message = message.concat("\n").concat(onOffLoadDto.eshterak)
+                    .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
+                    .concat(String.valueOf(textViewId));
+            new CustomToast().warning(message, Toast.LENGTH_LONG);
             textView.requestFocus();
-        } else if (lockProcess(!shouldEnterNumber)) {
+        } else if (lockProcess(false)) {
             final int currentNumber = getDigits(textView.getText().toString());
             final int use = currentNumber - onOffLoadDto.preNumber;
             if (canLessThanPre) {
                 lessThanPre(currentNumber);
             } else if (use < 0) {
                 makeRing(activity, NOT_SAVE);
-                new CustomToast().warning(getString(R.string.less_than_pre));
-                textView.setError(getString(R.string.less_than_pre));
+                String message = getString(R.string.less_than_pre);
+                textView.setError(message);
+                message = message.concat("\n").concat(onOffLoadDto.eshterak)
+                        .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
+                        .concat(String.valueOf(textViewId));
+                new CustomToast().warning(message, Toast.LENGTH_LONG);
                 textView.requestFocus();
             } else {
                 notEmpty(currentNumber);
             }
         }
     }
-
 
     private void lessThanPre(int currentNumber) {
         if (!isMakoos)
@@ -438,7 +456,7 @@ public class ReadingFragment extends Fragment {
             }
         }
         if (type != null) {
-            ShowFragmentDialogOnce(activity, "ARE_YOU_SURE_DIALOG",
+            ShowFragmentDialogOnce(activity, "ARE_YOU_SURE_DIALOG_".concat(onOffLoadDto.eshterak),
                     AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
                             counterStatePosition));
         }
@@ -464,8 +482,9 @@ public class ReadingFragment extends Fragment {
             }
         }
         if (type != null) {
-            ShowFragmentDialogOnce(activity, "ARE_YOU_SURE_DIALOG", AreYouSureFragment
-                    .newInstance(position, currentNumber, type, counterStateCode, counterStatePosition));
+            ShowFragmentDialogOnce(activity, "ARE_YOU_SURE_DIALOG_".concat(onOffLoadDto.eshterak),
+                    AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
+                            counterStatePosition));
         }
     }
 
@@ -521,15 +540,15 @@ public class ReadingFragment extends Fragment {
                 new CustomToast().warning(getString(R.string.can_not_show_pre));
             }
         } else if (id == textViewId /*R.id.edit_text_number*/)
-            if (!onOffLoadDto.isLocked)
+            if (!onOffLoadDto.isLocked && (shouldEnterNumber || canEnterNumber))
                 binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
     };
 
     private final View.OnLongClickListener onLongClickListener = view -> {
         final int id = view.getId();
         if (id == R.id.text_view_address)
-            ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG", PossibleFragment
-                    .newInstance(onOffLoadDto, position, true));
+            ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG_".concat(onOffLoadDto.eshterak),
+                    PossibleFragment.newInstance(onOffLoadDto, position, true));
         else if (id == textViewId)
             textView.setText("");
         return false;

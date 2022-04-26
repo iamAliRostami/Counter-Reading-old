@@ -218,7 +218,7 @@
     <string name="go_to_page">برو به صفحه</string>
     <string name="cancel">لغو</string>
     <!--    <string name="mistakes_error">شما به مرز تعداد ثبت نادرست مکرر رسیده اید.</string>-->
-    <string name="mistakes_error">برای ثبت، تنها یک فرصت دیگر دارید.</string>
+    <string name="mistakes_error">برای ثبت، تنها یک فرصت دیگر دارید.\n</string>
     <string name="by_mistakes">به علت اشتباه مکرر، اشتراک شماره&#160;</string>
     <string name="is_locked">&#160;قفل شده است.</string>
     <string name="lock_warning">خطر قفل شدن</string>
@@ -292,4 +292,5 @@
     <string name="_9">9</string>
     <string name="backspace">×</string>
     <string name="offline_warning">پیش از بارگذاری آفلاین با اپراتور خود هماهنگ فرمایید. در غیر این صورت مسئولیت از دست رفتن اطلاعات قرائت به عهده ی شما میباشد.</string>
+    <string name="select_gallery">انتخاب از گالری</string>
 </resources>

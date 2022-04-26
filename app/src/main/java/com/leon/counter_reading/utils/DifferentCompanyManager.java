@@ -1,6 +1,17 @@
 package com.leon.counter_reading.utils;
 
 
+import static com.leon.counter_reading.enums.CompanyNames.ESF;
+import static com.leon.counter_reading.enums.CompanyNames.TE;
+import static com.leon.counter_reading.enums.CompanyNames.TOWNS_WEST;
+import static com.leon.counter_reading.enums.CompanyNames.TSE;
+import static com.leon.counter_reading.enums.CompanyNames.TSW;
+import static com.leon.counter_reading.enums.CompanyNames.ZONE1;
+import static com.leon.counter_reading.enums.CompanyNames.ZONE2;
+import static com.leon.counter_reading.enums.CompanyNames.ZONE3;
+import static com.leon.counter_reading.enums.CompanyNames.ZONE4;
+import static com.leon.counter_reading.enums.CompanyNames.ZONE5;
+import static com.leon.counter_reading.enums.CompanyNames.ZONE6;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 
 import android.annotation.SuppressLint;
@@ -239,27 +250,27 @@ public class DifferentCompanyManager {
     public static CompanyNames getCompanyNameEnum(int companyCode) {
         switch (companyCode) {
             case 1:
-                return CompanyNames.ZONE1;
+                return ZONE1;
             case 2:
-                return CompanyNames.ZONE2;
+                return ZONE2;
             case 3:
-                return CompanyNames.ZONE3;
+                return ZONE3;
             case 4:
-                return CompanyNames.ZONE4;
+                return ZONE4;
             case 5:
-                return CompanyNames.ZONE5;
+                return ZONE5;
             case 6:
-                return CompanyNames.ZONE6;
+                return ZONE6;
             case 7:
-                return CompanyNames.TSW;
+                return TSW;
             case 8:
-                return CompanyNames.TE;
+                return TE;
             case 9:
-                return CompanyNames.TSE;
+                return TSE;
             case 10:
-                return CompanyNames.TOWNS_WEST;
+                return TOWNS_WEST;
             case 11:
-                return CompanyNames.ESF;
+                return ESF;
             default:
                 throw new UnsupportedOperationException();
         }
