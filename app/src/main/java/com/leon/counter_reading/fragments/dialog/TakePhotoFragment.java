@@ -209,7 +209,6 @@ public class TakePhotoFragment extends DialogFragment {
                 readingActivity.setPhotoResult(position);
             dismiss();
         } catch (Exception e) {
-            Log.e("error", e.getMessage());
             new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
         }
     }
