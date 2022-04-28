@@ -10,6 +10,7 @@ import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.DialogType.Yellow;
 import static com.leon.counter_reading.enums.NotificationType.LIGHT_OFF;
 import static com.leon.counter_reading.enums.NotificationType.LIGHT_ON;
+import static com.leon.counter_reading.enums.NotificationType.SAVE;
 import static com.leon.counter_reading.enums.OffloadStateEnum.INSERTED;
 import static com.leon.counter_reading.enums.SearchTypeEnum.All;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.ACCOUNT;
@@ -25,6 +26,7 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.READING_REPORT;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SERIAL;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SORT_TYPE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.TOKEN;
 import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
 import static com.leon.counter_reading.helpers.Constants.CAMERA;
 import static com.leon.counter_reading.helpers.Constants.COUNTER_LOCATION;
@@ -66,9 +68,7 @@ import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReadingBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.BundleEnum;
-import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.enums.SearchTypeEnum;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.fragments.dialog.CounterPlaceFragment;
 import com.leon.counter_reading.fragments.dialog.NavigationFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
@@ -100,8 +100,8 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 
-public class ReadingActivity extends BaseActivity implements TakePhotoFragment.Callback,
-        ReadingReportFragment.Callback, CounterPlaceFragment.Callback, NavigationFragment.Callback {
+public class ReadingActivity extends BaseActivity implements ReadingReportFragment.Callback,
+        CounterPlaceFragment.Callback, NavigationFragment.Callback {
     public static int offlineAttempts = 0;
     private int[] imageSrc;
     private ActivityReadingBinding binding;
@@ -348,14 +348,15 @@ public class ReadingActivity extends BaseActivity implements TakePhotoFragment.C
                         .onOffLoadDtos.get(position).counterStatePosition);
                 if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
                         counterStateDto.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {
-                    ShowFragmentDialogOnce(activity, "SERIAL_DIALOG",
+                    ShowFragmentDialogOnce(activity, "SERIAL_DIALOG_".concat(readingData.onOffLoadDtos.get(position).eshterak),
                             SerialFragment.newInstance(position, counterStateDto.id,
                                     readingData.onOffLoadDtos.get(position).counterStatePosition));
-                } else isShowing = true;
+                } else
+                    isShowing = true;
             }
             if (isShowing) {
                 isShowing = false;
-                makeRing(activity, NotificationType.SAVE);
+                makeRing(activity, SAVE);
                 Location location = null;
                 try {
                     location = getLocationTracker(activity).getCurrentLocation();
@@ -364,7 +365,7 @@ public class ReadingActivity extends BaseActivity implements TakePhotoFragment.C
                 }
                 new Update(readingData.onOffLoadDtos.get(position), location).execute(activity);
                 if (offlineAttempts < OFFLINE_ATTEMPT)
-                    new PrepareToSend(sharedPreferenceManager.getStringData(SharedReferenceKeys.TOKEN.getValue()))
+                    new PrepareToSend(sharedPreferenceManager.getStringData(TOKEN.getValue()))
                             .execute(activity);
                 changePage(binding.viewPager.getCurrentItem() + 1);
             }
@@ -600,7 +601,6 @@ public class ReadingActivity extends BaseActivity implements TakePhotoFragment.C
 
     }
 
-    @Override
     public void setPhotoResult(int position) {
         attemptSend(position, false, false);
     }

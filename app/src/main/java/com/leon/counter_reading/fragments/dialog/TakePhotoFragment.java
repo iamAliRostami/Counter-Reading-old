@@ -12,7 +12,6 @@ import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 import static com.leon.counter_reading.utils.CustomFile.saveTempBitmap;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,6 +29,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 
 import com.leon.counter_reading.BuildConfig;
+import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.ImageViewAdapter;
 import com.leon.counter_reading.databinding.FragmentTakePhotoBinding;
 import com.leon.counter_reading.tables.Image;
@@ -45,7 +45,6 @@ import java.util.ArrayList;
 public class TakePhotoFragment extends DialogFragment {
     public static int replace = 0;
     private static TakePhotoFragment instance;
-    private Callback readingActivity;
     private FragmentTakePhotoBinding binding;
     private ImageViewAdapter imageViewAdapter;
     private int position, trackNumber;
@@ -236,10 +235,14 @@ public class TakePhotoFragment extends DialogFragment {
         }
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof Activity) readingActivity = (Callback) context;
+    public void setResult() {
+        try {
+            dismiss();
+            if (result)
+                ((ReadingActivity) requireActivity()).setPhotoResult(position);
+        } catch (Exception e) {
+            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+        }
     }
 
     @Override
@@ -253,17 +256,13 @@ public class TakePhotoFragment extends DialogFragment {
         super.onResume();
     }
 
-    public void setResult() {
-        try {
-            if (result)
-                readingActivity.setPhotoResult(position);
-            dismiss();
-        } catch (Exception e) {
-            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
-        }
-    }
-
-    public interface Callback {
-        void setPhotoResult(int position);
-    }
+//    private Callback readingActivity;
+//    @Override
+//    public void onAttach(@NonNull Context context) {
+//        super.onAttach(context);
+//        if (context instanceof Activity) readingActivity = (Callback) context;
+//    }
+//    public interface Callback {
+//        void setPhotoResult(int position);
+//    }
 }

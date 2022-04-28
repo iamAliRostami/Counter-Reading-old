@@ -352,6 +352,7 @@ public class ReadingFragment extends Fragment {
 
     private boolean lockProcess(final boolean canBeEmpty) {
         onOffLoadDto.attemptCount++;
+        ((ReadingActivity) activity).updateOnOffLoadByAttempt(position);
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount + 1 == getLockNumber(getActiveCompanyName()))
             new CustomToast().error(getString(R.string.mistakes_error).concat(onOffLoadDto.eshterak)
                             .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
@@ -362,7 +363,6 @@ public class ReadingFragment extends Fragment {
                     concat(onOffLoadDto.eshterak).concat(getString(R.string.is_locked))
                     .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
                     .concat(String.valueOf(textViewId)), Toast.LENGTH_SHORT);
-        ((ReadingActivity) activity).updateOnOffLoadByAttempt(position);
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= getLockNumber(getActiveCompanyName())) {
             onOffLoadDto.isLocked = true;
             textView.setText("");

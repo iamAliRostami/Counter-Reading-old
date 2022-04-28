@@ -370,10 +370,7 @@ public class PossibleFragment extends DialogFragment {
             binding.linearLayoutKarbari.setVisibility(View.GONE);
             binding.editTextSearch.setVisibility(View.GONE);
         }
-
-
     }
-
 
     @Override
     public void onResume() {
