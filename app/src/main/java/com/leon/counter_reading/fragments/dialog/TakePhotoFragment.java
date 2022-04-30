@@ -140,7 +140,7 @@ public class TakePhotoFragment extends DialogFragment {
     }
 
     public void openResourceForResult() {
-        Log.e("checkBoxGallery", String.valueOf(binding.checkBoxGallery.isChecked()));
+//        Log.e("checkBoxGallery", String.valueOf(binding.checkBoxGallery.isChecked()));
         if (binding.checkBoxGallery.isChecked()) openGalleryForResult();
         else openCameraForResult();
     }

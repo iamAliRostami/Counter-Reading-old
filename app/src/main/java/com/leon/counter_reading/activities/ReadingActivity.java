@@ -298,8 +298,13 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                final FragmentManager manager = getSupportFragmentManager();
-                manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                try {
+                    final FragmentManager manager = getSupportFragmentManager();
+                    manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
 //                try {
 //                    manager.executePendingTransactions();
 //                } catch (Exception e) {
@@ -329,6 +334,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     }
 
     private void attemptSend(int position, boolean isForm, boolean isImage) {
+        //TODO
         if (isForm && (sharedPreferenceManager.getBoolData(SERIAL.getValue())
                 || sharedPreferenceManager.getBoolData(AHAD_2.getValue())
                 || sharedPreferenceManager.getBoolData(AHAD_1.getValue())
@@ -355,6 +361,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                     isShowing = true;
             }
             if (isShowing) {
+                updateAdapter(position);
                 isShowing = false;
                 makeRing(activity, SAVE);
                 Location location = null;

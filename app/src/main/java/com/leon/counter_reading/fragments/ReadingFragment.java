@@ -401,11 +401,11 @@ public class ReadingFragment extends Fragment {
             makeRing(activity, NOT_SAVE);
             String message = getString(R.string.counter_empty);
             textView.setError(message);
+            textView.requestFocus();
             message = message.concat("\n").concat(onOffLoadDto.eshterak)
                     .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
                     .concat(String.valueOf(textViewId));
             new CustomToast().warning(message, Toast.LENGTH_LONG);
-            textView.requestFocus();
         } else if (lockProcess(false)) {
             final int currentNumber = getDigits(textView.getText().toString());
             final int use = currentNumber - onOffLoadDto.preNumber;
@@ -415,11 +415,11 @@ public class ReadingFragment extends Fragment {
                 makeRing(activity, NOT_SAVE);
                 String message = getString(R.string.less_than_pre);
                 textView.setError(message);
+                textView.requestFocus();
                 message = message.concat("\n").concat(onOffLoadDto.eshterak)
                         .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
                         .concat(String.valueOf(textViewId));
                 new CustomToast().warning(message, Toast.LENGTH_LONG);
-                textView.requestFocus();
             } else {
                 notEmpty(currentNumber);
             }
