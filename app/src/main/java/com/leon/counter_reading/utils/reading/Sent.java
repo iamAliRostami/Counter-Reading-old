@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.leon.counter_reading.enums.OffloadStateEnum;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.CustomToast;
 

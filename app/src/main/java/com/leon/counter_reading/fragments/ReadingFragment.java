@@ -27,7 +27,9 @@ import static com.leon.counter_reading.utils.reading.Counting.checkHighLow;
 import static com.leon.counter_reading.utils.reading.Counting.checkHighLowMakoos;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -428,7 +430,7 @@ public class ReadingFragment extends Fragment {
 
     private void lessThanPre(int currentNumber) {
         if (!isMakoos)
-            ((ReadingActivity) activity).updateOnOffLoadByCounterNumber(position, currentNumber,
+            ((ReadingActivity) activity).updateOnOffLoadByNumber(position, currentNumber,
                     counterStateCode, counterStatePosition);
         else {
             notEmptyIsMakoos(currentNumber);
@@ -450,7 +452,7 @@ public class ReadingFragment extends Fragment {
                     type = LOW.getValue();
                     break;
                 case 0:
-                    ((ReadingActivity) activity).updateOnOffLoadByCounterNumber(position,
+                    ((ReadingActivity) activity).updateOnOffLoadByNumber(position,
                             currentNumber, counterStateCode, counterStatePosition, NORMAL.getValue());
                     break;
             }
@@ -476,7 +478,7 @@ public class ReadingFragment extends Fragment {
                     type = LOW.getValue();
                     break;
                 case 0:
-                    ((ReadingActivity) activity).updateOnOffLoadByCounterNumber(position,
+                    ((ReadingActivity) activity).updateOnOffLoadByNumber(position,
                             currentNumber, counterStateCode, counterStatePosition, NORMAL.getValue());
                     break;
             }
@@ -497,7 +499,13 @@ public class ReadingFragment extends Fragment {
     }
 
     private final View.OnClickListener onKeyboardClickListener = view -> {
-//        makeVibrate(requireContext(), 100);
+        try {
+//            makeVibrate(requireContext(), 100);
+            final AudioManager am = (AudioManager) requireContext().getSystemService(Context.AUDIO_SERVICE);
+            am.playSoundEffect(AudioManager.FX_KEY_CLICK, 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         final int id = view.getId();
         if (id == R.id.image_button_show_keyboard || id == R.id.image_button_hide_keyboard) {
             FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;

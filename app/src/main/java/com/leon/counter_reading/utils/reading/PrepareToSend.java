@@ -26,8 +26,6 @@ import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.CustomErrorHandling;
 import com.leon.counter_reading.utils.CustomToast;
 
-import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -45,7 +43,7 @@ public class PrepareToSend extends AsyncTask<Activity, Integer, Integer> {
     @Override
     protected Integer doInBackground(Activity... activities) {
         offLoadData.isFinal = false;
-        offLoadData.offLoads = new ArrayList<>(getApplicationComponent().MyDatabase().
+        offLoadData.offLoads.addAll(getApplicationComponent().MyDatabase().
                 onOffLoadDao().getAllOnOffLoadInsert(INSERTED.getValue(), true));
         offLoadData.offLoadReports.addAll(getApplicationComponent().MyDatabase().offLoadReportDao().
                 getAllOffLoadReportByActive(true, false));

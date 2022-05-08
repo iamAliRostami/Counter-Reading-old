@@ -19,7 +19,6 @@ import androidx.fragment.app.DialogFragment;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.databinding.FragmentAreYouSureBinding;
-import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.HighLowStateEnum;
 import com.leon.counter_reading.enums.NotificationType;
 
@@ -87,7 +86,7 @@ public class AreYouSureFragment extends DialogFragment {
         binding.buttonSubmit.setOnClickListener(v -> {
             dismiss();
             ((ReadingActivity) requireActivity()).
-                    updateOnOffLoadByCounterNumber(position, currentNumber, counterStateCode,
+                    updateOnOffLoadByNumber(position, currentNumber, counterStateCode,
                             counterStatePosition, type);
         });
         binding.buttonClose.setOnClickListener(v -> dismiss());

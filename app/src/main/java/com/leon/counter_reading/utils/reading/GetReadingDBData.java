@@ -19,8 +19,6 @@ import android.widget.Toast;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
-import com.leon.counter_reading.enums.ReadStatusEnum;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.MyDatabase;
@@ -66,7 +64,7 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
 
     @Override
     protected Integer doInBackground(Activity... activities) {
-        MyDatabase myDatabase = getApplicationComponent().MyDatabase();
+        final MyDatabase myDatabase = getApplicationComponent().MyDatabase();
         readingData.trackingDtos.addAll(myDatabase.trackingDao().
                 getTrackingDtosIsActiveNotArchive(true, false));
         for (int i = 0, trackingDtosSize = readingData.trackingDtos.size(); i < trackingDtosSize; i++) {

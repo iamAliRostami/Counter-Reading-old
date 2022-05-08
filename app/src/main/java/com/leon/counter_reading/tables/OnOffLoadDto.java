@@ -28,12 +28,11 @@ public class OnOffLoadDto {
     public int ahadTejariOrFari;
     public int ahadSaierOrAbBaha;
     public int qotrCode;
-    @Ignore
-    public String qotr;
     public int sifoonQotrCode;
     @Ignore
+    public String qotr;
+    @Ignore
     public String sifoonQotr;
-
     @Ignore
     public boolean hasPreNumber;
     @Ignore
@@ -70,11 +69,8 @@ public class OnOffLoadDto {
     public int possibleEmpty;
     public int possibleKarbariCode;
     public String description;
-    //    @Ignore
     public String phoneDateTime;
-    //    @Ignore
     public String locationDateTime;
-    //TODO
     public String d1;
     public String d2;
     public int offLoadStateId;
@@ -124,7 +120,7 @@ public class OnOffLoadDto {
 
         public OffLoad(OnOffLoadDto onOffLoadDto) {
             id = onOffLoadDto.id;
-            counterNumber = onOffLoadDto.counterNumber;//TODO
+            counterNumber = onOffLoadDto.counterNumber;
             counterStateId = onOffLoadDto.counterStateId;
             possibleAddress = onOffLoadDto.possibleAddress;
             possibleCounterSerial = onOffLoadDto.possibleCounterSerial;
@@ -153,9 +149,9 @@ public class OnOffLoadDto {
 
     public static class OffLoadData {
         public final ArrayList<OffLoadReport> offLoadReports;
-        public boolean isFinal;//TODO upload or reading
+        public final ArrayList<OffLoad> offLoads;
         public int finalTrackNumber;
-        public ArrayList<OffLoad> offLoads;
+        public boolean isFinal;
 
         public OffLoadData() {
             offLoadReports = new ArrayList<>();

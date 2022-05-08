@@ -353,7 +353,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     private void lessThanPre(int currentNumber, int position) {
         if (!isMakoos)
-            ((ReadingActivity) activity).updateOnOffLoadByCounterNumber(position, currentNumber,
+            ((ReadingActivity) activity).updateOnOffLoadByNumber(position, currentNumber,
                     counterStateCode, counterStatePosition);
         else {
             notEmptyIsMakoos(currentNumber, position);
@@ -386,7 +386,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                     areYouSureFragment.show(fragmentManager, activity.getString(R.string.use_out_of_range));
                     break;
                 case 0:
-                    ((ReadingActivity) activity).updateOnOffLoadByCounterNumber(position,
+                    ((ReadingActivity) activity).updateOnOffLoadByNumber(position,
                             currentNumber, counterStateCode, counterStatePosition,
                             HighLowStateEnum.NORMAL.getValue());
                     break;
@@ -419,7 +419,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                     areYouSureFragment.show(fragmentManager, activity.getString(R.string.use_out_of_range));
                     break;
                 case 0:
-                    ((ReadingActivity) activity).updateOnOffLoadByCounterNumber(position,
+                    ((ReadingActivity) activity).updateOnOffLoadByNumber(position,
                             currentNumber, counterStateCode, counterStatePosition,
                             HighLowStateEnum.NORMAL.getValue());
                     break;

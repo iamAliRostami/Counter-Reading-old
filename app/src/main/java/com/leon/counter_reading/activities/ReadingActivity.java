@@ -13,6 +13,7 @@ import static com.leon.counter_reading.enums.NotificationType.LIGHT_ON;
 import static com.leon.counter_reading.enums.NotificationType.SAVE;
 import static com.leon.counter_reading.enums.OffloadStateEnum.INSERTED;
 import static com.leon.counter_reading.enums.SearchTypeEnum.All;
+import static com.leon.counter_reading.enums.SearchTypeEnum.PAGE_NUMBER;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.ACCOUNT;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.ADDRESS;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_1;
@@ -34,6 +35,7 @@ import static com.leon.counter_reading.helpers.Constants.DESCRIPTION;
 import static com.leon.counter_reading.helpers.Constants.NAVIGATION;
 import static com.leon.counter_reading.helpers.Constants.OFFLINE_ATTEMPT;
 import static com.leon.counter_reading.helpers.Constants.REPORT;
+import static com.leon.counter_reading.helpers.Constants.onOffLoadDtos;
 import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
@@ -68,7 +70,6 @@ import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReadingBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.BundleEnum;
-import com.leon.counter_reading.enums.SearchTypeEnum;
 import com.leon.counter_reading.fragments.dialog.CounterPlaceFragment;
 import com.leon.counter_reading.fragments.dialog.NavigationFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
@@ -143,7 +144,6 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     @SuppressLint("NotifyDataSetChanged")
     private void updateAdapter(int position) {
         try {
-            runOnUiThread(() -> viewPagerAdapterReading.notifyDataSetChanged());
             int i = 0;
             boolean found = false;
             while (!found && i < readingDataTemp.onOffLoadDtos.size()) {
@@ -153,6 +153,9 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 }
                 i++;
             }
+            //TODO
+            onOffLoadDtos.set(position, readingData.onOffLoadDtos.get(position));
+            runOnUiThread(() -> viewPagerAdapterReading.notifyDataSetChanged());
         } catch (Exception e) {
             runOnUiThread(() -> new CustomDialogModel(Red, activity, e.getMessage(),
                     getString(R.string.dear_user), getString(R.string.take_screen_shot),
@@ -163,19 +166,19 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     public void updateOnOffLoadByPreNumber(int position) {
         readingData.onOffLoadDtos.get(position).counterNumberShown = true;
         readingData.onOffLoadDtos.get(position).isBazdid = true;
-        updateAdapter(position);
         new UpdateOnOffLoadByIsShown(readingData.onOffLoadDtos.get(position)).execute();
+        updateAdapter(position);
     }
 
     public void updateOnOffLoadByAttempt(int position) {
-        updateAdapter(position);
         new UpdateOnOffLoadByAttemptNumber(readingData.onOffLoadDtos.get(position)).execute();
+        updateAdapter(position);
     }
 
     public void updateOnOffLoadByLock(int position) {
         readingData.onOffLoadDtos.get(position).isLocked = true;
-        updateAdapter(position);
         new UpdateOnOffLoadDtoByLock(readingData.onOffLoadDtos.get(position)).execute();
+        updateAdapter(position);
     }
 
     public void updateOnOffLoadWithoutCounterNumber(int position, int counterStateCode,
@@ -193,17 +196,17 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
         attemptSend(position, false, false);
     }
 
-    public void updateOnOffLoadByCounterNumber(int position, int number, int counterStateCode,
-                                               int counterStatePosition) {
+    public void updateOnOffLoadByNumber(int position, int number, int counterStateCode,
+                                        int counterStatePosition) {
         updateOnOffLoad(position, counterStateCode, counterStatePosition);
         readingData.onOffLoadDtos.get(position).counterNumber = number;
         attemptSend(position, true, true);
     }
 
-    public void updateOnOffLoadByCounterNumber(int position, int number, int counterStateCode,
-                                               int counterStatePosition, int type) {
+    public void updateOnOffLoadByNumber(int position, int number, int counterStateCode,
+                                        int counterStatePosition, int type) {
         readingData.onOffLoadDtos.get(position).highLowStateId = type;
-        updateOnOffLoadByCounterNumber(position, number, counterStateCode, counterStatePosition);
+        updateOnOffLoadByNumber(position, number, counterStateCode, counterStatePosition);
     }
 
     public void updateOnOffLoadByNavigation(int position, OnOffLoadDto onOffLoadDto, boolean justMobile) {
@@ -238,7 +241,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     }
 
     public void search(int type, String key, boolean goToPage) {
-        if (type == SearchTypeEnum.PAGE_NUMBER.getValue()) {
+        if (type == PAGE_NUMBER.getValue()) {
             runOnUiThread(() -> binding.viewPager.setCurrentItem(Integer.parseInt(key) - 1));
         } else if (type == All.getValue()) {
             readingData.onOffLoadDtos.clear();
@@ -266,17 +269,15 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     private void setupViewPagerAdapter() {
         runOnUiThread(() -> {
             viewPagerAdapterReading = new ViewPagerStateAdapter2(this, readingData);
-//            viewPagerAdapterReading = new ViewPagerStateAdapter2(getSupportFragmentManager(), readingData);
             try {
                 binding.viewPager.setOffscreenPageLimit(1);
                 binding.viewPager.setAdapter(viewPagerAdapterReading);
-                RecyclerView recyclerView = ((RecyclerView) (binding.viewPager.getChildAt(0)));
+                final RecyclerView recyclerView = ((RecyclerView) (binding.viewPager.getChildAt(0)));
                 if (recyclerView != null) {
                     recyclerView.setItemViewCacheSize(0);
                 }
                 if (getApplicationComponent().SharedPreferenceModel().getBoolData(RTL_PAGING.getValue()))
                     binding.viewPager.setRotationY(180);
-//                binding.viewPager.setCurrentItem(0);
             } catch (Exception e) {
                 new CustomToast().error(getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
             }
@@ -305,17 +306,6 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                     e.printStackTrace();
                 }
 
-//                try {
-//                    manager.executePendingTransactions();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                if (manager.getBackStackEntryCount() > 0) {
-//                    while (manager.getBackStackEntryCount() > 0) {
-//                        manager.popBackStackImmediate();
-//                    }
-//                }
-
                 if (readingData.onOffLoadDtos.get(position).isLocked)
                     new CustomToast().error(getString(R.string.by_mistakes)
                             .concat(readingData.onOffLoadDtos.get(position).eshterak)
@@ -334,7 +324,6 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     }
 
     private void attemptSend(int position, boolean isForm, boolean isImage) {
-        //TODO
         if (isForm && (sharedPreferenceManager.getBoolData(SERIAL.getValue())
                 || sharedPreferenceManager.getBoolData(AHAD_2.getValue())
                 || sharedPreferenceManager.getBoolData(AHAD_1.getValue())
