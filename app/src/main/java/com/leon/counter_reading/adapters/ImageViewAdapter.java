@@ -1,6 +1,6 @@
 package com.leon.counter_reading.adapters;
 
-import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.fragments.dialog.TakePhotoFragment.replace;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
@@ -90,7 +90,7 @@ public class ImageViewAdapter extends BaseAdapter {
 //                    ShowFragmentDialogOnce(context, "Image # 1", HighQualityFragment
 //                            .newInstance(holder.imageView.getDrawingCache()));
                     holder.imageView.invalidate();
-                    ShowFragmentDialogOnce(context, "Image # 1", HighQualityFragment
+                    ShowDialogOnce(context, "Image # 1", HighQualityFragment
                             .newInstance(((BitmapDrawable) holder.imageView.getDrawable()).getBitmap()));
                 }
                 return false;

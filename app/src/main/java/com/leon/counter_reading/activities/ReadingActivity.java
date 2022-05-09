@@ -28,7 +28,7 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SERIAL;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SORT_TYPE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.TOKEN;
-import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.Constants.CAMERA;
 import static com.leon.counter_reading.helpers.Constants.COUNTER_LOCATION;
 import static com.leon.counter_reading.helpers.Constants.DESCRIPTION;
@@ -153,7 +153,6 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 }
                 i++;
             }
-            //TODO
             onOffLoadDtos.set(position, readingData.onOffLoadDtos.get(position));
             runOnUiThread(() -> viewPagerAdapterReading.notifyDataSetChanged());
         } catch (Exception e) {
@@ -315,7 +314,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     }
 
     private void showImage(int position) {
-        ShowFragmentDialogOnce(activity, "TAKE_PHOTO_".concat(readingData.onOffLoadDtos
+        ShowDialogOnce(activity, "TAKE_PHOTO_".concat(readingData.onOffLoadDtos
                 .get(binding.viewPager.getCurrentItem()).eshterak), TakePhotoFragment
                 .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
@@ -343,7 +342,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                         .onOffLoadDtos.get(position).counterStatePosition);
                 if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
                         counterStateDto.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {
-                    ShowFragmentDialogOnce(activity, "SERIAL_DIALOG_".concat(readingData.onOffLoadDtos.get(position).eshterak),
+                    ShowDialogOnce(activity, "SERIAL_DIALOG_".concat(readingData.onOffLoadDtos.get(position).eshterak),
                             SerialFragment.newInstance(position, counterStateDto.id,
                                     readingData.onOffLoadDtos.get(position).counterStatePosition));
                 } else
@@ -369,7 +368,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     }
 
     private void showPossible(int position) {
-        ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG_".
+        ShowDialogOnce(activity, "SHOW_POSSIBLE_DIALOG_".
                         concat(readingData.onOffLoadDtos.get(position).eshterak),
                 PossibleFragment.newInstance(readingData.onOffLoadDtos.get(position), position, false));
     }
@@ -471,7 +470,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 if (readingData.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
-                    ShowFragmentDialogOnce(activity, "TAKE_PHOTO_"
+                    ShowDialogOnce(activity, "TAKE_PHOTO_"
                                     .concat(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id),
                             TakePhotoFragment.newInstance(readingData.onOffLoadDtos
                                             .get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
@@ -487,7 +486,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 if (readingData.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
-                    ShowFragmentDialogOnce(activity, "READING_REPORT", ReadingReportFragment.newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
+                    ShowDialogOnce(activity, "READING_REPORT", ReadingReportFragment.newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber,
                             binding.viewPager.getCurrentItem(),
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).zoneId));
@@ -501,7 +500,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 if (readingDataTemp.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
-                    ShowFragmentDialogOnce(activity, "SEARCH_DIALOG", new SearchFragment());
+                    ShowDialogOnce(activity, "SEARCH_DIALOG", new SearchFragment());
                 }
             });
         }
@@ -528,11 +527,11 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                ShowFragmentDialogOnce(activity, "NAVIGATION", NavigationFragment
+                ShowDialogOnce(activity, "NAVIGATION", NavigationFragment
                         .newInstance(binding.viewPager.getCurrentItem()));
             }
         } else if (id == R.id.menu_report_forbid) {
-            ShowFragmentDialogOnce(activity, "REPORT_FORBID", ReportForbidFragment.newInstance(
+            ShowDialogOnce(activity, "REPORT_FORBID", ReportForbidFragment.newInstance(
                     readingData.onOffLoadDtos.size() > 0 ? readingData.onOffLoadDtos
                             .get(binding.viewPager.getCurrentItem()).zoneId : 0));
         } else if (id == R.id.menu_description) {
@@ -554,7 +553,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                ShowFragmentDialogOnce(activity, "COUNTER_PLACE", CounterPlaceFragment
+                ShowDialogOnce(activity, "COUNTER_PLACE", CounterPlaceFragment
                         .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                                 binding.viewPager.getCurrentItem()));
             }

@@ -1,6 +1,6 @@
 package com.leon.counter_reading.fragments.reading_setting;
 
-import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -57,9 +57,9 @@ public class ReadingSettingDeleteFragment extends Fragment {
     void setOnButtonDeleteClickListener() {
         binding.buttonDelete.setOnClickListener(v -> {
             if (binding.spinner.getSelectedItemPosition() == 0) {
-                ShowFragmentDialogOnce(requireContext(), "DELETE_DIALOG", DeleteFragment.newInstance(""));
+                ShowDialogOnce(requireContext(), "DELETE_DIALOG", DeleteFragment.newInstance(""));
             } else {
-                ShowFragmentDialogOnce(requireContext(), "DELETE_DIALOG", DeleteFragment
+                ShowDialogOnce(requireContext(), "DELETE_DIALOG", DeleteFragment
                         .newInstance(trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id));
             }
         });

@@ -1,6 +1,6 @@
 package com.leon.counter_reading.adapters;
 
-import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.annotation.SuppressLint;
@@ -58,13 +58,13 @@ public class ReadingReportAdapter extends BaseAdapter {
                         .insertOffLoadReport(offLoadReport);
                 offLoadReports.add(offLoadReport);
                 if (counterReportDtos.get(position).isAhad) {
-                    ShowFragmentDialogOnce(context, "AHAD_DIALOG", AhadFragment.newInstance(uuid));
+                    ShowDialogOnce(context, "AHAD_DIALOG", AhadFragment.newInstance(uuid));
                 }
                 if (counterReportDtos.get(position).isTavizi) {
-                    ShowFragmentDialogOnce(context, "TAVIZ_DIALOG", TaviziFragment.newInstance(uuid));
+                    ShowDialogOnce(context, "TAVIZ_DIALOG", TaviziFragment.newInstance(uuid));
                 }
                 if (counterReportDtos.get(position).isKarbari) {
-                    ShowFragmentDialogOnce(context, "KARBARI_DIALOG", KarbariFragment.newInstance(uuid));
+                    ShowDialogOnce(context, "KARBARI_DIALOG", KarbariFragment.newInstance(uuid));
                 }
             } else {
                 for (int i = 0; i < offLoadReports.size(); i++) {

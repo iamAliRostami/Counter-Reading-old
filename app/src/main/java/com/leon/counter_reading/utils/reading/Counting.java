@@ -20,8 +20,7 @@ public class Counting {
         return dailyAverage(preNumber, currentNumber, preDate) * 30 / zarib;
     }
 
-    public static int checkHighLow(OnOffLoadDto onOffLoadDto,
-                                   KarbariDto karbariDto,
+    public static int checkHighLow(OnOffLoadDto onOffLoadDto, KarbariDto karbariDto,
                                    ReadingConfigDefaultDto readingConfigDefaultDto,
                                    int currentNumber) {
         double average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate);
@@ -85,11 +84,10 @@ public class Counting {
         return 0;
     }
 
-    public static int checkHighLowMakoos(OnOffLoadDto onOffLoadDto,
-                                         KarbariDto karbariDto,
+    public static int checkHighLowMakoos(OnOffLoadDto onOffLoadDto, KarbariDto karbariDto,
                                          ReadingConfigDefaultDto readingConfigDefaultDto,
                                          int currentNumber) {
-        int temp = onOffLoadDto.preNumber;
+        final int temp = onOffLoadDto.preNumber;
         onOffLoadDto.preNumber = currentNumber;
         currentNumber = temp;
         return checkHighLow(onOffLoadDto, karbariDto, readingConfigDefaultDto, currentNumber);

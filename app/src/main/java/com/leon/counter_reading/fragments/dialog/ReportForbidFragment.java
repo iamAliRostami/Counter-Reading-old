@@ -1,7 +1,7 @@
 package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.ZONE_ID;
-import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.CustomFile.bitmapToFile;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
@@ -244,7 +244,7 @@ public class ReportForbidFragment extends DialogFragment {
 
     private void setOnImageViewTakenClickListener() {
         binding.imageViewTaken.setOnClickListener(v ->
-                ShowFragmentDialogOnce(requireContext(), "Image # 1",
+                ShowDialogOnce(requireContext(), "Image # 1",
                         HighQualityFragment.newInstance(forbiddenDto.bitmaps.get(forbiddenDto.bitmaps.size() - 1))));
     }
 

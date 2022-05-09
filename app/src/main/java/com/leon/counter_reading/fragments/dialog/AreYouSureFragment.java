@@ -29,8 +29,7 @@ public class AreYouSureFragment extends DialogFragment {
     private int position, currentNumber, type, counterStateCode, counterStatePosition;
 
     public static AreYouSureFragment newInstance(int position, int number, int type,
-                                                 int counterStateCode, int counterStatePosition
-    ) {
+                                                 int counterStateCode, int counterStatePosition) {
         final AreYouSureFragment fragment = new AreYouSureFragment();
         final Bundle args = new Bundle();
         args.putInt(POSITION.getValue(), position);

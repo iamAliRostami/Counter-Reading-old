@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 public class ShowFragmentDialog {
-    public static void ShowFragmentDialogOnce(Context context, String tag, DialogFragment dialogFragment) {
+    public static void ShowDialogOnce(Context context, String tag, DialogFragment dialogFragment) {
         final FragmentTransaction ft = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
         final Fragment prev = ((AppCompatActivity) context).getSupportFragmentManager().findFragmentByTag(tag);
         if (prev == null) {

@@ -7,7 +7,7 @@ import static com.leon.counter_reading.enums.HighLowStateEnum.NORMAL;
 import static com.leon.counter_reading.enums.HighLowStateEnum.ZERO;
 import static com.leon.counter_reading.enums.NotificationType.NOT_SAVE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
-import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.STORAGE_PERMISSIONS;
@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -69,6 +71,7 @@ public class ReadingFragment extends Fragment {
     private KarbariDto karbariDto;
     private OnOffLoadDto onOffLoadDto;
     private ReadingConfigDefaultDto readingConfigDefaultDto;
+    private long lastClickTime = 0;
     private int position, counterStateCode, counterStatePosition, textViewId, buttonId;
     private boolean isMakoos, isMane, canLessThanPre, canEnterNumber, shouldEnterNumber;
     private TextView textView;
@@ -452,15 +455,19 @@ public class ReadingFragment extends Fragment {
                     type = LOW.getValue();
                     break;
                 case 0:
-                    ((ReadingActivity) activity).updateOnOffLoadByNumber(position,
-                            currentNumber, counterStateCode, counterStatePosition, NORMAL.getValue());
+                    ((ReadingActivity) activity).updateOnOffLoadByNumber(position, currentNumber,
+                            counterStateCode, counterStatePosition, NORMAL.getValue());
                     break;
             }
         }
         if (type != null) {
-            ShowFragmentDialogOnce(activity, "ARE_YOU_SURE_DIALOG_".concat(onOffLoadDto.eshterak),
-                    AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
-                            counterStatePosition));
+            final FragmentManager fm = requireActivity().getSupportFragmentManager();
+            AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
+                    counterStatePosition).show(fm, "ARE_YOU_SURE_".concat(onOffLoadDto.eshterak));
+
+//            ShowDialogOnce(activity, "ARE_YOU_SURE_".concat(onOffLoadDto.eshterak),
+//                    AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
+//                            counterStatePosition));
         }
     }
 
@@ -484,9 +491,12 @@ public class ReadingFragment extends Fragment {
             }
         }
         if (type != null) {
-            ShowFragmentDialogOnce(activity, "ARE_YOU_SURE_DIALOG_".concat(onOffLoadDto.eshterak),
-                    AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
-                            counterStatePosition));
+            final FragmentManager fm = requireActivity().getSupportFragmentManager();
+            AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
+                    counterStatePosition).show(fm, "ARE_YOU_SURE_".concat(onOffLoadDto.eshterak));
+//            ShowDialogOnce(activity, "ARE_YOU_SURE_".concat(onOffLoadDto.eshterak),
+//                    AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
+//                            counterStatePosition));
         }
     }
 
@@ -538,15 +548,18 @@ public class ReadingFragment extends Fragment {
     };
     private final View.OnClickListener onClickListener = view -> {
         final int id = view.getId();
-        if (id == buttonId) checkPermissions();
-        else if (id == R.id.text_view_pre_number) {
+        if (id == buttonId) {
+            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) {
+                return;
+            }
+            lastClickTime = SystemClock.elapsedRealtime();
+            checkPermissions();
+        } else if (id == R.id.text_view_pre_number) {
             if (onOffLoadDto.hasPreNumber) {
                 activity.runOnUiThread(() ->
                         binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber)));
                 ((ReadingActivity) activity).updateOnOffLoadByPreNumber(position);
-            } else {
-                new CustomToast().warning(getString(R.string.can_not_show_pre));
-            }
+            } else new CustomToast().warning(getString(R.string.can_not_show_pre));
         } else if (id == textViewId /*R.id.edit_text_number*/)
             if (!onOffLoadDto.isLocked && (shouldEnterNumber || canEnterNumber))
                 binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
@@ -555,7 +568,7 @@ public class ReadingFragment extends Fragment {
     private final View.OnLongClickListener onLongClickListener = view -> {
         final int id = view.getId();
         if (id == R.id.text_view_address)
-            ShowFragmentDialogOnce(activity, "SHOW_POSSIBLE_DIALOG_".concat(onOffLoadDto.eshterak),
+            ShowDialogOnce(activity, "SHOW_POSSIBLE_DIALOG_".concat(onOffLoadDto.eshterak),
                     PossibleFragment.newInstance(onOffLoadDto, position, true));
         else if (id == textViewId)
             textView.setText("");

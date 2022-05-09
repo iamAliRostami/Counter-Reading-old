@@ -1,6 +1,6 @@
 package com.leon.counter_reading.adapters;
 
-import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.annotation.SuppressLint;
@@ -72,7 +72,7 @@ public class ReadingSettingAdapter extends BaseAdapter {
         });
         holder.imageViewMap1.setOnClickListener(v -> {
             if (checkLocation(trackingDto)) {
-                ShowFragmentDialogOnce(context, "ROAD_MAP_DIALOG", RoadMapFragment
+                ShowDialogOnce(context, "ROAD_MAP_DIALOG", RoadMapFragment
                         .newInstance(trackingDtos.get(position).x, trackingDtos.get(position).y));
             }
         });
