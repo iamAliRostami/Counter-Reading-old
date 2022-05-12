@@ -4,6 +4,7 @@ import static com.leon.counter_reading.helpers.Constants.counterStateDtos;
 import static com.leon.counter_reading.helpers.Constants.karbariDtos;
 import static com.leon.counter_reading.helpers.Constants.onOffLoadDtos;
 import static com.leon.counter_reading.helpers.Constants.readingConfigDefaultDtos;
+import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
 import android.widget.Toast;
 
@@ -75,12 +76,12 @@ public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
     public Fragment createFragment(int i) {
         try {
             if (counterStateDtos.isEmpty()) {
-                new CustomToast().error(MyApplication.getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
+                new CustomToast().error(getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
                 return ReadingFragment.newInstance(i);
             }
             return ReadingFragment.newInstance(i);
         } catch (Exception e) {
-            new CustomToast().error(MyApplication.getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
+            new CustomToast().error(getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
             return ReadingFragment.newInstance(i);
         }
     }

@@ -2,8 +2,10 @@ package com.leon.counter_reading.fragments;
 
 
 import static com.leon.counter_reading.enums.BundleEnum.TYPE;
+import static com.leon.counter_reading.utils.CustomFile.getFileSize;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +14,6 @@ import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentDownloadBinding;
-import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.utils.downloading.Download;
 
 import org.jetbrains.annotations.NotNull;
@@ -48,6 +49,8 @@ public class DownloadFragment extends Fragment {
     }
 
     void initialize() {
+        Log.e("Size", String.valueOf(getFileSize(requireContext().getExternalFilesDir(null)) / (1024 * 1024)));
+
         binding.imageViewDownload.setImageResource(imageSrc[type]);
         setOnButtonDownloadClickListener();
     }
