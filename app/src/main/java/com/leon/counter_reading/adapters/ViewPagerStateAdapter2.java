@@ -15,7 +15,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.fragments.ReadingFragment;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.utils.CustomToast;

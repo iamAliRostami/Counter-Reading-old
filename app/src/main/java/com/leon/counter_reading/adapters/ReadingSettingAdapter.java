@@ -51,7 +51,6 @@ public class ReadingSettingAdapter extends BaseAdapter {
         holder.textViewStartDate.setText(trackingDto.fromDate);
         holder.textViewEndDate.setText(trackingDto.toDate);
         holder.textViewNumber.setText(String.valueOf(trackingDto.itemQuantity));
-        //TODO
         if (zoneId > 0 && trackingDtos.get(position).zoneId != zoneId && trackingDtos.get(position).isActive) {
             getApplicationComponent().MyDatabase().trackingDao()
                     .updateTrackingDtoByStatus(trackingDtos.get(position).id, false);

@@ -132,6 +132,4 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void setCurrentDir(UsbFile dir) {
         currentDir = dir;
     }
-
-
 }

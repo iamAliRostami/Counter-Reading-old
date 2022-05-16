@@ -72,7 +72,6 @@ public class ImageViewAdapter extends BaseAdapter {
             }
         });
         if (position < images.size()) {
-
             holder.imageView.setImageBitmap(loadImage(getContext(), images.get(position).address));
             holder.textViewSize.setText(String.valueOf(images.get(position).size / 1024).concat(" کیلوبایت"));
             holder.imageView.setOnLongClickListener(v -> {
@@ -99,4 +98,3 @@ public class ImageViewAdapter extends BaseAdapter {
         TakePhotoFragment.newInstance().openResourceForResult();
     }
 }
-

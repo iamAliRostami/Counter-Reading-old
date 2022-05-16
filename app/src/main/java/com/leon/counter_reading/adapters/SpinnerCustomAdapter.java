@@ -26,7 +26,7 @@ public class SpinnerCustomAdapter extends BaseAdapter implements Serializable {
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
         view = inflater.inflate(R.layout.item_dropdown_menu, null);
-        TextView item = view.findViewById(R.id.text_view);
+        final TextView item = view.findViewById(R.id.text_view);
         item.setText(items[position]);
         return view;
     }

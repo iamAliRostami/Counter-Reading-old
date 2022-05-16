@@ -49,7 +49,7 @@ public class EmptyRecyclerView extends RecyclerView {
 
     private void updateEmptyView() {
         if (emptyView != null && getAdapter() != null) {
-            boolean showEmptyView = getAdapter().getItemCount() == 0;
+            final boolean showEmptyView = getAdapter().getItemCount() == 0;
             emptyView.setVisibility(showEmptyView ? VISIBLE : GONE);
             sortByLinearLayout.setVisibility(showEmptyView ? GONE : VISIBLE);
             setVisibility(showEmptyView ? GONE : VISIBLE);
