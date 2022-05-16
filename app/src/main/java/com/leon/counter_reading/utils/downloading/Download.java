@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
-import com.leon.counter_reading.fragments.download.upload.DownloadFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
@@ -33,7 +32,6 @@ public class Download extends AsyncTask<Activity, Void, Void> {
     protected Void doInBackground(Activity... activities) {
         final Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-        //TODO
         final Call<ReadingData> call = iAbfaService.loadData(BuildConfig.VERSION_CODE);
         activities[0].runOnUiThread(() ->
                 HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activities[0],

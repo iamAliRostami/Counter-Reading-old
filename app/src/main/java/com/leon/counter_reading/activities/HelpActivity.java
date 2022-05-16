@@ -33,8 +33,8 @@ public class HelpActivity extends BaseActivity {
     @Override
     protected void initialize() {
         binding = ActivityHelpBinding.inflate(getLayoutInflater());
-        View childLayout = binding.getRoot();
-        ConstraintLayout parentLayout = findViewById(R.id.base_Content);
+        final View childLayout = binding.getRoot();
+        final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
         activity = this;
         try {
@@ -74,18 +74,17 @@ public class HelpActivity extends BaseActivity {
 
     private void openPdfFromRaw() throws IOException {
         // Copy sample.pdf from 'res/raw' folder into cache so PdfRenderer can handle it
-        File fileCopy = new File(getCacheDir(), "HELP_" + BuildConfig.VERSION_CODE + "_PAGE_".concat(String.valueOf(pageNumber)));
+        final File fileCopy = new File(getCacheDir(), "HELP_" + BuildConfig.VERSION_CODE +
+                "_PAGE_".concat(String.valueOf(pageNumber)));
 //        copyToCache(fileCopy, R.raw.sample);
         copyToCache(fileCopy, R.raw.counter_reading);
         // We get a page from the PDF doc by calling 'open'
-        ParcelFileDescriptor fileDescriptor =
-                ParcelFileDescriptor.open(fileCopy,
-                        ParcelFileDescriptor.MODE_READ_ONLY);
-        PdfRenderer mPdfRenderer = new PdfRenderer(fileDescriptor);
+        final ParcelFileDescriptor fileDescriptor = ParcelFileDescriptor.open(fileCopy,
+                ParcelFileDescriptor.MODE_READ_ONLY);
+        final PdfRenderer mPdfRenderer = new PdfRenderer(fileDescriptor);
         PdfRenderer.Page mPdfPage = mPdfRenderer.openPage(pageNumber);
         // Create a new bitmap and render the page contents into it
-        Bitmap bitmap = Bitmap.createBitmap(mPdfPage.getWidth(),
-                mPdfPage.getHeight(),
+        final Bitmap bitmap = Bitmap.createBitmap(mPdfPage.getWidth(), mPdfPage.getHeight(),
                 Bitmap.Config.ARGB_8888);
         mPdfPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
         // Set the bitmap in the ImageView
@@ -95,9 +94,9 @@ public class HelpActivity extends BaseActivity {
     void copyToCache(File file, @RawRes int pdfResource) throws IOException {
         if (!file.exists()) {
             //Get input stream object to read the pdf
-            InputStream input = getResources().openRawResource(pdfResource);
-            FileOutputStream output = new FileOutputStream(file);
-            byte[] buffer = new byte[1024];
+            final InputStream input = getResources().openRawResource(pdfResource);
+            final FileOutputStream output = new FileOutputStream(file);
+            final byte[] buffer = new byte[1024];
             int size;
             // Copy the entire contents of the file
             while ((size = input.read(buffer)) != -1) {
@@ -119,7 +118,7 @@ public class HelpActivity extends BaseActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_contact_us) {
-            Intent intent = new Intent(activity, ContactUsActivity.class);
+            final Intent intent = new Intent(activity, ContactUsActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

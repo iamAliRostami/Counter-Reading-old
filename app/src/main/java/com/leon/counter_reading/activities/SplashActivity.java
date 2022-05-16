@@ -48,7 +48,7 @@ public class SplashActivity extends AppCompatActivity {
                     e.printStackTrace();
                 } finally {
                     splashLoaded = true;
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    final Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -81,13 +81,6 @@ public class SplashActivity extends AppCompatActivity {
         binding.shimmerViewContainer.setShimmer(null);
         binding.imageViewSplashScreen.setImageDrawable(null);
         binding = null;
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
         super.onDestroy();
     }
 }

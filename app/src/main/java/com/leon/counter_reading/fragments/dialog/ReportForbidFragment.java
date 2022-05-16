@@ -46,31 +46,31 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class ReportForbidFragment extends DialogFragment {
-    private final ForbiddenDto forbiddenDto = new ForbiddenDto();
     private FragmentReportForbidBinding binding;
-    private final ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null &&
-                        result.getData().getData() != null) {
-                    try {
-                        final InputStream inputStream = requireContext().getContentResolver()
-                                .openInputStream(result.getData().getData());
-                        addImage(compressBitmap(BitmapFactory.decodeStream(inputStream)));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-    private int zoneId;
+    private final ForbiddenDto forbiddenDto = new ForbiddenDto();
     private String path;
-    private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    addImage(compressBitmap(BitmapFactory.decodeFile(path)));
-                }
-            });
+    private int zoneId;
+    private final ActivityResultLauncher<Intent> galleryActivityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null &&
+                                result.getData().getData() != null) {
+                            try {
+                                final InputStream inputStream = requireContext().getContentResolver()
+                                        .openInputStream(result.getData().getData());
+                                addImage(compressBitmap(BitmapFactory.decodeStream(inputStream)));
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+    private final ActivityResultLauncher<Intent> cameraActivityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            addImage(compressBitmap(BitmapFactory.decodeFile(path)));
+                        }
+                    });
 
     public ReportForbidFragment() {
     }
@@ -105,7 +105,6 @@ public class ReportForbidFragment extends DialogFragment {
                 new InputFilter.LengthFilter(getEshterakMaxLength(getActiveCompanyName()))});
         binding.editTextPreAccount.setFilters(new InputFilter[]{
                 new InputFilter.LengthFilter(getEshterakMaxLength(getActiveCompanyName()))});
-
         forbiddenDto.File = new ArrayList<>();
         forbiddenDto.bitmaps = new ArrayList<>();
         setOnButtonPhotoClickListener();
@@ -250,7 +249,6 @@ public class ReportForbidFragment extends DialogFragment {
                 dialog.dismiss();
                 openCameraForResult();
             });
-            builder.setNeutralButton("", (dialog, which) -> dialog.dismiss());
             builder.create().show();
         });
     }

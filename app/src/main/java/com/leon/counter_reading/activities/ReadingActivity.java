@@ -104,14 +104,15 @@ import java.util.ArrayList;
 public class ReadingActivity extends BaseActivity implements ReadingReportFragment.Callback,
         CounterPlaceFragment.Callback, NavigationFragment.Callback {
     public static int offlineAttempts = 0;
-    private int[] imageSrc;
-    private ActivityReadingBinding binding;
-    private Activity activity;
+
+    private ViewPagerStateAdapter2 viewPagerAdapterReading;
     private IFlashLightManager flashLightManager;
     private ISharedPreferenceManager sharedPreferenceManager;
+    private ActivityReadingBinding binding;
+    private Activity activity;
+    private int[] imageSrc;
     private int readStatus = 0, highLow = 1;
     private boolean isShowing = false;
-    private ViewPagerStateAdapter2 viewPagerAdapterReading;
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -368,8 +369,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     }
 
     private void showPossible(int position) {
-        ShowDialogOnce(activity, "SHOW_POSSIBLE_DIALOG_".
-                        concat(readingData.onOffLoadDtos.get(position).eshterak),
+        ShowDialogOnce(activity, "SHOW_POSSIBLE_DIALOG_".concat(readingData.onOffLoadDtos.get(position).eshterak),
                 PossibleFragment.newInstance(readingData.onOffLoadDtos.get(position), position, false));
     }
 
@@ -517,7 +517,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
+        final int id = item.getItemId();
         Intent intent;
         if (id == R.id.menu_sort) {
             item.setChecked(!item.isChecked());

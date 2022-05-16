@@ -464,10 +464,6 @@ public class ReadingFragment extends Fragment {
             final FragmentManager fm = requireActivity().getSupportFragmentManager();
             AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
                     counterStatePosition).show(fm, "ARE_YOU_SURE_".concat(onOffLoadDto.eshterak));
-
-//            ShowDialogOnce(activity, "ARE_YOU_SURE_".concat(onOffLoadDto.eshterak),
-//                    AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
-//                            counterStatePosition));
         }
     }
 
@@ -494,9 +490,6 @@ public class ReadingFragment extends Fragment {
             final FragmentManager fm = requireActivity().getSupportFragmentManager();
             AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
                     counterStatePosition).show(fm, "ARE_YOU_SURE_".concat(onOffLoadDto.eshterak));
-//            ShowDialogOnce(activity, "ARE_YOU_SURE_".concat(onOffLoadDto.eshterak),
-//                    AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
-//                            counterStatePosition));
         }
     }
 
@@ -510,7 +503,6 @@ public class ReadingFragment extends Fragment {
 
     private final View.OnClickListener onKeyboardClickListener = view -> {
         try {
-//            makeVibrate(requireContext(), 100);
             final AudioManager am = (AudioManager) requireContext().getSystemService(Context.AUDIO_SERVICE);
             am.playSoundEffect(AudioManager.FX_KEY_CLICK, 1);
         } catch (Exception e) {

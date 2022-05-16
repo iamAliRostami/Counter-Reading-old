@@ -1,6 +1,8 @@
 package com.leon.counter_reading.activities;
 
 import static com.leon.counter_reading.helpers.Constants.POSITION;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
 
 import android.content.Intent;
 import android.os.Debug;
@@ -13,14 +15,13 @@ import androidx.core.content.ContextCompat;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityHomeBinding;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 public class HomeActivity extends BaseActivity {
     private ActivityHomeBinding binding;
     private boolean exit = false;
 
     private final View.OnClickListener onClickListener = v -> {
-        int id = v.getId();
+        final int id = v.getId();
         Intent intent = new Intent();
         if (id == R.id.linear_layout_download) {
             POSITION = 0;
@@ -59,36 +60,36 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void initialize() {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
-        View childLayout = binding.getRoot();
-        ConstraintLayout parentLayout = findViewById(R.id.base_Content);
+        final View childLayout = binding.getRoot();
+        final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
 
-        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
+        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
 
         initializeImageViews();
         setOnImageViewClickListener();
     }
 
     void initializeImageViews() {
-        binding.imageViewAppSetting.setImageDrawable(ContextCompat.getDrawable(
-                getApplicationContext(), R.drawable.img_app_settings));
-        binding.imageViewDownload.setImageDrawable(ContextCompat.getDrawable(
-                getApplicationContext(), R.drawable.img_download_information));
-        binding.imageViewUpload.setImageDrawable(ContextCompat.getDrawable(
-                getApplicationContext(), R.drawable.img_upload));
-        binding.imageViewReadingSetting.setImageDrawable(ContextCompat.getDrawable(
-                getApplicationContext(), R.drawable.img_reading_settings));
-        binding.imageViewHelp.setImageDrawable(ContextCompat.getDrawable(
-                getApplicationContext(), R.drawable.img_help));
-        binding.imageViewExit.setImageDrawable(ContextCompat.getDrawable(
-                getApplicationContext(), R.drawable.img_exit));
-        binding.imageViewReading.setImageDrawable(ContextCompat.getDrawable(
-                getApplicationContext(), R.drawable.img_readings));
-        binding.imageViewReport.setImageDrawable(ContextCompat.getDrawable(
-                getApplicationContext(), R.drawable.img_reading_report));
-        binding.imageViewLocation.setImageDrawable(ContextCompat.getDrawable(
-                getApplicationContext(), R.drawable.img_location));
+        binding.imageViewAppSetting.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
+                R.drawable.img_app_settings));
+        binding.imageViewDownload.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
+                R.drawable.img_download_information));
+        binding.imageViewUpload.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
+                R.drawable.img_upload));
+        binding.imageViewReadingSetting.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
+                R.drawable.img_reading_settings));
+        binding.imageViewHelp.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
+                R.drawable.img_help));
+        binding.imageViewExit.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
+                R.drawable.img_exit));
+        binding.imageViewReading.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
+                R.drawable.img_readings));
+        binding.imageViewReport.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
+                R.drawable.img_reading_report));
+        binding.imageViewLocation.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
+                R.drawable.img_location));
     }
 
     void setOnImageViewClickListener() {
@@ -130,15 +131,7 @@ public class HomeActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         binding = null;
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
         if (exit)
             android.os.Process.killProcess(android.os.Process.myPid());
         super.onDestroy();

@@ -96,15 +96,9 @@ public class ReadingSettingActivity extends BaseActivity {
     }
 
     private void setPadding() {
-        binding.textViewRead.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewDelete.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewNavigation.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewRead.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewDelete.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewNavigation.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
     }
 
     private void setupViewPager() {

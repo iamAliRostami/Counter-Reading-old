@@ -1,5 +1,13 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.SharedReferenceKeys.DATE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME_TEMP;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
+
 import android.os.Bundle;
 import android.os.Debug;
 import android.widget.TextView;
@@ -10,10 +18,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityContactUsBinding;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 public class ContactUsActivity extends AppCompatActivity {
     private ActivityContactUsBinding binding;
@@ -21,8 +26,8 @@ public class ContactUsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        sharedPreferenceManager = MyApplication.getApplicationComponent().SharedPreferenceModel();
-        MyApplication.onActivitySetTheme(this, sharedPreferenceManager.getIntData(SharedReferenceKeys.THEME_STABLE.getValue()), true);
+        sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
+        onActivitySetTheme(this, sharedPreferenceManager.getIntData(THEME_STABLE.getValue()), true);
         super.onCreate(savedInstanceState);
         binding = ActivityContactUsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -30,16 +35,14 @@ public class ContactUsActivity extends AppCompatActivity {
     }
 
     void initialize() {
-        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
-
-        if (sharedPreferenceManager.checkIsNotEmpty(SharedReferenceKeys.USERNAME_TEMP.getValue()))
-            binding.textViewDate.setText(sharedPreferenceManager
-                    .getStringData(SharedReferenceKeys.DATE.getValue()));
+        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        if (sharedPreferenceManager.checkIsNotEmpty(USERNAME_TEMP.getValue()))
+            binding.textViewDate.setText(sharedPreferenceManager.getStringData(DATE.getValue()));
         binding.textViewVersion.setText(BuildConfig.VERSION_NAME);
         binding.textViewSite.setText(R.string.site);
-        binding.imageViewLogo.setImageDrawable(AppCompatResources.getDrawable(
-                getApplicationContext(), R.drawable.img_logo));
+        binding.imageViewLogo.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
+                R.drawable.img_logo));
     }
 
     @Override
@@ -58,13 +61,6 @@ public class ContactUsActivity extends AppCompatActivity {
     protected void onDestroy() {
         binding.imageViewLogo.setImageDrawable(null);
         binding = null;
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
         super.onDestroy();
     }
 }

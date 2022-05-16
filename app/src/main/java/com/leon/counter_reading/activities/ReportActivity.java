@@ -106,23 +106,15 @@ public class ReportActivity extends BaseActivity {
     }
 
     private void setPadding() {
-        binding.textViewTotal.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewNotRead.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewTemporary.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewPerformance.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewTotal.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewNotRead.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewTemporary.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewPerformance.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
     }
 
     public void setupViewPager(ArrayList<CounterStateDto> counterStateDtos,
-                               ArrayList<TrackingDto> trackingDtos, int zero,
-                               int normal, int high, int low, int total, int isMane, int unread) {
+                               ArrayList<TrackingDto> trackingDtos, int zero, int normal, int high,
+                               int low, int total, int isMane, int unread) {
         this.counterStateDtos = new ArrayList<>(counterStateDtos);
         this.trackingDtos = new ArrayList<>(trackingDtos);
 
@@ -190,13 +182,6 @@ public class ReportActivity extends BaseActivity {
         binding = null;
         counterStateDtos = null;
         trackingDtos = null;
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
         super.onDestroy();
     }
 }

@@ -1,5 +1,8 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Debug;
@@ -22,7 +25,6 @@ import com.leon.counter_reading.fragments.setting.SettingChangePasswordFragment;
 import com.leon.counter_reading.fragments.setting.SettingChangeThemeFragment;
 import com.leon.counter_reading.fragments.setting.SettingUpdateFragment;
 import com.leon.counter_reading.utils.DepthPageTransformer;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.backup_restore.BackUp;
 import com.leon.counter_reading.utils.backup_restore.Restore;
 
@@ -34,8 +36,8 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void initialize() {
         binding = ActivitySettingBinding.inflate(getLayoutInflater());
-        View childLayout = binding.getRoot();
-        ConstraintLayout parentLayout = findViewById(R.id.base_Content);
+        final View childLayout = binding.getRoot();
+        final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
         activity = this;
         setupViewPager();
@@ -43,8 +45,8 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void initializeTextViews() {
-        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
+        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
 
         textViewChangeTheme();
         textViewChangePassword();
@@ -55,8 +57,8 @@ public class SettingActivity extends BaseActivity {
     private void textViewChangeTheme() {
         binding.textViewChangeTheme.setOnClickListener(view -> {
             setColor();
-            binding.textViewChangeTheme.setBackground(
-                    ContextCompat.getDrawable(activity, R.drawable.border_white_2));
+            binding.textViewChangeTheme.setBackground(ContextCompat.getDrawable(activity,
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(0);
         });
@@ -65,8 +67,8 @@ public class SettingActivity extends BaseActivity {
     private void textViewChangePassword() {
         binding.textViewChangePassword.setOnClickListener(view -> {
             setColor();
-            binding.textViewChangePassword.
-                    setBackground(ContextCompat.getDrawable(activity, R.drawable.border_white_2));
+            binding.textViewChangePassword.setBackground(ContextCompat.getDrawable(activity,
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(1);
         });
@@ -75,8 +77,8 @@ public class SettingActivity extends BaseActivity {
     private void textViewUpdate() {
         binding.textViewUpdate.setOnClickListener(view -> {
             setColor();
-            binding.textViewUpdate.
-                    setBackground(ContextCompat.getDrawable(activity, R.drawable.border_white_2));
+            binding.textViewUpdate.setBackground(ContextCompat.getDrawable(activity,
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(2);
         });
@@ -85,8 +87,8 @@ public class SettingActivity extends BaseActivity {
     private void textViewAvatar() {
         binding.textViewChangeAvatar.setOnClickListener(view -> {
             setColor();
-            binding.textViewChangeAvatar.
-                    setBackground(ContextCompat.getDrawable(activity, R.drawable.border_white_2));
+            binding.textViewChangeAvatar.setBackground(ContextCompat.getDrawable(activity,
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(3);
         });
@@ -104,22 +106,14 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void setPadding() {
-        binding.textViewChangeTheme.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewUpdate.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewChangePassword.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewChangeAvatar.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewChangeTheme.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewUpdate.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewChangePassword.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewChangeAvatar.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
     }
 
     private void setupViewPager() {
-        ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
+        final ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
         adapter.addFragment(new SettingChangeThemeFragment());
         adapter.addFragment(new SettingChangePasswordFragment());
         adapter.addFragment(new SettingUpdateFragment());
@@ -190,13 +184,6 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
         super.onDestroy();
     }
 }

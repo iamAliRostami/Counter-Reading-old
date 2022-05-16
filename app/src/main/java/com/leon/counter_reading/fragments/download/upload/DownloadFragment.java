@@ -77,16 +77,9 @@ public class DownloadFragment extends Fragment {
             dialog.dismiss();
             new Download().execute(requireActivity());
         });
-        builder.setNegativeButton(R.string.close, (dialog, which) -> {
-            dialog.dismiss();
-        });
-        builder.setNeutralButton("", (dialog, which) -> dialog.dismiss());
+        builder.setNegativeButton(R.string.close, (dialog, which) -> dialog.dismiss());
         builder.create().show();
     }
-
-//    public void setButtonState() {
-//        binding.buttonDownload.setEnabled(true);
-//    }
 
     @Override
     public void onDestroyView() {

@@ -2,6 +2,7 @@ package com.leon.counter_reading.activities;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.READ_PHONE_STATE;
+import static com.leon.counter_reading.enums.DialogType.Green;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AVATAR;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
@@ -26,7 +27,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Debug;
 import android.text.InputType;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +41,6 @@ import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityLoginBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
-import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.utils.CustomToast;
@@ -141,12 +140,12 @@ public class LoginActivity extends AppCompatActivity {
         binding.editTextUsername.setOnFocusChangeListener((view, b) -> {
             binding.editTextUsername.setHint("");
             if (b) {
-                binding.linearLayoutUsername.setBackground(ContextCompat
-                        .getDrawable(getApplicationContext(), R.drawable.border_black_2));
+                binding.linearLayoutUsername.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+                        R.drawable.border_black_2));
                 binding.editTextPassword.setTextColor(ContextCompat.getColor(activity, R.color.black));
             } else {
-                binding.linearLayoutUsername.setBackground(ContextCompat
-                        .getDrawable(getApplicationContext(), R.drawable.border_gray_2));
+                binding.linearLayoutUsername.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+                        R.drawable.border_gray_2));
                 binding.editTextPassword.setTextColor(ContextCompat.getColor(activity, R.color.gray));
             }
         });
@@ -156,13 +155,13 @@ public class LoginActivity extends AppCompatActivity {
         binding.editTextPassword.setOnFocusChangeListener((view, b) -> {
             binding.editTextPassword.setHint("");
             if (b) {
-                binding.linearLayoutPassword.setBackground(ContextCompat
-                        .getDrawable(getApplicationContext(), R.drawable.border_black_2));
-                binding.editTextPassword.setTextColor(ContextCompat.getColor(
-                        getApplicationContext(), R.color.black));
+                binding.linearLayoutPassword.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+                        R.drawable.border_black_2));
+                binding.editTextPassword.setTextColor(ContextCompat.getColor(getApplicationContext(),
+                        R.color.black));
             } else {
-                binding.linearLayoutPassword.setBackground(ContextCompat
-                        .getDrawable(getApplicationContext(), R.drawable.border_gray_2));
+                binding.linearLayoutPassword.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+                        R.drawable.border_gray_2));
                 binding.editTextPassword.setTextColor(ContextCompat.getColor(getApplicationContext(),
                         R.color.gray));
             }
@@ -182,7 +181,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setOnImageViewPerson() {
         binding.imageViewPerson.setOnClickListener(view ->
-                new CustomDialogModel(DialogType.Green, activity, getSerial(activity),
+                new CustomDialogModel(Green, activity, getSerial(activity),
                         MyApplication.getContext().getString(R.string.serial),
                         MyApplication.getContext().getString(R.string.dear_user),
                         MyApplication.getContext().getString(R.string.accepted)));
@@ -204,18 +203,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void attempt(boolean isLogin) {
-        View view;
         boolean cancel = false;
         if (binding.editTextUsername.getText().length() < 1) {
             binding.editTextUsername.setError(getString(R.string.error_empty));
-            view = binding.editTextUsername;
-            view.requestFocus();
+            binding.editTextUsername.requestFocus();
             cancel = true;
         }
         if (!cancel && binding.editTextPassword.getText().length() < 1) {
             binding.editTextPassword.setError(getString(R.string.error_empty));
-            view = binding.editTextPassword;
-            view.requestFocus();
+            binding.editTextPassword.requestFocus();
             cancel = true;
         }
         if (!cancel) {
@@ -262,22 +258,9 @@ public class LoginActivity extends AppCompatActivity {
         sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
         if (sharedPreferenceManager.checkIsNotEmpty(USERNAME.getValue()) &&
                 sharedPreferenceManager.checkIsNotEmpty(PASSWORD.getValue())) {
-            binding.editTextUsername.setText(sharedPreferenceManager.getStringData(
-                    USERNAME.getValue()));
-            binding.editTextPassword.setText(decrypt(sharedPreferenceManager
-                    .getStringData(PASSWORD.getValue())));
+            binding.editTextUsername.setText(sharedPreferenceManager.getStringData(USERNAME.getValue()));
+            binding.editTextPassword.setText(decrypt(sharedPreferenceManager.getStringData(PASSWORD.getValue())));
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        binding.imageViewPerson.setImageDrawable(null);
-        binding.imageViewPassword.setImageDrawable(null);
-        binding.imageViewLogo.setImageDrawable(null);
-        binding.imageViewUsername.setImageDrawable(null);
-        binding = null;
-        activity = null;
-        super.onDestroy();
     }
 
     @Override
@@ -290,5 +273,16 @@ public class LoginActivity extends AppCompatActivity {
         Runtime.getRuntime().gc();
         System.gc();
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        binding.imageViewPerson.setImageDrawable(null);
+        binding.imageViewPassword.setImageDrawable(null);
+        binding.imageViewLogo.setImageDrawable(null);
+        binding.imageViewUsername.setImageDrawable(null);
+        binding = null;
+        activity = null;
+        super.onDestroy();
     }
 }
