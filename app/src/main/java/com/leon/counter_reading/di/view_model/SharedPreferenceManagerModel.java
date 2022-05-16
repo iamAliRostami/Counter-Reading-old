@@ -9,11 +9,11 @@ import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 
 import javax.inject.Inject;
 
-public class SharedPreferencemanagerModel implements ISharedPreferenceManager {
+public class SharedPreferenceManagerModel implements ISharedPreferenceManager {
     private final SharedPreferences appPrefs;
 
     @Inject
-    public SharedPreferencemanagerModel(Context context, String xml) {
+    public SharedPreferenceManagerModel(Context context, String xml) {
         appPrefs = context.getSharedPreferences(xml, MODE_PRIVATE);
     }
 
@@ -33,7 +33,7 @@ public class SharedPreferencemanagerModel implements ISharedPreferenceManager {
 
     @Override
     public void putData(String key, int value) {
-        SharedPreferences.Editor prefsEditor = appPrefs.edit();
+        final SharedPreferences.Editor prefsEditor = appPrefs.edit();
         prefsEditor.putInt(key, value);
         prefsEditor.apply();
 
@@ -41,14 +41,14 @@ public class SharedPreferencemanagerModel implements ISharedPreferenceManager {
 
     @Override
     public void putData(String key, String data) {
-        SharedPreferences.Editor prefsEditor = appPrefs.edit();
+        final SharedPreferences.Editor prefsEditor = appPrefs.edit();
         prefsEditor.putString(key, data);
         prefsEditor.apply();
     }
 
     @Override
     public void putData(String key, boolean value) {
-        SharedPreferences.Editor prefsEditor = appPrefs.edit();
+        final SharedPreferences.Editor prefsEditor = appPrefs.edit();
         prefsEditor.putBoolean(key, value);
         prefsEditor.apply();
     }

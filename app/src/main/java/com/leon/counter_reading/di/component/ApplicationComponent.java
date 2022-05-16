@@ -9,7 +9,7 @@ import com.leon.counter_reading.di.module.SharedPreferenceModule;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.di.view_model.FlashViewModel;
 import com.leon.counter_reading.di.view_model.NetworkHelperModel;
-import com.leon.counter_reading.di.view_model.SharedPreferencemanagerModel;
+import com.leon.counter_reading.di.view_model.SharedPreferenceManagerModel;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.utils.MyDatabase;
 
@@ -29,7 +29,7 @@ public interface ApplicationComponent {
 
     MyDatabase MyDatabase();
 
-    SharedPreferencemanagerModel SharedPreferenceModel();
+    SharedPreferenceManagerModel SharedPreferenceModel();
 
     Gson Gson();
 

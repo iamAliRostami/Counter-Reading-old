@@ -13,15 +13,15 @@ import dagger.Provides;
 @Singleton
 @Module
 public class MyDatabaseModule {
-    private final MyDatabase myDatabase;
+    private final MyDatabase database;
 
     public MyDatabaseModule(Context context) {
-        this.myDatabase = MyDatabaseClientModel.getInstance(context).getMyDatabase();
+        this.database = MyDatabaseClientModel.getInstance(context).getMyDatabase();
     }
 
     @Singleton
     @Provides
     public MyDatabase providesMyDatabase() {
-        return myDatabase;
+        return database;
     }
 }

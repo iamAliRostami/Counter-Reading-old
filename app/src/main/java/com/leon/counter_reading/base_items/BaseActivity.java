@@ -61,8 +61,8 @@ import com.leon.counter_reading.adapters.NavigationDrawerAdapter;
 import com.leon.counter_reading.adapters.RecyclerItemClickListener;
 import com.leon.counter_reading.adapters.items.DrawerItem;
 import com.leon.counter_reading.databinding.ActivityBaseBinding;
-import com.leon.counter_reading.di.view_model.LocationTrackingGoogle;
-import com.leon.counter_reading.di.view_model.LocationTrackingGps;
+import com.leon.counter_reading.di.view_model.GpsLocationTracking;
+import com.leon.counter_reading.di.view_model.GoogleLocationTracking;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.PermissionManager;
@@ -143,8 +143,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(getString(R.string.access_granted));
-                LocationTrackingGps.setInstance(null);
-                LocationTrackingGoogle.setInstance(null);
+                GpsLocationTracking.setInstance(null);
+                GoogleLocationTracking.setInstance(null);
                 setActivityComponent(activity);
                 checkPermissions();
             }
@@ -271,9 +271,8 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     private void fillDrawerListView() {
-        final List<DrawerItem> dataList = DrawerItem.createItemList(
-                getResources().getStringArray(R.array.menu),
-                getResources().obtainTypedArray(R.array.icons));
+        final List<DrawerItem> dataList = DrawerItem.createItemList(getResources()
+                .getStringArray(R.array.menu), getResources().obtainTypedArray(R.array.icons));
         final NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(this, dataList);
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

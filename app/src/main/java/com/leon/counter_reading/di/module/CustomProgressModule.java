@@ -11,15 +11,15 @@ import dagger.Provides;
 @Singleton
 @Module
 public class CustomProgressModule {
-    private final CustomProgressModel customProgressModel;
+    private final CustomProgressModel progress;
 
     public CustomProgressModule() {
-        customProgressModel = CustomProgressModel.getInstance();
+        progress = CustomProgressModel.getInstance();
     }
 
     @Singleton
     @Provides
     public CustomProgressModel providesCustomProgressModel() {
-        return customProgressModel;
+        return progress;
     }
 }

@@ -24,15 +24,15 @@ import com.leon.counter_reading.tables.SavedLocation;
 
 import org.jetbrains.annotations.NotNull;
 
-public class LocationTrackingGoogle extends Service implements ILocationTracking {
-    private static LocationTrackingGoogle instance;
+public class GoogleLocationTracking extends Service implements ILocationTracking {
+    private static GoogleLocationTracking instance;
     private static Location location;
     private static LocationCallback locationCallback;
     private final OnSuccessListener<Location> onSuccessListener = this::addLocation;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
 
-    public LocationTrackingGoogle(Activity activity) {
+    public GoogleLocationTracking(Activity activity) {
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(@NotNull LocationResult locationResult) {
@@ -44,19 +44,19 @@ public class LocationTrackingGoogle extends Service implements ILocationTracking
         startFusedLocation(activity);
     }
 
-    public static synchronized LocationTrackingGoogle getInstance(Activity activity) {
+    public static synchronized GoogleLocationTracking getInstance(Activity activity) {
         if (instance == null) {
-            instance = new LocationTrackingGoogle(activity);
+            instance = new GoogleLocationTracking(activity);
         }
         return instance;
     }
 
-    public static LocationTrackingGoogle getInstance() {
+    public static GoogleLocationTracking getInstance() {
         return instance;
     }
 
-    public static void setInstance(LocationTrackingGoogle instance) {
-        LocationTrackingGoogle.instance = instance;
+    public static void setInstance(GoogleLocationTracking instance) {
+        GoogleLocationTracking.instance = instance;
     }
 
     void startFusedLocation(Activity activity) {
@@ -83,7 +83,7 @@ public class LocationTrackingGoogle extends Service implements ILocationTracking
     @Override
     public void addLocation(Location location) {
         if (location != null) {
-            LocationTrackingGoogle.location = location;
+            GoogleLocationTracking.location = location;
             if (getApplicationComponent().SharedPreferenceModel()
                     .getBoolData(SharedReferenceKeys.POINT.getValue())) {
                 SavedLocation savedLocation = new SavedLocation(location.getAccuracy(),

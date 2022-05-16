@@ -22,27 +22,27 @@ import com.leon.counter_reading.infrastructure.ILocationTracking;
 import com.leon.counter_reading.tables.SavedLocation;
 import com.leon.counter_reading.utils.CustomToast;
 
-public class LocationTrackingGps extends Service implements LocationListener, ILocationTracking {
-    private static LocationTrackingGps instance = null;
+public class GpsLocationTracking extends Service implements LocationListener, ILocationTracking {
+    private static GpsLocationTracking instance = null;
     private volatile static Location location;
     protected LocationManager locationManager;
     private double latitude;
     private double longitude;
 
-    public LocationTrackingGps() {
+    public GpsLocationTracking() {
         getLocation();
     }
 
-    public static synchronized LocationTrackingGps getInstance() {
+    public static synchronized GpsLocationTracking getInstance() {
         if (instance == null) {
-            instance = new LocationTrackingGps();
+            instance = new GpsLocationTracking();
             instance.addLocation(location);
         }
         return instance;
     }
 
-    public static void setInstance(LocationTrackingGps instance) {
-        LocationTrackingGps.instance = instance;
+    public static void setInstance(GpsLocationTracking instance) {
+        GpsLocationTracking.instance = instance;
     }
 
     @SuppressLint("MissingPermission")
@@ -114,7 +114,7 @@ public class LocationTrackingGps extends Service implements LocationListener, IL
     @Override
     public void addLocation(Location location) {
         if (location != null && (location.getLatitude() != 0 || location.getLongitude() != 0)) {
-            LocationTrackingGps.location = location;
+            GpsLocationTracking.location = location;
             if (getApplicationComponent().SharedPreferenceModel()
                     .getBoolData(SharedReferenceKeys.POINT.getValue())) {
                 SavedLocation savedLocation = new SavedLocation(location.getAccuracy(),
@@ -157,7 +157,7 @@ public class LocationTrackingGps extends Service implements LocationListener, IL
 
     public void stopListener() {
         if (locationManager != null) {
-            locationManager.removeUpdates(LocationTrackingGps.this);
+            locationManager.removeUpdates(GpsLocationTracking.this);
         }
     }
 
