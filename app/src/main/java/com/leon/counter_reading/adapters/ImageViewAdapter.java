@@ -63,7 +63,6 @@ public class ImageViewAdapter extends BaseAdapter {
         holder.imageViewSent.setVisibility(position < images.size() && images.get(position).isSent ?
                 View.VISIBLE : View.GONE);
 
-//        holder.imageView.setEnabled(position >= images.size() || !images.get(position).isSent);
         holder.imageView.setEnabled(true);
         holder.imageView.setOnClickListener(view1 -> {
             if (position >= images.size() || !images.get(position).isSent) {
@@ -73,22 +72,11 @@ public class ImageViewAdapter extends BaseAdapter {
             }
         });
         if (position < images.size()) {
-            //TODO
-//            holder.imageView.setImageBitmap(images.get(position).bitmap);
-//            holder.imageView.setImageBitmap(loadImage(getContext(), images.get(position).address));
-//            holder.imageView.setImageBitmap(compressBitmap(BitmapFactory.decodeFile(images.get(position).address)));
-//            holder.textViewSize.setText(String.valueOf(images.get(position).size / 1024).concat(" کیلوبایت"));
 
             holder.imageView.setImageBitmap(loadImage(getContext(), images.get(position).address));
             holder.textViewSize.setText(String.valueOf(images.get(position).size / 1024).concat(" کیلوبایت"));
             holder.imageView.setOnLongClickListener(v -> {
-                //TODO
-//                if (images.get(position).bitmap != null)
-//                ShowFragmentDialogOnce(context, "Image # 1",
-//                        HighQualityFragment.newInstance(images.get(position).bitmap));
                 if (images.get(position).address != null) {
-//                    ShowFragmentDialogOnce(context, "Image # 1", HighQualityFragment
-//                            .newInstance(holder.imageView.getDrawingCache()));
                     holder.imageView.invalidate();
                     ShowDialogOnce(context, "Image # 1", HighQualityFragment
                             .newInstance(((BitmapDrawable) holder.imageView.getDrawable()).getBitmap()));

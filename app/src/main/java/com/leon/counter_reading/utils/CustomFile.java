@@ -143,6 +143,23 @@ public class CustomFile {
         return fileNameToSave;
     }
 
+    private static void deleteRecursive() {
+        final File dir = new File(Environment.getExternalStorageDirectory() + "Dir_name_here");
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            if (children != null) {
+                for (String child : children) {
+                    new File(dir, child).delete();
+                }
+            }
+        }
+//        if (fileOrDirectory.isDirectory())
+//            for (File child : fileOrDirectory.listFiles())
+//                deleteRecursive(child);
+//
+//        fileOrDirectory.delete();
+    }
+
     @SuppressLint("SimpleDateFormat")
     static String saveImage(final InputStream inputStream, final Context context) {
         final Bitmap bitmapImage = compressBitmap(inputStream);

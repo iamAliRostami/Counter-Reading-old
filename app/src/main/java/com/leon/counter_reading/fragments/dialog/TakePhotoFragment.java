@@ -122,10 +122,6 @@ public class TakePhotoFragment extends DialogFragment {
         images.clear();
         if (!result) {
             images.addAll(getApplicationComponent().MyDatabase().imageDao().getImagesByOnOffLoadId(uuid));
-            //TODO
-//            for (int i = 0; i < images.size(); i++) {
-//                images.get(i).bitmap = loadImage(requireContext(), images.get(i).address);
-//            }
         }
         imageViewAdapter = new ImageViewAdapter(requireContext(), images);
         binding.gridViewImage.setAdapter(imageViewAdapter);
