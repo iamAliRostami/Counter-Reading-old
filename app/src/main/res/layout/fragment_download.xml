@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/large_dp"
-    tools:context="com.leon.counter_reading.fragments.DownloadFragment">
+    tools:context="com.leon.counter_reading.fragments.download.upload.DownloadFragment">
 
     <ImageView
         android:id="@+id/image_view_download"

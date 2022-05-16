@@ -549,9 +549,7 @@ public class ReadingFragment extends Fragment {
     private final View.OnClickListener onClickListener = view -> {
         final int id = view.getId();
         if (id == buttonId) {
-            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) {
-                return;
-            }
+            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
             lastClickTime = SystemClock.elapsedRealtime();
             checkPermissions();
         } else if (id == R.id.text_view_pre_number) {

@@ -186,17 +186,6 @@ public class ReportForbidFragment extends DialogFragment {
         binding.buttonSubmit.setOnClickListener(v -> {
             View view = null;
             boolean cancel = false;
-            /*if (binding.editTextPreAccount.getText().length() < DifferentCompanyManager.
-                    getEshterakMinLength(getActiveCompanyName())) {
-                binding.editTextPreAccount.setError(getString(R.string.error_format));
-                view = binding.editTextPreAccount;
-                cancel = true;
-            } else if (binding.editTextNextAccount.getText().length() < DifferentCompanyManager.
-                    getEshterakMinLength(getActiveCompanyName())) {
-                binding.editTextNextAccount.setError(getString(R.string.error_format));
-                view = binding.editTextNextAccount;
-                cancel = true;
-            } else */
             if (binding.editTextPostalCode.getText().length() > 0 &&
                     binding.editTextPostalCode.getText().length() < 10) {
                 binding.editTextPostalCode.setError(getString(R.string.error_format));
@@ -250,7 +239,7 @@ public class ReportForbidFragment extends DialogFragment {
 
     private void setOnButtonPhotoClickListener() {
         binding.buttonPhoto.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(requireContext(), R.style.AlertDialogCustom));
+            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(requireContext(), R.style.AlertDialogCustom));
             builder.setTitle(R.string.choose_document);
             builder.setMessage(R.string.select_source);
             builder.setPositiveButton(R.string.gallery, (dialog, which) -> {

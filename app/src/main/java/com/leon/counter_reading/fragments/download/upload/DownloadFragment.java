@@ -1,15 +1,17 @@
-package com.leon.counter_reading.fragments;
+package com.leon.counter_reading.fragments.download.upload;
 
 
 import static com.leon.counter_reading.enums.BundleEnum.TYPE;
 import static com.leon.counter_reading.utils.CustomFile.getFileSize;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.R;
@@ -19,6 +21,7 @@ import com.leon.counter_reading.utils.downloading.Download;
 import org.jetbrains.annotations.NotNull;
 
 public class DownloadFragment extends Fragment {
+    private long lastClickTime = 0;
     private final int[] imageSrc = {R.drawable.img_download, R.drawable.img_download_retry,
             R.drawable.img_download_off, R.drawable.img_download_special};
     private FragmentDownloadBinding binding;
@@ -49,7 +52,6 @@ public class DownloadFragment extends Fragment {
     }
 
     void initialize() {
-        Log.e("Size", String.valueOf(getFileSize(requireContext().getExternalFilesDir(null)) / (1024 * 1024)));
 
         binding.imageViewDownload.setImageResource(imageSrc[type]);
         setOnButtonDownloadClickListener();
@@ -57,14 +59,34 @@ public class DownloadFragment extends Fragment {
 
     void setOnButtonDownloadClickListener() {
         binding.buttonDownload.setOnClickListener(v -> {
-            binding.buttonDownload.setEnabled(false);
-            new Download(this).execute(requireActivity());
+            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
+            lastClickTime = SystemClock.elapsedRealtime();
+            final long dataStorage = getFileSize(requireContext().getExternalFilesDir(null)) / (1024 * 1024);
+            if (dataStorage > 250) {
+                storageDialog();
+            } else
+                new Download().execute(requireActivity());
         });
     }
 
-    public void setButtonState() {
-        binding.buttonDownload.setEnabled(true);
+    private void storageDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(requireContext(), R.style.AlertDialogCustom));
+        builder.setTitle(R.string.storage_title);
+        builder.setMessage(R.string.storage_warning);
+        builder.setPositiveButton(R.string.download, (dialog, which) -> {
+            dialog.dismiss();
+            new Download().execute(requireActivity());
+        });
+        builder.setNegativeButton(R.string.close, (dialog, which) -> {
+            dialog.dismiss();
+        });
+        builder.setNeutralButton("", (dialog, which) -> dialog.dismiss());
+        builder.create().show();
     }
+
+//    public void setButtonState() {
+//        binding.buttonDownload.setEnabled(true);
+//    }
 
     @Override
     public void onDestroyView() {

@@ -292,5 +292,7 @@
     <string name="_9">9</string>
     <string name="backspace">×</string>
     <string name="offline_warning">پیش از بارگذاری آفلاین با اپراتور خود هماهنگ فرمایید. در غیر این صورت مسئولیت از دست رفتن اطلاعات قرائت به عهده ی شما میباشد.</string>
+    <string name="storage_warning">حجم زیاد داده های شما موجب کندی برنامه می شود، جهت استفاده ی بهتر از اپلیکیشن، با هماهنگی اپراتور خود، پیش از بارگیری، حذف دیتا و کش انجام شود.</string>
+    <string name="storage_title">بهبود عملکرد</string>
     <string name="select_gallery">انتخاب از گالری</string>
 </resources>

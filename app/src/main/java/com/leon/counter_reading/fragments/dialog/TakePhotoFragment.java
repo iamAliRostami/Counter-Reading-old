@@ -251,14 +251,4 @@ public class TakePhotoFragment extends DialogFragment {
         }
         super.onResume();
     }
-
-//    private Callback readingActivity;
-//    @Override
-//    public void onAttach(@NonNull Context context) {
-//        super.onAttach(context);
-//        if (context instanceof Activity) readingActivity = (Callback) context;
-//    }
-//    public interface Callback {
-//        void setPhotoResult(int position);
-//    }
 }

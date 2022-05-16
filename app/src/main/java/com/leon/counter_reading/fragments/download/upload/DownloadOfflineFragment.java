@@ -1,4 +1,4 @@
-package com.leon.counter_reading.fragments;
+package com.leon.counter_reading.fragments.download.upload;
 
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_DETACHED;
@@ -24,6 +24,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentOfflineDownloadBinding;
+import com.leon.counter_reading.fragments.ExplorerFragment;
+import com.leon.counter_reading.fragments.HomeFragment;
 
 import org.jetbrains.annotations.NotNull;
 

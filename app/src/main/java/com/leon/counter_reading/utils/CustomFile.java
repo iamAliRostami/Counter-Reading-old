@@ -140,16 +140,20 @@ public class CustomFile {
         }
         CURRENT_IMAGE_SIZE = file.length();
         MediaScannerConnection.scanFile(context, new String[]{file.getPath()}, new String[]{"image/jpeg"}, null);
+
+        deleteRecursive(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+//        deleteRecursive(context.getCacheDir());
         return fileNameToSave;
     }
 
-    private static void deleteRecursive() {
-        final File dir = new File(Environment.getExternalStorageDirectory() + "Dir_name_here");
+    private static void deleteRecursive(final File dir) {
+//        Log.e("address", dir.getAbsolutePath());
+//        final File dir = new File(Environment.getExternalStorageDirectory() + "Dir_name_here");
         if (dir.isDirectory()) {
             String[] children = dir.list();
             if (children != null) {
                 for (String child : children) {
-                    new File(dir, child).delete();
+                    Log.e("delete?", String.valueOf(new File(dir, child).delete()));
                 }
             }
         }
