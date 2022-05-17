@@ -1,5 +1,8 @@
 package com.leon.counter_reading.utils.backup_restore;
 
+import static com.leon.counter_reading.enums.SharedReferenceKeys.LAST_BACK_UP;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
@@ -10,8 +13,6 @@ import android.widget.Toast;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.MyDatabase;
 
@@ -23,31 +24,31 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class BackUp extends AsyncTask<Activity, Integer, Void> {
-    private final CustomProgressModel customProgressModel;
+    private final CustomProgressModel progress;
 
     public BackUp(Activity activity) {
         super();
-        customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
-        customProgressModel.show(activity, false);
+        progress = getApplicationComponent().CustomProgressModel();
+        progress.show(activity, false);
     }
 
     @SuppressLint("SimpleDateFormat")
-    public static boolean exportDatabaseToCSVFile(String tableName, String child, Activity activity) {
-        File exportDir = new File(Environment
+    public static boolean exportDatabaseToCSV(String tableName, String child, Activity activity) {
+        final File exportDir = new File(Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + child);
         if (!exportDir.exists()) if (!exportDir.mkdirs()) return false;
-        File file = new File(exportDir, tableName + "_" + BuildConfig.BUILD_TYPE + "_"
+        final File file = new File(exportDir, tableName + "_" + BuildConfig.BUILD_TYPE + "_"
                 + BuildConfig.VERSION_CODE + ".csv");
         try {
             if (file.exists()) if (!file.delete()) return false;
             if (!file.createNewFile()) return false;
-            CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
-            Cursor curCSV = MyApplication.getApplicationComponent().MyDatabase()
+            final CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
+            final Cursor curCSV = getApplicationComponent().MyDatabase()
                     .query("SELECT * FROM " + tableName, null);
             csvWrite.writeNext(curCSV.getColumnNames());
             while (curCSV.moveToNext()) {
                 //Which column you want to export
-                String[] arrStr = new String[curCSV.getColumnCount()];
+                final String[] arrStr = new String[curCSV.getColumnCount()];
                 for (int i = 0; i < curCSV.getColumnCount() - 1; i++) {
                     if (!curCSV.getColumnName(i).equals("preNumber") && !curCSV.getColumnName(i).equals("customId")) {
                         arrStr[i] = curCSV.getString(i);
@@ -78,7 +79,7 @@ public class BackUp extends AsyncTask<Activity, Integer, Void> {
     @Override
     protected void onPostExecute(Void unused) {
         super.onPostExecute(unused);
-        customProgressModel.getDialog().dismiss();
+        progress.getDialog().dismiss();
     }
 
     @Override
@@ -89,14 +90,14 @@ public class BackUp extends AsyncTask<Activity, Integer, Void> {
     @Override
     @SuppressLint("SimpleDateFormat")
     protected Void doInBackground(Activity... activities) {
-        MyDatabase myDatabase = MyApplication.getApplicationComponent().MyDatabase();
-        Cursor cursor = myDatabase.getOpenHelper().getWritableDatabase().query("SELECT name FROM sqlite_master WHERE type='table';");
-
-        String timeStamp = "/_" + (new SimpleDateFormat(
-                activities[0].getString(R.string.save_format_name_melli))).format(new Date());
-        MyApplication.getApplicationComponent().SharedPreferenceModel().putData(SharedReferenceKeys.LAST_BACK_UP.getValue(), timeStamp);
+        final MyDatabase myDatabase = getApplicationComponent().MyDatabase();
+        final Cursor cursor = myDatabase.getOpenHelper().getWritableDatabase()
+                .query("SELECT name FROM sqlite_master WHERE type='table';");
+        final String timeStamp = "/_" + (new SimpleDateFormat(activities[0].getString(R.string.save_format_name_melli)))
+                .format(new Date());
+        getApplicationComponent().SharedPreferenceModel().putData(LAST_BACK_UP.getValue(), timeStamp);
         while (cursor.moveToNext()) {
-            if (!exportDatabaseToCSVFile(cursor.getString(0), timeStamp, activities[0]))
+            if (!exportDatabaseToCSV(cursor.getString(0), timeStamp, activities[0]))
                 break;
         }
         return null;

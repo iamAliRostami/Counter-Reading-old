@@ -43,11 +43,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -75,30 +73,6 @@ public class CustomFile {
             e.printStackTrace();
             return null;
         }
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    public static MultipartBody.Part bitmapToFile(Bitmap bitmap, Context context) {
-        String timeStamp = (new SimpleDateFormat(context.getString(R.string.save_format_name))).format(new Date());
-        String fileNameToSave = "JPEG_" + new Random().nextInt() + "_" + timeStamp + ".jpg";
-        File f = new File(context.getCacheDir(), fileNameToSave);
-        try {
-            if (!f.createNewFile()) return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        long startTime = Calendar.getInstance().getTimeInMillis();
-        try {
-            final byte[] bitmapData = compressBitmapToByte(bitmap);
-            final FileOutputStream fos = new FileOutputStream(f);
-            fos.write(bitmapData);
-            fos.flush();
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        RequestBody requestBody = RequestBody.create(f, MediaType.parse("image/jpeg"));
-        return MultipartBody.Part.createFormData("File", f.getName(), requestBody);
     }
 
     public static String saveTempBitmap(final String path, final Context context) {
@@ -147,8 +121,6 @@ public class CustomFile {
     }
 
     private static void deleteRecursive(final File dir) {
-//        Log.e("address", dir.getAbsolutePath());
-//        final File dir = new File(Environment.getExternalStorageDirectory() + "Dir_name_here");
         if (dir.isDirectory()) {
             String[] children = dir.list();
             if (children != null) {
@@ -157,11 +129,6 @@ public class CustomFile {
                 }
             }
         }
-//        if (fileOrDirectory.isDirectory())
-//            for (File child : fileOrDirectory.listFiles())
-//                deleteRecursive(child);
-//
-//        fileOrDirectory.delete();
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -187,117 +154,6 @@ public class CustomFile {
         MediaScannerConnection.scanFile(context, new String[]{file.getPath()}, new String[]{"image/jpeg"}, null);
         return fileNameToSave;
     }
-
-    public static byte[] compressBitmapToByte(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        return stream.toByteArray();
-    }
-
-    public static Bitmap compressBitmap(final String path) {
-        try {
-            Bitmap original = BitmapFactory.decodeFile(path);
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
-                final int width, height;
-                if (original.getHeight() > original.getWidth()) {
-                    height = 1000;
-                    width = original.getWidth() / (original.getHeight() / height);
-                } else {
-                    width = 1000;
-                    height = original.getHeight() / (original.getWidth() / width);
-                }
-                original = Bitmap.createScaledBitmap(original, width, height, false);
-                stream = new ByteArrayOutputStream();
-                original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-            }
-            CURRENT_IMAGE_SIZE = stream.toByteArray().length;
-            return original;
-        } catch (Exception e) {
-            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
-        }
-        return null;
-    }
-
-    public static Bitmap compressBitmap(final InputStream inputStream) {
-        Bitmap original = BitmapFactory.decodeStream(inputStream);
-        try {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
-                final int width, height;
-                if (original.getHeight() > original.getWidth()) {
-                    height = 1000;
-                    width = original.getWidth() / (original.getHeight() / height);
-                } else {
-                    width = 1000;
-                    height = original.getHeight() / (original.getWidth() / width);
-                }
-                original = Bitmap.createScaledBitmap(original, width, height, false);
-                stream = new ByteArrayOutputStream();
-                original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-            }
-            CURRENT_IMAGE_SIZE = stream.toByteArray().length;
-            return original;
-        } catch (Exception e) {
-            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
-        }
-        return null;
-    }
-
-    public static Bitmap compressBitmap(Bitmap original) {
-        try {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
-                final int width, height;
-                if (original.getHeight() > original.getWidth()) {
-                    height = 1000;
-                    width = original.getWidth() / (original.getHeight() / height);
-                } else {
-                    width = 1000;
-                    height = original.getHeight() / (original.getWidth() / width);
-                }
-                original = Bitmap.createScaledBitmap(original, width, height, false);
-                stream = new ByteArrayOutputStream();
-                original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-            }
-            CURRENT_IMAGE_SIZE = stream.toByteArray().length;
-            return original;
-        } catch (Exception e) {
-            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
-        }
-        return null;
-    }
-
-    public static ByteArrayInputStream compressBitmapIS(Bitmap original) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
-            int qualityPercent = Math.max((int) ((double)
-                    stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
-            original = Bitmap.createScaledBitmap(original
-                    , (int) ((double) original.getWidth() * qualityPercent / 100)
-                    , (int) ((double) original.getHeight() * qualityPercent / 100), false);
-            stream = new ByteArrayOutputStream();
-            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        }
-        return new ByteArrayInputStream(stream.toByteArray());
-    }
-
-    public static String bitmapToBinary(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return Arrays.toString(byteArray);
-    }
-
-    public static Bitmap binaryToBitmap(String s) {
-        byte[] bytes = s.getBytes();
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-    }
-
 
     public static String saveTempBitmap(final Bitmap bitmap, Context context) {
         if (isExternalStorageWritable()) {
@@ -412,6 +268,104 @@ public class CustomFile {
         }
     }
 
+    public static Bitmap compressBitmap(final String path) {
+        try {
+            Bitmap original = BitmapFactory.decodeFile(path);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
+                final int width, height;
+                if (original.getHeight() > original.getWidth()) {
+                    height = 1000;
+                    width = original.getWidth() / (original.getHeight() / height);
+                } else {
+                    width = 1000;
+                    height = original.getHeight() / (original.getWidth() / width);
+                }
+                original = Bitmap.createScaledBitmap(original, width, height, false);
+                stream = new ByteArrayOutputStream();
+                original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+            }
+            CURRENT_IMAGE_SIZE = stream.toByteArray().length;
+            return original;
+        } catch (Exception e) {
+            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+        }
+        return null;
+    }
+
+    public static Bitmap compressBitmap(final InputStream inputStream) {
+        Bitmap original = BitmapFactory.decodeStream(inputStream);
+        try {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
+                final int width, height;
+                if (original.getHeight() > original.getWidth()) {
+                    height = 1000;
+                    width = original.getWidth() / (original.getHeight() / height);
+                } else {
+                    width = 1000;
+                    height = original.getHeight() / (original.getWidth() / width);
+                }
+                original = Bitmap.createScaledBitmap(original, width, height, false);
+                stream = new ByteArrayOutputStream();
+                original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+            }
+            CURRENT_IMAGE_SIZE = stream.toByteArray().length;
+            return original;
+        } catch (Exception e) {
+            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+        }
+        return null;
+    }
+
+    public static Bitmap compressBitmap(Bitmap original) {
+        try {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
+                final int width, height;
+                if (original.getHeight() > original.getWidth()) {
+                    height = 1000;
+                    width = original.getWidth() / (original.getHeight() / height);
+                } else {
+                    width = 1000;
+                    height = original.getHeight() / (original.getWidth() / width);
+                }
+                original = Bitmap.createScaledBitmap(original, width, height, false);
+                stream = new ByteArrayOutputStream();
+                original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+            }
+            CURRENT_IMAGE_SIZE = stream.toByteArray().length;
+            return original;
+        } catch (Exception e) {
+            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+        }
+        return null;
+    }
+
+    public static byte[] compressBitmapToByte(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        return stream.toByteArray();
+    }
+
+    public static ByteArrayInputStream compressBitmapToInputStream(Bitmap original) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
+            int qualityPercent = Math.max((int) ((double)
+                    stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
+            original = Bitmap.createScaledBitmap(original
+                    , (int) ((double) original.getWidth() * qualityPercent / 100)
+                    , (int) ((double) original.getHeight() * qualityPercent / 100), false);
+            stream = new ByteArrayOutputStream();
+            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        }
+        return new ByteArrayInputStream(stream.toByteArray());
+    }
+
     public static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
@@ -447,29 +401,26 @@ public class CustomFile {
         return MultipartBody.Part.createFormData("FILE", file.getName(), requestFile);
     }
 
-
     @SuppressLint({"SimpleDateFormat", "SetTextI18n"})
     public static boolean writeResponseApkToDisk(ResponseBody body, Activity activity) {
         if (isExternalStorageWritable()) {
             try {
-                File storageDir = new File(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
+                final File storageDir = new File(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
                 if (!storageDir.exists()) {
                     if (!storageDir.mkdirs()) {
                         return false;
                     }
                 }
-                String timeStamp = (new SimpleDateFormat(
-                        activity.getString(R.string.save_format_name))).format(new Date());
-                String fileName = activity.getPackageName().substring(
-                        activity.getPackageName().lastIndexOf(".") + 1) + "_" +
-                        DifferentCompanyManager.getActiveCompanyName().toString() +
-                        "_" + timeStamp + ".apk";
-                File futureStudioIconFile = new File(storageDir, fileName);
+                final String timeStamp = (new SimpleDateFormat(activity.getString(R.string.save_format_name)))
+                        .format(new Date());
+                final String fileName = activity.getPackageName().substring(activity
+                        .getPackageName().lastIndexOf(".") + 1) + "_" + timeStamp + ".apk";
+                final File futureStudioIconFile = new File(storageDir, fileName);
                 InputStream inputStream = null;
                 OutputStream outputStream = null;
                 try {
-                    byte[] fileReader = new byte[7168];
-                    long fileSize = body.contentLength();
+                    final byte[] fileReader = new byte[7168];
+                    final long fileSize = body.contentLength();
                     long fileSizeDownloaded = 0;
                     inputStream = body.byteStream();
                     outputStream = new FileOutputStream(futureStudioIconFile);
@@ -508,11 +459,11 @@ public class CustomFile {
     }
 
     public static void runFile(Activity activity, String fileName) {
-        StrictMode.VmPolicy.Builder newBuilder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(newBuilder.build());//TODO Create directory
-        File storageDir = new File(String.valueOf(Environment
+        final StrictMode.VmPolicy.Builder newBuilder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(newBuilder.build());
+        final File storageDir = new File(String.valueOf(Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
-        File toInstall = new File(storageDir, fileName);
+        final File toInstall = new File(storageDir, fileName);
         Intent intent;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Uri apkUri = FileProvider.getUriForFile(activity, BuildConfig.APPLICATION_ID +
@@ -521,12 +472,36 @@ public class CustomFile {
             intent.setData(apkUri);
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         } else {
-            Uri apkUri = Uri.fromFile(toInstall);
+            final Uri apkUri = Uri.fromFile(toInstall);
             intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         activity.startActivity(intent);
+    }
+
+    public static long getFileSize(final File file) {
+        if (file == null || !file.exists())
+            return 0;
+        if (!file.isDirectory())
+            return file.length();
+        final List<File> dirs = new LinkedList<>();
+        dirs.add(file);
+        long result = 0;
+        while (!dirs.isEmpty()) {
+            final File dir = dirs.remove(0);
+            if (!dir.exists())
+                continue;
+            final File[] listFiles = dir.listFiles();
+            if (listFiles == null || listFiles.length == 0)
+                continue;
+            for (final File child : listFiles) {
+                result += child.length();
+                if (child.isDirectory())
+                    dirs.add(child);
+            }
+        }
+        return result;
     }
 
     public static File findFile(File dir, String name) {
@@ -581,27 +556,4 @@ public class CustomFile {
         return text.toString();
     }
 
-    public static long getFileSize(final File file) {
-        if (file == null || !file.exists())
-            return 0;
-        if (!file.isDirectory())
-            return file.length();
-        final List<File> dirs = new LinkedList<>();
-        dirs.add(file);
-        long result = 0;
-        while (!dirs.isEmpty()) {
-            final File dir = dirs.remove(0);
-            if (!dir.exists())
-                continue;
-            final File[] listFiles = dir.listFiles();
-            if (listFiles == null || listFiles.length == 0)
-                continue;
-            for (final File child : listFiles) {
-                result += child.length();
-                if (child.isDirectory())
-                    dirs.add(child);
-            }
-        }
-        return result;
-    }
 }

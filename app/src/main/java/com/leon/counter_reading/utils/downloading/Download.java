@@ -1,6 +1,7 @@
 package com.leon.counter_reading.utils.downloading;
 
 import static com.leon.counter_reading.enums.ProgressType.SHOW;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
 import android.app.Activity;
@@ -30,7 +31,7 @@ public class Download extends AsyncTask<Activity, Void, Void> {
 
     @Override
     protected Void doInBackground(Activity... activities) {
-        final Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
+        final Retrofit retrofit = getApplicationComponent().Retrofit();
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
         final Call<ReadingData> call = iAbfaService.loadData(BuildConfig.VERSION_CODE);
         activities[0].runOnUiThread(() ->

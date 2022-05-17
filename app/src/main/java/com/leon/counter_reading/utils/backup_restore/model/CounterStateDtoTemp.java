@@ -1,15 +1,13 @@
-package com.leon.counter_reading.utils.backup_restore;
+package com.leon.counter_reading.utils.backup_restore.model;
 
 import com.leon.counter_reading.tables.CounterStateDto;
 
 public class CounterStateDtoTemp {
     public String title;
-
     public int id;
     public int moshtarakinId;
     public int zoneId;
     public int clientOrder;
-
     public int canEnterNumber;
     public int isMane;
     public int canNumberBeLessThanPre;
@@ -19,14 +17,12 @@ public class CounterStateDtoTemp {
     public int isFaqed;
 
     public CounterStateDto getCounterStateDto() {
-        CounterStateDto counterStateDto = new CounterStateDto();
+        final CounterStateDto counterStateDto = new CounterStateDto();
         counterStateDto.title = title;
-
         counterStateDto.id = id;
         counterStateDto.moshtarakinId = moshtarakinId;
         counterStateDto.zoneId = zoneId;
         counterStateDto.clientOrder = clientOrder;
-
         counterStateDto.canEnterNumber = canEnterNumber == 1;
         counterStateDto.isMane = isMane == 1;
         counterStateDto.canNumberBeLessThanPre = canNumberBeLessThanPre == 1;

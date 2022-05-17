@@ -3,7 +3,7 @@ package com.leon.counter_reading.utils.uploading;
 import static com.leon.counter_reading.enums.ProgressType.SHOW_CANCELABLE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
-import static com.leon.counter_reading.utils.CustomFile.bitmapToFile;
+import static com.leon.counter_reading.utils.Converters.bitmapToFile;
 import static com.leon.counter_reading.utils.CustomFile.loadImage;
 import static com.leon.counter_reading.utils.CustomFile.prepareVoiceToSend;
 
@@ -37,7 +37,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
-    private final CustomProgressModel customProgressModel;
+    private final CustomProgressModel progress;
     private final ArrayList<Image> images = new ArrayList<>();
     private final ArrayList<Voice> voice = new ArrayList<>();
     private final ImageMultiple imageMultiples = new ImageMultiple();
@@ -47,8 +47,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
 
     public PrepareMultimedia(Activity activity, UploadFragment uploadFragment, boolean justImages) {
         super();
-        customProgressModel = getApplicationComponent().CustomProgressModel();
-        customProgressModel.show(activity, false);
+        progress = getApplicationComponent().CustomProgressModel();
+        progress.show(activity, false);
         this.uploadFragment = uploadFragment;
         this.justImages = justImages;
     }
@@ -95,7 +95,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
     @Override
     protected void onPostExecute(Activity activity) {
         super.onPostExecute(activity);
-        customProgressModel.getDialog().dismiss();
+        progress.getDialog().dismiss();
         uploadImages(activity);
         if (!justImages)
             uploadVoice(activity);
@@ -189,8 +189,8 @@ class UploadVoices implements ICallback<MultimediaUploadResponse> {
 class UploadImagesIncomplete implements ICallbackIncomplete<MultimediaUploadResponse> {
     @Override
     public void executeIncomplete(Response<MultimediaUploadResponse> response) {
-        CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
-        String error = errorHandling.getErrorMessageDefault(response);
+        final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+        final String error = errorHandling.getErrorMessageDefault(response);
         new CustomToast().warning(error, Toast.LENGTH_LONG);
     }
 }
@@ -198,8 +198,8 @@ class UploadImagesIncomplete implements ICallbackIncomplete<MultimediaUploadResp
 class UploadVoicesIncomplete implements ICallbackIncomplete<MultimediaUploadResponse> {
     @Override
     public void executeIncomplete(Response<MultimediaUploadResponse> response) {
-        CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
-        String error = errorHandling.getErrorMessageDefault(response);
+        final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+        final String error = errorHandling.getErrorMessageDefault(response);
         new CustomToast().warning(error, Toast.LENGTH_LONG);
     }
 }
@@ -214,4 +214,3 @@ class UploadMultimediaError implements ICallbackError {
         }
     }
 }
-

@@ -5,7 +5,6 @@ import static com.leon.counter_reading.enums.OffloadStateEnum.SENT;
 import static com.leon.counter_reading.helpers.Constants.ZIP_ROOT;
 import static com.leon.counter_reading.helpers.Constants.zipAddress;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.CalendarTool.getDate;
 import static com.leon.counter_reading.utils.OfflineUtils.writeOnSdCard;
 import static com.leon.counter_reading.utils.OfflineUtils.zipFileAtPath;
@@ -13,7 +12,6 @@ import static com.leon.counter_reading.utils.OfflineUtils.zipFileAtPath;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -25,28 +23,24 @@ import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.tables.Voice;
-import com.leon.counter_reading.utils.CalendarTool;
 import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activity> {
     private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
     private final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
     private final ArrayList<ForbiddenDto> forbiddenDtos = new ArrayList<>();
-    private final CustomProgressModel customProgressModel;
+    private final CustomProgressModel progress;
     private final int trackNumber;
     private final String id;
 
     public PrepareOffLoadOffline(Activity activity, int trackNumber, String id) {
         super();
-        customProgressModel = getApplicationComponent().CustomProgressModel();
-        customProgressModel.show(activity, false);
+        progress = getApplicationComponent().CustomProgressModel();
+        progress.show(activity, false);
         this.trackNumber = trackNumber;
         this.id = id;
     }
@@ -93,7 +87,7 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
     @Override
     protected void onPostExecute(Activity activity) {
         super.onPostExecute(activity);
-        customProgressModel.getDialog().dismiss();
+        progress.getDialog().dismiss();
     }
 
     private void uploadImages(Activity activity) {
@@ -153,10 +147,6 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
                     onOffLoadDao().getOnOffLoadReadByTrackingAndOffLoad(id));
         }
         if (onOffLoadDtos.size() == 0 || onOffLoadDtos.get(0) == null) {
-//            final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy MM dd");
-//            final Location location = getLocationTracker(activity).getCurrentLocation();
-//            final String archiveDateTime = dateFormatter.format(new Date(location != null ? location.getTime() :
-//                    Calendar.getInstance().getTimeInMillis()));
             getApplicationComponent().MyDatabase().trackingDao().updateTrackingDtoByArchive(id,
                     true, false, getDate(activity));
             return false;

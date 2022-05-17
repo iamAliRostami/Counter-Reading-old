@@ -1,4 +1,4 @@
-package com.leon.counter_reading.utils.backup_restore;
+package com.leon.counter_reading.utils.backup_restore.model;
 
 import static com.leon.counter_reading.utils.backup_restore.Restore.getIntFromString;
 
@@ -73,7 +73,7 @@ public class OnOffLoadDtoTemp {
     public int isBazdid;
 
     public OnOffLoadDto getOnOffLoadDto() {
-        OnOffLoadDto onOffLoadDto = new OnOffLoadDto();
+        final OnOffLoadDto onOffLoadDto = new OnOffLoadDto();
         onOffLoadDto.hasPreNumber = hasPreNumber == 1;
         onOffLoadDto.displayBillId = displayBillId == 1;
         onOffLoadDto.displayRadif = displayRadif == 1;

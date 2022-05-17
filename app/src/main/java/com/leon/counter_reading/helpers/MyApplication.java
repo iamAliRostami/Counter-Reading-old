@@ -19,7 +19,6 @@ import android.provider.Settings;
 
 import androidx.multidex.MultiDex;
 
-//import com.gu.toolargetool.TooLargeTool;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.component.ActivityComponent;
@@ -42,7 +41,6 @@ import com.yandex.metrica.profile.UserProfile;
 import es.dmoral.toasty.Toasty;
 
 public class MyApplication extends Application {
-
     private static Context appContext;
     private static int ERROR_COUNTER = 0;
     private static ApplicationComponent applicationComponent;
@@ -51,8 +49,6 @@ public class MyApplication extends Application {
     public static ActivityComponent getActivityComponent() {
         return activityComponent;
     }
-
-//    private com.squareup.leakcanary.RefWatcher refWatcher;
 
     public static void setActivityComponent(Activity activity) {
         activityComponent = DaggerActivityComponent
@@ -144,32 +140,21 @@ public class MyApplication extends Application {
         super.onCreate();
         if (!BuildConfig.BUILD_TYPE.equals("release")) {
             setupYandex();
-        } else {
-//            TooLargeTool.startLogging(this);
-            setupLeakCanary();
         }
     }
 
-    protected void setupLeakCanary() {
-        /*if (com.squareup.leakcanary.LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        refWatcher = com.squareup.leakcanary.LeakCanary.install(this);*/
-    }
 
     protected void setupYandex() {
-        UserProfile userProfile = UserProfile.newBuilder()
+        final UserProfile userProfile = UserProfile.newBuilder()
                 .apply(Attribute.name().withValue(applicationComponent.SharedPreferenceModel()
                         .getStringData(USERNAME.getValue()))).build();
-        YandexMetricaConfig config = com.yandex.metrica.YandexMetricaConfig
+        final YandexMetricaConfig config = com.yandex.metrica.YandexMetricaConfig
                 .newConfigBuilder("6d39e473-5c5c-4163-9c4c-21eb91758e8f").withLogs()
                 .withAppVersion(BuildConfig.VERSION_NAME).build();
         YandexMetrica.activate(appContext, config);
         YandexMetrica.enableActivityAutoTracking(this);
         YandexMetrica.activate(getApplicationContext(), config);
-//        YandexMetrica.setUserProfileID("id 784");
         YandexMetrica.reportUserProfile(userProfile);
-//        throw new RuntimeException("Test Force Crash"); // Force a crash
     }
 
     @Override

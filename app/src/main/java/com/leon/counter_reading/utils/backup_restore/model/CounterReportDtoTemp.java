@@ -1,4 +1,4 @@
-package com.leon.counter_reading.utils.backup_restore;
+package com.leon.counter_reading.utils.backup_restore.model;
 
 import com.leon.counter_reading.tables.CounterReportDto;
 
@@ -14,8 +14,7 @@ public class CounterReportDtoTemp {
     public int clientOrder;
 
     public CounterReportDto getCounterReportDto() {
-        CounterReportDto counterReportDto = new CounterReportDto();
-
+        final CounterReportDto counterReportDto = new CounterReportDto();
         counterReportDto.id = id;
         counterReportDto.moshtarakinId = moshtarakinId;
         counterReportDto.title = title;

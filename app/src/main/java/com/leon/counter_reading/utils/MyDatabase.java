@@ -217,12 +217,6 @@ public abstract class MyDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("DROP INDEX 'id'");
-//            database.execSQL("DROP INDEX 'id' ON TrackingDto(id);");
-//            database.execSQL("DROP INDEX 'id' ON KarbariDto(id);");
-//            database.execSQL("DROP INDEX 'id' ON OnOffLoadDto(id);");
-//            database.execSQL("DROP INDEX 'id' ON QotrDictionary(id);");
-//            database.execSQL("DROP INDEX 'id' ON ReadingConfigDefaultDto(id);");
-//            database.execSQL("DROP INDEX 'id' ON CounterStateDto(id);");
         }
     };
 

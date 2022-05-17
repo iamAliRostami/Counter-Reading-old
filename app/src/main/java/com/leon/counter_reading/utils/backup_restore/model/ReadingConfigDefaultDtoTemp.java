@@ -1,4 +1,4 @@
-package com.leon.counter_reading.utils.backup_restore;
+package com.leon.counter_reading.utils.backup_restore.model;
 
 import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 
@@ -34,7 +34,7 @@ public class ReadingConfigDefaultDtoTemp {
     public String zone;
 
     public ReadingConfigDefaultDto getReadingConfigDto() {
-        ReadingConfigDefaultDto readingConfigDefaultDto = new ReadingConfigDefaultDto();
+        final ReadingConfigDefaultDto readingConfigDefaultDto = new ReadingConfigDefaultDto();
         readingConfigDefaultDto.id = id;
         readingConfigDefaultDto.zoneId = zoneId;
         readingConfigDefaultDto.defaultAlalHesab = defaultAlalHesab;

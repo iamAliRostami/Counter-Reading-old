@@ -1,4 +1,4 @@
-package com.leon.counter_reading.utils.backup_restore;
+package com.leon.counter_reading.utils.backup_restore.model;
 
 import com.leon.counter_reading.tables.ForbiddenDto;
 
@@ -17,8 +17,7 @@ public class ForbiddenDtoTemp {
     public int isSent;
 
     public ForbiddenDto getForbiddenDto() {
-        ForbiddenDto forbiddenDto = new ForbiddenDto();
-
+        final ForbiddenDto forbiddenDto = new ForbiddenDto();
         forbiddenDto.description = description;
         forbiddenDto.preEshterak = preEshterak;
         forbiddenDto.nextEshterak = nextEshterak;
@@ -27,7 +26,6 @@ public class ForbiddenDtoTemp {
         forbiddenDto.y = y;
         forbiddenDto.gisAccuracy = gisAccuracy;
         forbiddenDto.address = address;
-
         forbiddenDto.zoneId = zoneId;
         forbiddenDto.tedadVahed = tedadVahed;
         forbiddenDto.isSent = isSent == 1;

@@ -71,7 +71,7 @@ public class SaveDownloadData {
         myDatabase.karbariDao().deleteKarbariDto();
         myDatabase.karbariDao().insertAllKarbariDtos(readingData.karbariDtos);
 
-        ArrayList<QotrDictionary> qotrDictionaries = new ArrayList<>(myDatabase.qotrDictionaryDao()
+        final ArrayList<QotrDictionary> qotrDictionaries = new ArrayList<>(myDatabase.qotrDictionaryDao()
                 .getAllQotrDictionaries());
         for (int j = 0; j < qotrDictionaries.size(); j++) {
             int i = 0;
@@ -123,29 +123,26 @@ public class SaveDownloadData {
             final String time = replaceNonstandardDigits(new SimpleDateFormat(activity
                     .getString(R.string.save_format_name))
                     .format(new Date()).concat(String.valueOf(new Random().nextInt(1000))));
-
+            int trackNumber = Integer.parseInt(replaceNonstandardDigits(String.valueOf(readingData.trackingDtos.get(i).trackNumber)));
             final String query = "CREATE TABLE `%s` AS %s;";
             final String queryTrackDto = String.format(query, "TrackingDto_".concat(time),
                     String.format("SELECT * FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1",
-                            readingData.trackingDtos.get(i).trackNumber));
+                            trackNumber));
 
 //            final String queryTrackDto = String.format(query, "TrackingDto_".concat(time),
 //                    "SELECT * FROM TrackingDto WHERE trackNumber = ۱۲۳۴۵۶ AND isArchive = 1");
+//                final String test = "CREATE TABLE IF NOT EXISTS `copied` AS SELECT * FROM OnOffLoadDto WHERE 0";
+//                cursor = myDatabase.getOpenHelper().getWritableDatabase().query(test);
+//                cursor.moveToFirst();
 
             final String queryOnOffLoad = String.format(query, "OnOffLoadDto_".concat(time),
-                    String.format("SELECT * FROM OnOffLoadDto WHERE trackNumber = %d",
-                            readingData.trackingDtos.get(i).trackNumber));
+                    String.format("SELECT * FROM OnOffLoadDto WHERE trackNumber = %d", trackNumber));
 
             try {
                 Cursor cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryTrackDto);
                 cursor.moveToFirst();
                 cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryOnOffLoad);
                 cursor.moveToFirst();
-
-
-//                final String test = "CREATE TABLE IF NOT EXISTS `copied` AS SELECT * FROM OnOffLoadDto WHERE 0";
-//                cursor = myDatabase.getOpenHelper().getWritableDatabase().query(test);
-//                cursor.moveToFirst();
 
                 myDatabase.trackingDao().deleteTrackingDto(readingData.trackingDtos.get(i).trackNumber, true);
                 myDatabase.onOffLoadDao().deleteOnOffLoads(readingData.trackingDtos.get(i).trackNumber);

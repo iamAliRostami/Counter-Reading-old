@@ -12,7 +12,10 @@ import static com.leon.counter_reading.enums.CompanyNames.ZONE3;
 import static com.leon.counter_reading.enums.CompanyNames.ZONE4;
 import static com.leon.counter_reading.enums.CompanyNames.ZONE5;
 import static com.leon.counter_reading.enums.CompanyNames.ZONE6;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.PROXY;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
+import static com.leon.counter_reading.utils.Converters.replaceNonstandardDigits;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -20,8 +23,6 @@ import android.location.Location;
 
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.enums.CompanyNames;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.helpers.MyApplication;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,13 +31,12 @@ import java.util.Date;
 public class DifferentCompanyManager {
 
     public static CompanyNames getActiveCompanyName() {
-//        return CompanyNames.ZONE4;
         return BuildConfig.COMPANY_NAME;
     }
 
     public static String getBaseUrl(CompanyNames companyNames) {
-        if (MyApplication.getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(SharedReferenceKeys.PROXY.getValue())) {
-            String proxy = MyApplication.getApplicationComponent().SharedPreferenceModel().getStringData(SharedReferenceKeys.PROXY.getValue());
+        if (getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(PROXY.getValue())) {
+            final String proxy = getApplicationComponent().SharedPreferenceModel().getStringData(PROXY.getValue());
             if (proxy.startsWith("http://") && proxy.length() > 7)
                 return proxy;
             if (proxy.startsWith("https://") && proxy.length() > 8)
@@ -430,7 +430,7 @@ public class DifferentCompanyManager {
         final Location location = getLocationTracker(activity).getCurrentLocation();
         Date date = new Date(location != null ? location.getTime() :
                 Calendar.getInstance().getTimeInMillis());
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         switch (companyNames) {
             case ZONE1:
@@ -448,6 +448,6 @@ public class DifferentCompanyManager {
         }
         date = new Date(calendar.getTimeInMillis());
         final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        return Converters.replaceNonstandardDigits(dateFormatter.format(date));
+        return replaceNonstandardDigits(dateFormatter.format(date));
     }
 }

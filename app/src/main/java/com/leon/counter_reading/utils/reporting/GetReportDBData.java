@@ -1,12 +1,13 @@
 package com.leon.counter_reading.utils.reporting;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 
 import com.leon.counter_reading.activities.ReportActivity;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.enums.HighLowStateEnum;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.MyDatabase;
@@ -14,7 +15,7 @@ import com.leon.counter_reading.utils.MyDatabase;
 import java.util.ArrayList;
 
 public class GetReportDBData extends AsyncTask<Activity, Integer, Integer> {
-    private final CustomProgressModel customProgressModel;
+    private final CustomProgressModel progress;
     private final MyDatabase myDatabase;
     private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
     private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
@@ -22,21 +23,21 @@ public class GetReportDBData extends AsyncTask<Activity, Integer, Integer> {
 
     public GetReportDBData(Activity activity) {
         super();
-        myDatabase = MyApplication.getApplicationComponent().MyDatabase();
-        customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
-        customProgressModel.show(activity, false);
+        myDatabase = getApplicationComponent().MyDatabase();
+        progress = getApplicationComponent().CustomProgressModel();
+        progress.show(activity, false);
     }
 
     @Override
     protected void onPostExecute(Integer integer) {
         super.onPostExecute(integer);
-        customProgressModel.getDialog().dismiss();
+        progress.getDialog().dismiss();
     }
 
     @Override
     protected Integer doInBackground(Activity... activities) {
         trackingDtos.addAll(myDatabase.trackingDao().getTrackingDtosIsActiveNotArchive(true, false));
-        ArrayList<Integer> isManes = new ArrayList<>();
+        final ArrayList<Integer> isManes = new ArrayList<>();
         if (trackingDtos.size() > 0)
             isManes.addAll(myDatabase.counterStateDao().getCounterStateDtosIsMane(true, trackingDtos.get(0).zoneId));
         for (int j = 0, trackingDtosSize = trackingDtos.size(); j < trackingDtosSize; j++) {

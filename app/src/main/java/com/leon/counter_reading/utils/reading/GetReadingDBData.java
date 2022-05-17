@@ -26,14 +26,14 @@ import com.leon.counter_reading.utils.MyDatabase;
 import java.util.Collections;
 
 public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
-    private final CustomProgressModel customProgressModel;
+    private final CustomProgressModel progress;
     private final int readStatus, highLow;
     private final boolean sortType;
 
     public GetReadingDBData(Activity activity, int readStatus, int highLow, boolean sortType) {
         super();
-        customProgressModel = getApplicationComponent().CustomProgressModel();
-        customProgressModel.show(activity, false);
+        progress = getApplicationComponent().CustomProgressModel();
+        progress.show(activity, false);
 
         readingData.trackingDtos.clear();
         readingData.onOffLoadDtos.clear();
@@ -58,7 +58,7 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
 
     @Override
     protected void onPostExecute(Integer integer) {
-        customProgressModel.getDialog().dismiss();
+        progress.getDialog().dismiss();
         super.onPostExecute(integer);
     }
 

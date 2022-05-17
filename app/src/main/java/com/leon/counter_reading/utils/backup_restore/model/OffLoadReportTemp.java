@@ -1,4 +1,4 @@
-package com.leon.counter_reading.utils.backup_restore;
+package com.leon.counter_reading.utils.backup_restore.model;
 
 import com.leon.counter_reading.tables.OffLoadReport;
 
@@ -9,7 +9,7 @@ public class OffLoadReportTemp {
     public int trackNumber;
 
     public OffLoadReport getOffLoadReport() {
-        OffLoadReport offLoadReport = new OffLoadReport();
+        final OffLoadReport offLoadReport = new OffLoadReport();
         offLoadReport.onOffLoadId = onOffLoadId;
         offLoadReport.reportId = reportId;
         offLoadReport.isSent = isSent == 1;

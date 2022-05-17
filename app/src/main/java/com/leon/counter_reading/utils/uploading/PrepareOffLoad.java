@@ -6,12 +6,11 @@ import static com.leon.counter_reading.enums.OffloadStateEnum.SENT_WITH_ERROR;
 import static com.leon.counter_reading.enums.ProgressType.SHOW;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
-import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.CalendarTool.getDate;
+import static com.leon.counter_reading.utils.Converters.bitmapToFile;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -29,15 +28,11 @@ import com.leon.counter_reading.tables.ForbiddenDtoRequestMultiple;
 import com.leon.counter_reading.tables.ForbiddenDtoResponses;
 import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.tables.OnOffLoadDto;
-import com.leon.counter_reading.utils.CalendarTool;
 import com.leon.counter_reading.utils.CustomErrorHandling;
 import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -47,15 +42,15 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
     private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
     private final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
     private final ArrayList<ForbiddenDto> forbiddenDtos = new ArrayList<>();
-    private final CustomProgressModel customProgressModel;
+    private final CustomProgressModel progress;
     private final UploadFragment fragment;
     private final int trackNumber;
     private final String id;
 
     public PrepareOffLoad(Activity activity, int trackNumber, String id, UploadFragment fragment) {
         super();
-        customProgressModel = getApplicationComponent().CustomProgressModel();
-        customProgressModel.show(activity, false);
+        progress = getApplicationComponent().CustomProgressModel();
+        progress.show(activity, false);
         this.trackNumber = trackNumber;
         this.id = id;
         this.fragment = fragment;
@@ -78,7 +73,7 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
     @Override
     protected void onPostExecute(Activity activity) {
         super.onPostExecute(activity);
-        customProgressModel.getDialog().dismiss();
+        progress.getDialog().dismiss();
         uploadOffLoad(activity);
         if (forbiddenDtos.size() > 0) uploadForbid(activity);
         fragment.setButtonState();
@@ -95,7 +90,7 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
                             forbiddenDto.postalCode, forbiddenDto.tedadVahed, forbiddenDto.x,
                             forbiddenDto.y, forbiddenDto.gisAccuracy);
             if (forbiddenDto.address != null)
-                forbiddenDtoMultiple.File = CustomFile.bitmapToFile(CustomFile.loadImage(activity,
+                forbiddenDtoMultiple.File = bitmapToFile(CustomFile.loadImage(activity,
                         forbiddenDto.address), activity);
             forbiddenDtoRequestMultiple.forbiddenDtos.add(forbiddenDtoMultiple);
         }

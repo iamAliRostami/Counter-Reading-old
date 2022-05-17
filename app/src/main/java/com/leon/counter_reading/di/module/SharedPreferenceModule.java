@@ -2,7 +2,7 @@ package com.leon.counter_reading.di.module;
 
 import android.content.Context;
 
-import com.leon.counter_reading.di.view_model.SharedPreferenceManagerModel;
+import com.leon.counter_reading.di.view_model.SharedPreferenceModel;
 import com.leon.counter_reading.enums.SharedReferenceNames;
 
 import javax.inject.Singleton;
@@ -13,15 +13,15 @@ import dagger.Provides;
 @Singleton
 @Module
 public class SharedPreferenceModule {
-    private final SharedPreferenceManagerModel sharedPreference;
+    private final SharedPreferenceModel sharedPreference;
 
     public SharedPreferenceModule(Context context, SharedReferenceNames sharedReferenceNames) {
-        sharedPreference = new SharedPreferenceManagerModel(context, sharedReferenceNames.getValue());
+        sharedPreference = new SharedPreferenceModel(context, sharedReferenceNames.getValue());
     }
 
     @Singleton
     @Provides
-    public SharedPreferenceManagerModel providesSharedPreferenceModel() {
+    public SharedPreferenceModel providesSharedPreferenceModel() {
         return sharedPreference;
     }
 }

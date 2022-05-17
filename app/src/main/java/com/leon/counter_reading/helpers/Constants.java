@@ -31,7 +31,7 @@ public class Constants {
     public static final int CAMERA = 1446;
     public static final int REPORT = 1445;
     public static final int NAVIGATION = 1903;
-    public static final int COUNTER_LOCATION = 1914;
+    public static final int COUNTER_PLACE = 1914;
     public static final int DESCRIPTION = 1909;
 
     public static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
@@ -47,7 +47,6 @@ public class Constants {
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
     public static final String[] LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION};
-    public static final String PHONE_PERMISSIONS = "android.permission.READ_PRIVILEGED_PHONE_STATE";
     public static final String ACTION_USB_PERMISSION = "com.leon.counter_reading.activities.USB_PERMISSION";
     public static final int INTERFACE_SUBCLASS = 6;
     public static final int INTERFACE_PROTOCOL = 80;

@@ -1,4 +1,4 @@
-package com.leon.counter_reading.utils.backup_restore;
+package com.leon.counter_reading.utils.backup_restore.model;
 
 import com.leon.counter_reading.tables.TrackingDto;
 
@@ -32,7 +32,7 @@ public class TrackingDtoTemp {
     public String y;
 
     public TrackingDto getTrackingDto() {
-        TrackingDto trackingDto = new TrackingDto();
+        final TrackingDto trackingDto = new TrackingDto();
         trackingDto.id = id;
         trackingDto.listNumber = listNumber;
         trackingDto.insertDateJalali = insertDateJalali;

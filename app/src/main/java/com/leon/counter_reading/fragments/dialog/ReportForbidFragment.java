@@ -3,7 +3,7 @@ package com.leon.counter_reading.fragments.dialog;
 import static com.leon.counter_reading.enums.BundleEnum.ZONE_ID;
 import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
-import static com.leon.counter_reading.utils.CustomFile.bitmapToFile;
+import static com.leon.counter_reading.utils.Converters.bitmapToFile;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;

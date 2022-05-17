@@ -1,9 +1,5 @@
 package com.leon.counter_reading.infrastructure;
 
-/**
- * Created by Leon on 1/10/2018.
- */
-
 public interface ISharedPreferenceManager {
     void putData(String key, String value);
 

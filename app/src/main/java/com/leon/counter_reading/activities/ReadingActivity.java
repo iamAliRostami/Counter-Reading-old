@@ -30,7 +30,7 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.SORT_TYPE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.TOKEN;
 import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.Constants.CAMERA;
-import static com.leon.counter_reading.helpers.Constants.COUNTER_LOCATION;
+import static com.leon.counter_reading.helpers.Constants.COUNTER_PLACE;
 import static com.leon.counter_reading.helpers.Constants.DESCRIPTION;
 import static com.leon.counter_reading.helpers.Constants.NAVIGATION;
 import static com.leon.counter_reading.helpers.Constants.OFFLINE_ATTEMPT;
@@ -580,9 +580,8 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if ((requestCode == REPORT || requestCode == NAVIGATION ||
-                requestCode == DESCRIPTION ||
-                requestCode == COUNTER_LOCATION) && resultCode == RESULT_OK) {
+        if ((requestCode == REPORT || requestCode == NAVIGATION || requestCode == DESCRIPTION ||
+                requestCode == COUNTER_PLACE) && resultCode == RESULT_OK) {
             new ResultOld(data).execute(activity);
         } else if (requestCode == CAMERA && resultCode == RESULT_OK) {
             int position = data.getExtras().getInt(POSITION.getValue());
@@ -593,7 +592,6 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     @Override
     public void setResult(int position, String uuid) {
         new Result(position, uuid).execute(activity);
-
     }
 
     public void setPhotoResult(int position) {

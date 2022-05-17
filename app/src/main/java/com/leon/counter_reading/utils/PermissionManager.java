@@ -312,9 +312,7 @@ public class PermissionManager {
                     final CellSignalStrengthWcdma cell = ((CellInfoWcdma) info).getCellSignalStrength();
                     signal = cell.getDbm();
                     outOfService = signal <= -110;
-                }/* else {
-                    throw new Exception("Unknown type of cell signal!");
-                }*/
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

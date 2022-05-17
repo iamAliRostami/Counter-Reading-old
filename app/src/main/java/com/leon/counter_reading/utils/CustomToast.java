@@ -1,8 +1,8 @@
 package com.leon.counter_reading.utils;
 
-import android.widget.Toast;
+import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
-import com.leon.counter_reading.helpers.MyApplication;
+import android.widget.Toast;
 
 import es.dmoral.toasty.Toasty;
 
@@ -12,7 +12,7 @@ public class CustomToast {
     }
 
     public void error(String s, int duration) {
-        Toasty.error(MyApplication.getContext(), s, duration, true).show();
+        Toasty.error(getContext(), s, duration, true).show();
     }
 
     public void success(String s) {
@@ -20,7 +20,7 @@ public class CustomToast {
     }
 
     public void success(String s, int duration) {
-        Toasty.success(MyApplication.getContext(), s, duration, true).show();
+        Toasty.success(getContext(), s, duration, true).show();
     }
 
     public void info(String s) {
@@ -28,7 +28,7 @@ public class CustomToast {
     }
 
     public void info(String s, int duration) {
-        Toasty.info(MyApplication.getContext(), s, duration, true).show();
+        Toasty.info(getContext(), s, duration, true).show();
     }
 
     public void warning(String s) {
@@ -36,16 +36,16 @@ public class CustomToast {
     }
 
     public void warning(String s, int duration) {
-        Toasty.warning(MyApplication.getContext(), s, duration, true).show();
+        Toasty.warning(getContext(), s, duration, true).show();
     }
 
     public void normal(String s, int drawable) {
-        Toasty.normal(MyApplication.getContext(), s, drawable).show();
+        Toasty.normal(getContext(), s, drawable).show();
     }
 
     public void custom(String s, int drawable, int duration, int tintColor,
                        boolean withIcon, boolean shouldTint) {
-        Toasty.custom(MyApplication.getContext(), s, drawable, tintColor, duration, withIcon,
+        Toasty.custom(getContext(), s, drawable, tintColor, duration, withIcon,
                 shouldTint).show();
     }
 }

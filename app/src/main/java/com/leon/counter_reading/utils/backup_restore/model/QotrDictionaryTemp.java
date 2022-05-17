@@ -1,4 +1,4 @@
-package com.leon.counter_reading.utils.backup_restore;
+package com.leon.counter_reading.utils.backup_restore.model;
 
 import com.leon.counter_reading.tables.QotrDictionary;
 
@@ -8,7 +8,7 @@ public class QotrDictionaryTemp {
     public int isSelected;
 
     public QotrDictionary getQotrDictionary() {
-        QotrDictionary qotrDictionary = new QotrDictionary();
+        final QotrDictionary qotrDictionary = new QotrDictionary();
         qotrDictionary.id = id;
         qotrDictionary.isSelected = isSelected == 1;
         qotrDictionary.title = title;

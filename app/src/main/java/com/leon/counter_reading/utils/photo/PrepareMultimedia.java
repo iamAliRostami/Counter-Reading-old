@@ -3,11 +3,10 @@ package com.leon.counter_reading.utils.photo;
 import static com.leon.counter_reading.enums.ProgressType.SHOW_CANCELABLE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.TOKEN;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.utils.CustomFile.bitmapToFile;
+import static com.leon.counter_reading.utils.Converters.bitmapToFile;
 import static com.leon.counter_reading.utils.CustomFile.loadImage;
 
 import android.app.Activity;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -55,10 +54,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
         imageGrouped.File.clear();
         for (int i = 0; i < images.size(); i++) {
             images.get(i).Description = description;
-            if (!images.get(i).isSent && images.get(i).File == null) //TODO
-//                imageGrouped.File.add(bitmapToFile(images.get(i).bitmap, activities[0]));
-//                imageGrouped.File.add(bitmapToFile(BitmapFactory.decodeFile(images.get(i).address), activities[0]));
-            imageGrouped.File.add(bitmapToFile(loadImage(activities[0], images.get(i).address), activities[0]));
+            if (!images.get(i).isSent && images.get(i).File == null)
+                imageGrouped.File.add(bitmapToFile(loadImage(activities[0], images.get(i).address), activities[0]));
         }
         return activities[0];
     }
