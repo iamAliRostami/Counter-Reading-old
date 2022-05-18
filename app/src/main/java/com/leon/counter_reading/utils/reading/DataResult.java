@@ -10,10 +10,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 
-public class ResultOld extends AsyncTask<Activity, Void, Void> {
+public class DataResult extends AsyncTask<Activity, Void, Void> {
     private final Intent data;
 
-    public ResultOld(Intent data) {
+    public DataResult(Intent data) {
         super();
         this.data = data;
     }

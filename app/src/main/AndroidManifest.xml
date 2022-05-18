@@ -12,8 +12,11 @@
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
-
+        <intent>
+            <action android:name="android.intent.action.PICK" />
+        </intent>
         <package android:name="com.leon.counter_reading.activities.ReportForbidActivity" />
+        <package android:name="com.leon.counter_reading.activities.ReadingActivity" />
         <package android:name="com.leon.counter_reading.activities.TakePhotoActivity" />
         <package android:name="com.leon.counter_reading.activities.DescriptionActivity" />
     </queries>

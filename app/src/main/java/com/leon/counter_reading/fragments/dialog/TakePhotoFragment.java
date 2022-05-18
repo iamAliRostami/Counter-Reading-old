@@ -15,7 +15,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,16 +136,20 @@ public class TakePhotoFragment extends DialogFragment {
 
     public void openResourceForResult() {
 //        Log.e("checkBoxGallery", String.valueOf(binding.checkBoxGallery.isChecked()));
-        if (binding.checkBoxGallery.isChecked()) openGalleryForResult();
+        if (binding.checkBoxGallery.isChecked())
+            openGalleryForResult();
         else openCameraForResult();
     }
 
     private void openGalleryForResult() {
-        final Intent galleryIntent = new Intent("android.intent.action.PICK");
-        if (galleryIntent.resolveActivity(requireContext().getPackageManager()) != null) {
-            galleryIntent.setType("image/*");
-            galleryResultLauncher.launch(galleryIntent);
-        }
+        final Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("image/*");
+        galleryResultLauncher.launch(galleryIntent);
+//        final Intent galleryIntent = new Intent("android.intent.action.PICK");
+//        if (galleryIntent.resolveActivity(requireContext().getPackageManager()) != null) {
+//            galleryIntent.setType("image/*");
+//            galleryResultLauncher.launch(galleryIntent);
+//        }
     }
 
     private void openCameraForResult() {
@@ -202,7 +205,6 @@ public class TakePhotoFragment extends DialogFragment {
 
     private void prepareImage(Image image) {
         try {
-//            image.address = saveTempBitmap(path, requireContext());
             image.size = CURRENT_IMAGE_SIZE;
             image.OnOffLoadId = uuid;
             image.trackNumber = trackNumber;

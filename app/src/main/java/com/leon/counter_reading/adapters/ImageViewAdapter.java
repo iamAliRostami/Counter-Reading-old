@@ -11,6 +11,7 @@ import static com.leon.counter_reading.utils.DifferentCompanyManager.getImageNum
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,8 @@ public class ImageViewAdapter extends BaseAdapter {
     private final ArrayList<Image> images;
     private final LayoutInflater inflater;
     private final Context context;
+    private long lastClickTime = 0;
+
 
     public ImageViewAdapter(Context context, ArrayList<Image> images) {
         this.images = images;
@@ -63,10 +66,10 @@ public class ImageViewAdapter extends BaseAdapter {
         holder.imageViewSent.setVisibility(position < images.size() && images.get(position).isSent ?
                 View.VISIBLE : View.GONE);
 
-        holder.imageView.setEnabled(true);
         holder.imageView.setOnClickListener(view1 -> {
+            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
+            lastClickTime = SystemClock.elapsedRealtime();
             if (position >= images.size() || !images.get(position).isSent) {
-                holder.imageView.setEnabled(false);
                 replace = position < images.size() ? position + 1 : 0;
                 imagePicker();
             }

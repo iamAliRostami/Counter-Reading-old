@@ -90,7 +90,7 @@ import com.leon.counter_reading.utils.reading.GetReadingDBData;
 import com.leon.counter_reading.utils.reading.PrepareToSend;
 import com.leon.counter_reading.utils.reading.ReadingUtils;
 import com.leon.counter_reading.utils.reading.Result;
-import com.leon.counter_reading.utils.reading.ResultOld;
+import com.leon.counter_reading.utils.reading.DataResult;
 import com.leon.counter_reading.utils.reading.Search;
 import com.leon.counter_reading.utils.reading.Update;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByAttemptNumber;
@@ -582,7 +582,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
         super.onActivityResult(requestCode, resultCode, data);
         if ((requestCode == REPORT || requestCode == NAVIGATION || requestCode == DESCRIPTION ||
                 requestCode == COUNTER_PLACE) && resultCode == RESULT_OK) {
-            new ResultOld(data).execute(activity);
+            new DataResult(data).execute(activity);
         } else if (requestCode == CAMERA && resultCode == RESULT_OK) {
             int position = data.getExtras().getInt(POSITION.getValue());
             attemptSend(position, false, false);

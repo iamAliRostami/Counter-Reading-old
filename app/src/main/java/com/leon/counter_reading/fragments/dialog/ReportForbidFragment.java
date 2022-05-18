@@ -50,7 +50,7 @@ public class ReportForbidFragment extends DialogFragment {
     private final ForbiddenDto forbiddenDto = new ForbiddenDto();
     private String path;
     private int zoneId;
-    private final ActivityResultLauncher<Intent> galleryActivityResultLauncher =
+    private final ActivityResultLauncher<Intent> galleryResultLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                     result -> {
                         if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null &&
@@ -64,7 +64,7 @@ public class ReportForbidFragment extends DialogFragment {
                             }
                         }
                     });
-    private final ActivityResultLauncher<Intent> cameraActivityResultLauncher =
+    private final ActivityResultLauncher<Intent> cameraResultLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                     result -> {
                         if (result.getResultCode() == Activity.RESULT_OK) {
@@ -266,17 +266,20 @@ public class ReportForbidFragment extends DialogFragment {
                 path = photoFile.getPath();
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(requireContext(),
                         BuildConfig.APPLICATION_ID.concat(".provider"), photoFile));
-                cameraActivityResultLauncher.launch(cameraIntent);
+                cameraResultLauncher.launch(cameraIntent);
             }
         }
     }
 
     private void openGalleryForResult() {
-        final Intent galleryIntent = new Intent("android.intent.action.PICK");
-        if (galleryIntent.resolveActivity(requireContext().getPackageManager()) != null) {
-            galleryIntent.setType("image/*");
-            galleryActivityResultLauncher.launch(galleryIntent);
-        }
+        final Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("image/*");
+        galleryResultLauncher.launch(galleryIntent);
+//        final Intent galleryIntent = new Intent("android.intent.action.PICK");
+//        if (galleryIntent.resolveActivity(requireContext().getPackageManager()) != null) {
+//            galleryIntent.setType("image/*");
+//            galleryResultLauncher.launch(galleryIntent);
+//        }
     }
 
     private void addImage(final Bitmap bitmap) {
