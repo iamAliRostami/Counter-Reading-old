@@ -1,5 +1,10 @@
 package com.leon.counter_reading.fragments.dialog;
 
+import static com.leon.counter_reading.enums.SearchTypeEnum.BARCODE;
+import static com.leon.counter_reading.enums.SearchTypeEnum.NAME;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getSecondSearchItem;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -19,7 +24,6 @@ import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentSearchBinding;
 import com.leon.counter_reading.enums.SearchTypeEnum;
 import com.leon.counter_reading.utils.CustomToast;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -55,11 +59,10 @@ public class SearchFragment extends DialogFragment {
             }/* else if (type == SearchTypeEnum.BARCODE.getValue()) {
                 scanFromFragment();
             } */ else {
-                String key = binding.editTextSearch.getText().toString();
+                final String key = binding.editTextSearch.getText().toString();
                 if (key.isEmpty()) {
-                    View view = binding.editTextSearch;
                     binding.editTextSearch.setError(getString(R.string.error_empty));
-                    view.requestFocus();
+                    binding.editTextSearch.requestFocus();
                 } else {
                     ((ReadingActivity) requireActivity()).search(type, key, binding.checkBoxGoToPage.isChecked());
                     dismiss();
@@ -69,21 +72,21 @@ public class SearchFragment extends DialogFragment {
     }
 
     private void initializeSpinner() {
-        String[] items = getResources().getStringArray(R.array.search_option);
-        items[1] = DifferentCompanyManager.getSecondSearchItem(DifferentCompanyManager.getActiveCompanyName());
-        SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(getActivity(), items);
+        final String[] items = getResources().getStringArray(R.array.search_option);
+        items[1] = getSecondSearchItem(getActiveCompanyName());
+        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(getActivity(), items);
         binding.spinnerSearch.setAdapter(adapter);
         binding.spinnerSearch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 type = position;
-                binding.checkBoxGoToPage.setVisibility(type >= SearchTypeEnum.NAME.getValue() ?
-                        View.GONE : View.VISIBLE);
-                binding.editTextSearch.setInputType(type == SearchTypeEnum.NAME.getValue() ?
+                binding.checkBoxGoToPage.setVisibility(type >= NAME.getValue() ? View.GONE :
+                        View.VISIBLE);
+                binding.editTextSearch.setInputType(type == NAME.getValue() ?
                         InputType.TYPE_CLASS_TEXT : InputType.TYPE_CLASS_NUMBER);
-                binding.editTextSearch.setVisibility(type >= SearchTypeEnum.BARCODE.getValue() ?
-                        View.GONE : View.VISIBLE);
-                if (type == SearchTypeEnum.BARCODE.getValue())
+                binding.editTextSearch.setVisibility(type >= BARCODE.getValue() ? View.GONE :
+                        View.VISIBLE);
+                if (type == BARCODE.getValue())
                     scanFromFragment();
             }
 

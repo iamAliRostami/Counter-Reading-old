@@ -2,6 +2,8 @@ package com.leon.counter_reading.utils.reading;
 
 import static com.leon.counter_reading.enums.SearchTypeEnum.BODY_COUNTER;
 import static com.leon.counter_reading.enums.SearchTypeEnum.ESHTERAK;
+import static com.leon.counter_reading.enums.SearchTypeEnum.NAME;
+import static com.leon.counter_reading.enums.SearchTypeEnum.RADIF;
 import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 
@@ -27,7 +29,7 @@ public class Search extends AsyncTask<Activity, Void, Void> {
 
     @Override
     protected Void doInBackground(Activity... activities) {
-        if (type == SearchTypeEnum.NAME.getValue()) {
+        if (type == NAME.getValue()) {
             readingData.onOffLoadDtos.clear();
             for (int i = 0; i < readingDataTemp.onOffLoadDtos.size(); i++) {
                 if (readingDataTemp.onOffLoadDtos.get(i).firstName.toLowerCase().contains(key) ||
@@ -44,7 +46,7 @@ public class Search extends AsyncTask<Activity, Void, Void> {
                         found = readingData.onOffLoadDtos.get(i).eshterak.contains(key);
                         i++;
                     }
-                } else if (type == SearchTypeEnum.RADIF.getValue()) {
+                } else if (type == RADIF.getValue()) {
                     while (i < readingData.onOffLoadDtos.size() && !found) {
                         found = String.valueOf(readingData.onOffLoadDtos.get(i).radif).contains(key);
                         i++;
@@ -67,7 +69,7 @@ public class Search extends AsyncTask<Activity, Void, Void> {
                         if (readingDataTemp.onOffLoadDtos.get(j).eshterak.toLowerCase().contains(key))
                             readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(j));
                     }
-                } else if (type == SearchTypeEnum.RADIF.getValue()) {
+                } else if (type == RADIF.getValue()) {
                     for (int j = 0; j < readingDataTemp.onOffLoadDtos.size(); j++) {
                         if (String.valueOf(readingDataTemp.onOffLoadDtos.get(j).radif).contains(key))
                             readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(j));
