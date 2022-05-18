@@ -1,7 +1,9 @@
 package com.leon.counter_reading.fragments.dialog;
 
+import static com.leon.counter_reading.enums.SearchTypeEnum.All;
 import static com.leon.counter_reading.enums.SearchTypeEnum.BARCODE;
 import static com.leon.counter_reading.enums.SearchTypeEnum.NAME;
+import static com.leon.counter_reading.enums.SearchTypeEnum.RADIF;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getSecondSearchItem;
 
@@ -22,7 +24,6 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentSearchBinding;
-import com.leon.counter_reading.enums.SearchTypeEnum;
 import com.leon.counter_reading.utils.CustomToast;
 
 import org.jetbrains.annotations.NotNull;
@@ -53,19 +54,17 @@ public class SearchFragment extends DialogFragment {
 
     private void setOnButtonSearchClickListener() {
         binding.buttonSearch.setOnClickListener(v -> {
-            if (type == SearchTypeEnum.All.getValue()) {
+            if (type == All.getValue()) {
                 ((ReadingActivity) requireActivity()).search(type, null, false);
                 dismiss();
-            }/* else if (type == SearchTypeEnum.BARCODE.getValue()) {
-                scanFromFragment();
-            } */ else {
+            } else {
                 final String key = binding.editTextSearch.getText().toString();
                 if (key.isEmpty()) {
                     binding.editTextSearch.setError(getString(R.string.error_empty));
                     binding.editTextSearch.requestFocus();
                 } else {
-                    ((ReadingActivity) requireActivity()).search(type, key, binding.checkBoxGoToPage.isChecked());
-                    dismiss();
+                    if (((ReadingActivity) requireActivity()).search(type, key, binding.checkBoxGoToPage.isChecked()))
+                        dismiss();
                 }
             }
         });
@@ -102,7 +101,7 @@ public class SearchFragment extends DialogFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() == null) {
                 new CustomToast().warning(getString(R.string.data_not_found));
@@ -110,7 +109,7 @@ public class SearchFragment extends DialogFragment {
                 binding.editTextSearch.setText(result.getContents());
                 binding.editTextSearch.setVisibility(View.VISIBLE);
             }
-            binding.spinnerSearch.setSelection(SearchTypeEnum.RADIF.getValue());
+            binding.spinnerSearch.setSelection(RADIF.getValue());
         }
     }
 

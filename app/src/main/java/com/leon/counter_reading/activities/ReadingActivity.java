@@ -85,12 +85,12 @@ import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DepthPageTransformer2;
 import com.leon.counter_reading.utils.reading.ChangeSortType;
+import com.leon.counter_reading.utils.reading.DataResult;
 import com.leon.counter_reading.utils.reading.GetBundle;
 import com.leon.counter_reading.utils.reading.GetReadingDBData;
 import com.leon.counter_reading.utils.reading.PrepareToSend;
 import com.leon.counter_reading.utils.reading.ReadingUtils;
 import com.leon.counter_reading.utils.reading.Result;
-import com.leon.counter_reading.utils.reading.DataResult;
 import com.leon.counter_reading.utils.reading.Search;
 import com.leon.counter_reading.utils.reading.Update;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByAttemptNumber;
@@ -240,7 +240,9 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
         }
     }
 
-    public void search(int type, String key, boolean goToPage) {
+    public boolean searchResult;
+
+    public boolean search(int type, String key, boolean goToPage) {
         if (type == PAGE_NUMBER.getValue()) {
             runOnUiThread(() -> binding.viewPager.setCurrentItem(Integer.parseInt(key) - 1));
         } else if (type == All.getValue()) {
@@ -249,7 +251,9 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
             runOnUiThread(this::setupViewPager);
         } else {
             new Search(type, key, goToPage).execute(activity);
+            return searchResult;
         }
+        return true;
     }
 
     public void setupViewPager() {

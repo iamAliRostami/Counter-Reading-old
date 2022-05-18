@@ -12,13 +12,13 @@ import android.os.AsyncTask;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
-import com.leon.counter_reading.enums.SearchTypeEnum;
 import com.leon.counter_reading.utils.CustomToast;
 
-public class Search extends AsyncTask<Activity, Void, Void> {
+public class Search extends AsyncTask<Activity, Void, Activity> {
     private final int type;
     private final String key;
     private final boolean goToPage;
+    private boolean result;
 
     public Search(int type, String key, boolean goToPage) {
         super();
@@ -28,61 +28,96 @@ public class Search extends AsyncTask<Activity, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Activity... activities) {
+    protected Activity doInBackground(Activity... activities) {
         if (type == NAME.getValue()) {
-            readingData.onOffLoadDtos.clear();
-            for (int i = 0; i < readingDataTemp.onOffLoadDtos.size(); i++) {
-                if (readingDataTemp.onOffLoadDtos.get(i).firstName.toLowerCase().contains(key) ||
-                        readingDataTemp.onOffLoadDtos.get(i).sureName.toLowerCase().contains(key))
-                    readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(i));
-            }
-            ((ReadingActivity) (activities[0])).setupViewPager();
+            result = searchByName(activities[0]);
         } else {
-            boolean found = false;
-            int i = 0;
             if (goToPage) {
-                if (type == ESHTERAK.getValue()) {
-                    while (i < readingData.onOffLoadDtos.size() && !found) {
-                        found = readingData.onOffLoadDtos.get(i).eshterak.contains(key);
-                        i++;
-                    }
-                } else if (type == RADIF.getValue()) {
-                    while (i < readingData.onOffLoadDtos.size() && !found) {
-                        found = String.valueOf(readingData.onOffLoadDtos.get(i).radif).contains(key);
-                        i++;
-                    }
-                } else if (type == BODY_COUNTER.getValue()) {
-                    while (i < readingData.onOffLoadDtos.size() && !found) {
-                        found = readingData.onOffLoadDtos.get(i).counterSerial.contains(key);
-                        i++;
-                    }
-                }
-                if (found)
-                    ((ReadingActivity) (activities[0])).changePage(i - 1);
-                else
-                    activities[0].runOnUiThread(() ->
-                            new CustomToast().warning(activities[0].getString(R.string.data_not_found)));
+                result = filter(activities[0]);
             } else {
-                readingData.onOffLoadDtos.clear();
-                if (type == ESHTERAK.getValue()) {
-                    for (int j = 0; j < readingDataTemp.onOffLoadDtos.size(); j++) {
-                        if (readingDataTemp.onOffLoadDtos.get(j).eshterak.toLowerCase().contains(key))
-                            readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(j));
-                    }
-                } else if (type == RADIF.getValue()) {
-                    for (int j = 0; j < readingDataTemp.onOffLoadDtos.size(); j++) {
-                        if (String.valueOf(readingDataTemp.onOffLoadDtos.get(j).radif).contains(key))
-                            readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(j));
-                    }
-                } else if (type == BODY_COUNTER.getValue()) {
-                    for (int j = 0; j < readingDataTemp.onOffLoadDtos.size(); j++) {
-                        if (readingDataTemp.onOffLoadDtos.get(j).counterSerial.toLowerCase().contains(key))
-                            readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(j));
-                    }
-                }
-                ((ReadingActivity) (activities[0])).setupViewPager();
+                result = searchOther(activities[0]);
             }
         }
-        return null;
+        return activities[0];
+    }
+
+    @Override
+    protected void onPostExecute(Activity activity) {
+        super.onPostExecute(activity);
+        ((ReadingActivity) activity).searchResult = result;
+    }
+
+    private boolean searchOther(Activity activity) {
+        readingData.onOffLoadDtos.clear();
+        if (type == ESHTERAK.getValue()) {
+            for (int j = 0; j < readingDataTemp.onOffLoadDtos.size(); j++) {
+                if (readingDataTemp.onOffLoadDtos.get(j).eshterak.toLowerCase().contains(key))
+                    readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(j));
+            }
+        } else if (type == RADIF.getValue()) {
+            for (int j = 0; j < readingDataTemp.onOffLoadDtos.size(); j++) {
+                if (String.valueOf(readingDataTemp.onOffLoadDtos.get(j).radif).contains(key))
+                    readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(j));
+            }
+        } else if (type == BODY_COUNTER.getValue()) {
+            for (int j = 0; j < readingDataTemp.onOffLoadDtos.size(); j++) {
+                if (readingDataTemp.onOffLoadDtos.get(j).counterSerial.toLowerCase().contains(key))
+                    readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(j));
+            }
+        }
+        if (readingData.onOffLoadDtos.size() > 0)
+            ((ReadingActivity) (activity)).setupViewPager();
+        else {
+            activity.runOnUiThread(() ->
+                    new CustomToast().warning(activity.getString(R.string.data_not_found)));
+            readingData.onOffLoadDtos.addAll(readingDataTemp.onOffLoadDtos);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean searchByName(Activity activity) {
+        readingData.onOffLoadDtos.clear();
+        for (int i = 0; i < readingDataTemp.onOffLoadDtos.size(); i++) {
+            if (readingDataTemp.onOffLoadDtos.get(i).firstName.toLowerCase().contains(key) ||
+                    readingDataTemp.onOffLoadDtos.get(i).sureName.toLowerCase().contains(key))
+                readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(i));
+        }
+        if (readingData.onOffLoadDtos.size() > 0)
+            ((ReadingActivity) (activity)).setupViewPager();
+        else {
+            activity.runOnUiThread(() ->
+                    new CustomToast().warning(activity.getString(R.string.data_not_found)));
+            readingData.onOffLoadDtos.addAll(readingDataTemp.onOffLoadDtos);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean filter(Activity activity) {
+        boolean found = false;
+        int i = 0;
+        if (type == ESHTERAK.getValue()) {
+            while (i < readingData.onOffLoadDtos.size() && !found) {
+                found = readingData.onOffLoadDtos.get(i).eshterak.contains(key);
+                i++;
+            }
+        } else if (type == RADIF.getValue()) {
+            while (i < readingData.onOffLoadDtos.size() && !found) {
+                found = String.valueOf(readingData.onOffLoadDtos.get(i).radif).contains(key);
+                i++;
+            }
+        } else if (type == BODY_COUNTER.getValue()) {
+            while (i < readingData.onOffLoadDtos.size() && !found) {
+                found = readingData.onOffLoadDtos.get(i).counterSerial.contains(key);
+                i++;
+            }
+        }
+        if (found)
+            ((ReadingActivity) (activity)).changePage(i - 1);
+        else
+            activity.runOnUiThread(() ->
+                    new CustomToast().warning(activity.getString(R.string.data_not_found)));
+        return found;
     }
 }
