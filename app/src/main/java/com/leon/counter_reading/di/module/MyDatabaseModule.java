@@ -1,5 +1,7 @@
 package com.leon.counter_reading.di.module;
 
+import static com.leon.counter_reading.di.view_model.MyDatabaseClientModel.getInstance;
+
 import android.content.Context;
 
 import com.leon.counter_reading.di.view_model.MyDatabaseClientModel;
@@ -16,7 +18,7 @@ public class MyDatabaseModule {
     private final MyDatabase database;
 
     public MyDatabaseModule(Context context) {
-        this.database = MyDatabaseClientModel.getInstance(context).getMyDatabase();
+        this.database = getInstance(context).getMyDatabase();
     }
 
     @Singleton
