@@ -4,7 +4,7 @@ plugins {
 }
 android {
     compileSdkVersion 32
-    buildToolsVersion "30.0.3"
+    buildToolsVersion '31.0.0'
     signingConfigs {
         config {
             keyAlias 'ali_angel'
