@@ -14,7 +14,7 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 
-@Singleton
+//@Singleton
 @Module
 public class NetworkModule {
     final NetworkHelperModel networkHelper;

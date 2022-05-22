@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Singleton
+//@Singleton
 @Module
 public class LocationTrackingModule {
     private GoogleLocationTracking googleTracking;

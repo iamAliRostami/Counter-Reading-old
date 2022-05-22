@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Singleton
+//@Singleton
 @Module
 public class CustomDialogModule {
     private final LovelyStandardDialog lovelyStandardDialog;
