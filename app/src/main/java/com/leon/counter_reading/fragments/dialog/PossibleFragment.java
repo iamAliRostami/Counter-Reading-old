@@ -5,6 +5,8 @@ import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.NotificationType.OTHER;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KARBARI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getEshterakMinLength;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.app.Activity;
@@ -159,24 +161,19 @@ public class PossibleFragment extends DialogFragment {
     private void initializeTextViews() {
         binding.editTextAccount.setFilters(new InputFilter[]{
                 new InputFilter.LengthFilter(DifferentCompanyManager
-                        .getEshterakMaxLength(DifferentCompanyManager.getActiveCompanyName()))});
+                        .getEshterakMaxLength(getActiveCompanyName()))});
 
-        binding.textViewAhad1Title.setText(DifferentCompanyManager.getAhad1(DifferentCompanyManager
-                .getActiveCompanyName()).concat(":"));
-        binding.textViewAhad2Title.setText(DifferentCompanyManager.getAhad2(DifferentCompanyManager
-                .getActiveCompanyName()).replaceFirst("آحاد ", "").concat(":"));
+        binding.textViewAhad1Title.setText(DifferentCompanyManager.getAhad1(getActiveCompanyName()).concat(":"));
+        binding.textViewAhad2Title.setText(DifferentCompanyManager.getAhad2(getActiveCompanyName()).replaceFirst("آحاد ", "").concat(":"));
         binding.textViewAhadTotalTitle.setText(DifferentCompanyManager
-                .getAhadTotal(DifferentCompanyManager.getActiveCompanyName()).replaceFirst("آحاد ", "").concat(":"));
+                .getAhadTotal(getActiveCompanyName()).replaceFirst("آحاد ", "").concat(":"));
 
-        binding.editTextAhadEmpty.setHint(DifferentCompanyManager.getAhad(DifferentCompanyManager
-                .getActiveCompanyName()).concat(getString(R.string.empty)));
+        binding.editTextAhadEmpty.setHint(DifferentCompanyManager.getAhad(getActiveCompanyName()).concat(getString(R.string.empty)));
 
-        binding.editTextAhad1.setHint(DifferentCompanyManager.getAhad1(DifferentCompanyManager
-                .getActiveCompanyName()));
-        binding.editTextAhad2.setHint(DifferentCompanyManager.getAhad2(DifferentCompanyManager
-                .getActiveCompanyName()));
+        binding.editTextAhad1.setHint(DifferentCompanyManager.getAhad1(getActiveCompanyName()));
+        binding.editTextAhad2.setHint(DifferentCompanyManager.getAhad2(getActiveCompanyName()));
         binding.editTextAhadTotal.setHint(DifferentCompanyManager
-                .getAhadTotal(DifferentCompanyManager.getActiveCompanyName()));
+                .getAhadTotal(getActiveCompanyName()));
         if (onOffLoadDto.possibleMobile != null)
             binding.editTextMobile.setText(onOffLoadDto.possibleMobile);
         if (onOffLoadDto.possibleAddress != null)
@@ -258,7 +255,7 @@ public class PossibleFragment extends DialogFragment {
             selection[i] = found;
             itemNames[i] = counterReportDtos.get(i).title;
         }
-        new LovelyChoiceDialog(activity/*, R.style.CheckBoxTintTheme*/)
+        new LovelyChoiceDialog(activity)
                 .setTopColorRes(R.color.green)
                 .setTopTitle(R.string.reports)
                 .setItemsMultiChoice(itemNames, selection, (positions, items) -> {
@@ -277,9 +274,7 @@ public class PossibleFragment extends DialogFragment {
                             .counterReportDao().getAllCounterReportByZone(onOffLoadDto.zoneId));
                     offLoadReports = new ArrayList<>(getApplicationComponent().MyDatabase().offLoadReportDao()
                             .getAllOffLoadReportById(onOffLoadDto.id, onOffLoadDto.trackNumber));
-                })
-                .setConfirmButtonText(getString(R.string.ok).concat(" ").concat(getString(R.string.reports)))
-                .show();
+                }).setConfirmButtonText(getString(R.string.ok).concat(" ").concat(getString(R.string.reports))).show();
 
     }
 
@@ -310,8 +305,8 @@ public class PossibleFragment extends DialogFragment {
                     onOffLoadDto.possibleCounterSerial = binding.editTextSerial.getText().toString();
             }
             if (binding.editTextAccount.getText().length() > 0) {
-                if (binding.editTextAccount.getText().toString().length() < DifferentCompanyManager.
-                        getEshterakMinLength(DifferentCompanyManager.getActiveCompanyName())) {
+                if (binding.editTextAccount.getText().toString().length() <
+                        getEshterakMinLength(getActiveCompanyName())) {
                     binding.editTextAccount.setError(getString(R.string.error_format));
                     view = binding.editTextAccount;
                     cancel = true;
@@ -338,8 +333,8 @@ public class PossibleFragment extends DialogFragment {
             if (cancel)
                 view.requestFocus();
             else {
-                dismiss();
                 ((ReadingActivity) activity).updateOnOffLoadByNavigation(position, onOffLoadDto, justMobile);
+                dismiss();
             }
         });
         binding.buttonClose.setOnClickListener(v -> dismiss());
@@ -355,16 +350,16 @@ public class PossibleFragment extends DialogFragment {
 
     private void initializeSpinner() {
         if (sharedPreferenceManager.getBoolData(KARBARI.getValue())) {
-            karbariDtos = new ArrayList<>(getApplicationComponent().MyDatabase()
-                    .karbariDao().getAllKarbariDto());
+            karbariDtos = new ArrayList<>(getApplicationComponent().MyDatabase().karbariDao()
+                    .getAllKarbariDto());
             karbariDtosTemp = new ArrayList<>(karbariDtos);
             String[] items = new String[karbariDtosTemp.size() + 1];
             for (int i = 0; i < karbariDtosTemp.size(); i++) {
                 items[i + 1] = karbariDtosTemp.get(i).title;
             }
             items[0] = getString(R.string.select_one);
-            final SpinnerCustomAdapter karbariAdapter = new SpinnerCustomAdapter(activity, items);
-            binding.spinnerKarbari.setAdapter(karbariAdapter);
+            final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(activity, items);
+            binding.spinnerKarbari.setAdapter(adapter);
             binding.spinnerKarbari.setSelection(onOffLoadDto.counterStatePosition + 1);
         } else {
             binding.linearLayoutKarbari.setVisibility(View.GONE);

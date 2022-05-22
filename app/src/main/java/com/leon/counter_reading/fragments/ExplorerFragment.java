@@ -21,9 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.github.mjdev.libaums.UsbMassStorageDevice;
-import com.github.mjdev.libaums.fs.FileSystem;
-import com.github.mjdev.libaums.fs.UsbFile;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.UsbFilesAdapter;
 import com.leon.counter_reading.adapters.recyclerview.RecyclerItemClickListener;
@@ -37,6 +34,10 @@ import com.leon.counter_reading.utils.uploading.CopyTaskParam;
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.Deque;
+
+import me.jahnen.libaums.UsbMassStorageDevice;
+import me.jahnen.libaums.fs.FileSystem;
+import me.jahnen.libaums.fs.UsbFile;
 
 
 public class ExplorerFragment extends Fragment {

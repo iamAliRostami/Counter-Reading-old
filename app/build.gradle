@@ -83,8 +83,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     buildFeatures {
         dataBinding = true
@@ -101,7 +101,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.google.android.material:material:1.6.0'
@@ -122,7 +122,7 @@ dependencies {
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0@aar'
 
-    implementation 'org.osmdroid:osmdroid-android:6.1.11@aar'
+    implementation 'org.osmdroid:osmdroid-android:6.1.13@aar'
     implementation 'com.github.MKergall:osmbonuspack:6.6.0'
 
     implementation 'android.arch.persistence.room:runtime:1.1.1'
@@ -139,18 +139,15 @@ dependencies {
     implementation 'com.auth0.android:jwtdecode:2.0.1'
     implementation 'gun0912.ted:tedpermission:1.0.3'
 
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
+    implementation 'com.github.bumptech.glide:glide:4.13.2'
     implementation 'com.github.ali-sardari:PersianRangeDatePicker:1.2.1'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.github.GrenderG:Toasty:1.5.0'
     implementation 'com.github.blackfizz:eazegraph:1.2.3@aar'
 
-    implementation 'com.yandex.android:mobmetricalib:4.2.0'
+    implementation 'com.yandex.android:mobmetricalib:5.0.0'
     implementation 'com.yandex.android:mobmetricalib-ndk-crashes:1.1.0'
 
-    implementation 'me.jahnen:libaums:0.8.0'
-//    implementation 'com.gu.android:toolargetool:0.3.0'
-
-//    implementation 'com.github.livefront:bridge:v2.0.2'
+    implementation 'me.jahnen:libaums:0.9.0'
 }

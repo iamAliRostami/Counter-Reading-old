@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.github.mjdev.libaums.UsbMassStorageDevice;
+//import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentOfflineDownloadBinding;
 import com.leon.counter_reading.fragments.ExplorerFragment;
@@ -32,6 +32,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import me.jahnen.libaums.UsbMassStorageDevice;
 
 public class DownloadOfflineFragment extends Fragment implements HomeFragment.HomeCallback, ExplorerFragment.ExplorerCallback {
     private final List<UsbDevice> detectedDevices = new ArrayList<>();

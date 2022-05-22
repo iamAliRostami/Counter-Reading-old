@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.mjdev.libaums.fs.UsbFile;
+//import com.github.mjdev.libaums.fs.UsbFile;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.holder.USBViewHolder;
 import com.leon.counter_reading.adapters.recyclerview.RecyclerItemClickListener;
@@ -30,6 +30,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import me.jahnen.libaums.fs.UsbFile;
 
 public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final List<UsbFile> usbFiles = new ArrayList<>();
