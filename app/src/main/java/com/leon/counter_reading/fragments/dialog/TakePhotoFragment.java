@@ -135,7 +135,6 @@ public class TakePhotoFragment extends DialogFragment {
     }
 
     public void openResourceForResult() {
-//        Log.e("checkBoxGallery", String.valueOf(binding.checkBoxGallery.isChecked()));
         if (binding.checkBoxGallery.isChecked())
             openGalleryForResult();
         else openCameraForResult();
@@ -204,17 +203,19 @@ public class TakePhotoFragment extends DialogFragment {
             });
 
     private void prepareImage(Image image) {
-        try {
-            image.size = CURRENT_IMAGE_SIZE;
-            image.OnOffLoadId = uuid;
-            image.trackNumber = trackNumber;
-            if (replace > 0) {
-                getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
-                images.set(replace - 1, image);
-            } else images.add(image);
-        } catch (Exception e) {
-            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
-        }
+        if (CURRENT_IMAGE_SIZE > 0) {
+            try {
+                image.size = CURRENT_IMAGE_SIZE;
+                image.OnOffLoadId = uuid;
+                image.trackNumber = trackNumber;
+                if (replace > 0) {
+                    getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
+                    images.set(replace - 1, image);
+                } else images.add(image);
+            } catch (Exception e) {
+                new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+            }
+        } else new CustomToast().error("مجددا تلاش کنید.");
     }
 
     private void prepareImage() {

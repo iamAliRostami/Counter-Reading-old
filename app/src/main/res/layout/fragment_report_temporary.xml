@@ -79,11 +79,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/low_dp"
-        android:background="@drawable/border_gray_5">
+        android:background="@drawable/border_gray_5"
+        android:visibility="visible">
 
         <Spinner
             android:id="@+id/spinner"
             style="@style/Spinner"
+            android:visibility="gone"
             tools:listitem="@layout/item_dropdown_menu" />
 
     </RelativeLayout>

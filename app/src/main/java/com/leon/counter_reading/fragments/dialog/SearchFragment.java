@@ -49,7 +49,6 @@ public class SearchFragment extends DialogFragment {
         initializeSpinner();
         setOnButtonSearchClickListener();
         binding.editTextSearch.requestFocus();
-
     }
 
     private void setOnButtonSearchClickListener() {

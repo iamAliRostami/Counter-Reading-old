@@ -30,7 +30,6 @@ import java.util.ArrayList;
 public class ReportTemporaryFragment extends Fragment {
     private FragmentReportTemporaryBinding binding;
     private ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
-    private SpinnerCustomAdapter adapter;
     private Activity activity;
     private String[] items;
     private int total, isMane;
@@ -64,15 +63,17 @@ public class ReportTemporaryFragment extends Fragment {
     }
 
     private void initialize() {
-        binding.imageViewTemporary.setImageDrawable(
-                ContextCompat.getDrawable(activity, R.drawable.img_temporary_report));
+//        Log.e("page 1", String.valueOf(reportTemporary.getPage()));
+//        binding.spinner.setVisibility(View.VISIBLE);
+        binding.imageViewTemporary.setImageDrawable(ContextCompat.getDrawable(activity,
+                R.drawable.img_temporary_report));
         binding.textViewTotal.setText(String.valueOf(total));
         binding.textViewTemporary.setText(String.valueOf(isMane));
         initializeSpinner();
     }
 
     private void initializeSpinner() {
-        adapter = new SpinnerCustomAdapter(activity, items);
+        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(activity, items);
         binding.spinner.setAdapter(adapter);
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -81,29 +82,29 @@ public class ReportTemporaryFragment extends Fragment {
                     isFirst = false;
                     return;
                 }
-                Intent intent = new Intent(getActivity(), ReadingActivity.class);
-                Gson gson = new Gson();
-                ArrayList<String> json1 = new ArrayList<>();
+                final Intent intent = new Intent(getActivity(), ReadingActivity.class);
+                final Gson gson = new Gson();
+                final ArrayList<String> json = new ArrayList<>();
                 if (position == 0) {
                     for (int i = 0, counterStateDtosSize = counterStateDtos.size(); i < counterStateDtosSize; i++) {
                         CounterStateDto counterStateDto = counterStateDtos.get(i);
-                        json1.add(gson.toJson(counterStateDto.id));
+                        json.add(gson.toJson(counterStateDto.id));
                     }
                 } else if (position > counterStateDtos.size()) {
                     for (int i = 0, counterStateDtosSize = counterStateDtos.size(); i < counterStateDtosSize; i++) {
                         CounterStateDto counterStateDto = counterStateDtos.get(i);
                         if (counterStateDto.isMane)
-                            json1.add(gson.toJson(counterStateDto.id));
+                            json.add(gson.toJson(counterStateDto.id));
                     }
                 } else {
-                    json1.add(gson.toJson(counterStateDtos.get(position - 1).id));
+                    json.add(gson.toJson(counterStateDtos.get(position - 1).id));
                 }
                 if (position == counterStateDtos.size() + 2) {
                     intent.putExtra(BundleEnum.READ_STATUS.getValue(), ReadStatusEnum.ALL_MANE_UNREAD.getValue());
                 } else {
                     intent.putExtra(BundleEnum.READ_STATUS.getValue(), ReadStatusEnum.ALL_MANE.getValue());
                 }
-                intent.putExtra(BundleEnum.IS_MANE.getValue(), json1);
+                intent.putExtra(BundleEnum.IS_MANE.getValue(), json);
                 POSITION = 1;
                 startActivity(intent);
             }
@@ -130,6 +131,16 @@ public class ReportTemporaryFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            binding.spinner.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
     }
@@ -151,7 +162,6 @@ public class ReportTemporaryFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         items = null;
-        adapter = null;
         counterStateDtos = null;
     }
 }

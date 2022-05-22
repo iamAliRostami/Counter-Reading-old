@@ -1,6 +1,7 @@
 package com.leon.counter_reading.fragments.setting;
 
 import static android.app.Activity.RESULT_OK;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.AVATAR;
 import static com.leon.counter_reading.helpers.Constants.BITMAP_SELECTED_IMAGE;
 import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GALLERY_REQUEST;
@@ -8,6 +9,7 @@ import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 import static com.leon.counter_reading.utils.CustomFile.rotateImage;
+import static com.leon.counter_reading.utils.CustomFile.saveTempBitmap;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -31,7 +33,6 @@ import androidx.fragment.app.Fragment;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentSettingChangeAvatarBinding;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 
@@ -62,11 +63,11 @@ public class SettingChangeAvatarFragment extends Fragment {
     }
 
     private void initialize() {
-        if (getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(SharedReferenceKeys.AVATAR.getValue())) {
-            binding.imageViewAvatar.setImageBitmap(CustomFile.loadImage(activity, getApplicationComponent().SharedPreferenceModel().getStringData(SharedReferenceKeys.AVATAR.getValue())));
+        if (getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(AVATAR.getValue())) {
+            binding.imageViewAvatar.setImageBitmap(CustomFile.loadImage(activity, getApplicationComponent().SharedPreferenceModel().getStringData(AVATAR.getValue())));
         } else {
-            binding.imageViewAvatar.setImageDrawable(ContextCompat
-                    .getDrawable(activity, R.drawable.img_profile));
+            binding.imageViewAvatar.setImageDrawable(ContextCompat.getDrawable(activity,
+                    R.drawable.img_profile));
             binding.buttonChangeDelete.setVisibility(View.GONE);
         }
         setOnButtonChangeAvatarClickListener();
@@ -77,9 +78,9 @@ public class SettingChangeAvatarFragment extends Fragment {
     private void setOnButtonChangeAvatarClickListener() {
         binding.buttonChangeAvatar.setOnClickListener(view -> {
             if (BITMAP_SELECTED_IMAGE != null) {
-                String address = CustomFile.saveTempBitmap(BITMAP_SELECTED_IMAGE, activity);
+                final String address = saveTempBitmap(BITMAP_SELECTED_IMAGE, activity);
                 if (!address.equals(activity.getString(R.string.error_external_storage_is_not_writable))) {
-                    getApplicationComponent().SharedPreferenceModel().putData(SharedReferenceKeys.AVATAR.getValue(), address);
+                    getApplicationComponent().SharedPreferenceModel().putData(AVATAR.getValue(), address);
                     new CustomToast().success(getString(R.string.profile_changed));
                 }
             } else {
@@ -91,14 +92,14 @@ public class SettingChangeAvatarFragment extends Fragment {
     private void setOnButtonDeleteClickListener() {
         binding.buttonChangeDelete.setOnClickListener(view -> {
             BITMAP_SELECTED_IMAGE = null;
-            getApplicationComponent().SharedPreferenceModel().putData(SharedReferenceKeys.AVATAR.getValue(), null);
+            getApplicationComponent().SharedPreferenceModel().putData(AVATAR.getValue(), null);
             initialize();
         });
     }
 
     private void setOnImageViewAvatarClickListener() {
         binding.imageViewAvatar.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
+            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
             builder.setTitle(R.string.choose_document);
             builder.setMessage(R.string.select_source);
             builder.setPositiveButton(R.string.gallery, (dialog, which) -> {
