@@ -333,8 +333,8 @@ public class PossibleFragment extends DialogFragment {
             if (cancel)
                 view.requestFocus();
             else {
-                ((ReadingActivity) activity).updateOnOffLoadByNavigation(position, onOffLoadDto, justMobile);
                 dismiss();
+                ((ReadingActivity) activity).updateOnOffLoadByNavigation(position, onOffLoadDto, justMobile);
             }
         });
         binding.buttonClose.setOnClickListener(v -> dismiss());

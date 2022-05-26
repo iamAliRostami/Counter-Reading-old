@@ -51,8 +51,8 @@ public class MyApplication extends Application {
     }
 
     public static void setActivityComponent(Activity activity) {
-        activityComponent = DaggerActivityComponent
-                .builder().customDialogModule(new CustomDialogModule(activity))
+        activityComponent = DaggerActivityComponent.builder()
+                .customDialogModule(new CustomDialogModule(activity))
                 .locationTrackingModule(new LocationTrackingModule(activity)).build();
     }
 
@@ -145,8 +145,8 @@ public class MyApplication extends Application {
 
 
     protected void setupYandex() {
-        final UserProfile userProfile = UserProfile.newBuilder()
-                .apply(Attribute.name().withValue(applicationComponent.SharedPreferenceModel()
+        final UserProfile userProfile = UserProfile.newBuilder().apply(Attribute.name()
+                .withValue(applicationComponent.SharedPreferenceModel()
                         .getStringData(USERNAME.getValue()))).build();
         final YandexMetricaConfig config = com.yandex.metrica.YandexMetricaConfig
                 .newConfigBuilder("6d39e473-5c5c-4163-9c4c-21eb91758e8f").withLogs()

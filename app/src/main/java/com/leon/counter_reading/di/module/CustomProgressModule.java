@@ -1,6 +1,8 @@
 package com.leon.counter_reading.di.module;
 
 
+import static com.leon.counter_reading.di.view_model.CustomProgressModel.getInstance;
+
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 
 import javax.inject.Singleton;
@@ -14,7 +16,7 @@ public class CustomProgressModule {
     private final CustomProgressModel progress;
 
     public CustomProgressModule() {
-        progress = CustomProgressModel.getInstance();
+        progress = getInstance();
     }
 
     @Singleton
