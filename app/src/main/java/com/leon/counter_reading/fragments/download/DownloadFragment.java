@@ -1,4 +1,4 @@
-package com.leon.counter_reading.fragments.download.upload;
+package com.leon.counter_reading.fragments.download;
 
 
 import static com.leon.counter_reading.enums.BundleEnum.TYPE;

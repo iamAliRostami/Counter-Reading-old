@@ -13,7 +13,7 @@ import androidx.fragment.app.ListFragment;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentHomeBinding;
-import com.leon.counter_reading.fragments.download.upload.DownloadOfflineFragment;
+import com.leon.counter_reading.fragments.download.DownloadOfflineFragment;
 
 import java.util.ArrayList;
 import java.util.List;

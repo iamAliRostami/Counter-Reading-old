@@ -25,7 +25,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.UsbFilesAdapter;
 import com.leon.counter_reading.adapters.recyclerview.RecyclerItemClickListener;
 import com.leon.counter_reading.databinding.FragmentExplorerBinding;
-import com.leon.counter_reading.fragments.download.upload.DownloadOfflineFragment;
+import com.leon.counter_reading.fragments.download.DownloadOfflineFragment;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.downloading.CopyTask;
 import com.leon.counter_reading.utils.downloading.DownloadOffline;

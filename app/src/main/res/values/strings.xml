@@ -295,4 +295,6 @@
     <string name="storage_warning">حجم زیاد داده های شما موجب کندی برنامه می شود، جهت استفاده ی بهتر از اپلیکیشن، با هماهنگی اپراتور خود، پیش از بارگیری، حذف دیتا و کش انجام شود.</string>
     <string name="storage_title">بهبود عملکرد</string>
     <string name="select_gallery">انتخاب از گالری</string>
+    <string name="standard_keyboard">کیبورد استاندارد</string>
+    <string name="sensitive_keyboard">کیبورد حساس</string>
 </resources>

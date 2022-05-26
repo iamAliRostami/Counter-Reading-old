@@ -1,5 +1,7 @@
 package com.leon.counter_reading.tables;
 
+import static com.leon.counter_reading.helpers.Constants.readingData;
+
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
@@ -145,6 +147,14 @@ public class OnOffLoadDto {
             phoneDateTime = onOffLoadDto.phoneDateTime;
             locationDateTime = onOffLoadDto.locationDateTime;
         }
+    }
+
+    public void updateIgnore(final OnOffLoadDto onOffLoadDto) {
+        displayBillId = onOffLoadDto.displayBillId;
+        displayRadif = onOffLoadDto.displayRadif;
+        hasPreNumber = onOffLoadDto.hasPreNumber;
+        qotr = onOffLoadDto.qotr;
+        sifoonQotr = onOffLoadDto.sifoonQotr;
     }
 
     public static class OffLoadData {

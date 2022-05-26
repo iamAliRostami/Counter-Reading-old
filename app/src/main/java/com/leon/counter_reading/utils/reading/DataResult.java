@@ -10,6 +10,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 
+import com.leon.counter_reading.tables.OnOffLoadDto;
+
 public class DataResult extends AsyncTask<Activity, Void, Void> {
     private final Intent data;
 
@@ -22,9 +24,11 @@ public class DataResult extends AsyncTask<Activity, Void, Void> {
     protected Void doInBackground(Activity... activities) {
         final int position = data.getExtras().getInt(POSITION.getValue());
         final String uuid = data.getExtras().getString(BILL_ID.getValue());
+        final OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(position);
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(true, uuid);
         readingData.onOffLoadDtos.set(position, getApplicationComponent().MyDatabase()
                 .onOffLoadDao().getAllOnOffLoadById(uuid, readingData.onOffLoadDtos.get(position).trackingId));
+        readingData.onOffLoadDtos.get(position).updateIgnore(onOffLoadDtoTemp);
         int i = 0;
         boolean found = false;
         while (!found && i < readingDataTemp.onOffLoadDtos.size()) {

@@ -6,6 +6,7 @@ import static com.leon.counter_reading.enums.HighLowStateEnum.LOW;
 import static com.leon.counter_reading.enums.HighLowStateEnum.NORMAL;
 import static com.leon.counter_reading.enums.HighLowStateEnum.ZERO;
 import static com.leon.counter_reading.enums.NotificationType.NOT_SAVE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.KEYBOARD_TYPE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
 import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
@@ -26,6 +27,7 @@ import static com.leon.counter_reading.utils.PermissionManager.forceClose;
 import static com.leon.counter_reading.utils.reading.Counting.checkHighLow;
 import static com.leon.counter_reading.utils.reading.Counting.checkHighLowMakoos;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -33,8 +35,10 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -273,18 +277,34 @@ public class ReadingFragment extends Fragment {
         });
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setOnKeyboardButtonsClickListener() {
-        binding.buttonKeyboard0.setOnClickListener(onKeyboardClickListener);
-        binding.buttonKeyboard1.setOnClickListener(onKeyboardClickListener);
-        binding.buttonKeyboard2.setOnClickListener(onKeyboardClickListener);
-        binding.buttonKeyboard3.setOnClickListener(onKeyboardClickListener);
-        binding.buttonKeyboard4.setOnClickListener(onKeyboardClickListener);
-        binding.buttonKeyboard5.setOnClickListener(onKeyboardClickListener);
-        binding.buttonKeyboard6.setOnClickListener(onKeyboardClickListener);
-        binding.buttonKeyboard7.setOnClickListener(onKeyboardClickListener);
-        binding.buttonKeyboard8.setOnClickListener(onKeyboardClickListener);
-        binding.buttonKeyboard9.setOnClickListener(onKeyboardClickListener);
-        binding.buttonKeyboardBackspace.setOnClickListener(onKeyboardClickListener);
+        if (!getApplicationComponent().SharedPreferenceModel().getBoolData(KEYBOARD_TYPE.getValue())) {
+            binding.buttonKeyboard0.setOnClickListener(onKeyboardClickListener);
+            binding.buttonKeyboard1.setOnClickListener(onKeyboardClickListener);
+            binding.buttonKeyboard2.setOnClickListener(onKeyboardClickListener);
+            binding.buttonKeyboard3.setOnClickListener(onKeyboardClickListener);
+            binding.buttonKeyboard4.setOnClickListener(onKeyboardClickListener);
+            binding.buttonKeyboard5.setOnClickListener(onKeyboardClickListener);
+            binding.buttonKeyboard6.setOnClickListener(onKeyboardClickListener);
+            binding.buttonKeyboard7.setOnClickListener(onKeyboardClickListener);
+            binding.buttonKeyboard8.setOnClickListener(onKeyboardClickListener);
+            binding.buttonKeyboard9.setOnClickListener(onKeyboardClickListener);
+            binding.buttonKeyboardBackspace.setOnClickListener(onKeyboardClickListener);
+        } else {
+            binding.buttonKeyboard0.setOnTouchListener(onTouchListener);
+            binding.buttonKeyboard1.setOnTouchListener(onTouchListener);
+            binding.buttonKeyboard2.setOnTouchListener(onTouchListener);
+            binding.buttonKeyboard3.setOnTouchListener(onTouchListener);
+            binding.buttonKeyboard4.setOnTouchListener(onTouchListener);
+            binding.buttonKeyboard5.setOnTouchListener(onTouchListener);
+            binding.buttonKeyboard6.setOnTouchListener(onTouchListener);
+            binding.buttonKeyboard7.setOnTouchListener(onTouchListener);
+            binding.buttonKeyboard8.setOnTouchListener(onTouchListener);
+            binding.buttonKeyboard9.setOnTouchListener(onTouchListener);
+            binding.buttonKeyboardBackspace.setOnTouchListener(onTouchListener);
+        }
+
         binding.imageButtonHideKeyboard.setOnClickListener(onKeyboardClickListener);
         binding.imageButtonShowKeyboard.setOnClickListener(onKeyboardClickListener);
     }
@@ -500,6 +520,51 @@ public class ReadingFragment extends Fragment {
             return 0;
         }
     }
+
+    private final View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+        @SuppressLint("ClickableViewAccessibility")
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                try {
+                    final AudioManager am = (AudioManager) requireContext().getSystemService(Context.AUDIO_SERVICE);
+                    am.playSoundEffect(AudioManager.FX_KEY_CLICK, 1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                final int id = view.getId();
+                if (id == R.id.image_button_show_keyboard || id == R.id.image_button_hide_keyboard) {
+                    FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
+                    changeKeyboardState();
+                } else if (id == R.id.button_keyboard_backspace) {
+                    if (textView.getText().toString().length() > 0)
+                        textView.setText(textView.getText().toString()
+                                .substring(0, textView.getText().toString().length() - 1));
+                } else if (id == R.id.button_keyboard_0) {
+                    textView.setText(textView.getText().toString().concat("0"));
+                } else if (id == R.id.button_keyboard_1) {
+                    textView.setText(textView.getText().toString().concat("1"));
+                } else if (id == R.id.button_keyboard_2) {
+                    textView.setText(textView.getText().toString().concat("2"));
+                } else if (id == R.id.button_keyboard_3) {
+                    textView.setText(textView.getText().toString().concat("3"));
+                } else if (id == R.id.button_keyboard_4) {
+                    textView.setText(textView.getText().toString().concat("4"));
+                } else if (id == R.id.button_keyboard_5) {
+                    textView.setText(textView.getText().toString().concat("5"));
+                } else if (id == R.id.button_keyboard_6) {
+                    textView.setText(textView.getText().toString().concat("6"));
+                } else if (id == R.id.button_keyboard_7) {
+                    textView.setText(textView.getText().toString().concat("7"));
+                } else if (id == R.id.button_keyboard_8) {
+                    textView.setText(textView.getText().toString().concat("8"));
+                } else if (id == R.id.button_keyboard_9) {
+                    textView.setText(textView.getText().toString().concat("9"));
+                }
+            }
+            return false;
+        }
+    };
 
     private final View.OnClickListener onKeyboardClickListener = view -> {
         try {

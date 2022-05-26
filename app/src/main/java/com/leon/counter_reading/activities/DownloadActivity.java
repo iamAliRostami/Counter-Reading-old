@@ -27,8 +27,8 @@ import com.leon.counter_reading.adapters.ViewPagerAdapterTab;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityDownloadBinding;
 import com.leon.counter_reading.enums.DownloadType;
-import com.leon.counter_reading.fragments.download.upload.DownloadFragment;
-import com.leon.counter_reading.fragments.download.upload.DownloadOfflineFragment;
+import com.leon.counter_reading.fragments.download.DownloadFragment;
+import com.leon.counter_reading.fragments.download.DownloadOfflineFragment;
 import com.leon.counter_reading.utils.DepthPageTransformer;
 
 public class DownloadActivity extends BaseActivity {

@@ -12,19 +12,45 @@
         android:gravity="center"
         android:text="@string/data_not_found"
         android:textColor="@color/red"
-        android:visibility="gone"
-        android:textSize="@dimen/text_size_large" />
+        android:textSize="@dimen/text_size_large"
+        android:visibility="gone" />
 
     <CheckBox
         android:id="@+id/check_box_paging_rotation"
         style="@style/CheckBox.Possible"
-        android:layout_margin="@dimen/low_dp"
         android:text="@string/paging_rtl" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_keyboard"
+        style="@style/CheckBox.Possible"
+        android:layout_below="@id/check_box_paging_rotation"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radio_button_standard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/gray"
+            android:text="@string/standard_keyboard"
+            android:textColor="@color/text_color_dark"
+            android:textSize="@dimen/text_size_medium" />
+
+        <RadioButton
+            android:id="@+id/radio_button_sensitive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/gray"
+            android:text="@string/sensitive_keyboard"
+            android:textColor="@color/text_color_dark"
+            android:textSize="@dimen/text_size_medium" />
+
+    </RadioGroup>
+
     <ListView
         android:id="@+id/listViewRead"
-        android:layout_below="@id/check_box_paging_rotation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/radio_group_keyboard"
         android:layout_margin="@dimen/low_dp"
         android:divider="@null"
         android:dividerHeight="@dimen/low_dp"

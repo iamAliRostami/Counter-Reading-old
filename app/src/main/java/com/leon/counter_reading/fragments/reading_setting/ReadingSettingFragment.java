@@ -1,8 +1,11 @@
 package com.leon.counter_reading.fragments.reading_setting;
 
+import static com.leon.counter_reading.enums.SharedReferenceKeys.KEYBOARD_TYPE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +15,6 @@ import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.adapters.ReadingSettingAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingSettingBinding;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.tables.TrackingDto;
 
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +52,7 @@ public class ReadingSettingFragment extends Fragment {
     private void initialize() {
         setupListView();
         initializeCheckbox();
+        initializeRadioGroup();
     }
 
     private void setupListView() {
@@ -66,10 +69,21 @@ public class ReadingSettingFragment extends Fragment {
 
     private void initializeCheckbox() {
         binding.checkBoxPagingRotation.setChecked(getApplicationComponent().SharedPreferenceModel()
-                .getBoolData(SharedReferenceKeys.RTL_PAGING.getValue()));
-        binding.checkBoxPagingRotation.setOnClickListener(v -> getApplicationComponent()
-                .SharedPreferenceModel().putData(SharedReferenceKeys.RTL_PAGING.getValue(),
+                .getBoolData(RTL_PAGING.getValue()));
+        binding.checkBoxPagingRotation.setOnClickListener(v ->
+                getApplicationComponent().SharedPreferenceModel().putData(RTL_PAGING.getValue(),
                         binding.checkBoxPagingRotation.isChecked()));
+    }
+
+    private void initializeRadioGroup() {
+        binding.radioButtonStandard.setChecked(!getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(KEYBOARD_TYPE.getValue()));
+        binding.radioButtonSensitive.setChecked(getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(KEYBOARD_TYPE.getValue()));
+//        binding.radioButtonStandard.setOnCheckedChangeListener((compoundButton, b) ->
+//                getApplicationComponent().SharedPreferenceModel().putData(KEYBOARD_TYPE.getValue(), b));
+        binding.radioButtonSensitive.setOnCheckedChangeListener((compoundButton, b) ->
+                getApplicationComponent().SharedPreferenceModel().putData(KEYBOARD_TYPE.getValue(), b));
     }
 
     @Override

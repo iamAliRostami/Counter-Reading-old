@@ -1,4 +1,4 @@
-package com.leon.counter_reading.fragments.download.upload;
+package com.leon.counter_reading.fragments.download;
 
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_ATTACHED;
 import static android.hardware.usb.UsbManager.ACTION_USB_DEVICE_DETACHED;

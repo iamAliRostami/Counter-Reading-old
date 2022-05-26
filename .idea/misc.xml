@@ -15,6 +15,7 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_gray_5.xml" value="0.42421875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_gray_6.xml" value="0.42421875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_gray_7.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_keyboard.xml" value="0.2445" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_white_1.xml" value="0.1875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_white_2.xml" value="0.1875" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/drawable/border_white_3.xml" value="0.2505" />
@@ -55,11 +56,11 @@
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_navigation.xml" value="0.365625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_offline_download.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_possible.xml" value="0.4" />
-        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_reading.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_reading.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_reading_1.xml" value="0.365625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_reading_possible_setting.xml" value="0.39375" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_reading_report.xml" value="0.365625" />
-        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_reading_setting.xml" value="0.5396145610278372" />
+        <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_reading_setting.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_reading_setting_delete.xml" value="0.365625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_report_forbid.xml" value="0.365625" />
         <entry key="..\:/AndroidStudioProjects/Counter-Reading-old/app/src/main/res/layout/fragment_report_not_reading.xml" value="0.26614583333333336" />
