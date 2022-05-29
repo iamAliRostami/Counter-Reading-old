@@ -14,7 +14,7 @@
             android:layout_height="@dimen/small_dp"
             android:background="?attr/colorAccent" />
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/scroll_view_form"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -104,6 +104,11 @@
                         android:layout_width="match_parent" />
                 </LinearLayout>
 
+                <ListView
+                    android:id="@+id/list_view_reports"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:listitem="@layout/item_public" />
                 <EditText
                     android:id="@+id/edit_text_mobile"
                     style="@style/InputPossible"
@@ -259,7 +264,7 @@
                     android:text="@string/reports"
                     android:textSize="@dimen/text_size_large" />
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
             android:id="@+id/linear_layout_submit"

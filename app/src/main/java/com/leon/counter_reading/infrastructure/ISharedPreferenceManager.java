@@ -11,6 +11,8 @@ public interface ISharedPreferenceManager {
 
     int getIntData(String key);
 
+    int getIntNullData(String key);
+
     boolean getBoolData(String key);
 
     boolean checkIsNotEmpty(String key);

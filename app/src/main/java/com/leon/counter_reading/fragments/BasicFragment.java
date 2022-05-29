@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,7 +49,9 @@ public class BasicFragment extends Fragment {
         return binding.getRoot();
     }
 
+
     private void initialize() {
+        binding.textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
         initializeTextView();
         setOnclickListeners();
     }
@@ -76,7 +77,7 @@ public class BasicFragment extends Fragment {
     }
 
     private void initializeTextView() {
-        if (getApplicationComponent().SharedPreferenceModel().getIntData(PERSONAL_CODE.getValue()) > 0)
+        if (getApplicationComponent().SharedPreferenceModel().getIntNullData(PERSONAL_CODE.getValue()) > 0)
             binding.editTextPersonalCode.setText(String.valueOf(getApplicationComponent()
                     .SharedPreferenceModel().getIntData(PERSONAL_CODE.getValue())));
         binding.textViewSerial.setText(getSerial(requireActivity()));
@@ -84,13 +85,6 @@ public class BasicFragment extends Fragment {
         binding.textViewAndroidVersion.setText(getAndroidVersion());
         binding.textViewAppVersion.setText(BuildConfig.VERSION_NAME);
         binding.textViewSignal.setText(getSignal());
-
-        try {
-            final TextView textViewCompanyName = requireActivity().findViewById(R.id.text_view_company_name);
-            textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private String getSignal() {
@@ -115,10 +109,6 @@ public class BasicFragment extends Fragment {
         } else {
             return 0;
         }
-    }
-
-    private boolean proxyValidation(final String ip) {
-        return ip.length() == 0 || ip.startsWith("https://") || ip.startsWith("http://");
     }
 
     //    private static final Pattern IP_PATTERN = Pattern.compile("(http(s)?)://(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(:(\\d{1,5}))?");

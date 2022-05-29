@@ -187,7 +187,7 @@ public class LoginFragment extends Fragment {
 
     private void setOnImageViewPasswordClickListener() {
         binding.imageViewPassword.setOnClickListener(view -> {
-            initializeTextViewCompanyName();
+//            initializeTextViewCompanyName();
             if (binding.editTextPassword.getInputType() != InputType.TYPE_CLASS_TEXT) {
                 binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT);
             } else

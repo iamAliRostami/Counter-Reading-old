@@ -64,6 +64,11 @@ public class SharedPreferenceModel implements ISharedPreferenceManager {
     }
 
     @Override
+    public int getIntNullData(String key) {
+        return appPrefs.getInt(key, 0);
+    }
+
+    @Override
     public boolean getBoolData(String key) {
         return appPrefs.getBoolean(key, false);
     }

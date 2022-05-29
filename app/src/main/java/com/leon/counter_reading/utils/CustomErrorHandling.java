@@ -1,6 +1,7 @@
 package com.leon.counter_reading.utils;
 
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
 import android.content.Context;
 
@@ -45,6 +46,10 @@ public class CustomErrorHandling {
             errorMessage += context.getString(R.string.error_change_server);
         } else if (code == 401 || code == 403) {
             errorMessage += context.getString(R.string.error_not_auth);
+        } else if (code == 402) {
+            final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+            final CustomErrorHandling.APIError apiError = errorHandling.parseError(response);
+            errorMessage = apiError.message();
         } else {
             errorMessage += context.getString(R.string.error_other);
         }
