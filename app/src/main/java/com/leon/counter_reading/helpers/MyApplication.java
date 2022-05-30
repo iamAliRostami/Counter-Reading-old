@@ -102,7 +102,7 @@ public class MyApplication extends Application {
     }
 
     public static String getDBName() {
-        return "MyDatabase_18";
+        return "MyDatabase_19";
     }
 
     public static String getAndroidVersion() {

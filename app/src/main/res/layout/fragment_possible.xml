@@ -104,11 +104,12 @@
                         android:layout_width="match_parent" />
                 </LinearLayout>
 
-                <ListView
-                    android:id="@+id/list_view_reports"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    tools:listitem="@layout/item_public" />
+                <TextView
+                    android:id="@+id/text_view_mobiles"
+                    style="@style/InputPossible"
+                    android:background="@drawable/border_gray_3"
+                    android:visibility="gone" />
+
                 <EditText
                     android:id="@+id/edit_text_mobile"
                     style="@style/InputPossible"

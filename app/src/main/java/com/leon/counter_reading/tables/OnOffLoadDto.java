@@ -56,6 +56,7 @@ public class OnOffLoadDto {
     public int trackNumber;
     public int zarfiat;
     public String mobile;
+    public String mobiles;
     public int hazf;//TODO 0 <  hazf movaqat
     public int noeVagozariId;//TODO 4: sax o saz or karbari isSaxt
     public Integer counterNumber;

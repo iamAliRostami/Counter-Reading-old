@@ -33,6 +33,7 @@ import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.tables.OnOffLoadDto;
+import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.custom_dialog.LovelyChoiceDialog;
 
@@ -102,12 +103,27 @@ public class PossibleFragment extends DialogFragment {
             binding.linearLayoutMobile.setVisibility(View.VISIBLE);
             binding.editTextMobile.setVisibility(View.VISIBLE);
             binding.textViewMobile.setVisibility(View.VISIBLE);
-//            binding.textViewOldRadif.setText(String.valueOf(onOffLoadDto.oldRadif));
             binding.textViewOldRadif.setText(onOffLoadDto.oldRadif != null ? onOffLoadDto.oldRadif : "-");
             binding.textViewOldEshterak.setText(onOffLoadDto.oldEshterak != null ? onOffLoadDto.oldEshterak : "-");
             binding.textViewFatherName.setText(onOffLoadDto.fatherName != null ? onOffLoadDto.fatherName : "-");
-            binding.textViewMobile.setText(onOffLoadDto.mobile != null ? onOffLoadDto.mobile : "-");
             binding.editTextMobile.setText(onOffLoadDto.possibleMobile);
+            binding.textViewMobile.setText(onOffLoadDto.mobile != null ? onOffLoadDto.mobile : "-");
+
+            if (onOffLoadDto.mobiles != null) {
+                final String[] mobiles = onOffLoadDto.mobiles.split(",");
+                String mobile = "";
+                for (String mobileTemp : mobiles) {
+                    mobile = mobile.concat(mobileTemp.trim().concat("\n"));
+                }
+                binding.textViewMobiles.setText(mobile.substring(0, mobile.length() - 1));
+            }
+
+            binding.textViewMobile.setOnClickListener(view -> {
+                if (onOffLoadDto.mobiles != null)
+                    binding.textViewMobiles.setVisibility(binding.textViewMobiles.getVisibility()
+                            == View.VISIBLE ? View.GONE : View.VISIBLE);
+                else new CustomToast().warning("موردی یافت نشد.");
+            });
 
             binding.editTextSerial.setVisibility(View.GONE);
             binding.editTextAddress.setVisibility(View.GONE);
@@ -123,6 +139,7 @@ public class PossibleFragment extends DialogFragment {
             binding.textViewReport.setVisibility(View.GONE);
             binding.linearLayoutKarbari.setVisibility(View.GONE);
             binding.editTextSearch.setVisibility(View.GONE);
+
         } else
             initializeTextViews();
         setOnButtonsClickListener();
