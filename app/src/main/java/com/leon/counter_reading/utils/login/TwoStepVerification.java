@@ -17,7 +17,7 @@ import com.leon.counter_reading.utils.custom_dialog.LovelyTextInputDialog;
 
 public class TwoStepVerification {
     public static void insertPersonalCode(Context context) {
-        LovelyTextInputDialog lovelyTextInputDialog = new LovelyTextInputDialog(context);
+       final LovelyTextInputDialog lovelyTextInputDialog = new LovelyTextInputDialog(context);
         lovelyTextInputDialog.setTopColorRes(R.color.yellow)
                 .setTopTitleColorRes(R.color.white)
                 .setTopTitle(R.string.verification_code)

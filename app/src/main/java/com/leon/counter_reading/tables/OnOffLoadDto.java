@@ -1,7 +1,5 @@
 package com.leon.counter_reading.tables;
 
-import static com.leon.counter_reading.helpers.Constants.readingData;
-
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
@@ -31,16 +29,6 @@ public class OnOffLoadDto {
     public int ahadSaierOrAbBaha;
     public int qotrCode;
     public int sifoonQotrCode;
-    @Ignore
-    public String qotr;
-    @Ignore
-    public String sifoonQotr;
-    @Ignore
-    public boolean hasPreNumber;
-    @Ignore
-    public boolean displayBillId;
-    @Ignore
-    public boolean displayRadif;
 
     public String postalCode;
     public int preNumber;
@@ -91,6 +79,16 @@ public class OnOffLoadDto {
     public boolean isBazdid;
     public Integer counterStatePosition;
 
+    @Ignore
+    public String qotr;
+    @Ignore
+    public String sifoonQotr;
+    @Ignore
+    public boolean hasPreNumber;
+    @Ignore
+    public boolean displayBillId;
+    @Ignore
+    public boolean displayRadif;
 
     public static class OffLoad {
         public String id;

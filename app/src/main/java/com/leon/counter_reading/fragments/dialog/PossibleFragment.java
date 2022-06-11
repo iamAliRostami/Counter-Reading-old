@@ -2,6 +2,7 @@ package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.ON_OFF_LOAD;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.enums.DialogType.Green;
 import static com.leon.counter_reading.enums.NotificationType.OTHER;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KARBARI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
@@ -27,7 +28,10 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentPossibleBinding;
+import com.leon.counter_reading.di.view_model.CustomDialogModel;
+import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.KarbariDto;
@@ -119,10 +123,23 @@ public class PossibleFragment extends DialogFragment {
             }
 
             binding.textViewMobile.setOnClickListener(view -> {
-                if (onOffLoadDto.mobiles != null)
-                    binding.textViewMobiles.setVisibility(binding.textViewMobiles.getVisibility()
-                            == View.VISIBLE ? View.GONE : View.VISIBLE);
-                else new CustomToast().warning("موردی یافت نشد.");
+                if (onOffLoadDto.mobiles != null) {
+                    final String[] mobiles = onOffLoadDto.mobiles.split(",");
+                    String mobile = "";
+                    for (String mobileTemp : mobiles) {
+                        mobile = mobile.concat(mobileTemp.trim().concat("\n"));
+                    }
+                    new CustomDialogModel(Green,
+                            activity, mobile,
+                            MyApplication.getContext().getString(R.string.dear_user),
+                            MyApplication.getContext().getString(R.string.mobile_number),
+                            MyApplication.getContext().getString(R.string.accepted));
+                }else new CustomToast().warning("موردی یافت نشد.");
+
+//                if (onOffLoadDto.mobiles != null)
+//                    binding.textViewMobiles.setVisibility(binding.textViewMobiles.getVisibility()
+//                            == View.VISIBLE ? View.GONE : View.VISIBLE);
+//                else new CustomToast().warning("موردی یافت نشد.");
             });
 
             binding.editTextSerial.setVisibility(View.GONE);

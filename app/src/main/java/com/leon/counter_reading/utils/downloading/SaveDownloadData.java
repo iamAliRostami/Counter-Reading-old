@@ -1,5 +1,7 @@
 package com.leon.counter_reading.utils.downloading;
 
+import static com.leon.counter_reading.enums.DialogType.Green;
+import static com.leon.counter_reading.enums.DialogType.Yellow;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.Converters.replaceNonstandardDigits;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
@@ -40,7 +42,7 @@ public class SaveDownloadData {
                     .trackingDtos.get(i).trackNumber) > 0) {
                 final String message = String.format(activity.getString(R.string.download_message_error),
                         readingData.trackingDtos.get(i).trackNumber);
-                showMessage(activity, message, DialogType.Yellow);
+                showMessage(activity, message, Yellow);
                 return;
             } else {
                 myDatabase.counterReportDao().deleteAllCounterReport(readingData.counterReportDtos.get(0).zoneId);
@@ -104,13 +106,12 @@ public class SaveDownloadData {
         }
         final String message = String.format(MyApplication.getContext().getString(R.string.download_message),
                 readingData.trackingDtos.size(), readingData.onOffLoadDtos.size());
-        showMessage(activity, message, DialogType.Green);
+        showMessage(activity, message, Green);
     }
 
 
     private void showMessage(Activity activity, String message, DialogType dialogType) {
-        activity.runOnUiThread(() -> new CustomDialogModel(dialogType,
-                activity, message,
+        activity.runOnUiThread(() -> new CustomDialogModel(dialogType, activity, message,
                 MyApplication.getContext().getString(R.string.dear_user),
                 MyApplication.getContext().getString(R.string.download),
                 MyApplication.getContext().getString(R.string.accepted)));

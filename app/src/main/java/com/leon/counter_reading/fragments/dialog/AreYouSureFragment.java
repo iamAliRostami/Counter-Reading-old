@@ -105,5 +105,6 @@ public class AreYouSureFragment extends DialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        binding = null;
     }
 }

@@ -46,12 +46,12 @@ public class GetPerformance extends AsyncTask<Activity, Activity, Activity> {
 
     @Override
     protected Activity doInBackground(Activity... activities) {
-        Retrofit retrofit = getApplicationComponent().NetworkHelperModel()
+        final Retrofit retrofit = getApplicationComponent().NetworkHelperModel()
                 .getInstance(true, getApplicationComponent().SharedPreferenceModel()
                         .getStringData(SharedReferenceKeys.TOKEN.getValue()), 10, 5, 5);
 
-        IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-        Call<PerformanceResponse> call = iAbfaService.myPerformance(new PerformanceInfo(startDate, endDate));
+        final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
+        final Call<PerformanceResponse> call = iAbfaService.myPerformance(new PerformanceInfo(startDate, endDate));
         activities[0].runOnUiThread(() -> {
             customProgressModel.getDialog().dismiss();
             callHttpAsync(call, ProgressType.SHOW.getValue(), activities[0],
