@@ -29,6 +29,8 @@ public class ForbiddenDto {
     public String x;
     public String y;
     public boolean isSent;
+    @Ignore
+    public boolean activate;
 
     @Ignore
     public ArrayList<MultipartBody.Part> File;
