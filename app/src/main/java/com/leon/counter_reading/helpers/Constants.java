@@ -68,5 +68,6 @@ public class Constants {
     public static Uri PHOTO_URI;
     public static boolean FOCUS_ON_EDIT_TEXT;
     public static String zipAddress;
+    public final static String DBName = "MyDatabase_20";
 
 }

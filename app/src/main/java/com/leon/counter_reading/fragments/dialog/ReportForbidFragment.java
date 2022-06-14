@@ -183,25 +183,34 @@ public class ReportForbidFragment extends DialogFragment {
 
     private void setOnButtonSubmitClickListener() {
         binding.buttonSubmit.setOnClickListener(v -> {
-            View view = null;
             boolean cancel = false;
-            if (binding.editTextPostalCode.getText().length() > 0 &&
+            if (binding.radioButtonActivate.isChecked()) {
+                if (binding.editTextPreAccount.getText().toString().isEmpty()) {
+                    binding.editTextPreAccount.setError(getString(R.string.error_empty));
+                    binding.editTextPreAccount.requestFocus();
+                    cancel = true;
+                } else if (binding.editTextNextAccount.getText().toString().isEmpty()) {
+                    binding.editTextNextAccount.setError(getString(R.string.error_empty));
+                    binding.editTextNextAccount.requestFocus();
+                    cancel = true;
+                }
+            }
+            if (!cancel && binding.editTextPostalCode.getText().length() > 0 &&
                     binding.editTextPostalCode.getText().length() < 10) {
                 binding.editTextPostalCode.setError(getString(R.string.error_format));
-                view = binding.editTextPostalCode;
+                binding.editTextPostalCode.requestFocus();
                 cancel = true;
-            } else if (binding.editTextAhadNumber.getText().toString().isEmpty()) {
+            } else if (!cancel && binding.editTextAhadNumber.getText().toString().isEmpty()) {
                 binding.editTextAhadNumber.setError(getString(R.string.error_empty));
-                view = binding.editTextAhadNumber;
+                binding.editTextAhadNumber.requestFocus();
                 cancel = true;
-            } else if (binding.editTextDescription.getText().toString().isEmpty()) {
+            } else if (!cancel && binding.editTextDescription.getText().toString().isEmpty()) {
                 binding.editTextDescription.setError(getString(R.string.error_empty));
-                view = binding.editTextDescription;
+                binding.editTextDescription.requestFocus();
                 cancel = true;
             }
             if (!cancel)
                 sendForbid();
-            else view.requestFocus();
         });
     }
 
@@ -225,7 +234,8 @@ public class ReportForbidFragment extends DialogFragment {
                 binding.editTextDescription.getText().toString(),
                 binding.editTextPreAccount.getText().toString(),
                 binding.editTextNextAccount.getText().toString(),
-                getDigits(binding.editTextAhadNumber.getText().toString()), zoneId);
+                getDigits(binding.editTextAhadNumber.getText().toString()),
+                zoneId, binding.radioButtonActivate.isChecked());
         new PrepareForbid(requireActivity(), forbiddenDto, zoneId).execute(requireActivity());
         dismiss();
     }

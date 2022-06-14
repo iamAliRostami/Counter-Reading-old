@@ -12,4 +12,5 @@ public class ForbiddenDtoRequest {
     public RequestBody x;
     public RequestBody y;
     public RequestBody gisAccuracy;
+    public RequestBody activate;
 }

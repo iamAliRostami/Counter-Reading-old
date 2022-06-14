@@ -24,7 +24,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+                <LinearLayout
+                    android:id="@+id/linear_layout_debt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/low_dp"
+                    android:background="@drawable/border_gray_6"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/medium_dp"
+                    android:visibility="gone">
 
+                    <TextView
+                        style="@style/TitlePossible"
+                        android:text="@string/debt" />
+
+                    <TextView
+                        android:id="@+id/text_view_debt"
+                        style="@style/TitlePossible"
+                        android:layout_width="match_parent" />
+                </LinearLayout>
                 <LinearLayout
                     android:id="@+id/linear_layout_old_radif"
                     android:layout_width="match_parent"

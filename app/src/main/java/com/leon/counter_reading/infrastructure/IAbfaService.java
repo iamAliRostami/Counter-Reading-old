@@ -107,6 +107,7 @@ public interface IAbfaService {
             @Part("NextEshterak") RequestBody nextEshterak,
             @Part("PostalCode") RequestBody postalCode,
             @Part("TedadVahed") RequestBody TedadVahed,
+            @Part("activate") RequestBody activate,
             @Part("x") RequestBody x,
             @Part("y") RequestBody y,
             @Part("GisAccuracy") RequestBody gisAccuracy);
@@ -120,6 +121,7 @@ public interface IAbfaService {
             @Part("NextEshterak") RequestBody nextEshterak,
             @Part("PostalCode") RequestBody postalCode,
             @Part("TedadVahed") RequestBody TedadVahed,
+            @Part("activate") RequestBody activate,
             @Part("x") RequestBody x,
             @Part("y") RequestBody y,
             @Part("GisAccuracy") RequestBody gisAccuracy);
@@ -133,6 +135,7 @@ public interface IAbfaService {
             @Part("NextEshterak") RequestBody nextEshterak,
             @Part("PostalCode") RequestBody postalCode,
             @Part("TedadVahed") RequestBody TedadVahed,
+            @Part("activate") RequestBody activate,
             @Part("x") RequestBody x,
             @Part("y") RequestBody y,
             @Part("GisAccuracy") RequestBody gisAccuracy);
@@ -145,6 +148,7 @@ public interface IAbfaService {
             @Part("NextEshterak") RequestBody nextEshterak,
             @Part("PostalCode") RequestBody postalCode,
             @Part("TedadVahed") RequestBody TedadVahed,
+            @Part("activate") RequestBody activate,
             @Part("x") RequestBody x,
             @Part("y") RequestBody y,
             @Part("GisAccuracy") RequestBody gisAccuracy);

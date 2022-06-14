@@ -136,7 +136,7 @@
     <string name="show">نمایش&#160;</string>
     <string name="number">تعداد&#160;</string>
     <string name="reports">گزارشات</string>
-    <string name="report_forbid">گزارش غیرمجاز</string>
+    <string name="report_forbid">گزارش غیرمجاز / فعالسازی</string>
     <string name="previous_account">اشتراک قبلی</string>
     <string name="next_account">اشتراک بعدی</string>
     <string name="attach_image">الصاق عکس</string>
@@ -297,4 +297,7 @@
     <string name="select_gallery">انتخاب از گالری</string>
     <string name="standard_keyboard">کیبورد استاندارد</string>
     <string name="sensitive_keyboard">کیبورد حساس</string>
+    <string name="activate">فعال شود</string>
+    <string name="debt">بدهی</string>
+    <string name="forbidden">غیرمجاز</string>
 </resources>

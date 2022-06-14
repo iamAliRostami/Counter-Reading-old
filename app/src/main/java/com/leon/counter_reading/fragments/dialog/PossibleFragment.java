@@ -29,7 +29,6 @@ import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentPossibleBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
-import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
@@ -105,8 +104,10 @@ public class PossibleFragment extends DialogFragment {
             binding.linearLayoutOldRadif.setVisibility(View.VISIBLE);
             binding.linearLayoutFatherName.setVisibility(View.VISIBLE);
             binding.linearLayoutMobile.setVisibility(View.VISIBLE);
+            binding.linearLayoutDebt.setVisibility(View.VISIBLE);
             binding.editTextMobile.setVisibility(View.VISIBLE);
             binding.textViewMobile.setVisibility(View.VISIBLE);
+            binding.textViewDebt.setText(String.valueOf(Math.toIntExact(onOffLoadDto.balance)));
             binding.textViewOldRadif.setText(onOffLoadDto.oldRadif != null ? onOffLoadDto.oldRadif : "-");
             binding.textViewOldEshterak.setText(onOffLoadDto.oldEshterak != null ? onOffLoadDto.oldEshterak : "-");
             binding.textViewFatherName.setText(onOffLoadDto.fatherName != null ? onOffLoadDto.fatherName : "-");
@@ -129,12 +130,11 @@ public class PossibleFragment extends DialogFragment {
                     for (String mobileTemp : mobiles) {
                         mobile = mobile.concat(mobileTemp.trim().concat("\n"));
                     }
-                    new CustomDialogModel(Green,
-                            activity, mobile,
+                    new CustomDialogModel(Green, activity, mobile,
                             MyApplication.getContext().getString(R.string.dear_user),
                             MyApplication.getContext().getString(R.string.mobile_number),
                             MyApplication.getContext().getString(R.string.accepted));
-                }else new CustomToast().warning("موردی یافت نشد.");
+                } else new CustomToast().warning("موردی یافت نشد.");
 
 //                if (onOffLoadDto.mobiles != null)
 //                    binding.textViewMobiles.setVisibility(binding.textViewMobiles.getVisibility()

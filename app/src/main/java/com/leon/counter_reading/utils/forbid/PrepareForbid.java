@@ -1,5 +1,6 @@
 package com.leon.counter_reading.utils.forbid;
 
+import static com.leon.counter_reading.enums.ProgressType.SHOW;
 import static com.leon.counter_reading.helpers.Constants.CURRENT_IMAGE_SIZE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.CustomFile.saveTempBitmap;
@@ -11,7 +12,6 @@ import android.os.AsyncTask;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
-import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
@@ -43,12 +43,14 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
         final Call<ForbiddenDtoResponses> call;
         if (zoneId != 0 && forbiddenDto.File.size() > 0) {
-            call = iAbfaService.singleForbidden(forbiddenDto.File, forbiddenDto.forbiddenDtoRequest.zoneId,
+            call = iAbfaService.singleForbidden(forbiddenDto.File,
+                    forbiddenDto.forbiddenDtoRequest.zoneId,
                     forbiddenDto.forbiddenDtoRequest.description,
                     forbiddenDto.forbiddenDtoRequest.preEshterak,
                     forbiddenDto.forbiddenDtoRequest.nextEshterak,
                     forbiddenDto.forbiddenDtoRequest.postalCode,
                     forbiddenDto.forbiddenDtoRequest.tedadVahed,
+                    forbiddenDto.forbiddenDtoRequest.activate,
                     forbiddenDto.forbiddenDtoRequest.x,
                     forbiddenDto.forbiddenDtoRequest.y,
                     forbiddenDto.forbiddenDtoRequest.gisAccuracy);
@@ -59,6 +61,7 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
                     forbiddenDto.forbiddenDtoRequest.nextEshterak,
                     forbiddenDto.forbiddenDtoRequest.postalCode,
                     forbiddenDto.forbiddenDtoRequest.tedadVahed,
+                    forbiddenDto.forbiddenDtoRequest.activate,
                     forbiddenDto.forbiddenDtoRequest.x,
                     forbiddenDto.forbiddenDtoRequest.y,
                     forbiddenDto.forbiddenDtoRequest.gisAccuracy);
@@ -69,6 +72,7 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
                     forbiddenDto.forbiddenDtoRequest.nextEshterak,
                     forbiddenDto.forbiddenDtoRequest.postalCode,
                     forbiddenDto.forbiddenDtoRequest.tedadVahed,
+                    forbiddenDto.forbiddenDtoRequest.activate,
                     forbiddenDto.forbiddenDtoRequest.x,
                     forbiddenDto.forbiddenDtoRequest.y,
                     forbiddenDto.forbiddenDtoRequest.gisAccuracy);
@@ -78,15 +82,15 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
                     forbiddenDto.forbiddenDtoRequest.nextEshterak,
                     forbiddenDto.forbiddenDtoRequest.postalCode,
                     forbiddenDto.forbiddenDtoRequest.tedadVahed,
+                    forbiddenDto.forbiddenDtoRequest.activate,
                     forbiddenDto.forbiddenDtoRequest.x,
                     forbiddenDto.forbiddenDtoRequest.y,
                     forbiddenDto.forbiddenDtoRequest.gisAccuracy);
         }
         activities[0].runOnUiThread(() -> {
             customProgressModel.getDialog().dismiss();
-            HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW.getValue(), activities[0],
-                    new Forbidden(forbiddenDto),
-                    new ForbiddenIncomplete(activities[0]),
+            HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activities[0],
+                    new Forbidden(forbiddenDto), new ForbiddenIncomplete(activities[0]),
                     new ForbiddenError(activities[0]));
         });
         return null;
@@ -148,8 +152,7 @@ class Forbidden implements ICallback<ForbiddenDtoResponses> {
     @Override
     public void execute(Response<ForbiddenDtoResponses> response) {
         if (!response.isSuccessful())
-            getApplicationComponent().MyDatabase().forbiddenDao().
-                    insertForbiddenDto(forbiddenDto);
+            getApplicationComponent().MyDatabase().forbiddenDao().insertForbiddenDto(forbiddenDto);
         else {
             if (response.body() != null) {
                 new CustomToast().success(response.body().message);

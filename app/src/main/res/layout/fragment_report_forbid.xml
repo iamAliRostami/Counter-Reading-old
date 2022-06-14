@@ -10,9 +10,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+
+        <RadioGroup
+            android:id="@+id/radio_group_type"
+            style="@style/CheckBox.Possible"
+            android:layout_margin="0dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_button_forbidden"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/gray"
+                android:checked="true"
+                android:text="@string/forbidden"
+                android:textColor="@color/text_color_dark"
+                android:textSize="@dimen/text_size_medium" />
+
+            <RadioButton
+                android:id="@+id/radio_button_activate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/gray"
+                android:text="@string/activate"
+                android:textColor="@color/text_color_dark"
+                android:textSize="@dimen/text_size_medium" />
+
+        </RadioGroup>
+
         <TextView
             android:id="@+id/text_view_pre_account"
             style="@style/InputTitle"
+            android:layout_below="@id/radio_group_type"
             android:text="@string/previous_account" />
 
         <LinearLayout
@@ -20,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/text_view_pre_account"
+            android:layout_marginTop="@dimen/low_dp"
             android:background="@drawable/border_gray_3"
             android:orientation="horizontal">
 
@@ -153,6 +185,7 @@
                 tools:ignore="Autofill,LabelFor" />
 
         </LinearLayout>
+
 
         <Button
             android:id="@+id/button_photo"

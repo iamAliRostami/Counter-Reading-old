@@ -101,10 +101,6 @@ public class MyApplication extends Application {
         }
     }
 
-    public static String getDBName() {
-        return "MyDatabase_19";
-    }
-
     public static String getAndroidVersion() {
         final String release = Build.VERSION.RELEASE;
         final int sdkVersion = Build.VERSION.SDK_INT;

@@ -78,9 +78,7 @@ public class OnOffLoadDto {
     public int highLowStateId;
     public boolean isBazdid;
     public Integer counterStatePosition;
-
-
-    @Ignore
+    
     public long balance;
 
     @Ignore
