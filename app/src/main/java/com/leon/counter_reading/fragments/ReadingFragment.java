@@ -35,7 +35,6 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -619,7 +618,6 @@ public class ReadingFragment extends Fragment {
             if (!onOffLoadDto.isLocked && (shouldEnterNumber || canEnterNumber))
                 binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
     };
-
     private final View.OnLongClickListener onLongClickListener = view -> {
         final int id = view.getId();
         if (id == R.id.text_view_address)

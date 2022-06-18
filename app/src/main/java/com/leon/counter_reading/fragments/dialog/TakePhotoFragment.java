@@ -28,6 +28,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 
 import com.leon.counter_reading.BuildConfig;
+import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.ImageViewAdapter;
 import com.leon.counter_reading.databinding.FragmentTakePhotoBinding;
@@ -251,6 +252,9 @@ public class TakePhotoFragment extends DialogFragment {
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
+        } else {
+            ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
+            new CustomToast().error(getString(R.string.refresh_page), Toast.LENGTH_LONG);
         }
         super.onResume();
     }

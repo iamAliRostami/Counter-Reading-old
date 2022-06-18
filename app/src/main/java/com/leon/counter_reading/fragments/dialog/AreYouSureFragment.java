@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
@@ -21,6 +22,7 @@ import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.databinding.FragmentAreYouSureBinding;
 import com.leon.counter_reading.enums.HighLowStateEnum;
 import com.leon.counter_reading.enums.NotificationType;
+import com.leon.counter_reading.utils.CustomToast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -98,6 +100,9 @@ public class AreYouSureFragment extends DialogFragment {
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
+        } else {
+            ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
+            new CustomToast().error(getString(R.string.refresh_page), Toast.LENGTH_LONG);
         }
         super.onResume();
     }

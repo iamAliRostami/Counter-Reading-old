@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -135,11 +136,6 @@ public class PossibleFragment extends DialogFragment {
                             MyApplication.getContext().getString(R.string.mobile_number),
                             MyApplication.getContext().getString(R.string.accepted));
                 } else new CustomToast().warning("موردی یافت نشد.");
-
-//                if (onOffLoadDto.mobiles != null)
-//                    binding.textViewMobiles.setVisibility(binding.textViewMobiles.getVisibility()
-//                            == View.VISIBLE ? View.GONE : View.VISIBLE);
-//                else new CustomToast().warning("موردی یافت نشد.");
             });
 
             binding.editTextSerial.setVisibility(View.GONE);
@@ -408,6 +404,9 @@ public class PossibleFragment extends DialogFragment {
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
+        } else {
+            ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
+            new CustomToast().error(getString(R.string.refresh_page), Toast.LENGTH_LONG);
         }
         super.onResume();
     }

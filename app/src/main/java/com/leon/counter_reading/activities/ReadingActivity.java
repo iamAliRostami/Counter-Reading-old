@@ -170,10 +170,17 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
         updateAdapter(position);
     }
 
-    public void updateOnOffLoadByAttempt(int position) {
+    public void updateOnOffLoadByAttempt(int position, boolean... booleans) {
+        if (booleans != null && booleans.length > 0)
+            readingData.onOffLoadDtos.get(position).attemptCount--;
         new UpdateOnOffLoadByAttemptNumber(readingData.onOffLoadDtos.get(position)).execute();
         updateAdapter(position);
     }
+
+//    public void updateOnOffLoadByAttempt(int position) {
+//        new UpdateOnOffLoadByAttemptNumber(readingData.onOffLoadDtos.get(position)).execute();
+//        updateAdapter(position);
+//    }
 
     public void updateOnOffLoadByLock(int position) {
         readingData.onOffLoadDtos.get(position).isLocked = true;

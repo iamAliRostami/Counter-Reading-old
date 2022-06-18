@@ -12,14 +12,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ReadingReportAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingReportBinding;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.OffLoadReport;
+import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.reporting.GetReadingReportDBData;
 
 import java.util.ArrayList;
@@ -97,6 +100,8 @@ public class ReadingReportFragment extends DialogFragment {
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
+        } else {
+            new CustomToast().error(getString(R.string.refresh_page), Toast.LENGTH_LONG);
         }
         super.onResume();
     }

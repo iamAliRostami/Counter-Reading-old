@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -119,6 +120,8 @@ public class SearchFragment extends DialogFragment {
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
+        } else {
+            new CustomToast().error(getString(R.string.refresh_page), Toast.LENGTH_LONG);
         }
         super.onResume();
     }

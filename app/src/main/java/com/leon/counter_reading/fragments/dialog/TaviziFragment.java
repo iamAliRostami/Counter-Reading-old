@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -15,6 +16,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentSerialBinding;
 import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.helpers.MyApplication;
+import com.leon.counter_reading.utils.CustomToast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -76,6 +78,8 @@ public class TaviziFragment extends DialogFragment {
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
+        } else {
+            new CustomToast().error(getString(R.string.refresh_page), Toast.LENGTH_LONG);
         }
         super.onResume();
     }
