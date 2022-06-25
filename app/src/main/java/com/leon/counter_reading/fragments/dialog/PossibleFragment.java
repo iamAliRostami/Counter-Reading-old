@@ -56,6 +56,22 @@ public class PossibleFragment extends DialogFragment {
     private ArrayList<KarbariDto> karbariDtosTemp = new ArrayList<>();
     private ArrayList<CounterReportDto> counterReportDtos = new ArrayList<>();
     private ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
+    private final View.OnClickListener onPhoneClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (onOffLoadDto.mobiles != null) {
+                final String[] mobiles = onOffLoadDto.mobiles.split(",");
+                String mobile = "";
+                for (String mobileTemp : mobiles) {
+                    mobile = mobile.concat(mobileTemp.trim().concat("\n"));
+                }
+                new CustomDialogModel(Green, activity, mobile,
+                        MyApplication.getContext().getString(R.string.dear_user),
+                        MyApplication.getContext().getString(R.string.mobile_number),
+                        MyApplication.getContext().getString(R.string.accepted));
+            } else new CustomToast().warning("موردی یافت نشد.");
+        }
+    };
 
     public static PossibleFragment newInstance(OnOffLoadDto onOffLoadDto, int position, boolean justMobile) {
         PossibleFragment.justMobile = justMobile;
@@ -67,7 +83,7 @@ public class PossibleFragment extends DialogFragment {
 
     static Bundle putBundle(OnOffLoadDto onOffLoadDto, int position) {
         final Bundle args = new Bundle();
-        String json = new Gson().toJson(onOffLoadDto);
+        final String json = new Gson().toJson(onOffLoadDto);
         args.putString(ON_OFF_LOAD.getValue(), json);
         args.putInt(POSITION.getValue(), position);
         return args;
@@ -124,19 +140,8 @@ public class PossibleFragment extends DialogFragment {
                 binding.textViewMobiles.setText(mobile.substring(0, mobile.length() - 1));
             }
 
-            binding.textViewMobile.setOnClickListener(view -> {
-                if (onOffLoadDto.mobiles != null) {
-                    final String[] mobiles = onOffLoadDto.mobiles.split(",");
-                    String mobile = "";
-                    for (String mobileTemp : mobiles) {
-                        mobile = mobile.concat(mobileTemp.trim().concat("\n"));
-                    }
-                    new CustomDialogModel(Green, activity, mobile,
-                            MyApplication.getContext().getString(R.string.dear_user),
-                            MyApplication.getContext().getString(R.string.mobile_number),
-                            MyApplication.getContext().getString(R.string.accepted));
-                } else new CustomToast().warning("موردی یافت نشد.");
-            });
+            binding.textViewMobile.setOnClickListener(onPhoneClickListener);
+            binding.imageViewMobile.setOnClickListener(onPhoneClickListener);
 
             binding.editTextSerial.setVisibility(View.GONE);
             binding.editTextAddress.setVisibility(View.GONE);
@@ -250,7 +255,7 @@ public class PossibleFragment extends DialogFragment {
 
         binding.linearLayoutMobile.setVisibility(sharedPreferenceManager.
                 getBoolData(SharedReferenceKeys.MOBILE.getValue()) ? View.VISIBLE : View.GONE);
-        binding.editTextMobile.setVisibility(sharedPreferenceManager.
+        binding.linearLayoutMobileInput.setVisibility(sharedPreferenceManager.
                 getBoolData(SharedReferenceKeys.MOBILE.getValue()) ? View.VISIBLE : View.GONE);
         binding.textViewMobile.setVisibility(sharedPreferenceManager.
                 getBoolData(SharedReferenceKeys.MOBILE.getValue()) ? View.VISIBLE : View.GONE);

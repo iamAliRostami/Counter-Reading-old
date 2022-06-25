@@ -56,15 +56,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/linear_layout_1"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:weightSum="2.4">
+                android:baselineAligned="false">
 
                 <RelativeLayout
                     style="@style/ReadingLine"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.4"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
@@ -324,20 +322,6 @@
                 android:lines="1"
                 android:textSize="@dimen/text_size_large" />
 
-            <!--        <RelativeLayout-->
-            <!--            android:id="@+id/linear_layout_6"-->
-            <!--            android:layout_width="match_parent"-->
-            <!--            android:layout_height="match_parent"-->
-            <!--            android:layout_below="@id/text_view_name"-->
-            <!--            android:layout_marginTop="@dimen/small_dp"-->
-            <!--            android:layout_marginBottom="@dimen/small_dp"-->
-            <!--            android:background="@drawable/border_gray_5">-->
-
-            <!--            <Spinner-->
-            <!--                android:id="@+id/spinner"-->
-            <!--                style="@style/Spinner"-->
-            <!--                tools:listitem="@layout/item_dropdown_menu" />-->
-            <!--        </RelativeLayout>-->
 
             <Spinner
                 android:id="@+id/spinner"

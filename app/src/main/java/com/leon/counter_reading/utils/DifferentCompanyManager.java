@@ -44,7 +44,8 @@ public class DifferentCompanyManager {
         }
         switch (companyNames) {
             case ESF:
-                return "https://37.191.92.157/";
+//                return "http://172.18.12.36/";
+            return "https://37.191.92.157/";
             case ZONE1:
                 return "http://217.146.220.33:50011/";
             case ZONE2:

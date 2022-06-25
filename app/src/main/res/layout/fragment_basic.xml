@@ -17,188 +17,114 @@
             android:layout_height="wrap_content"
             android:gravity="center">
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/linear_layout_serial"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/low_dp"
-                android:background="@drawable/border_white_2"
-                android:orientation="vertical">
+                style="@style/ItemLineBasic">
 
                 <TextView
-                    style="@style/text_bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/TitleBasic"
                     android:labelFor="@id/text_view_serial"
-                    android:text="@string/serial"
-                    android:textSize="@dimen/text_size_medium" />
+                    android:text="@string/serial" />
 
                 <TextView
                     android:id="@+id/text_view_serial"
-                    style="@style/InputPossible"
-                    android:layout_margin="@dimen/low_dp"
-                    android:textSize="@dimen/text_size_medium" />
+                    style="@style/InputBasic"
+                    android:background="@drawable/border_black_2" />
 
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <LinearLayout
                 android:id="@+id/linear_layout_android_version"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear_layout_serial"
-                android:layout_margin="@dimen/low_dp"
-                android:background="@drawable/border_white_2"
-                android:orientation="vertical">
+                style="@style/ItemLineBasic"
+                android:layout_below="@id/linear_layout_serial">
 
                 <TextView
-                    style="@style/text_bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/android_version"
-                    android:textSize="@dimen/text_size_medium" />
+                    style="@style/TitleBasic"
+                    android:text="@string/android_version" />
 
                 <TextView
                     android:id="@+id/text_view_android_version"
-                    style="@style/InputPossible"
-                    android:layout_margin="@dimen/low_dp"
-                    android:textSize="@dimen/text_size_medium" />
+                    style="@style/InputBasic"
+                    android:background="@drawable/border_black_2" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linear_layout_signal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear_layout_android_version"
-                android:layout_margin="@dimen/low_dp"
-                android:background="@drawable/border_white_2"
-                android:orientation="vertical">
+                style="@style/ItemLineBasic"
+                android:layout_below="@id/linear_layout_android_version">
 
                 <TextView
-                    style="@style/text_bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/signal"
-                    android:textSize="@dimen/text_size_medium" />
+                    style="@style/TitleBasic"
+                    android:text="@string/signal" />
 
                 <TextView
                     android:id="@+id/text_view_signal"
-                    style="@style/InputPossible"
-                    android:layout_margin="@dimen/low_dp"
-                    android:textSize="@dimen/text_size_medium" />
+                    style="@style/InputBasic"
+                    android:background="@drawable/border_black_2" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linear_layout_app_version"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear_layout_signal"
-                android:layout_margin="@dimen/low_dp"
-                android:background="@drawable/border_white_2"
-                android:orientation="vertical">
+                style="@style/ItemLineBasic"
+                android:layout_below="@id/linear_layout_signal">
 
                 <TextView
-                    style="@style/text_bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="@style/TitleBasic"
                     android:labelFor="@id/text_view_app_version"
-                    android:text="@string/app_version"
-                    android:textSize="@dimen/text_size_medium" />
+                    android:text="@string/app_version" />
 
                 <TextView
                     android:id="@+id/text_view_app_version"
-                    style="@style/InputPossible"
-                    android:layout_margin="@dimen/low_dp"
+                    style="@style/InputBasic"
                     android:textSize="@dimen/text_size_medium" />
             </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/relative_layout_proxy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear_layout_app_version"
-                android:layout_margin="@dimen/low_dp"
-                android:background="@drawable/border_white_2"
-                android:orientation="vertical"
-                android:padding="@dimen/medium_dp">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/linear_layout_proxy"
+                style="@style/ItemLineBasic"
+                android:layout_below="@id/linear_layout_app_version">
 
                 <TextView
-                    android:id="@+id/text_view_proxy"
-                    style="@style/text_bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:labelFor="@id/edit_text_proxy"
-                    android:text="@string/enter_proxy"
-                    android:textSize="@dimen/text_size_medium" />
+                    style="@style/TitleBasic"
+                    android:text="@string/enter_proxy" />
 
                 <EditText
                     android:id="@+id/edit_text_proxy"
-                    style="@style/InputPossible"
-                    android:layout_width="match_parent"
-                    android:layout_below="@id/text_view_proxy"
+                    style="@style/InputBasic"
                     android:hint="@string/http_https"
-                    android:inputType="text"
-                    android:padding="@dimen/low_dp"
-                    android:textSize="@dimen/text_size_medium"
-                    tools:ignore="LabelFor" />
+                    android:inputType="text" />
 
                 <Button
                     android:id="@+id/button_submit_proxy"
-                    style="@style/ButtonSubmit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/edit_text_proxy"
-                    android:layout_centerHorizontal="true"
-                    android:text="@string/submit"
-                    android:textSize="@dimen/text_size_medium" />
-            </RelativeLayout>
+                    style="@style/ButtonBasic"
+                    android:text="@string/submit" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <RelativeLayout
-                android:id="@+id/relative_layout_personal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/relative_layout_proxy"
-                android:layout_margin="@dimen/low_dp"
-                android:background="@drawable/border_white_2"
-                android:orientation="vertical"
-                android:padding="@dimen/medium_dp">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/linear_layout_personal"
+                style="@style/ItemLineBasic"
+                android:layout_below="@id/linear_layout_proxy">
 
                 <TextView
-                    android:id="@+id/text_view_personal"
-                    style="@style/text_bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    style="@style/TitleBasic"
                     android:labelFor="@id/edit_text_personal_code"
-                    android:text="@string/enter_personal_code"
-                    android:textSize="@dimen/text_size_medium" />
+                    android:text="@string/enter_personal_code" />
 
                 <EditText
                     android:id="@+id/edit_text_personal_code"
-                    style="@style/InputPossible"
-                    android:layout_width="match_parent"
-                    android:layout_below="@id/text_view_personal"
-                    android:inputType="text"
-                    android:padding="@dimen/low_dp"
-                    android:textSize="@dimen/text_size_medium" />
+                    style="@style/InputBasic"
+                    android:inputType="text" />
 
                 <Button
                     android:id="@+id/button_submit_personal"
-                    style="@style/ButtonSubmit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/ButtonBasic"
                     android:layout_below="@id/edit_text_personal_code"
-                    android:layout_centerHorizontal="true"
-                    android:text="@string/submit"
-                    android:textSize="@dimen/text_size_medium" />
-            </RelativeLayout>
+                    android:text="@string/submit" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
         </RelativeLayout>
     </ScrollView>
-    <LinearLayout
+
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linear_layout_footer"
         style="@style/bottomView"
         android:orientation="horizontal">
@@ -206,16 +132,14 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
             android:src="@drawable/img_logo_footer" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/text_view_company_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:text="@string/copy_right"
             android:textColor="@color/text_color_light" />
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </RelativeLayout>
