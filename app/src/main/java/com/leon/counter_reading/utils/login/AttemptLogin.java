@@ -1,5 +1,6 @@
 package com.leon.counter_reading.utils.login;
 
+import static com.leon.counter_reading.enums.ProgressType.SHOW;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -9,10 +10,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.auth0.android.jwt.JWT;
+import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.HomeActivity;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
-import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
@@ -46,11 +47,12 @@ public class AttemptLogin extends AsyncTask<Activity, Activity, Void> {
 
     @Override
     protected Void doInBackground(Activity... activities) {
-        Retrofit retrofit = getApplicationComponent().NetworkHelperModel().getInstance();
+        final Retrofit retrofit = getApplicationComponent().NetworkHelperModel().getInstance();
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-        Call<LoginFeedBack> call = iAbfaService.login(new LoginInfo(username, password, serial));
+        final Call<LoginFeedBack> call = iAbfaService.login(new LoginInfo(username, password, serial,
+                BuildConfig.VERSION_NAME));
         activities[0].runOnUiThread(() ->
-                HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW.getValue(), activities[0],
+                HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activities[0],
                         new LoginCompleted(activities[0], isChecked, username, password),
                         new Incomplete(activities[0]), new Error(activities[0])));
         return null;

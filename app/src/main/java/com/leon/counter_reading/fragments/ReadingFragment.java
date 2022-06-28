@@ -35,6 +35,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -622,7 +623,9 @@ public class ReadingFragment extends Fragment {
                     debtOrNumber = true;
                     requireActivity().runOnUiThread(() -> {
                         binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber));
-                        binding.textViewPreNumber.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_color_dark));
+                        final TypedValue typedValue = new TypedValue();
+                        requireActivity().getTheme().resolveAttribute(android.R.attr.textColor, typedValue, true);
+                        binding.textViewPreNumber.setTextColor(typedValue.data);
                     });
                     ((ReadingActivity) requireActivity()).updateOnOffLoadByPreNumber(position);
                 } else new CustomToast().warning(getString(R.string.can_not_show_pre));
