@@ -4,6 +4,7 @@ import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.enums.BundleEnum.ZONE_ID;
+import static com.leon.counter_reading.enums.DialogType.Red;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,6 +21,7 @@ import androidx.fragment.app.DialogFragment;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ReadingReportAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingReportBinding;
+import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.utils.CustomToast;
@@ -101,7 +103,9 @@ public class ReadingReportFragment extends DialogFragment {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
         } else {
-            new CustomToast().error(getString(R.string.refresh_page), Toast.LENGTH_LONG);
+            new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
+                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
+                    getString(R.string.accepted));
         }
         super.onResume();
     }

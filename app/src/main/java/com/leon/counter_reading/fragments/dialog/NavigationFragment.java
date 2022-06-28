@@ -1,6 +1,7 @@
 package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.helpers.Constants.readingData;
 
 import android.app.Activity;
@@ -21,6 +22,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentNavigationBinding;
+import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
@@ -229,7 +231,9 @@ public class NavigationFragment extends DialogFragment {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
         } else {
-            new CustomToast().error(getString(R.string.refresh_page), Toast.LENGTH_LONG);
+            new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
+                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
+                    getString(R.string.accepted));
         }
         super.onResume();
     }

@@ -1,6 +1,7 @@
 package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
+import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentSerialBinding;
+import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.utils.CustomToast;
@@ -79,7 +81,9 @@ public class TaviziFragment extends DialogFragment {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
         } else {
-            new CustomToast().error(getString(R.string.refresh_page), Toast.LENGTH_LONG);
+            new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
+                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
+                    getString(R.string.accepted));
         }
         super.onResume();
     }

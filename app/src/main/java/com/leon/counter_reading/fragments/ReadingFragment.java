@@ -1,6 +1,7 @@
 package com.leon.counter_reading.fragments;
 
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.HighLowStateEnum.HIGH;
 import static com.leon.counter_reading.enums.HighLowStateEnum.LOW;
 import static com.leon.counter_reading.enums.HighLowStateEnum.NORMAL;
@@ -28,7 +29,6 @@ import static com.leon.counter_reading.utils.reading.Counting.checkHighLow;
 import static com.leon.counter_reading.utils.reading.Counting.checkHighLowMakoos;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -46,6 +46,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -55,6 +56,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingBinding;
+import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
 import com.leon.counter_reading.helpers.Constants;
@@ -70,13 +72,12 @@ import java.util.ArrayList;
 
 public class ReadingFragment extends Fragment {
     private FragmentReadingBinding binding;
-    private Activity activity;
     private KarbariDto karbariDto;
     private OnOffLoadDto onOffLoadDto;
     private ReadingConfigDefaultDto readingConfigDefaultDto;
     private long lastClickTime = 0;
     private int position, counterStateCode, counterStatePosition, textViewId, buttonId;
-    private boolean isMakoos, isMane, canLessThanPre, canEnterNumber, shouldEnterNumber;
+    private boolean isMakoos, isMane, canLessThanPre, canEnterNumber, shouldEnterNumber, debtOrNumber;
     private TextView textView;
 
     public ReadingFragment() {
@@ -124,7 +125,6 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,7 +135,6 @@ public class ReadingFragment extends Fragment {
             getBundle(getArguments());
             getArguments().clear();
         }
-        activity = getActivity();
     }
 
 
@@ -179,7 +178,6 @@ public class ReadingFragment extends Fragment {
 
     private void initializeButtonSubmit() {
         binding.buttonSubmit.setId(View.generateViewId());
-//        final Button button = binding.buttonSubmit;
         buttonId = binding.buttonSubmit.getId();
         binding.buttonSubmit.setOnClickListener(onClickListener);
     }
@@ -228,8 +226,11 @@ public class ReadingFragment extends Fragment {
         else
             binding.textViewSiphon.setText(onOffLoadDto.sifoonQotr.equals("مشخص نشده") ? "-" : onOffLoadDto.sifoonQotr);
 
-        if (onOffLoadDto.counterNumberShown)
-            binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber));
+        //TODO
+//        if (onOffLoadDto.counterNumberShown)
+//        binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber));
+        binding.textViewPreNumber.setText(String.valueOf(Math.toIntExact(onOffLoadDto.balance)));
+
 
         binding.textViewPreNumber.setOnClickListener(onClickListener);
         binding.textViewAddress.setOnLongClickListener(onLongClickListener);
@@ -240,7 +241,7 @@ public class ReadingFragment extends Fragment {
         for (int i = 0; i < counterStateDtos.size(); i++) {
             items[i] = counterStateDtos.get(i).title;
         }
-        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(activity, items);
+        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
         binding.spinner.setAdapter(adapter);
         boolean found = false;
         int i;
@@ -303,7 +304,6 @@ public class ReadingFragment extends Fragment {
             binding.buttonKeyboard9.setOnTouchListener(onTouchListener);
             binding.buttonKeyboardBackspace.setOnTouchListener(onTouchListener);
         }
-
         binding.imageButtonHideKeyboard.setOnClickListener(onKeyboardClickListener);
         binding.imageButtonShowKeyboard.setOnClickListener(onKeyboardClickListener);
     }
@@ -321,7 +321,7 @@ public class ReadingFragment extends Fragment {
                 new CustomToast().warning("به علت عدم دسترسی به مکان یابی، امکان ثبت وجود ندارد.");
             }
         };
-        new TedPermission(activity)
+        new TedPermission(requireContext())
                 .setPermissionListener(permissionlistener)
                 .setRationaleMessage(getString(R.string.confirm_permission))
                 .setRationaleConfirmText(getString(R.string.allow_permission))
@@ -341,10 +341,10 @@ public class ReadingFragment extends Fragment {
 
             @Override
             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                forceClose(activity);
+                forceClose(requireActivity());
             }
         };
-        new TedPermission(activity)
+        new TedPermission(requireContext())
                 .setPermissionListener(permissionlistener)
                 .setRationaleMessage(getString(R.string.confirm_permission))
                 .setRationaleConfirmText(getString(R.string.allow_permission))
@@ -355,8 +355,8 @@ public class ReadingFragment extends Fragment {
     }
 
     private void checkPermissions() {
-        if (enableGps(activity))
-            if (!checkLocationPermission(getContext())) {
+        if (enableGps(requireActivity()))
+            if (!checkLocationPermission(requireContext())) {
                 askLocationPermission();
             } else if (!checkStoragePermission(getContext())) {
                 askStoragePermission();
@@ -364,7 +364,6 @@ public class ReadingFragment extends Fragment {
                 attemptSend();
             }
     }
-
 
     private void attemptSend() {
         if (!shouldEnterNumber && lockProcess(true)) {
@@ -376,7 +375,7 @@ public class ReadingFragment extends Fragment {
 
     private boolean lockProcess(final boolean canBeEmpty) {
         onOffLoadDto.attemptCount++;
-        ((ReadingActivity) activity).updateOnOffLoadByAttempt(position);
+        ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position);
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount + 1 == getLockNumber(getActiveCompanyName()))
             new CustomToast().error(getString(R.string.mistakes_error).concat(onOffLoadDto.eshterak)
                             .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
@@ -390,7 +389,7 @@ public class ReadingFragment extends Fragment {
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= getLockNumber(getActiveCompanyName())) {
             onOffLoadDto.isLocked = true;
             textView.setText("");
-            ((ReadingActivity) activity).updateOnOffLoadByLock(position);
+            ((ReadingActivity) requireActivity()).updateOnOffLoadByLock(position);
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
             binding.imageButtonShowKeyboard.setVisibility(View.GONE);
             return canBeEmpty;
@@ -400,7 +399,7 @@ public class ReadingFragment extends Fragment {
 
     private void canBeEmpty() {
         if (textView.getText().toString().isEmpty() || isMane) {
-            ((ReadingActivity) activity).updateOnOffLoadWithoutCounterNumber(position,
+            ((ReadingActivity) requireActivity()).updateOnOffLoadWithoutCounterNumber(position,
                     counterStateCode, counterStatePosition);
         } else {
             final int currentNumber = getDigits(textView.getText().toString());
@@ -408,7 +407,7 @@ public class ReadingFragment extends Fragment {
             if (canLessThanPre) {
                 lessThanPre(currentNumber);
             } else if (use < 0) {
-                makeRing(activity, NOT_SAVE);
+                makeRing(requireContext(), NOT_SAVE);
                 String message = getString(R.string.less_than_pre);
                 textView.setError(message);
                 message = message.concat("\n").concat(onOffLoadDto.eshterak)
@@ -416,13 +415,18 @@ public class ReadingFragment extends Fragment {
                         .concat(String.valueOf(textViewId));
                 new CustomToast().warning(message, Toast.LENGTH_LONG);
                 textView.requestFocus();
+            } else {
+                ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
+                new CustomDialogModel(Red, requireContext(), getString(R.string.error_on_download_counter_states),
+                        getString(R.string.dear_user), getString(R.string.take_screen_shot),
+                        getString(R.string.accepted));
             }
         }
     }
 
     private void canNotBeEmpty() {
         if (textView.getText().toString().isEmpty()) {
-            makeRing(activity, NOT_SAVE);
+            makeRing(requireContext(), NOT_SAVE);
             String message = getString(R.string.counter_empty);
             textView.setError(message);
             textView.requestFocus();
@@ -436,7 +440,7 @@ public class ReadingFragment extends Fragment {
             if (canLessThanPre) {
                 lessThanPre(currentNumber);
             } else if (use < 0) {
-                makeRing(activity, NOT_SAVE);
+                makeRing(requireContext(), NOT_SAVE);
                 String message = getString(R.string.less_than_pre);
                 textView.setError(message);
                 textView.requestFocus();
@@ -452,7 +456,7 @@ public class ReadingFragment extends Fragment {
 
     private void lessThanPre(int currentNumber) {
         if (!isMakoos)
-            ((ReadingActivity) activity).updateOnOffLoadByNumber(position, currentNumber,
+            ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(position, currentNumber,
                     counterStateCode, counterStatePosition);
         else {
             notEmptyIsMakoos(currentNumber);
@@ -474,7 +478,7 @@ public class ReadingFragment extends Fragment {
                     type = LOW.getValue();
                     break;
                 case 0:
-                    ((ReadingActivity) activity).updateOnOffLoadByNumber(position, currentNumber,
+                    ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(position, currentNumber,
                             counterStateCode, counterStatePosition, NORMAL.getValue());
                     break;
             }
@@ -500,8 +504,8 @@ public class ReadingFragment extends Fragment {
                     type = LOW.getValue();
                     break;
                 case 0:
-                    ((ReadingActivity) activity).updateOnOffLoadByNumber(position,
-                            currentNumber, counterStateCode, counterStatePosition, NORMAL.getValue());
+                    ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(position, currentNumber,
+                            counterStateCode, counterStatePosition, NORMAL.getValue());
                     break;
             }
         }
@@ -609,19 +613,28 @@ public class ReadingFragment extends Fragment {
             lastClickTime = SystemClock.elapsedRealtime();
             checkPermissions();
         } else if (id == R.id.text_view_pre_number) {
-            if (onOffLoadDto.hasPreNumber) {
-                activity.runOnUiThread(() ->
-                        binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber)));
-                ((ReadingActivity) activity).updateOnOffLoadByPreNumber(position);
-            } else new CustomToast().warning(getString(R.string.can_not_show_pre));
-        } else if (id == textViewId /*R.id.edit_text_number*/)
+            if (debtOrNumber) {
+                debtOrNumber = false;
+                binding.textViewPreNumber.setText(String.valueOf(Math.toIntExact(onOffLoadDto.balance)));
+                binding.textViewPreNumber.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+            } else {
+                if (onOffLoadDto.hasPreNumber) {
+                    debtOrNumber = true;
+                    requireActivity().runOnUiThread(() -> {
+                        binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber));
+                        binding.textViewPreNumber.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_color_dark));
+                    });
+                    ((ReadingActivity) requireActivity()).updateOnOffLoadByPreNumber(position);
+                } else new CustomToast().warning(getString(R.string.can_not_show_pre));
+            }
+        } else if (id == textViewId)
             if (!onOffLoadDto.isLocked && (shouldEnterNumber || canEnterNumber))
                 binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
     };
     private final View.OnLongClickListener onLongClickListener = view -> {
         final int id = view.getId();
         if (id == R.id.text_view_address)
-            ShowDialogOnce(activity, "SHOW_POSSIBLE_DIALOG_".concat(onOffLoadDto.eshterak),
+            ShowDialogOnce(requireContext(), "SHOW_POSSIBLE_DIALOG_".concat(onOffLoadDto.eshterak),
                     PossibleFragment.newInstance(onOffLoadDto, position, true));
         else if (id == textViewId)
             textView.setText("");

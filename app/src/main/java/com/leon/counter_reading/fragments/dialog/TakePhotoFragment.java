@@ -6,6 +6,7 @@ import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.SENT;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.enums.CompanyNames.TSE;
+import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.helpers.Constants.CURRENT_IMAGE_SIZE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
@@ -32,6 +33,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.ImageViewAdapter;
 import com.leon.counter_reading.databinding.FragmentTakePhotoBinding;
+import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.photo.PrepareMultimedia;
@@ -254,7 +256,9 @@ public class TakePhotoFragment extends DialogFragment {
             getDialog().getWindow().setAttributes(params);
         } else {
             ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
-            new CustomToast().error(getString(R.string.refresh_page), Toast.LENGTH_LONG);
+            new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
+                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
+                    getString(R.string.accepted));
         }
         super.onResume();
     }

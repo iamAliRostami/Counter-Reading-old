@@ -2,6 +2,7 @@ package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
 import static com.leon.counter_reading.enums.NotificationType.OTHER;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad1;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad2;
@@ -17,9 +18,6 @@ import androidx.fragment.app.DialogFragment;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentAhadBinding;
-import com.leon.counter_reading.enums.NotificationType;
-import com.leon.counter_reading.helpers.MyApplication;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -84,8 +82,7 @@ public class AhadFragment extends DialogFragment {
                 }
             }
             if (!cancel) {
-                MyApplication.getApplicationComponent().MyDatabase()
-                        .onOffLoadDao().updateOnOffLoad(asli, fari, uuid);
+                getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(asli, fari, uuid);
                 dismiss();
             }
         });

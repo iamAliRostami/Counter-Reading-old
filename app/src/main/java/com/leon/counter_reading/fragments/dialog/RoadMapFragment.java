@@ -2,6 +2,7 @@ package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.LATITUDE;
 import static com.leon.counter_reading.enums.BundleEnum.LONGITUDE;
+import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 
 import android.graphics.Color;
@@ -11,14 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentRoadMapBinding;
-import com.leon.counter_reading.utils.CustomToast;
+import com.leon.counter_reading.di.view_model.CustomDialogModel;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
@@ -95,14 +95,14 @@ public class RoadMapFragment extends DialogFragment {
 
     private void addRouteOverlay(GeoPoint startPoint, GeoPoint endPoint) {
         requireActivity().runOnUiThread(() -> {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            final StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
-            RoadManager roadManager = new OSRMRoadManager(requireActivity());
+            final RoadManager roadManager = new OSRMRoadManager(requireActivity());
             final ArrayList<GeoPoint> wayPoints = new ArrayList<>();
             wayPoints.add(startPoint);
             wayPoints.add(endPoint);
-            Road road = roadManager.getRoad(wayPoints);
-            Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
+            final Road road = roadManager.getRoad(wayPoints);
+            final Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
 
             roadOverlay.setWidth(12);
             roadOverlay.setColor(Color.RED);
@@ -123,7 +123,9 @@ public class RoadMapFragment extends DialogFragment {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
         } else {
-            new CustomToast().error(getString(R.string.refresh_page), Toast.LENGTH_LONG);
+            new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
+                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
+                    getString(R.string.accepted));
         }
         super.onResume();
     }

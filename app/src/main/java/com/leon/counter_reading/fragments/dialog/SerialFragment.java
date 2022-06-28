@@ -3,6 +3,7 @@ package com.leon.counter_reading.fragments.dialog;
 import static com.leon.counter_reading.enums.BundleEnum.COUNTER_STATE_CODE;
 import static com.leon.counter_reading.enums.BundleEnum.COUNTER_STATE_POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import androidx.fragment.app.DialogFragment;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.databinding.FragmentSerialBinding;
+import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.utils.CustomToast;
 
@@ -88,7 +90,9 @@ public class SerialFragment extends DialogFragment {
             getDialog().getWindow().setAttributes(params);
         } else {
             ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
-            new CustomToast().error(getString(R.string.refresh_page), Toast.LENGTH_LONG);
+            new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
+                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
+                    getString(R.string.accepted));
         }
         super.onResume();
     }

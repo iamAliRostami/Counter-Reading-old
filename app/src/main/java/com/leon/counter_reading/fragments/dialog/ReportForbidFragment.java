@@ -1,6 +1,7 @@
 package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.ZONE_ID;
+import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.Converters.bitmapToFile;
@@ -37,6 +38,7 @@ import androidx.fragment.app.DialogFragment;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentReportForbidBinding;
+import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.tables.ForbiddenDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.forbid.PrepareForbid;
@@ -308,7 +310,9 @@ public class ReportForbidFragment extends DialogFragment {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
         } else {
-            new CustomToast().error(getString(R.string.refresh_page), Toast.LENGTH_LONG);
+            new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
+                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
+                    getString(R.string.accepted));
         }
         super.onResume();
     }

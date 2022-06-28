@@ -3,6 +3,7 @@ package com.leon.counter_reading.fragments.dialog;
 import static com.leon.counter_reading.enums.BundleEnum.ON_OFF_LOAD;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.DialogType.Green;
+import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.NotificationType.OTHER;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KARBARI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
@@ -20,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -62,9 +62,8 @@ public class PossibleFragment extends DialogFragment {
             if (onOffLoadDto.mobiles != null) {
                 final String[] mobiles = onOffLoadDto.mobiles.split(",");
                 String mobile = "";
-                for (String mobileTemp : mobiles) {
+                for (String mobileTemp : mobiles)
                     mobile = mobile.concat(mobileTemp.trim().concat("\n"));
-                }
                 new CustomDialogModel(Green, activity, mobile,
                         MyApplication.getContext().getString(R.string.dear_user),
                         MyApplication.getContext().getString(R.string.mobile_number),
@@ -139,10 +138,6 @@ public class PossibleFragment extends DialogFragment {
                 }
                 binding.textViewMobiles.setText(mobile.substring(0, mobile.length() - 1));
             }
-
-            binding.textViewMobile.setOnClickListener(onPhoneClickListener);
-            binding.imageViewMobile.setOnClickListener(onPhoneClickListener);
-
             binding.editTextSerial.setVisibility(View.GONE);
             binding.editTextAddress.setVisibility(View.GONE);
             binding.editTextAccount.setVisibility(View.GONE);
@@ -160,6 +155,8 @@ public class PossibleFragment extends DialogFragment {
 
         } else
             initializeTextViews();
+        binding.textViewMobile.setOnClickListener(onPhoneClickListener);
+        binding.imageViewMobile.setOnClickListener(onPhoneClickListener);
         setOnButtonsClickListener();
         setOnEditTextSearchChangeListener();
     }
@@ -411,7 +408,9 @@ public class PossibleFragment extends DialogFragment {
             getDialog().getWindow().setAttributes(params);
         } else {
             ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
-            new CustomToast().error(getString(R.string.refresh_page), Toast.LENGTH_LONG);
+            new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
+                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
+                    getString(R.string.accepted));
         }
         super.onResume();
     }
