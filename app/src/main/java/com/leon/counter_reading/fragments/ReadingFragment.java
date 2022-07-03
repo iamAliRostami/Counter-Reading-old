@@ -227,7 +227,6 @@ public class ReadingFragment extends Fragment {
         else
             binding.textViewSiphon.setText(onOffLoadDto.sifoonQotr.equals("مشخص نشده") ? "-" : onOffLoadDto.sifoonQotr);
 
-        //TODO
 //        if (onOffLoadDto.counterNumberShown)
 //        binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber));
         binding.textViewPreNumber.setText(String.valueOf(Math.toIntExact(onOffLoadDto.balance)));

@@ -12,7 +12,6 @@ import android.hardware.usb.UsbInterface;
 import android.net.Uri;
 import android.view.KeyEvent;
 
-//import com.github.mjdev.libaums.fs.UsbFile;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.fragments.ExplorerFragment;
 import com.leon.counter_reading.helpers.Constants;

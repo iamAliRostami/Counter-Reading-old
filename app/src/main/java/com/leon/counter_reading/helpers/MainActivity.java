@@ -5,14 +5,13 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.leon.counter_reading.activities.SplashActivity;
+import com.leon.counter_reading.base_items.BaseActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startActivity(new Intent(this, SplashActivity.class));
-
+        startActivity(new Intent(this, BaseActivity.class));
     }
 }

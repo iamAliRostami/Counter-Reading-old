@@ -3,7 +3,7 @@ plugins {
     id 'com.google.gms.google-services'
 }
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     buildToolsVersion '31.0.0'
     signingConfigs {
         config {
@@ -16,9 +16,9 @@ android {
     defaultConfig {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
-        targetSdkVersion 32
-        versionCode 80
-        versionName "1.01.03.28"
+        targetSdkVersion 33
+        versionCode 81
+        versionName "1.01.04.11"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config

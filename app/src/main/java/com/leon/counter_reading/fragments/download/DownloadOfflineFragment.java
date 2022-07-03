@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-//import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentOfflineDownloadBinding;
 import com.leon.counter_reading.fragments.ExplorerFragment;
@@ -159,7 +158,8 @@ public class DownloadOfflineFragment extends Fragment implements HomeFragment.Ho
         super.onDestroyView();
         try {
             requireContext().unregisterReceiver(usbReceiver);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         binding.imageViewDownload.setImageDrawable(null);
     }

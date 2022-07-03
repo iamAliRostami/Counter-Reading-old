@@ -2,7 +2,6 @@ package com.leon.counter_reading.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Debug;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +48,6 @@ public class SplashFragment extends Fragment {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
-//                    requireActivity().runOnUiThread(() -> startActivity.splashLoaded());
                     startActivity.splashLoaded();
                 }
             }
