@@ -64,9 +64,9 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
 //        long startTime = Calendar.getInstance().getTimeInMillis();
         for (int i = 0; i < images.size(); i++) {
             final Bitmap bitmap = loadImage(activities[0], images.get(i).address);
-            if (bitmap != null) {
-                imageMultiples.Description.add(RequestBody.create(images.get(i).Description,
-                        MediaType.parse("text/plain")));
+            if (bitmap != null && images.get(i).OnOffLoadId != null) {
+                imageMultiples.Description.add(RequestBody.create(images.get(i).Description == null ?
+                        "" : images.get(i).Description, MediaType.parse("text/plain")));
                 imageMultiples.OnOffLoadId.add(RequestBody.create(images.get(i).OnOffLoadId,
                         MediaType.parse("text/plain")));
                 imageMultiples.File.add(bitmapToFile(bitmap, activities[0]));
@@ -78,11 +78,11 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
             voice.get(i).File = prepareVoiceToSend(activities[0]
                     .getExternalFilesDir(null).getAbsolutePath() +
                     activities[0].getString(R.string.audio_folder) + voice.get(i).address);
-            if (voice.get(i).File != null) {
+            if (voice.get(i).File != null && voice.get(i).OnOffLoadId != null) {
                 voiceMultiples.OnOffLoadId.add(RequestBody.create(voice.get(i).OnOffLoadId,
                         MediaType.parse("text/plain")));
-                voiceMultiples.Description.add(RequestBody.create(voice.get(i).Description,
-                        MediaType.parse("text/plain")));
+                voiceMultiples.Description.add(RequestBody.create(voice.get(i).Description == null ?
+                        "" : voice.get(i).Description, MediaType.parse("text/plain")));
                 voiceMultiples.File.add(voice.get(i).File);
             } else {
                 getApplicationComponent().MyDatabase().voiceDao().

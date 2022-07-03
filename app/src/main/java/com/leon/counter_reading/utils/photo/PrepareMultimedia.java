@@ -95,7 +95,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
         TakePhotoFragment.newInstance().setResult();
     }
 
-    private void saveImages(boolean isSent, Activity activity) {
+    private void saveImages(boolean isSent) {
 //        for (int j = 0; j < 200; j++)//TODO
         for (int i = 0; i < images.size(); i++) {
             if (!images.get(i).isSent) {
@@ -128,7 +128,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
             } else {
                 new CustomToast().warning(activity.getString(R.string.error_upload), Toast.LENGTH_LONG);
             }
-            saveImages(response.body() != null && response.body().status == 200, activity);
+            saveImages(response.body() != null && response.body().status == 200);
             setResult();
         }
     }
@@ -145,7 +145,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
             final CustomErrorHandling errorHandling = new CustomErrorHandling(activity);
             final String error = errorHandling.getErrorMessageDefault(response);
             new CustomToast().warning(error, Toast.LENGTH_LONG);
-            saveImages(false, activity);
+            saveImages(false);
             setResult();
         }
     }
@@ -164,7 +164,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
                 final String error = errorHandling.getErrorMessageTotal(t);
                 new CustomToast().error(error, Toast.LENGTH_LONG);
             }
-            saveImages(false, activity);
+            saveImages(false);
             setResult();
         }
     }
