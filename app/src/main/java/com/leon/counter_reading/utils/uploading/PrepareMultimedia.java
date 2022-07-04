@@ -63,7 +63,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
                     getVoicesByBySent(false));
         for (int i = 0; i < images.size(); i++) {
             final Bitmap bitmap = loadImage(activities[0], images.get(i).address);
-            if (bitmap != null && images.get(i).OnOffLoadId != null) {
+            if (images.get(i) != null && bitmap != null && images.get(i).OnOffLoadId != null) {
                 try {
                     imageMultiples.Description.add(RequestBody.create((images.get(i).Description == null ||
                                     images.get(i).Description.isEmpty()) ? "-" : images.get(i).Description,
