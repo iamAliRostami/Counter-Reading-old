@@ -1,7 +1,6 @@
 package com.leon.counter_reading.fragments;
 
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
-import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.HighLowStateEnum.HIGH;
 import static com.leon.counter_reading.enums.HighLowStateEnum.LOW;
 import static com.leon.counter_reading.enums.HighLowStateEnum.NORMAL;
@@ -57,7 +56,6 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingBinding;
-import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
 import com.leon.counter_reading.helpers.Constants;
@@ -250,6 +248,7 @@ public class ReadingFragment extends Fragment {
                 found = true;
             }
         binding.spinner.setSelection(found ? i - 1 : 0);
+        setCounterStateField(found ? i - 1 : 0);
         setOnSpinnerSelectedListener();
     }
 
@@ -257,24 +256,28 @@ public class ReadingFragment extends Fragment {
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int i, long id) {
-                counterStatePosition = i;
-                final CounterStateDto counterStateDto = counterStateDtos.get(counterStatePosition);
-                counterStateCode = counterStateDto.id;
-                isMane = counterStateDto.isMane;
-                shouldEnterNumber = counterStateDto.shouldEnterNumber;
-                canEnterNumber = counterStateDto.canEnterNumber;
-                canLessThanPre = counterStateDto.canNumberBeLessThanPre;
-                isMakoos = counterStateDto.title.equals("معکوس");
-                binding.imageButtonShowKeyboard.setVisibility(canEnterNumber || shouldEnterNumber ?
-                        View.VISIBLE : View.GONE);
-                if (!canEnterNumber && !shouldEnterNumber) textView.setText("");
-                changeKeyboardState();
+                setCounterStateField(i);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+    }
+
+    private void setCounterStateField(int i) {
+        counterStatePosition = i;
+        final CounterStateDto counterStateDto = counterStateDtos.get(counterStatePosition);
+        counterStateCode = counterStateDto.id;
+        isMane = counterStateDto.isMane;
+        shouldEnterNumber = counterStateDto.shouldEnterNumber;
+        canEnterNumber = counterStateDto.canEnterNumber;
+        canLessThanPre = counterStateDto.canNumberBeLessThanPre;
+        isMakoos = counterStateDto.title.equals("معکوس");
+        binding.imageButtonShowKeyboard.setVisibility(canEnterNumber || shouldEnterNumber ?
+                View.VISIBLE : View.GONE);
+        if (!canEnterNumber && !shouldEnterNumber) textView.setText("");
+        changeKeyboardState();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -416,11 +419,14 @@ public class ReadingFragment extends Fragment {
                 new CustomToast().warning(message, Toast.LENGTH_LONG);
                 textView.requestFocus();
             } else {
-                ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
-                new CustomDialogModel(Red, requireContext(), getString(R.string.error_on_download_counter_states)
-                        .concat("\ncode: ").concat(String.valueOf(counterStateCode)),
-                        getString(R.string.dear_user), getString(R.string.take_screen_shot),
-                        getString(R.string.accepted));
+                //TODO
+                ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(position, currentNumber,
+                        counterStateCode, counterStatePosition);
+//                ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
+//                new CustomDialogModel(Red, requireContext(), getString(R.string.error_on_download_counter_states)
+//                        .concat("\ncode: ").concat(String.valueOf(counterStateCode)),
+//                        getString(R.string.dear_user), getString(R.string.take_screen_shot),
+//                        getString(R.string.accepted));
             }
         }
     }
@@ -631,8 +637,10 @@ public class ReadingFragment extends Fragment {
                 } else new CustomToast().warning(getString(R.string.can_not_show_pre));
             }
         } else if (id == textViewId)
-            if (!onOffLoadDto.isLocked && (shouldEnterNumber || canEnterNumber))
+            if (!onOffLoadDto.isLocked && (shouldEnterNumber || canEnterNumber)) {
+                FOCUS_ON_EDIT_TEXT = true;
                 binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
+            }
     };
     private final View.OnLongClickListener onLongClickListener = view -> {
         final int id = view.getId();
@@ -658,6 +666,7 @@ public class ReadingFragment extends Fragment {
                 }
                 return false;
             });
+            changeKeyboardState();
         }
         super.onResume();
     }
