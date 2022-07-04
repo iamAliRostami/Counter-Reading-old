@@ -7,8 +7,12 @@ import static com.leon.counter_reading.utils.Converters.bitmapToFile;
 import static com.leon.counter_reading.utils.CustomFile.loadImage;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
@@ -34,16 +38,17 @@ import retrofit2.Retrofit;
 
 public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
     private final ImageGrouped imageGrouped = new ImageGrouped();
-    private final CustomProgressModel customProgressModel;
+    private final CustomProgressModel progress;
     private final ArrayList<Image> images;
-    private final String description;
+    private final String description, tag;
     private final boolean result;
 
-    public PrepareMultimedia(ArrayList<Image> images, String description, boolean result,
-                             Activity activity) {
+    public PrepareMultimedia(Activity activity, ArrayList<Image> images, String description,
+                             String tag, boolean result) {
         super();
-        customProgressModel = getApplicationComponent().CustomProgressModel();
-        customProgressModel.show(activity, false);
+        this.tag = tag;
+        progress = getApplicationComponent().CustomProgressModel();
+        progress.show(activity, false);
         this.description = description;
         this.result = result;
         this.images = images;
@@ -63,8 +68,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
     @Override
     protected void onPostExecute(Activity activity) {
         super.onPostExecute(activity);
-        if (customProgressModel.getDialog() != null)
-            customProgressModel.getDialog().dismiss();
+        if (progress.getDialog() != null)
+            progress.getDialog().dismiss();
         uploadImage(activity);
     }
 
@@ -84,31 +89,28 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
                     new UploadImages(activity), new UploadImagesIncomplete(activity),
                     new UploadImagesError(activity));
         } else if (result) {
-            setResult();
+            setResult(activity);
         } else {
             activity.runOnUiThread(() ->
                     new CustomToast().warning(activity.getString(R.string.there_is_no_images), Toast.LENGTH_LONG));
         }
     }
 
-    private void setResult() {
-        TakePhotoFragment.newInstance().setResult();
+    private void setResult(final Context context) {
+        final Fragment fragment = ((AppCompatActivity) context).getSupportFragmentManager()
+                .findFragmentByTag(tag);
+        if (fragment != null)
+            ((TakePhotoFragment) fragment).setResult();
     }
 
     private void saveImages(boolean isSent) {
-//        for (int j = 0; j < 200; j++)//TODO
         for (int i = 0; i < images.size(); i++) {
             if (!images.get(i).isSent) {
                 images.get(i).isSent = isSent;
                 if (getApplicationComponent().MyDatabase().imageDao().getImagesById(images.get(i).id).size() > 0)
                     getApplicationComponent().MyDatabase().imageDao().updateImage(images.get(i));
                 else {
-                    //TODO
-//                    final String address = saveTempBitmap(images.get(i).bitmap, activity);
-//                    if (!address.equals(activity.getString(R.string.error_external_storage_is_not_writable))) {
-//                        images.get(i).address = address;
                     getApplicationComponent().MyDatabase().imageDao().insertImage(images.get(i));
-//                    }
                 }
             }
         }
@@ -129,7 +131,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
                 new CustomToast().warning(activity.getString(R.string.error_upload), Toast.LENGTH_LONG);
             }
             saveImages(response.body() != null && response.body().status == 200);
-            setResult();
+            setResult(activity);
         }
     }
 
@@ -146,7 +148,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
             final String error = errorHandling.getErrorMessageDefault(response);
             new CustomToast().warning(error, Toast.LENGTH_LONG);
             saveImages(false);
-            setResult();
+            setResult(activity);
         }
     }
 
@@ -165,7 +167,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
                 new CustomToast().error(error, Toast.LENGTH_LONG);
             }
             saveImages(false);
-            setResult();
+            setResult(activity);
         }
     }
 }

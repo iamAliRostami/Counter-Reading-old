@@ -8,6 +8,7 @@ import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.enums.BundleEnum.TYPE;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.DialogType.Yellow;
+import static com.leon.counter_reading.enums.FragmentTags.TAKE_PHOTO;
 import static com.leon.counter_reading.enums.NotificationType.LIGHT_OFF;
 import static com.leon.counter_reading.enums.NotificationType.LIGHT_ON;
 import static com.leon.counter_reading.enums.NotificationType.SAVE;
@@ -46,7 +47,6 @@ import static com.leon.counter_reading.utils.login.TwoStepVerification.showPerso
 import static com.leon.counter_reading.utils.reading.ReadingUtils.setAboveIcons;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -105,14 +105,13 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
         CounterPlaceFragment.Callback, NavigationFragment.Callback {
     public static int offlineAttempts = 0;
 
+    private ISharedPreferenceManager sharedPreferenceManager;
     private ViewPagerStateAdapter2 viewPagerAdapterReading;
     private IFlashLightManager flashLightManager;
-    private ISharedPreferenceManager sharedPreferenceManager;
     private ActivityReadingBinding binding;
-    private Activity activity;
-    private int[] imageSrc;
     private int readStatus = 0, highLow = 1;
     private boolean isShowing = false;
+    private int[] imageSrc;
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -126,13 +125,12 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
         final View childLayout = binding.getRoot();
         final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
-        activity = this;
         sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
         imageSrc = ArrayUtils.clone(setAboveIcons());
         getBundle();
         setOnImageViewsClickListener();
-        new GetReadingDBData(activity, readStatus, highLow, sharedPreferenceManager.
-                getBoolData(SORT_TYPE.getValue())).execute(activity);
+        new GetReadingDBData(this, readStatus, highLow, sharedPreferenceManager.
+                getBoolData(SORT_TYPE.getValue())).execute(this);
     }
 
     private void updateOnOffLoad(int position, int counterStateCode, int counterStatePosition) {
@@ -157,7 +155,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
             onOffLoadDtos.set(position, readingData.onOffLoadDtos.get(position));
             runOnUiThread(() -> viewPagerAdapterReading.notifyDataSetChanged());
         } catch (Exception e) {
-            runOnUiThread(() -> new CustomDialogModel(Red, activity, e.getMessage(),
+            runOnUiThread(() -> new CustomDialogModel(Red, this, e.getMessage(),
                     getString(R.string.dear_user), getString(R.string.take_screen_shot),
                     getString(R.string.accepted)));
         }
@@ -236,7 +234,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 }
             });
         } catch (Exception e) {
-            activity.runOnUiThread(() -> new CustomDialogModel(Red, activity, e.getMessage(),
+            runOnUiThread(() -> new CustomDialogModel(Red, this, e.getMessage(),
                     getString(R.string.dear_user), getString(R.string.take_screen_shot),
                     getString(R.string.accepted)));
         }
@@ -252,7 +250,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
             readingData.onOffLoadDtos.addAll(readingDataTemp.onOffLoadDtos);
             runOnUiThread(this::setupViewPager);
         } else {
-            new Search(type, key, goToPage).execute(activity);
+            new Search(type, key, goToPage).execute(this);
             return searchResult;
         }
         return true;
@@ -321,8 +319,8 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     }
 
     private void showImage(int position) {
-        ShowDialogOnce(activity, "TAKE_PHOTO_".concat(readingData.onOffLoadDtos
-                .get(binding.viewPager.getCurrentItem()).eshterak), TakePhotoFragment
+        ShowDialogOnce(this, TAKE_PHOTO.getValue().concat(readingData.onOffLoadDtos
+                .get(binding.viewPager.getCurrentItem()).id), TakePhotoFragment
                 .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber,
@@ -349,7 +347,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                         .onOffLoadDtos.get(position).counterStatePosition);
                 if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
                         counterStateDto.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {
-                    ShowDialogOnce(activity, "SERIAL_DIALOG_".concat(readingData.onOffLoadDtos.get(position).eshterak),
+                    ShowDialogOnce(this, "SERIAL_DIALOG_".concat(readingData.onOffLoadDtos.get(position).eshterak),
                             SerialFragment.newInstance(position, counterStateDto.id,
                                     readingData.onOffLoadDtos.get(position).counterStatePosition));
                 } else
@@ -358,29 +356,29 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
             if (isShowing) {
                 updateAdapter(position);
                 isShowing = false;
-                makeRing(activity, SAVE);
+                makeRing(this, SAVE);
                 Location location = null;
                 try {
-                    location = getLocationTracker(activity).getCurrentLocation();
+                    location = getLocationTracker(this).getCurrentLocation();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                new Update(readingData.onOffLoadDtos.get(position), location).execute(activity);
+                new Update(readingData.onOffLoadDtos.get(position), location).execute(this);
                 if (offlineAttempts < OFFLINE_ATTEMPT)
                     new PrepareToSend(sharedPreferenceManager.getStringData(TOKEN.getValue()))
-                            .execute(activity);
+                            .execute(this);
                 changePage(binding.viewPager.getCurrentItem() + 1);
             }
         }
     }
 
     private void showPossible(int position) {
-        ShowDialogOnce(activity, "SHOW_POSSIBLE_DIALOG_".concat(readingData.onOffLoadDtos.get(position).eshterak),
+        ShowDialogOnce(this, "SHOW_POSSIBLE_DIALOG_".concat(readingData.onOffLoadDtos.get(position).eshterak),
                 PossibleFragment.newInstance(readingData.onOffLoadDtos.get(position), position, false));
     }
 
     private void showNoEshterakFound() {
-        new CustomDialogModel(Yellow, activity, getString(R.string.no_eshterak_found),
+        new CustomDialogModel(Yellow, this, getString(R.string.no_eshterak_found),
                 getString(R.string.dear_user), getString(R.string.eshterak),
                 getString(R.string.accepted));
     }
@@ -455,7 +453,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                     R.drawable.img_flash_off));
             imageViewFlash.setOnClickListener(v -> {
                 boolean isOn = flashLightManager.toggleFlash();
-                makeRing(activity, isOn ? LIGHT_ON : LIGHT_OFF);
+                makeRing(this, isOn ? LIGHT_ON : LIGHT_OFF);
                 imageViewFlash.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                         isOn ? R.drawable.img_flash_on : R.drawable.img_flash_off));
             });
@@ -476,8 +474,8 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 if (readingData.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
-                    ShowDialogOnce(activity, "TAKE_PHOTO_"
-                                    .concat(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id),
+                    ShowDialogOnce(this, TAKE_PHOTO.getValue().concat(readingData.onOffLoadDtos
+                                    .get(binding.viewPager.getCurrentItem()).id),
                             TakePhotoFragment.newInstance(readingData.onOffLoadDtos
                                             .get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
                                     readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
@@ -492,7 +490,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 if (readingData.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
-                    ShowDialogOnce(activity, "READING_REPORT", ReadingReportFragment.newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
+                    ShowDialogOnce(this, "READING_REPORT", ReadingReportFragment.newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber,
                             binding.viewPager.getCurrentItem(),
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).zoneId));
@@ -506,7 +504,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 if (readingDataTemp.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
-                    ShowDialogOnce(activity, "SEARCH_DIALOG", new SearchFragment());
+                    ShowDialogOnce(this, "SEARCH_DIALOG", new SearchFragment());
                 }
             });
         }
@@ -528,23 +526,23 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
         if (id == R.id.menu_sort) {
             item.setChecked(!item.isChecked());
             sharedPreferenceManager.putData(SORT_TYPE.getValue(), item.isChecked());
-            new ChangeSortType(activity, item.isChecked()).execute(activity);
+            new ChangeSortType(this, item.isChecked()).execute(this);
         } else if (id == R.id.menu_navigation) {
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                ShowDialogOnce(activity, "NAVIGATION", NavigationFragment
+                ShowDialogOnce(this, "NAVIGATION", NavigationFragment
                         .newInstance(binding.viewPager.getCurrentItem()));
             }
         } else if (id == R.id.menu_report_forbid) {
-            ShowDialogOnce(activity, "REPORT_FORBID", ReportForbidFragment.newInstance(
+            ShowDialogOnce(this, "REPORT_FORBID", ReportForbidFragment.newInstance(
                     readingData.onOffLoadDtos.size() > 0 ? readingData.onOffLoadDtos
                             .get(binding.viewPager.getCurrentItem()).zoneId : 0));
         } else if (id == R.id.menu_description) {
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                intent = new Intent(activity, DescriptionActivity.class);
+                intent = new Intent(this, DescriptionActivity.class);
                 intent.putExtra(BILL_ID.getValue(),
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
                 intent.putExtra(TRACKING.getValue(),
@@ -559,7 +557,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                ShowDialogOnce(activity, "COUNTER_PLACE", CounterPlaceFragment
+                ShowDialogOnce(this, "COUNTER_PLACE", CounterPlaceFragment
                         .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                                 binding.viewPager.getCurrentItem()));
             }
@@ -578,7 +576,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 binding.viewPager.setCurrentItem(currentItem);
             }
         } else if (id == R.id.menu_verification) {
-            showPersonalCode(activity);
+            showPersonalCode(this);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -588,7 +586,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
         super.onActivityResult(requestCode, resultCode, data);
         if ((requestCode == REPORT || requestCode == NAVIGATION || requestCode == DESCRIPTION ||
                 requestCode == COUNTER_PLACE) && resultCode == RESULT_OK) {
-            new DataResult(data).execute(activity);
+            new DataResult(data).execute(this);
         } else if (requestCode == CAMERA && resultCode == RESULT_OK) {
             int position = data.getExtras().getInt(POSITION.getValue());
             attemptSend(position, false, false);
@@ -597,7 +595,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
 
     @Override
     public void setResult(int position, String uuid) {
-        new Result(position, uuid).execute(activity);
+        new Result(position, uuid).execute(this);
     }
 
     public void setPhotoResult(int position) {
@@ -609,7 +607,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
         super.onStop();
         try {
             final ImageView imageViewFlash = findViewById(R.id.image_view_flash);
-            imageViewFlash.setImageDrawable(AppCompatResources.getDrawable(activity,
+            imageViewFlash.setImageDrawable(AppCompatResources.getDrawable(this,
                     R.drawable.img_flash_off));
             flashLightManager.turnOff();
         } catch (Exception e) {

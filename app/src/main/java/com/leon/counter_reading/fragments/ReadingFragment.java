@@ -417,7 +417,8 @@ public class ReadingFragment extends Fragment {
                 textView.requestFocus();
             } else {
                 ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
-                new CustomDialogModel(Red, requireContext(), getString(R.string.error_on_download_counter_states),
+                new CustomDialogModel(Red, requireContext(), getString(R.string.error_on_download_counter_states)
+                        .concat("\ncode: ").concat(String.valueOf(counterStateCode)),
                         getString(R.string.dear_user), getString(R.string.take_screen_shot),
                         getString(R.string.accepted));
             }

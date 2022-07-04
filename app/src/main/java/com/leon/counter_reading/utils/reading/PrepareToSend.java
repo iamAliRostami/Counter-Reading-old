@@ -137,12 +137,11 @@ class offLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadR
     public void executeIncomplete(Response<OnOffLoadDto.OffLoadResponses> response) {
         if (response != null) {
             try {
-                CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
-                String error = errorHandling.getErrorMessageDefault(response);
+                final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+                final String error = errorHandling.getErrorMessageDefault(response);
                 new CustomToast().error(error);
             } catch (Exception e) {
-                activity.runOnUiThread(() -> new CustomDialogModel(Red,
-                        activity, e.getMessage(),
+                activity.runOnUiThread(() -> new CustomDialogModel(Red, activity, e.getMessage(),
                         activity.getString(R.string.dear_user),
                         activity.getString(R.string.take_screen_shot),
                         activity.getString(R.string.accepted)));

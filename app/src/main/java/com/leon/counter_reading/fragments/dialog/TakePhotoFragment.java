@@ -15,6 +15,7 @@ import static com.leon.counter_reading.utils.CustomFile.saveTempBitmap;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,44 +46,39 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class TakePhotoFragment extends DialogFragment {
-    public static int replace = 0;
-    private static TakePhotoFragment instance;
     private FragmentTakePhotoBinding binding;
     private ImageViewAdapter imageViewAdapter;
-    private int position, trackNumber;
+    private final ArrayList<Image> images = new ArrayList<>();
+    private int replace = 0, position, trackNumber;
     private String uuid, path;
     private boolean result;
-    private final ArrayList<Image> images = new ArrayList<>();
+    private long lastClickTime = 0;
 
     public TakePhotoFragment() {
     }
 
     public static TakePhotoFragment newInstance(boolean sent, String uuid, int trackingNumber,
                                                 int position, boolean image) {
-        instance = newInstance(sent, uuid, trackingNumber);
+        final TakePhotoFragment fragment = newInstance(sent, uuid, trackingNumber);
         final Bundle args;
-        if (instance.getArguments() != null)
-            args = instance.getArguments();
+        if (fragment.getArguments() != null)
+            args = fragment.getArguments();
         else args = new Bundle();
         args.putInt(POSITION.getValue(), position);
         args.putBoolean(IMAGE.getValue(), image);
-        instance.setArguments(args);
-        instance.setCancelable(false);
-        return instance;
+        fragment.setArguments(args);
+        fragment.setCancelable(false);
+        return fragment;
     }
 
     public static TakePhotoFragment newInstance(boolean sent, String uuid, int trackingNumber) {
-        instance = new TakePhotoFragment();
+        final TakePhotoFragment fragment = new TakePhotoFragment();
         final Bundle args = new Bundle();
         args.putBoolean(SENT.getValue(), sent);
         args.putString(BILL_ID.getValue(), uuid);
         args.putInt(TRACKING.getValue(), trackingNumber);
-        instance.setArguments(args);
-        return instance;
-    }
-
-    public static TakePhotoFragment newInstance() {
-        return instance;
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -127,17 +123,28 @@ public class TakePhotoFragment extends DialogFragment {
         }
         imageViewAdapter = new ImageViewAdapter(requireContext(), images);
         binding.gridViewImage.setAdapter(imageViewAdapter);
+        binding.gridViewImage.setOnItemClickListener((adapterView, view, i, l) -> {
+            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
+            lastClickTime = SystemClock.elapsedRealtime();
+            replace = imageViewAdapter.setReplace(i);
+            if (replace >= 0)
+                openResourceForResult();
+        });
+        binding.gridViewImage.setOnItemLongClickListener((adapterView, view, i, l) -> {
+            imageViewAdapter.showImageHighQuality(i);
+            return true;
+        });
     }
 
     private void setOnButtonSendClickListener() {
         binding.buttonSaveSend.setOnClickListener(v -> {
             binding.buttonSaveSend.setEnabled(false);
-            new PrepareMultimedia(images, binding.editTextDescription.getText().toString(), result,
-                    requireActivity()).execute(requireActivity());
+            new PrepareMultimedia(requireActivity(), images, binding.editTextDescription.getText().toString(),
+                    getTag(), result).execute(requireActivity());
         });
     }
 
-    public void openResourceForResult() {
+    private void openResourceForResult() {
         if (binding.checkBoxGallery.isChecked())
             openGalleryForResult();
         else openCameraForResult();
@@ -147,11 +154,6 @@ public class TakePhotoFragment extends DialogFragment {
         final Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
         galleryResultLauncher.launch(galleryIntent);
-//        final Intent galleryIntent = new Intent("android.intent.action.PICK");
-//        if (galleryIntent.resolveActivity(requireContext().getPackageManager()) != null) {
-//            galleryIntent.setType("image/*");
-//            galleryResultLauncher.launch(galleryIntent);
-//        }
     }
 
     private void openCameraForResult() {

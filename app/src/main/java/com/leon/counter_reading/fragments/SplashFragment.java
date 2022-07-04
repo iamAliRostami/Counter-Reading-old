@@ -65,9 +65,13 @@ public class SplashFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        binding.shimmerViewContainer.setShimmer(null);
-        binding.imageViewSplashScreen.setImageDrawable(null);
         super.onDestroy();
+        try {
+            binding.shimmerViewContainer.setShimmer(null);
+            binding.imageViewSplashScreen.setImageDrawable(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public interface Callback {
