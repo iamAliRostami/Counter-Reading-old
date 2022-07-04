@@ -376,7 +376,7 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-    private boolean lockProcess(final boolean canBeEmpty) {
+    private boolean lockProcess(final boolean canContinue) {
         onOffLoadDto.attemptCount++;
         ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position);
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount + 1 == getLockNumber(getActiveCompanyName()))
@@ -395,7 +395,7 @@ public class ReadingFragment extends Fragment {
             ((ReadingActivity) requireActivity()).updateOnOffLoadByLock(position);
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
             binding.imageButtonShowKeyboard.setVisibility(View.GONE);
-            return canBeEmpty;
+            return canContinue;
         }
         return true;
     }
