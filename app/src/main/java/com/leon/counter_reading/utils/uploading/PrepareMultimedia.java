@@ -218,8 +218,7 @@ class UploadMultimediaError implements ICallbackError {
     public void executeError(Throwable t) {
         if (!HttpClientWrapper.cancel) {
             final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
-            final String error = errorHandling.getErrorMessageTotal(t);
-            new CustomToast().error(error, Toast.LENGTH_LONG);
+            new CustomToast().error(errorHandling.getErrorMessageTotal(t), Toast.LENGTH_LONG);
         }
     }
 }
