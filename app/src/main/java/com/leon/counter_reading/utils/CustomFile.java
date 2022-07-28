@@ -116,7 +116,6 @@ public class CustomFile {
         MediaScannerConnection.scanFile(context, new String[]{file.getPath()}, new String[]{"image/jpeg"}, null);
 
         deleteRecursive(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES));
-//        deleteRecursive(context.getCacheDir());
         return fileNameToSave;
     }
 
@@ -276,10 +275,11 @@ public class CustomFile {
             if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
                 final int width, height;
                 if (original.getHeight() > original.getWidth()) {
-                    height = 1000;
+                    //TODO
+                    height = Math.min(1000, original.getHeight());
                     width = original.getWidth() / (original.getHeight() / height);
                 } else {
-                    width = 1000;
+                    width = Math.min(1000, original.getWidth());
                     height = original.getHeight() / (original.getWidth() / width);
                 }
                 original = Bitmap.createScaledBitmap(original, width, height, false);
@@ -301,11 +301,12 @@ public class CustomFile {
             original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
                 final int width, height;
+                //TODO
                 if (original.getHeight() > original.getWidth()) {
-                    height = 1000;
+                    height = Math.min(1000, original.getHeight());
                     width = original.getWidth() / (original.getHeight() / height);
                 } else {
-                    width = 1000;
+                    width = Math.min(1000, original.getWidth());
                     height = original.getHeight() / (original.getWidth() / width);
                 }
                 original = Bitmap.createScaledBitmap(original, width, height, false);
@@ -327,10 +328,11 @@ public class CustomFile {
             if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
                 final int width, height;
                 if (original.getHeight() > original.getWidth()) {
-                    height = 1000;
+                    //TODO
+                    height = Math.min(1000, original.getHeight());
                     width = original.getWidth() / (original.getHeight() / height);
                 } else {
-                    width = 1000;
+                    width = Math.min(1000, original.getWidth());
                     height = original.getHeight() / (original.getWidth() / width);
                 }
                 original = Bitmap.createScaledBitmap(original, width, height, false);

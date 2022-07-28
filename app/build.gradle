@@ -17,8 +17,8 @@ android {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 83
-        versionName "1.01.04.14"
+        versionCode 84
+        versionName "1.01.05.03"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config
@@ -48,7 +48,7 @@ android {
                     "com.leon.counter_reading.enums.CompanyNames.ESF"
         }
         esf {
-//            debuggable true
+            debuggable true
             minifyEnabled false
             signingConfig signingConfigs.config
             applicationIdSuffix ".esf"
