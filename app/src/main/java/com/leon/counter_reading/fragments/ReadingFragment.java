@@ -227,7 +227,8 @@ public class ReadingFragment extends Fragment {
 
 //        if (onOffLoadDto.counterNumberShown)
 //        binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber));
-        binding.textViewPreNumber.setText(String.valueOf(Math.toIntExact(onOffLoadDto.balance)));
+//        binding.textViewPreNumber.setText(String.valueOf(Math.toIntExact(onOffLoadDto.balance)));
+        binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.balance));
 
 
         binding.textViewPreNumber.setOnClickListener(onClickListener);
@@ -622,7 +623,7 @@ public class ReadingFragment extends Fragment {
         } else if (id == R.id.text_view_pre_number) {
             if (debtOrNumber) {
                 debtOrNumber = false;
-                binding.textViewPreNumber.setText(String.valueOf(Math.toIntExact(onOffLoadDto.balance)));
+                binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.balance));
                 binding.textViewPreNumber.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
             } else {
                 if (onOffLoadDto.hasPreNumber) {

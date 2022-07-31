@@ -4,6 +4,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PROXY;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.validate;
 
 import android.app.Activity;
 import android.content.Context;
@@ -30,8 +31,9 @@ public class SetProxy {
                 .setHint("http:// یا https://")
                 .setInitialInput(getApplicationComponent().SharedPreferenceModel().getStringData(PROXY.getValue()))
                 .setInputFilter(R.string.error_format, text -> {
-                    String proxy = lovelyTextInputDialog.getEditTextNumber().getText().toString();
-                    return proxy.length() == 0 || proxy.startsWith("https://") || proxy.startsWith("http://")/**/;
+                    final String ip = lovelyTextInputDialog.getEditTextNumber().getText().toString();
+                    return !(ip.length() == 0 || validate(ip));
+//                    return ip.length() == 0 || ip.startsWith("https://") || ip.startsWith("http://")/**/;
 //                    return true;
                 })
                 .setConfirmButton(R.string.confirm, text -> {

@@ -5,6 +5,7 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.PROXY;
 import static com.leon.counter_reading.helpers.MyApplication.getAndroidVersion;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getSerial;
+import static com.leon.counter_reading.helpers.MyApplication.validate;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
 
@@ -23,8 +24,6 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentBasicBinding;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.PermissionManager;
-
-import java.util.regex.Pattern;
 
 public class BasicFragment extends Fragment {
     private FragmentBasicBinding binding;
@@ -65,7 +64,7 @@ public class BasicFragment extends Fragment {
 
         binding.buttonSubmitProxy.setOnClickListener(view -> {
             final String ip = binding.editTextProxy.getText().toString();
-            if (ip.length() == 0 ||/* (proxyValidation(ip) && validate(ip.substring(ip.indexOf("//") + 2)))*/validate(ip)) {
+            if (ip.length() == 0 || validate(ip)) {
                 getApplicationComponent().SharedPreferenceModel().putData(PROXY.getValue(),
                         ip.endsWith("/") ? ip : ip.concat("/"));
                 new CustomToast().success("پروکسی با موفقیت تنظیم شد.", Toast.LENGTH_LONG);
@@ -111,13 +110,4 @@ public class BasicFragment extends Fragment {
         }
     }
 
-    //    private static final Pattern IP_PATTERN = Pattern.compile("(http(s)?)://(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(:(\\d{1,5}))?");
-//    private static final Pattern IP_PATTERN = Pattern.compile("^https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)");
-//    private static final Pattern PATTERN_SIMPLE = Pattern.compile("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)(\\.(?!$)|$)){4}$");
-//    private static final Pattern PATTERN_WITH_PORT = Pattern.compile("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):(\\d{1,5})");
-    private static final Pattern IP_PATTERN = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)");
-
-    public static boolean validate(final String ip) {
-        return IP_PATTERN.matcher(ip).matches();
-    }
 }

@@ -25,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -40,7 +39,6 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentReportForbidBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.tables.ForbiddenDto;
-import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.forbid.PrepareForbid;
 
 import java.io.File;

@@ -123,7 +123,7 @@ public class PossibleFragment extends DialogFragment {
             binding.linearLayoutDebt.setVisibility(View.VISIBLE);
             binding.editTextMobile.setVisibility(View.VISIBLE);
             binding.textViewMobile.setVisibility(View.VISIBLE);
-            binding.textViewDebt.setText(String.valueOf(Math.toIntExact(onOffLoadDto.balance)));
+            binding.textViewDebt.setText(String.valueOf(onOffLoadDto.balance));
             binding.textViewOldRadif.setText(onOffLoadDto.oldRadif != null ? onOffLoadDto.oldRadif : "-");
             binding.textViewOldEshterak.setText(onOffLoadDto.oldEshterak != null ? onOffLoadDto.oldEshterak : "-");
             binding.textViewFatherName.setText(onOffLoadDto.fatherName != null ? onOffLoadDto.fatherName : "-");
