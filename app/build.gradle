@@ -118,7 +118,7 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation 'com.intuit.sdp:sdp-android:1.1.0'
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0@aar'
 
@@ -147,8 +147,8 @@ dependencies {
     implementation 'com.github.GrenderG:Toasty:1.5.0'
     implementation 'com.github.blackfizz:eazegraph:1.2.3@aar'
 
-    implementation 'com.yandex.android:mobmetricalib:5.0.0'
-    implementation 'com.yandex.android:mobmetricalib-ndk-crashes:1.1.0'
+    implementation 'com.yandex.android:mobmetricalib:5.0.1'
+    implementation 'com.yandex.android:mobmetricalib-ndk-crashes:2.0.0'
 
     implementation 'me.jahnen:libaums:0.9.0'
 }
