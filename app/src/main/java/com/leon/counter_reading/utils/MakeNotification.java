@@ -15,9 +15,9 @@ import androidx.core.app.NotificationManagerCompat;
 import com.leon.counter_reading.enums.NotificationType;
 
 public class MakeNotification {
-    public static void makeVibrate(Context context) {
+    public static void makeVibrate(Context context, int... milliSeconds) {
         final Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(500);
+        vibrator.vibrate(milliSeconds.length > 0 ? milliSeconds[0]: 500);
     }
 
     public static void makeRing(Context context, NotificationType type) {

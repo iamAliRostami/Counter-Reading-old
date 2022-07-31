@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.leon.counter_reading.enums.OffloadStateEnum;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.CustomToast;
 
@@ -26,12 +25,10 @@ public class Sent extends AsyncTask<Activity, Integer, Integer> {
     protected Integer doInBackground(Activity... activities) {
         try {
             getApplicationComponent().MyDatabase().offLoadReportDao().updateOffLoadReportByIsSent(true);
-            final int state = offLoadResponses.isValid ? SENT.getValue() :
-                    SENT_WITH_ERROR.getValue();
-            getApplicationComponent().MyDatabase().onOffLoadDao()
-                    .updateOnOffLoad(state, offLoadResponses.targetObject);
-            String[] targetObject = offLoadResponses.targetObject;
-
+            final int state = offLoadResponses.isValid ? SENT.getValue() : SENT_WITH_ERROR.getValue();
+            getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(state,
+                    offLoadResponses.targetObject);
+            final String[] targetObject = offLoadResponses.targetObject;
             for (String s : targetObject) {
                 boolean found = false;
                 int i = 0;

@@ -1,9 +1,11 @@
 package com.leon.counter_reading.utils;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.getContext;
+
 import android.content.Context;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.helpers.MyApplication;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -38,16 +40,16 @@ public class CustomErrorHandling {
             errorMessage += context.getString(R.string.not_respond);
         } else if (code == 503) {
             errorMessage = context.getString(R.string.error_overload);
-        }
-//        else if (code == 502) {
-//            errorMessage = context.getString(R.string.error_turn_off_proxy);
-//        }
-        else if (code >= 500 && code < 600) {
+        } else if (code >= 500 && code < 600) {
             errorMessage += context.getString(R.string.error_internal);
         } else if (code == 404) {
             errorMessage += context.getString(R.string.error_change_server);
         } else if (code == 401 || code == 403) {
             errorMessage += context.getString(R.string.error_not_auth);
+        } else if (code == 402) {
+            final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+            final CustomErrorHandling.APIError apiError = errorHandling.parseError(response);
+            errorMessage = apiError.message();
         } else {
             errorMessage += context.getString(R.string.error_other);
         }
@@ -70,7 +72,7 @@ public class CustomErrorHandling {
 
     public APIError parseError(Response<?> response) {
         try {
-            Converter<ResponseBody, APIError> converter = MyApplication.getApplicationComponent()
+            Converter<ResponseBody, APIError> converter = getApplicationComponent()
                     .Retrofit().responseBodyConverter(APIError.class, new Annotation[0]);
             APIError error;
             error = converter.convert(Objects.requireNonNull(response.errorBody()));

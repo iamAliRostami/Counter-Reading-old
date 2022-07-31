@@ -9,8 +9,10 @@
     <color name="milky">#5C5C5C</color>
     <color name="smoked">#DCD9CD</color>
     <color name="transparent">#00000000</color>
+<!--    <color name="text_color_dark">#E6E6E6</color>-->
     <color name="text_color_dark">#E6E6E6</color>
 <!--    <color name="text_color_light">#413f44</color>-->
+<!--    <color name="text_color_light">#3D3D3D</color>-->
     <color name="text_color_light">#3D3D3D</color>
 
     <color name="red">#B71C1C</color>

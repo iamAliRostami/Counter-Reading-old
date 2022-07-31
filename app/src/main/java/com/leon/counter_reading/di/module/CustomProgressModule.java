@@ -1,6 +1,8 @@
 package com.leon.counter_reading.di.module;
 
 
+import static com.leon.counter_reading.di.view_model.CustomProgressModel.getInstance;
+
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 
 import javax.inject.Singleton;
@@ -8,18 +10,18 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Singleton
+//@Singleton
 @Module
 public class CustomProgressModule {
-    private final CustomProgressModel customProgressModel;
+    private final CustomProgressModel progress;
 
     public CustomProgressModule() {
-        customProgressModel = CustomProgressModel.getInstance();
+        progress = getInstance();
     }
 
     @Singleton
     @Provides
     public CustomProgressModel providesCustomProgressModel() {
-        return customProgressModel;
+        return progress;
     }
 }

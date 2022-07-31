@@ -13,15 +13,17 @@ import androidx.fragment.app.ListFragment;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentHomeBinding;
+import com.leon.counter_reading.fragments.download.DownloadOfflineFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends ListFragment {
-    private final DownloadOfflineFragment downloadOfflineFragment;
+    //    private final DownloadOfflineFragment downloadFragment;
+    private final HomeCallback downloadFragment;
 
     public HomeFragment(DownloadOfflineFragment downloadOfflineFragment) {
-        this.downloadOfflineFragment = downloadOfflineFragment;
+        this.downloadFragment = downloadOfflineFragment;
     }
 
     public static HomeFragment newInstance(DownloadOfflineFragment downloadOfflineFragment) {
@@ -36,25 +38,26 @@ public class HomeFragment extends ListFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FragmentHomeBinding binding = FragmentHomeBinding.inflate(getLayoutInflater());
+        final FragmentHomeBinding binding = FragmentHomeBinding.inflate(getLayoutInflater());
         initialize();
         return binding.getRoot();
     }
 
     private void initialize() {
-        final List<UsbDevice> mDetectedDevices = downloadOfflineFragment.getUsbDevices();
+        final List<UsbDevice> mDetectedDevices = downloadFragment.getUsbDevices();
         final List<String> showDevices = new ArrayList<>();
         for (int i = 0; i < mDetectedDevices.size(); i++) {
             showDevices.add(mDetectedDevices.get(i).getProductName());
         }
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.item_devices, R.id.text_view_device, showDevices);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.item_devices,
+                R.id.text_view_device, showDevices);
         setListAdapter(adapter);
     }
 
     @Override
     public void onListItemClick(@NonNull ListView list, @NonNull View view, int position, long id) {
         super.onListItemClick(list, view, position, id);
-        downloadOfflineFragment.requestPermission(position);
+        downloadFragment.requestPermission(position);
     }
 
     public interface HomeCallback {

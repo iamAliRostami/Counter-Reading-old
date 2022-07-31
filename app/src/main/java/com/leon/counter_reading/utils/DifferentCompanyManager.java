@@ -1,7 +1,21 @@
 package com.leon.counter_reading.utils;
 
 
+import static com.leon.counter_reading.enums.CompanyNames.ESF;
+import static com.leon.counter_reading.enums.CompanyNames.TE;
+import static com.leon.counter_reading.enums.CompanyNames.TOWNS_WEST;
+import static com.leon.counter_reading.enums.CompanyNames.TSE;
+import static com.leon.counter_reading.enums.CompanyNames.TSW;
+import static com.leon.counter_reading.enums.CompanyNames.ZONE1;
+import static com.leon.counter_reading.enums.CompanyNames.ZONE2;
+import static com.leon.counter_reading.enums.CompanyNames.ZONE3;
+import static com.leon.counter_reading.enums.CompanyNames.ZONE4;
+import static com.leon.counter_reading.enums.CompanyNames.ZONE5;
+import static com.leon.counter_reading.enums.CompanyNames.ZONE6;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.PROXY;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
+import static com.leon.counter_reading.utils.Converters.replaceNonstandardDigits;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -9,8 +23,6 @@ import android.location.Location;
 
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.enums.CompanyNames;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.helpers.MyApplication;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,13 +31,12 @@ import java.util.Date;
 public class DifferentCompanyManager {
 
     public static CompanyNames getActiveCompanyName() {
-//        return CompanyNames.ZONE4;
         return BuildConfig.COMPANY_NAME;
     }
 
     public static String getBaseUrl(CompanyNames companyNames) {
-        if (MyApplication.getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(SharedReferenceKeys.PROXY.getValue())) {
-            String proxy = MyApplication.getApplicationComponent().SharedPreferenceModel().getStringData(SharedReferenceKeys.PROXY.getValue());
+        if (getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(PROXY.getValue())) {
+            final String proxy = getApplicationComponent().SharedPreferenceModel().getStringData(PROXY.getValue());
             if (proxy.startsWith("http://") && proxy.length() > 7)
                 return proxy;
             if (proxy.startsWith("https://") && proxy.length() > 8)
@@ -33,7 +44,8 @@ public class DifferentCompanyManager {
         }
         switch (companyNames) {
             case ESF:
-                return "https://37.191.92.157/";
+//                return "http://172.18.12.36/";
+            return "https://37.191.92.157/";
             case ZONE1:
                 return "http://217.146.220.33:50011/";
             case ZONE2:
@@ -51,7 +63,8 @@ public class DifferentCompanyManager {
             case TE:
                 return "http://185.120.137.254";
             case TSE:
-                return "http://5.160.85.228:9098/";
+                return "http://46.209.181.2:9098/";
+//                return "http://5.160.85.228:9098/";
             case TOWNS_WEST:
                 return "http://217.66.195.75/";
             case KSH:
@@ -239,27 +252,27 @@ public class DifferentCompanyManager {
     public static CompanyNames getCompanyNameEnum(int companyCode) {
         switch (companyCode) {
             case 1:
-                return CompanyNames.ZONE1;
+                return ZONE1;
             case 2:
-                return CompanyNames.ZONE2;
+                return ZONE2;
             case 3:
-                return CompanyNames.ZONE3;
+                return ZONE3;
             case 4:
-                return CompanyNames.ZONE4;
+                return ZONE4;
             case 5:
-                return CompanyNames.ZONE5;
+                return ZONE5;
             case 6:
-                return CompanyNames.ZONE6;
+                return ZONE6;
             case 7:
-                return CompanyNames.TSW;
+                return TSW;
             case 8:
-                return CompanyNames.TE;
+                return TE;
             case 9:
-                return CompanyNames.TSE;
+                return TSE;
             case 10:
-                return CompanyNames.TOWNS_WEST;
+                return TOWNS_WEST;
             case 11:
-                return CompanyNames.ESF;
+                return ESF;
             default:
                 throw new UnsupportedOperationException();
         }
@@ -419,7 +432,7 @@ public class DifferentCompanyManager {
         final Location location = getLocationTracker(activity).getCurrentLocation();
         Date date = new Date(location != null ? location.getTime() :
                 Calendar.getInstance().getTimeInMillis());
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         switch (companyNames) {
             case ZONE1:
@@ -437,6 +450,6 @@ public class DifferentCompanyManager {
         }
         date = new Date(calendar.getTimeInMillis());
         final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        return Converters.replaceNonstandardDigits(dateFormatter.format(date));
+        return replaceNonstandardDigits(dateFormatter.format(date));
     }
 }

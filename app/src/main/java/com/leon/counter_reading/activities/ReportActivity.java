@@ -35,56 +35,56 @@ public class ReportActivity extends BaseActivity {
     @Override
     protected void initialize() {
         binding = ActivityReportBinding.inflate(getLayoutInflater());
-        View childLayout = binding.getRoot();
-        ConstraintLayout parentLayout = findViewById(R.id.base_Content);
+        final View childLayout = binding.getRoot();
+        final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
         activity = this;
         new GetReportDBData(activity).execute(activity);
         initializeTextViews();
     }
 
-    void initializeTextViews() {
+    private void initializeTextViews() {
         textViewTotalNormal();
         textViewTemporary();
         textViewNotRead();
         textViewPerformance();
     }
 
-    void textViewTotalNormal() {
+    private void textViewTotalNormal() {
         binding.textViewTotal.setOnClickListener(view -> {
             setColor();
-            binding.textViewTotal.
-                    setBackground(ContextCompat.getDrawable(activity, R.drawable.border_white_2));
+            binding.textViewTotal.setBackground(ContextCompat.getDrawable(activity,
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(0);
         });
     }
 
-    void textViewNotRead() {
+    private void textViewNotRead() {
         binding.textViewNotRead.setOnClickListener(view -> {
             setColor();
-            binding.textViewNotRead.
-                    setBackground(ContextCompat.getDrawable(activity, R.drawable.border_white_2));
+            binding.textViewNotRead.setBackground(ContextCompat.getDrawable(activity,
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(1);
         });
     }
 
-    void textViewTemporary() {
+    private void textViewTemporary() {
         binding.textViewTemporary.setOnClickListener(view -> {
             setColor();
-            binding.textViewTemporary.
-                    setBackground(ContextCompat.getDrawable(activity, R.drawable.border_white_2));
+            binding.textViewTemporary.setBackground(ContextCompat.getDrawable(activity,
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(2);
         });
     }
 
-    void textViewPerformance() {
+    private void textViewPerformance() {
         binding.textViewPerformance.setOnClickListener(view -> {
             setColor();
-            binding.textViewPerformance.
-                    setBackground(ContextCompat.getDrawable(activity, R.drawable.border_white_2));
+            binding.textViewPerformance.setBackground(ContextCompat.getDrawable(activity,
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(3);
         });
@@ -92,37 +92,25 @@ public class ReportActivity extends BaseActivity {
 
     private void setColor() {
         binding.textViewNotRead.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewNotRead.setTextColor(ContextCompat
-                .getColor(activity, R.color.text_color_light));
+        binding.textViewNotRead.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
         binding.textViewTotal.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewTotal.setTextColor(ContextCompat
-                .getColor(activity, R.color.text_color_light));
+        binding.textViewTotal.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
         binding.textViewTemporary.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewTemporary.setTextColor(ContextCompat
-                .getColor(activity, R.color.text_color_light));
+        binding.textViewTemporary.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
         binding.textViewPerformance.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewPerformance.setTextColor(ContextCompat
-                .getColor(activity, R.color.text_color_light));
+        binding.textViewPerformance.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
     }
 
     private void setPadding() {
-        binding.textViewTotal.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewNotRead.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewTemporary.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewPerformance.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewTotal.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewNotRead.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewTemporary.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewPerformance.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
     }
 
     public void setupViewPager(ArrayList<CounterStateDto> counterStateDtos,
-                               ArrayList<TrackingDto> trackingDtos, int zero,
-                               int normal, int high, int low, int total, int isMane, int unread) {
+                               ArrayList<TrackingDto> trackingDtos, int zero, int normal, int high,
+                               int low, int total, int isMane, int unread) {
         this.counterStateDtos = new ArrayList<>(counterStateDtos);
         this.trackingDtos = new ArrayList<>(trackingDtos);
 
@@ -152,7 +140,7 @@ public class ReportActivity extends BaseActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                int currentPage = binding.viewPager.getCurrentItem();
+                final int currentPage = binding.viewPager.getCurrentItem();
                 if (currentPage == 3 || currentPage == 0) {
                     previousState = currentState;
                     currentState = state;
@@ -190,13 +178,6 @@ public class ReportActivity extends BaseActivity {
         binding = null;
         counterStateDtos = null;
         trackingDtos = null;
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
         super.onDestroy();
     }
 }

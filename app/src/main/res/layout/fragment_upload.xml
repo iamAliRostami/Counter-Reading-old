@@ -6,14 +6,21 @@
     android:padding="@dimen/large_dp"
     tools:context="com.leon.counter_reading.fragments.upload.UploadFragment">
 
+    <TextView
+        android:id="@+id/text_view_offline_warning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/offline_warning"
+        android:textSize="@dimen/text_size_medium" />
+
     <ImageView
         android:id="@+id/imageViewUpload"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/linear_layout_spinner"
+        android:layout_below="@id/text_view_offline_warning"
         android:src="@drawable/img_upload_on"
         tools:ignore="ContentDescription" />
-
 
     <RelativeLayout
         android:id="@+id/linear_layout_spinner"
@@ -30,8 +37,8 @@
             android:background="@drawable/border_gray_6"
             android:paddingLeft="@dimen/low_dp"
             android:paddingRight="@dimen/low_dp"
-            android:visibility="gone"
-            android:textColor="@color/text_color_dark" />
+            android:textColor="@color/text_color_dark"
+            android:visibility="gone" />
 
         <Spinner
             android:id="@+id/spinner"

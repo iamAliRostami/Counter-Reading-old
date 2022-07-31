@@ -1,5 +1,11 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
+
 import android.os.Bundle;
 import android.os.Debug;
 import android.view.animation.AlphaAnimation;
@@ -11,18 +17,14 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityDistributionBillBinding;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.helpers.MyApplication;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 public class DistributionBillActivity extends AppCompatActivity {
     private ActivityDistributionBillBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MyApplication.onActivitySetTheme(this, MyApplication.getApplicationComponent()
-                        .SharedPreferenceModel().getIntData(SharedReferenceKeys.THEME_STABLE.getValue()),
-                true);
+        onActivitySetTheme(this, getApplicationComponent().SharedPreferenceModel()
+                .getIntData(THEME_STABLE.getValue()), true);
         super.onCreate(savedInstanceState);
         binding = ActivityDistributionBillBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -30,16 +32,15 @@ public class DistributionBillActivity extends AppCompatActivity {
     }
 
     void initialize() {
-        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
-
-        binding.imageViewBill.setImageDrawable(
-                AppCompatResources.getDrawable(getApplicationContext(), R.drawable.img_temporary));
+        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        binding.imageViewBill.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
+                R.drawable.img_temporary));
         startAnimationOnTextViewCounter();
     }
 
     private void startAnimationOnTextViewCounter() {
-        Animation anim = new AlphaAnimation(0.0f, 1.0f);
+        final Animation anim = new AlphaAnimation(0.0f, 1.0f);
         anim.setDuration(300);
         anim.setStartOffset(20);
         anim.setRepeatMode(Animation.REVERSE);
@@ -62,13 +63,6 @@ public class DistributionBillActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         binding.imageViewBill.setImageDrawable(null);
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
         super.onDestroy();
     }
 }

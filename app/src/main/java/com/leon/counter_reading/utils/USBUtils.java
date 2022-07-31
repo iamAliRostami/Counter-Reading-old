@@ -1,5 +1,9 @@
 package com.leon.counter_reading.utils;
 
+import static com.leon.counter_reading.helpers.Constants.SORT_BY_DATE;
+import static com.leon.counter_reading.helpers.Constants.SORT_BY_NAME;
+import static com.leon.counter_reading.helpers.Constants.SORT_BY_SIZE;
+
 import android.content.Context;
 import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
@@ -8,7 +12,6 @@ import android.hardware.usb.UsbInterface;
 import android.net.Uri;
 import android.view.KeyEvent;
 
-import com.github.mjdev.libaums.fs.UsbFile;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.fragments.ExplorerFragment;
 import com.leon.counter_reading.helpers.Constants;
@@ -17,18 +20,19 @@ import java.io.File;
 import java.util.Comparator;
 import java.util.HashMap;
 
-public class USBUtils {
+import me.jahnen.libaums.fs.UsbFile;
 
+public class USBUtils {
     private static final HashMap<String, Integer> sMimeIcons = new HashMap<>();
     public static final Comparator<UsbFile> comparator = new Comparator<UsbFile>() {
         @Override
         public int compare(UsbFile lhs, UsbFile rhs) {
             switch (ExplorerFragment.sortByCurrent) {
-                case Constants.SORT_BY_NAME:
+                case SORT_BY_NAME:
                     return sortByName(lhs, rhs);
-                case Constants.SORT_BY_DATE:
+                case SORT_BY_DATE:
                     return sortByDate(lhs, rhs);
-                case Constants.SORT_BY_SIZE:
+                case SORT_BY_SIZE:
                     return sortBySize(lhs, rhs);
                 default:
                     break;
@@ -36,7 +40,7 @@ public class USBUtils {
             return 0;
         }
 
-        final int extractInt(String s) {
+        int extractInt(String s) {
             int result = 0;
             try {
                 String num = s.replaceAll("\\D", "");
@@ -47,7 +51,7 @@ public class USBUtils {
             return result;
         }
 
-        final int checkIfDirectory(UsbFile lhs, UsbFile rhs) {
+        int checkIfDirectory(UsbFile lhs, UsbFile rhs) {
             if (lhs.isDirectory() && !rhs.isDirectory()) {
                 return -1;
             }
@@ -59,7 +63,7 @@ public class USBUtils {
             return 0;
         }
 
-        final int sortByName(UsbFile lhs, UsbFile rhs) {
+        int sortByName(UsbFile lhs, UsbFile rhs) {
             int result;
             int dir = checkIfDirectory(lhs, rhs);
             if (dir != 0)
@@ -346,11 +350,11 @@ public class USBUtils {
 
     public static String getHumanSortBy(Context context) {
         switch (ExplorerFragment.sortByCurrent) {
-            case Constants.SORT_BY_DATE:
+            case SORT_BY_DATE:
                 return context.getString(R.string.date);
-            case Constants.SORT_BY_SIZE:
+            case SORT_BY_SIZE:
                 return context.getString(R.string.size);
-            case Constants.SORT_BY_NAME:
+            case SORT_BY_NAME:
             default:
                 return context.getString(R.string.name);
         }

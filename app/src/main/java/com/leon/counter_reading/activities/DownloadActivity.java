@@ -1,7 +1,11 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.DownloadType.RETRY;
+import static com.leon.counter_reading.enums.DownloadType.SPECIAL;
 import static com.leon.counter_reading.helpers.Constants.ALL_FILES_ACCESS_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.SETTING_REQUEST;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,10 +27,9 @@ import com.leon.counter_reading.adapters.ViewPagerAdapterTab;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityDownloadBinding;
 import com.leon.counter_reading.enums.DownloadType;
-import com.leon.counter_reading.fragments.DownloadFragment;
-import com.leon.counter_reading.fragments.DownloadOfflineFragment;
+import com.leon.counter_reading.fragments.download.DownloadFragment;
+import com.leon.counter_reading.fragments.download.DownloadOfflineFragment;
 import com.leon.counter_reading.utils.DepthPageTransformer;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 public class DownloadActivity extends BaseActivity {
     private ActivityDownloadBinding binding;
@@ -35,10 +38,9 @@ public class DownloadActivity extends BaseActivity {
     @Override
     protected void initialize() {
         binding = ActivityDownloadBinding.inflate(getLayoutInflater());
-        View childLayout = binding.getRoot();
-        ConstraintLayout parentLayout = findViewById(R.id.base_Content);
+        final View childLayout = binding.getRoot();
+        final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
-//        checkAllFilePermission();
         setupViewPager();
         initializeTextViews();
     }
@@ -76,7 +78,7 @@ public class DownloadActivity extends BaseActivity {
 
     private void askAllFilePermission() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+            final Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
             Uri uri = Uri.fromParts("package", getPackageName(), null);
             intent.setData(uri);
             startActivityForResult(intent, ALL_FILES_ACCESS_REQUEST);
@@ -85,7 +87,7 @@ public class DownloadActivity extends BaseActivity {
 
     private void askSettingPermission() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+            final Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
             Uri uri = Uri.fromParts("package", getPackageName(), null);
             intent.setData(uri);
             startActivityForResult(intent, SETTING_REQUEST);
@@ -93,9 +95,8 @@ public class DownloadActivity extends BaseActivity {
     }
 
     private void initializeTextViews() {
-        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
-
+        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
         textViewDownloadNormal();
         textViewDownloadSpecial();
         textViewDownloadOff();
@@ -105,8 +106,8 @@ public class DownloadActivity extends BaseActivity {
     private void textViewDownloadNormal() {
         binding.textViewDownloadNormal.setOnClickListener(view -> {
             setColor();
-            binding.textViewDownloadNormal.setBackground(ContextCompat
-                    .getDrawable(getApplicationContext(), R.drawable.border_white_2));
+            binding.textViewDownloadNormal.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(DownloadType.NORMAL.getValue());
         });
@@ -115,18 +116,18 @@ public class DownloadActivity extends BaseActivity {
     private void textViewDownloadRetry() {
         binding.textViewDownloadRetry.setOnClickListener(view -> {
             setColor();
-            binding.textViewDownloadRetry.setBackground(ContextCompat
-                    .getDrawable(getApplicationContext(), R.drawable.border_white_2));
+            binding.textViewDownloadRetry.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+                    R.drawable.border_white_2));
             setPadding();
-            binding.viewPager.setCurrentItem(DownloadType.RETRY.getValue());
+            binding.viewPager.setCurrentItem(RETRY.getValue());
         });
     }
 
     private void textViewDownloadOff() {
         binding.textViewDownloadOff.setOnClickListener(view -> {
             setColor();
-            binding.textViewDownloadOff.setBackground(ContextCompat
-                    .getDrawable(getApplicationContext(), R.drawable.border_white_2));
+            binding.textViewDownloadOff.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(DownloadType.OFFLINE.getValue());
         });
@@ -135,49 +136,41 @@ public class DownloadActivity extends BaseActivity {
     private void textViewDownloadSpecial() {
         binding.textViewDownloadSpecial.setOnClickListener(view -> {
             setColor();
-            binding.textViewDownloadSpecial.setBackground(ContextCompat.getDrawable(
-                    getApplicationContext(), R.drawable.border_white_2));
+            binding.textViewDownloadSpecial.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+                    R.drawable.border_white_2));
             setPadding();
-            binding.viewPager.setCurrentItem(DownloadType.SPECIAL.getValue());
+            binding.viewPager.setCurrentItem(SPECIAL.getValue());
         });
     }
 
     private void setColor() {
         binding.textViewDownloadOff.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewDownloadOff.setTextColor(
-                ContextCompat.getColor(getApplicationContext(), R.color.text_color_light));
+        binding.textViewDownloadOff.setTextColor(ContextCompat.getColor(getApplicationContext(),
+                R.color.text_color_light));
         binding.textViewDownloadNormal.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewDownloadNormal.setTextColor(
-                ContextCompat.getColor(getApplicationContext(), R.color.text_color_light));
+        binding.textViewDownloadNormal.setTextColor(ContextCompat.getColor(getApplicationContext(),
+                R.color.text_color_light));
         binding.textViewDownloadRetry.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewDownloadRetry.setTextColor(
-                ContextCompat.getColor(getApplicationContext(), R.color.text_color_light));
+        binding.textViewDownloadRetry.setTextColor(ContextCompat.getColor(getApplicationContext(),
+                R.color.text_color_light));
         binding.textViewDownloadSpecial.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewDownloadSpecial.setTextColor(
-                ContextCompat.getColor(getApplicationContext(), R.color.text_color_light));
+        binding.textViewDownloadSpecial.setTextColor(ContextCompat.getColor(getApplicationContext(),
+                R.color.text_color_light));
     }
 
     private void setPadding() {
-        binding.textViewDownloadNormal.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewDownloadOff.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewDownloadRetry.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewDownloadSpecial.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewDownloadNormal.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewDownloadOff.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewDownloadRetry.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewDownloadSpecial.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
     }
 
     private void setupViewPager() {
         ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
         adapter.addFragment(DownloadFragment.newInstance(DownloadType.NORMAL.getValue()));
-        adapter.addFragment(DownloadFragment.newInstance(DownloadType.RETRY.getValue()));
+        adapter.addFragment(DownloadFragment.newInstance(RETRY.getValue()));
         adapter.addFragment(DownloadOfflineFragment.newInstance());
-        adapter.addFragment(DownloadFragment.newInstance(DownloadType.SPECIAL.getValue()));
+        adapter.addFragment(DownloadFragment.newInstance(SPECIAL.getValue()));
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

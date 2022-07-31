@@ -1,11 +1,12 @@
 package com.leon.counter_reading.utils.reporting;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.fragments.dialog.ReadingReportFragment;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.OffLoadReport;
 
@@ -15,12 +16,12 @@ public class GetReadingReportDBData extends AsyncTask<Activity, Integer, Integer
     private final String uuid;
     private final int trackNumber;
     private final int zoneId;
-    private final CustomProgressModel customProgressModel;
+    private final CustomProgressModel progress;
 
     public GetReadingReportDBData(Activity activity, int trackNumber, int zoneId, String uuid) {
         super();
-        customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
-        customProgressModel.show(activity, false);
+        progress = getApplicationComponent().CustomProgressModel();
+        progress.show(activity, false);
         this.trackNumber = trackNumber;
         this.zoneId = zoneId;
         this.uuid = uuid;
@@ -29,16 +30,15 @@ public class GetReadingReportDBData extends AsyncTask<Activity, Integer, Integer
     @Override
     protected void onPostExecute(Integer integer) {
         super.onPostExecute(integer);
-        customProgressModel.getDialog().dismiss();
+        progress.getDialog().dismiss();
     }
 
     @Override
     protected Integer doInBackground(Activity... activities) {
-        final ArrayList<CounterReportDto> counterReportDtos =
-                new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase()
-                        .counterReportDao().getAllCounterReportByZone(zoneId));
-        final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase()
-                .offLoadReportDao().getAllOffLoadReportById(uuid, trackNumber));
+        final ArrayList<CounterReportDto> counterReportDtos = new ArrayList<>(getApplicationComponent()
+                .MyDatabase().counterReportDao().getAllCounterReportByZone(zoneId));
+        final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>(getApplicationComponent()
+                .MyDatabase().offLoadReportDao().getAllOffLoadReportById(uuid, trackNumber));
         for (int i = 0; i < offLoadReports.size(); i++) {
             for (int j = 0; j < counterReportDtos.size(); j++) {
                 if (offLoadReports.get(i).reportId == counterReportDtos.get(j).id) {
@@ -46,7 +46,6 @@ public class GetReadingReportDBData extends AsyncTask<Activity, Integer, Integer
                 }
             }
         }
-//        ((ReadingReportActivity) (activities[0])).setupRecyclerView(counterReportDtos, offLoadReports);
         ReadingReportFragment.newInstance().setupRecyclerView(counterReportDtos, offLoadReports);
         return null;
     }

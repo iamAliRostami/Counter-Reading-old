@@ -25,12 +25,6 @@
         android:id="@+id/menu_verification"
         android:title="@string/verification_code"
         app:showAsAction="never" />
-<!--    <item-->
-<!--        android:id="@+id/menu_keyboard"-->
-<!--        android:checkable="true"-->
-<!--        android:visible="false"-->
-<!--        android:title="@string/visible_hide_keyboard"-->
-<!--        app:showAsAction="never" />-->
 
     <item
         android:id="@+id/menu_sort"

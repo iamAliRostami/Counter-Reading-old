@@ -9,18 +9,18 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Singleton
+//@Singleton
 @Module
 public class FlashModule {
-    private final FlashViewModel flashViewModel;
+    private final FlashViewModel flash;
 
     public FlashModule(Context context) {
-        this.flashViewModel = new FlashViewModel(context);
+        this.flash = new FlashViewModel(context);
     }
 
     @Singleton
     @Provides
     public FlashViewModel providesFlashViewModel() {
-        return flashViewModel;
+        return flash;
     }
 }

@@ -2,9 +2,13 @@ package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.ON_OFF_LOAD;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.enums.DialogType.Green;
+import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.NotificationType.OTHER;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KARBARI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getEshterakMinLength;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.app.Activity;
@@ -25,12 +29,15 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentPossibleBinding;
+import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.tables.OnOffLoadDto;
+import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.custom_dialog.LovelyChoiceDialog;
 
@@ -49,6 +56,21 @@ public class PossibleFragment extends DialogFragment {
     private ArrayList<KarbariDto> karbariDtosTemp = new ArrayList<>();
     private ArrayList<CounterReportDto> counterReportDtos = new ArrayList<>();
     private ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
+    private final View.OnClickListener onPhoneClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (onOffLoadDto.mobiles != null) {
+                final String[] mobiles = onOffLoadDto.mobiles.split(",");
+                String mobile = "";
+                for (String mobileTemp : mobiles)
+                    mobile = mobile.concat(mobileTemp.trim().concat("\n"));
+                new CustomDialogModel(Green, activity, mobile,
+                        MyApplication.getContext().getString(R.string.dear_user),
+                        MyApplication.getContext().getString(R.string.mobile_number),
+                        MyApplication.getContext().getString(R.string.accepted));
+            } else new CustomToast().warning("موردی یافت نشد.");
+        }
+    };
 
     public static PossibleFragment newInstance(OnOffLoadDto onOffLoadDto, int position, boolean justMobile) {
         PossibleFragment.justMobile = justMobile;
@@ -60,7 +82,7 @@ public class PossibleFragment extends DialogFragment {
 
     static Bundle putBundle(OnOffLoadDto onOffLoadDto, int position) {
         final Bundle args = new Bundle();
-        String json = new Gson().toJson(onOffLoadDto);
+        final String json = new Gson().toJson(onOffLoadDto);
         args.putString(ON_OFF_LOAD.getValue(), json);
         args.putInt(POSITION.getValue(), position);
         return args;
@@ -98,15 +120,24 @@ public class PossibleFragment extends DialogFragment {
             binding.linearLayoutOldRadif.setVisibility(View.VISIBLE);
             binding.linearLayoutFatherName.setVisibility(View.VISIBLE);
             binding.linearLayoutMobile.setVisibility(View.VISIBLE);
+            binding.linearLayoutDebt.setVisibility(View.VISIBLE);
             binding.editTextMobile.setVisibility(View.VISIBLE);
             binding.textViewMobile.setVisibility(View.VISIBLE);
-//            binding.textViewOldRadif.setText(String.valueOf(onOffLoadDto.oldRadif));
+            binding.textViewDebt.setText(String.valueOf(Math.toIntExact(onOffLoadDto.balance)));
             binding.textViewOldRadif.setText(onOffLoadDto.oldRadif != null ? onOffLoadDto.oldRadif : "-");
             binding.textViewOldEshterak.setText(onOffLoadDto.oldEshterak != null ? onOffLoadDto.oldEshterak : "-");
             binding.textViewFatherName.setText(onOffLoadDto.fatherName != null ? onOffLoadDto.fatherName : "-");
-            binding.textViewMobile.setText(onOffLoadDto.mobile != null ? onOffLoadDto.mobile : "-");
             binding.editTextMobile.setText(onOffLoadDto.possibleMobile);
+            binding.textViewMobile.setText(onOffLoadDto.mobile != null ? onOffLoadDto.mobile : "-");
 
+            if (onOffLoadDto.mobiles != null) {
+                final String[] mobiles = onOffLoadDto.mobiles.split(",");
+                String mobile = "";
+                for (String mobileTemp : mobiles) {
+                    mobile = mobile.concat(mobileTemp.trim().concat("\n"));
+                }
+                binding.textViewMobiles.setText(mobile.substring(0, mobile.length() - 1));
+            }
             binding.editTextSerial.setVisibility(View.GONE);
             binding.editTextAddress.setVisibility(View.GONE);
             binding.editTextAccount.setVisibility(View.GONE);
@@ -121,8 +152,11 @@ public class PossibleFragment extends DialogFragment {
             binding.textViewReport.setVisibility(View.GONE);
             binding.linearLayoutKarbari.setVisibility(View.GONE);
             binding.editTextSearch.setVisibility(View.GONE);
+
         } else
             initializeTextViews();
+        binding.textViewMobile.setOnClickListener(onPhoneClickListener);
+        binding.imageViewMobile.setOnClickListener(onPhoneClickListener);
         setOnButtonsClickListener();
         setOnEditTextSearchChangeListener();
     }
@@ -159,24 +193,19 @@ public class PossibleFragment extends DialogFragment {
     private void initializeTextViews() {
         binding.editTextAccount.setFilters(new InputFilter[]{
                 new InputFilter.LengthFilter(DifferentCompanyManager
-                        .getEshterakMaxLength(DifferentCompanyManager.getActiveCompanyName()))});
+                        .getEshterakMaxLength(getActiveCompanyName()))});
 
-        binding.textViewAhad1Title.setText(DifferentCompanyManager.getAhad1(DifferentCompanyManager
-                .getActiveCompanyName()).concat(":"));
-        binding.textViewAhad2Title.setText(DifferentCompanyManager.getAhad2(DifferentCompanyManager
-                .getActiveCompanyName()).replaceFirst("آحاد ", "").concat(":"));
+        binding.textViewAhad1Title.setText(DifferentCompanyManager.getAhad1(getActiveCompanyName()).concat(":"));
+        binding.textViewAhad2Title.setText(DifferentCompanyManager.getAhad2(getActiveCompanyName()).replaceFirst("آحاد ", "").concat(":"));
         binding.textViewAhadTotalTitle.setText(DifferentCompanyManager
-                .getAhadTotal(DifferentCompanyManager.getActiveCompanyName()).replaceFirst("آحاد ", "").concat(":"));
+                .getAhadTotal(getActiveCompanyName()).replaceFirst("آحاد ", "").concat(":"));
 
-        binding.editTextAhadEmpty.setHint(DifferentCompanyManager.getAhad(DifferentCompanyManager
-                .getActiveCompanyName()).concat(getString(R.string.empty)));
+        binding.editTextAhadEmpty.setHint(DifferentCompanyManager.getAhad(getActiveCompanyName()).concat(getString(R.string.empty)));
 
-        binding.editTextAhad1.setHint(DifferentCompanyManager.getAhad1(DifferentCompanyManager
-                .getActiveCompanyName()));
-        binding.editTextAhad2.setHint(DifferentCompanyManager.getAhad2(DifferentCompanyManager
-                .getActiveCompanyName()));
+        binding.editTextAhad1.setHint(DifferentCompanyManager.getAhad1(getActiveCompanyName()));
+        binding.editTextAhad2.setHint(DifferentCompanyManager.getAhad2(getActiveCompanyName()));
         binding.editTextAhadTotal.setHint(DifferentCompanyManager
-                .getAhadTotal(DifferentCompanyManager.getActiveCompanyName()));
+                .getAhadTotal(getActiveCompanyName()));
         if (onOffLoadDto.possibleMobile != null)
             binding.editTextMobile.setText(onOffLoadDto.possibleMobile);
         if (onOffLoadDto.possibleAddress != null)
@@ -223,7 +252,7 @@ public class PossibleFragment extends DialogFragment {
 
         binding.linearLayoutMobile.setVisibility(sharedPreferenceManager.
                 getBoolData(SharedReferenceKeys.MOBILE.getValue()) ? View.VISIBLE : View.GONE);
-        binding.editTextMobile.setVisibility(sharedPreferenceManager.
+        binding.linearLayoutMobileInput.setVisibility(sharedPreferenceManager.
                 getBoolData(SharedReferenceKeys.MOBILE.getValue()) ? View.VISIBLE : View.GONE);
         binding.textViewMobile.setVisibility(sharedPreferenceManager.
                 getBoolData(SharedReferenceKeys.MOBILE.getValue()) ? View.VISIBLE : View.GONE);
@@ -258,7 +287,7 @@ public class PossibleFragment extends DialogFragment {
             selection[i] = found;
             itemNames[i] = counterReportDtos.get(i).title;
         }
-        new LovelyChoiceDialog(activity/*, R.style.CheckBoxTintTheme*/)
+        new LovelyChoiceDialog(activity)
                 .setTopColorRes(R.color.green)
                 .setTopTitle(R.string.reports)
                 .setItemsMultiChoice(itemNames, selection, (positions, items) -> {
@@ -277,9 +306,7 @@ public class PossibleFragment extends DialogFragment {
                             .counterReportDao().getAllCounterReportByZone(onOffLoadDto.zoneId));
                     offLoadReports = new ArrayList<>(getApplicationComponent().MyDatabase().offLoadReportDao()
                             .getAllOffLoadReportById(onOffLoadDto.id, onOffLoadDto.trackNumber));
-                })
-                .setConfirmButtonText(getString(R.string.ok).concat(" ").concat(getString(R.string.reports)))
-                .show();
+                }).setConfirmButtonText(getString(R.string.ok).concat(" ").concat(getString(R.string.reports))).show();
 
     }
 
@@ -310,8 +337,8 @@ public class PossibleFragment extends DialogFragment {
                     onOffLoadDto.possibleCounterSerial = binding.editTextSerial.getText().toString();
             }
             if (binding.editTextAccount.getText().length() > 0) {
-                if (binding.editTextAccount.getText().toString().length() < DifferentCompanyManager.
-                        getEshterakMinLength(DifferentCompanyManager.getActiveCompanyName())) {
+                if (binding.editTextAccount.getText().toString().length() <
+                        getEshterakMinLength(getActiveCompanyName())) {
                     binding.editTextAccount.setError(getString(R.string.error_format));
                     view = binding.editTextAccount;
                     cancel = true;
@@ -355,25 +382,22 @@ public class PossibleFragment extends DialogFragment {
 
     private void initializeSpinner() {
         if (sharedPreferenceManager.getBoolData(KARBARI.getValue())) {
-            karbariDtos = new ArrayList<>(getApplicationComponent().MyDatabase()
-                    .karbariDao().getAllKarbariDto());
+            karbariDtos = new ArrayList<>(getApplicationComponent().MyDatabase().karbariDao()
+                    .getAllKarbariDto());
             karbariDtosTemp = new ArrayList<>(karbariDtos);
             String[] items = new String[karbariDtosTemp.size() + 1];
             for (int i = 0; i < karbariDtosTemp.size(); i++) {
                 items[i + 1] = karbariDtosTemp.get(i).title;
             }
             items[0] = getString(R.string.select_one);
-            final SpinnerCustomAdapter karbariAdapter = new SpinnerCustomAdapter(activity, items);
-            binding.spinnerKarbari.setAdapter(karbariAdapter);
+            final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(activity, items);
+            binding.spinnerKarbari.setAdapter(adapter);
             binding.spinnerKarbari.setSelection(onOffLoadDto.counterStatePosition + 1);
         } else {
             binding.linearLayoutKarbari.setVisibility(View.GONE);
             binding.editTextSearch.setVisibility(View.GONE);
         }
-
-
     }
-
 
     @Override
     public void onResume() {
@@ -382,6 +406,11 @@ public class PossibleFragment extends DialogFragment {
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
+        } else {
+            ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
+            new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
+                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
+                    getString(R.string.accepted));
         }
         super.onResume();
     }

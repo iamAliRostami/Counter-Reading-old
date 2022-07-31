@@ -7,6 +7,8 @@ import static com.leon.counter_reading.helpers.MyApplication.getApplicationCompo
 import android.app.Activity;
 import android.os.AsyncTask;
 
+import com.leon.counter_reading.tables.OnOffLoadDto;
+
 public class Result extends AsyncTask<Activity, Void, Void> {
     final int position;
     final String uuid;
@@ -20,8 +22,10 @@ public class Result extends AsyncTask<Activity, Void, Void> {
     @Override
     protected Void doInBackground(Activity... activities) {
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(true, uuid);
+        final OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(position);
         readingData.onOffLoadDtos.set(position, getApplicationComponent().MyDatabase()
                 .onOffLoadDao().getAllOnOffLoadById(uuid, readingData.onOffLoadDtos.get(position).trackingId));
+        readingData.onOffLoadDtos.get(position).updateIgnore(onOffLoadDtoTemp);
         int i = 0;
         boolean found = false;
         while (!found && i < readingDataTemp.onOffLoadDtos.size()) {

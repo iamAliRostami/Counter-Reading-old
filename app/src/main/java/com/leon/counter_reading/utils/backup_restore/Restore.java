@@ -1,5 +1,6 @@
 package com.leon.counter_reading.utils.backup_restore;
 
+import static com.leon.counter_reading.enums.SharedReferenceKeys.LAST_BACK_UP;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -11,7 +12,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.ForbiddenDto;
@@ -22,6 +22,15 @@ import com.leon.counter_reading.tables.QotrDictionary;
 import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.CustomToast;
+import com.leon.counter_reading.utils.backup_restore.model.CounterReportDtoTemp;
+import com.leon.counter_reading.utils.backup_restore.model.CounterStateDtoTemp;
+import com.leon.counter_reading.utils.backup_restore.model.ForbiddenDtoTemp;
+import com.leon.counter_reading.utils.backup_restore.model.KarbariDtoTemp;
+import com.leon.counter_reading.utils.backup_restore.model.OffLoadReportTemp;
+import com.leon.counter_reading.utils.backup_restore.model.OnOffLoadDtoTemp;
+import com.leon.counter_reading.utils.backup_restore.model.QotrDictionaryTemp;
+import com.leon.counter_reading.utils.backup_restore.model.ReadingConfigDefaultDtoTemp;
+import com.leon.counter_reading.utils.backup_restore.model.TrackingDtoTemp;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,22 +39,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Restore extends AsyncTask<Activity, Integer, Void> {
-    private final CustomProgressModel customProgressModel;
+    private final CustomProgressModel progress;
     private final ArrayList<String> trackIds = new ArrayList<>();
     private final ArrayList<Integer> trackNumbers = new ArrayList<>();
 
     public Restore(Activity activity) {
         super();
-        customProgressModel = getApplicationComponent().CustomProgressModel();
-        customProgressModel.show(activity, false);
+        progress = getApplicationComponent().CustomProgressModel();
+        progress.show(activity, false);
     }
 
-    public static ArrayList<String> importTableFromCSVFile(String tableName, Activity activity) {
-        File importDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +
-                getApplicationComponent().SharedPreferenceModel()
-                        .getStringData(SharedReferenceKeys.LAST_BACK_UP.getValue()));
+    public static ArrayList<String> importTableFromCSV(String tableName, Activity activity) {
+        final File importDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +
+                getApplicationComponent().SharedPreferenceModel().getStringData(LAST_BACK_UP.getValue()));
         CSVReader csvReader;
-        ArrayList<String> value = new ArrayList<>();
+        final ArrayList<String> value = new ArrayList<>();
         try {
             csvReader = new CSVReader(new FileReader(importDir + "/" + tableName + "_"
                     + BuildConfig.BUILD_TYPE + "_" + BuildConfig.VERSION_CODE + ".csv"));
@@ -137,7 +145,7 @@ public class Restore extends AsyncTask<Activity, Integer, Void> {
     }
 
     public static void importDatabaseFromCSVFileSample(String tableName, Activity activity) {
-        File importDir = new File(String.valueOf(Environment
+        final File importDir = new File(String.valueOf(Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
         CSVReader csvReader;
         try {
@@ -175,7 +183,6 @@ public class Restore extends AsyncTask<Activity, Integer, Void> {
                 value.append("]");
                 e.printStackTrace();
             }
-            Log.e("value", String.valueOf(value));
             activity.runOnUiThread(() ->
                     new CustomToast().success("بازیابی اطلاعات با موفقیت انجام شد.", Toast.LENGTH_LONG));
         } catch (IOException e) {
@@ -190,7 +197,7 @@ public class Restore extends AsyncTask<Activity, Integer, Void> {
     @Override
     protected void onPostExecute(Void unused) {
         super.onPostExecute(unused);
-        customProgressModel.getDialog().dismiss();
+        progress.getDialog().dismiss();
     }
 
     @Override
@@ -215,76 +222,72 @@ public class Restore extends AsyncTask<Activity, Integer, Void> {
     }
 
     private void restoreForbiddenDto(Activity activity) {
-        ArrayList<String> forbiddenDtoString = importTableFromCSVFile("OffLoadReport", activity);
-        ArrayList<ForbiddenDto> forbiddenDtos = new ArrayList<>();
-        Gson gson = new Gson();
+        final ArrayList<String> forbiddenDtoString = importTableFromCSV("OffLoadReport", activity);
+        final ArrayList<ForbiddenDto> forbiddenDtos = new ArrayList<>();
+        final Gson gson = new Gson();
         for (int i = 0; i < forbiddenDtoString.size(); i++) {
-            ForbiddenDtoTemp forbiddenDtoTemp = gson
-                    .fromJson(forbiddenDtoString.get(i), ForbiddenDtoTemp.class);
+            final ForbiddenDtoTemp forbiddenDtoTemp = gson.fromJson(forbiddenDtoString.get(i),
+                    ForbiddenDtoTemp.class);
             forbiddenDtos.add(forbiddenDtoTemp.getForbiddenDto());
         }
         getApplicationComponent().MyDatabase().forbiddenDao().insertForbiddenDto(forbiddenDtos);
     }
 
     private void restoreOffLoadReport(Activity activity) {
-        ArrayList<String> offLoadReportString = importTableFromCSVFile("OffLoadReport", activity);
-        ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
-        Gson gson = new Gson();
+        final ArrayList<String> offLoadReportString = importTableFromCSV("OffLoadReport", activity);
+        final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
+        final Gson gson = new Gson();
         for (int i = 0; i < offLoadReportString.size(); i++) {
-            OffLoadReportTemp offLoadReportTemp = gson
-                    .fromJson(offLoadReportString.get(i), OffLoadReportTemp.class);
+            final OffLoadReportTemp offLoadReportTemp = gson.fromJson(offLoadReportString.get(i),
+                    OffLoadReportTemp.class);
             offLoadReports.add(offLoadReportTemp.getOffLoadReport());
         }
         getApplicationComponent().MyDatabase().offLoadReportDao().insertOffLoadReport(offLoadReports);
     }
 
     private void restoreKarbariDto(Activity activity) {
-        ArrayList<String> karbariDtoString = importTableFromCSVFile("KarbariDto", activity);
-        ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
-        Gson gson = new Gson();
+        final ArrayList<String> karbariDtoString = importTableFromCSV("KarbariDto", activity);
+        final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
+        final Gson gson = new Gson();
         for (int i = 0; i < karbariDtoString.size(); i++) {
-            KarbariDtoTemp karbariDtoTemp = gson
+            final KarbariDtoTemp karbariDtoTemp = gson
                     .fromJson(karbariDtoString.get(i), KarbariDtoTemp.class);
             karbariDtos.add(karbariDtoTemp.getKarbariDto());
         }
-        Log.e("size", String.valueOf(karbariDtos.size()));
         getApplicationComponent().MyDatabase().karbariDao().insertAllKarbariDtos(karbariDtos);
     }
 
     private void restoreCounterReportDto(Activity activity) {
-        ArrayList<String> counterReportDtoString = importTableFromCSVFile("CounterReportDto", activity);
-        ArrayList<CounterReportDto> counterReportDtos = new ArrayList<>();
-        Gson gson = new Gson();
+        final ArrayList<String> counterReportDtoString = importTableFromCSV("CounterReportDto", activity);
+        final ArrayList<CounterReportDto> counterReportDtos = new ArrayList<>();
+        final Gson gson = new Gson();
         for (int i = 0; i < counterReportDtoString.size(); i++) {
-            CounterReportDtoTemp counterReportDtoTemp = gson
+            final CounterReportDtoTemp counterReportDtoTemp = gson
                     .fromJson(counterReportDtoString.get(i), CounterReportDtoTemp.class);
             counterReportDtos.add(counterReportDtoTemp.getCounterReportDto());
         }
-        Log.e("size", String.valueOf(counterReportDtos.size()));
         getApplicationComponent().MyDatabase().counterReportDao().insertAllCounterStateReport(counterReportDtos);
     }
 
     private void restoreReadingConfigDefaultDto(Activity activity) {
-        ArrayList<String> readingConfigDefaultDtoString = importTableFromCSVFile("ReadingConfigDefaultDto", activity);
-        ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
-        Gson gson = new Gson();
+        final ArrayList<String> readingConfigDefaultDtoString = importTableFromCSV("ReadingConfigDefaultDto", activity);
+        final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
+        final Gson gson = new Gson();
         for (int i = 0; i < readingConfigDefaultDtoString.size(); i++) {
-            ReadingConfigDefaultDtoTemp readingConfigDefaultDtoTemp = gson
+            final ReadingConfigDefaultDtoTemp readingConfigDefaultDtoTemp = gson
                     .fromJson(readingConfigDefaultDtoString.get(i), ReadingConfigDefaultDtoTemp.class);
             readingConfigDefaultDtos.add(readingConfigDefaultDtoTemp.getReadingConfigDto());
         }
-        Log.e("size", String.valueOf(readingConfigDefaultDtos.size()));
         getApplicationComponent().MyDatabase().readingConfigDefaultDao().insertAllReadingConfigDefault(readingConfigDefaultDtos);
     }
 
     private ArrayList<OnOffLoadDto> restoreOnOffLoadDto(Activity activity) {
-        ArrayList<String> onOffLoadDtoString = importTableFromCSVFile("OnOffLoadDto", activity);
-        ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
-//        ArrayList<OnOffLoadDto> onOffLoadDtosTemp = new ArrayList<>(MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao().getAllOnOffLoad());
-        Gson gson = new Gson();
+        final ArrayList<String> onOffLoadDtoString = importTableFromCSV("OnOffLoadDto", activity);
+        final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
+        final Gson gson = new Gson();
         for (int i = 0; i < onOffLoadDtoString.size(); i++) {
             boolean found = false;
-            OnOffLoadDtoTemp onOffLoadDtoTemp = gson
+            final OnOffLoadDtoTemp onOffLoadDtoTemp = gson
                     .fromJson(onOffLoadDtoString.get(i), OnOffLoadDtoTemp.class);
             for (int j = 0; j < trackIds.size() && !found; j++) {
                 if (trackIds.get(j).equals(onOffLoadDtoTemp.id) && trackNumbers.get(j) == onOffLoadDtoTemp.trackNumber) {
@@ -294,20 +297,19 @@ public class Restore extends AsyncTask<Activity, Integer, Void> {
             if (!found)
                 onOffLoadDtos.add(onOffLoadDtoTemp.getOnOffLoadDto());
         }
-        Log.e("size", String.valueOf(onOffLoadDtos.size()));
         getApplicationComponent().MyDatabase().onOffLoadDao().insertAllOnOffLoad(onOffLoadDtos);
         return onOffLoadDtos;
     }
 
     private ArrayList<TrackingDto> restoreTrackingDto(Activity activity) {
-        ArrayList<String> trackingDtoString = importTableFromCSVFile("TrackingDto", activity);
-        ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
-        ArrayList<TrackingDto> trackingDtosTemp = new ArrayList<>(getApplicationComponent().MyDatabase().trackingDao().getTrackingDto());
-        Gson gson = new Gson();
+        final ArrayList<String> trackingDtoString = importTableFromCSV("TrackingDto", activity);
+        final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
+        final ArrayList<TrackingDto> trackingDtosTemp = new ArrayList<>(getApplicationComponent().MyDatabase().trackingDao().getTrackingDto());
+        final Gson gson = new Gson();
         for (int i = 0; i < trackingDtoString.size(); i++) {
             boolean found = false;
-            TrackingDtoTemp trackingDtoTemp = gson
-                    .fromJson(trackingDtoString.get(i), TrackingDtoTemp.class);
+            final TrackingDtoTemp trackingDtoTemp = gson.fromJson(trackingDtoString.get(i),
+                    TrackingDtoTemp.class);
             for (int j = 0; j < trackingDtosTemp.size() && !found; j++) {
                 if (trackingDtoTemp.trackNumber == trackingDtosTemp.get(j).trackNumber &&
                         trackingDtoTemp.id.equals(trackingDtosTemp.get(j).id)) {
@@ -325,28 +327,26 @@ public class Restore extends AsyncTask<Activity, Integer, Void> {
     }
 
     private void restoreCounterStateDto(Activity activity) {
-        ArrayList<String> counterStateDtoString = importTableFromCSVFile("CounterStateDto", activity);
-        ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
-        Gson gson = new Gson();
+        final ArrayList<String> counterStateDtoString = importTableFromCSV("CounterStateDto", activity);
+        final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
+        final Gson gson = new Gson();
         for (int i = 0; i < counterStateDtoString.size(); i++) {
-            CounterStateDtoTemp counterStateDtoTemp = gson
+            final CounterStateDtoTemp counterStateDtoTemp = gson
                     .fromJson(counterStateDtoString.get(i), CounterStateDtoTemp.class);
             counterStateDtos.add(counterStateDtoTemp.getCounterStateDto());
         }
-        Log.e("size", String.valueOf(counterStateDtos.size()));
         getApplicationComponent().MyDatabase().counterStateDao().insertAllCounterStateDto(counterStateDtos);
     }
 
     private void restoreQotrDictionary(Activity activity) {
-        ArrayList<String> qotrDictionaryString = importTableFromCSVFile("QotrDictionary", activity);
-        ArrayList<QotrDictionary> qotrDictionaries = new ArrayList<>();
-        Gson gson = new Gson();
+        final ArrayList<String> qotrDictionaryString = importTableFromCSV("QotrDictionary", activity);
+        final ArrayList<QotrDictionary> qotrDictionaries = new ArrayList<>();
+        final Gson gson = new Gson();
         for (int i = 0; i < qotrDictionaryString.size(); i++) {
-            QotrDictionaryTemp qotrDictionaryTemp = gson
-                    .fromJson(qotrDictionaryString.get(i), QotrDictionaryTemp.class);
+            final QotrDictionaryTemp qotrDictionaryTemp = gson.fromJson(qotrDictionaryString.get(i),
+                    QotrDictionaryTemp.class);
             qotrDictionaries.add(qotrDictionaryTemp.getQotrDictionary());
         }
-        Log.e("size", String.valueOf(qotrDictionaries.size()));
         getApplicationComponent().MyDatabase().qotrDictionaryDao().insertQotrDictionaries(qotrDictionaries);
     }
 

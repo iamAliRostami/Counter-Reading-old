@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +23,8 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentBasicBinding;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.PermissionManager;
+
+import java.util.regex.Pattern;
 
 public class BasicFragment extends Fragment {
     private FragmentBasicBinding binding;
@@ -48,7 +49,9 @@ public class BasicFragment extends Fragment {
         return binding.getRoot();
     }
 
+
     private void initialize() {
+        binding.textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
         initializeTextView();
         setOnclickListeners();
     }
@@ -61,9 +64,10 @@ public class BasicFragment extends Fragment {
         });
 
         binding.buttonSubmitProxy.setOnClickListener(view -> {
-            if (proxyValidation()) {
+            final String ip = binding.editTextProxy.getText().toString();
+            if (ip.length() == 0 ||/* (proxyValidation(ip) && validate(ip.substring(ip.indexOf("//") + 2)))*/validate(ip)) {
                 getApplicationComponent().SharedPreferenceModel().putData(PROXY.getValue(),
-                        binding.editTextProxy.getText().toString());
+                        ip.endsWith("/") ? ip : ip.concat("/"));
                 new CustomToast().success("پروکسی با موفقیت تنظیم شد.", Toast.LENGTH_LONG);
             } else {
                 binding.editTextProxy.requestFocus();
@@ -73,7 +77,7 @@ public class BasicFragment extends Fragment {
     }
 
     private void initializeTextView() {
-        if (getApplicationComponent().SharedPreferenceModel().getIntData(PERSONAL_CODE.getValue()) > 0)
+        if (getApplicationComponent().SharedPreferenceModel().getIntNullData(PERSONAL_CODE.getValue()) > 0)
             binding.editTextPersonalCode.setText(String.valueOf(getApplicationComponent()
                     .SharedPreferenceModel().getIntData(PERSONAL_CODE.getValue())));
         binding.textViewSerial.setText(getSerial(requireActivity()));
@@ -81,9 +85,6 @@ public class BasicFragment extends Fragment {
         binding.textViewAndroidVersion.setText(getAndroidVersion());
         binding.textViewAppVersion.setText(BuildConfig.VERSION_NAME);
         binding.textViewSignal.setText(getSignal());
-
-        final TextView textViewCompanyName = requireActivity().findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
     }
 
     private String getSignal() {
@@ -110,8 +111,13 @@ public class BasicFragment extends Fragment {
         }
     }
 
-    private boolean proxyValidation() {
-        final String proxy = binding.editTextProxy.getText().toString();
-        return proxy.length() == 0 || proxy.startsWith("https://") || proxy.startsWith("http://");
+    //    private static final Pattern IP_PATTERN = Pattern.compile("(http(s)?)://(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(:(\\d{1,5}))?");
+//    private static final Pattern IP_PATTERN = Pattern.compile("^https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)");
+//    private static final Pattern PATTERN_SIMPLE = Pattern.compile("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)(\\.(?!$)|$)){4}$");
+//    private static final Pattern PATTERN_WITH_PORT = Pattern.compile("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):(\\d{1,5})");
+    private static final Pattern IP_PATTERN = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)");
+
+    public static boolean validate(final String ip) {
+        return IP_PATTERN.matcher(ip).matches();
     }
 }

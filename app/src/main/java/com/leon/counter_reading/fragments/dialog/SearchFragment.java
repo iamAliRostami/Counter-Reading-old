@@ -1,5 +1,13 @@
 package com.leon.counter_reading.fragments.dialog;
 
+import static com.leon.counter_reading.enums.DialogType.Red;
+import static com.leon.counter_reading.enums.SearchTypeEnum.All;
+import static com.leon.counter_reading.enums.SearchTypeEnum.BARCODE;
+import static com.leon.counter_reading.enums.SearchTypeEnum.NAME;
+import static com.leon.counter_reading.enums.SearchTypeEnum.RADIF;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getSecondSearchItem;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -8,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -17,9 +26,8 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentSearchBinding;
-import com.leon.counter_reading.enums.SearchTypeEnum;
+import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.utils.CustomToast;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -44,46 +52,42 @@ public class SearchFragment extends DialogFragment {
         initializeSpinner();
         setOnButtonSearchClickListener();
         binding.editTextSearch.requestFocus();
-
     }
 
     private void setOnButtonSearchClickListener() {
         binding.buttonSearch.setOnClickListener(v -> {
-            if (type == SearchTypeEnum.All.getValue()) {
+            if (type == All.getValue()) {
                 ((ReadingActivity) requireActivity()).search(type, null, false);
                 dismiss();
-            }/* else if (type == SearchTypeEnum.BARCODE.getValue()) {
-                scanFromFragment();
-            } */ else {
-                String key = binding.editTextSearch.getText().toString();
+            } else {
+                final String key = binding.editTextSearch.getText().toString();
                 if (key.isEmpty()) {
-                    View view = binding.editTextSearch;
                     binding.editTextSearch.setError(getString(R.string.error_empty));
-                    view.requestFocus();
+                    binding.editTextSearch.requestFocus();
                 } else {
-                    ((ReadingActivity) requireActivity()).search(type, key, binding.checkBoxGoToPage.isChecked());
-                    dismiss();
+                    if (((ReadingActivity) requireActivity()).search(type, key, binding.checkBoxGoToPage.isChecked()))
+                        dismiss();
                 }
             }
         });
     }
 
     private void initializeSpinner() {
-        String[] items = getResources().getStringArray(R.array.search_option);
-        items[1] = DifferentCompanyManager.getSecondSearchItem(DifferentCompanyManager.getActiveCompanyName());
-        SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(getActivity(), items);
+        final String[] items = getResources().getStringArray(R.array.search_option);
+        items[1] = getSecondSearchItem(getActiveCompanyName());
+        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(getActivity(), items);
         binding.spinnerSearch.setAdapter(adapter);
         binding.spinnerSearch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 type = position;
-                binding.checkBoxGoToPage.setVisibility(type >= SearchTypeEnum.NAME.getValue() ?
-                        View.GONE : View.VISIBLE);
-                binding.editTextSearch.setInputType(type == SearchTypeEnum.NAME.getValue() ?
+                binding.checkBoxGoToPage.setVisibility(type >= NAME.getValue() ? View.GONE :
+                        View.VISIBLE);
+                binding.editTextSearch.setInputType(type == NAME.getValue() ?
                         InputType.TYPE_CLASS_TEXT : InputType.TYPE_CLASS_NUMBER);
-                binding.editTextSearch.setVisibility(type >= SearchTypeEnum.BARCODE.getValue() ?
-                        View.GONE : View.VISIBLE);
-                if (type == SearchTypeEnum.BARCODE.getValue())
+                binding.editTextSearch.setVisibility(type >= BARCODE.getValue() ? View.GONE :
+                        View.VISIBLE);
+                if (type == BARCODE.getValue())
                     scanFromFragment();
             }
 
@@ -99,7 +103,7 @@ public class SearchFragment extends DialogFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() == null) {
                 new CustomToast().warning(getString(R.string.data_not_found));
@@ -107,7 +111,7 @@ public class SearchFragment extends DialogFragment {
                 binding.editTextSearch.setText(result.getContents());
                 binding.editTextSearch.setVisibility(View.VISIBLE);
             }
-            binding.spinnerSearch.setSelection(SearchTypeEnum.RADIF.getValue());
+            binding.spinnerSearch.setSelection(RADIF.getValue());
         }
     }
 
@@ -118,6 +122,10 @@ public class SearchFragment extends DialogFragment {
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
+        } else {
+            new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
+                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
+                    getString(R.string.accepted));
         }
         super.onResume();
     }

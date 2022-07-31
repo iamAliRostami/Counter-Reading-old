@@ -4,9 +4,11 @@ import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
 import static com.leon.counter_reading.enums.BundleEnum.DESCRIPTION;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
 import static com.leon.counter_reading.helpers.Constants.RECORD_AUDIO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
 import static com.leon.counter_reading.utils.PermissionManager.checkRecorderPermission;
 
@@ -31,11 +33,9 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityDescriptionBinding;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.tables.Voice;
 import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.PermissionManager;
 import com.leon.counter_reading.utils.voice.PrepareMultimedia;
 
@@ -57,13 +57,13 @@ public class DescriptionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         onActivitySetTheme(this, getApplicationComponent().SharedPreferenceModel()
-                        .getIntData(SharedReferenceKeys.THEME_STABLE.getValue()),
+                        .getIntData(THEME_STABLE.getValue()),
                 true);
         super.onCreate(savedInstanceState);
         binding = ActivityDescriptionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
+        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
         activity = this;
         if (checkRecorderPermission(getApplicationContext()))
             initialize();
@@ -98,7 +98,7 @@ public class DescriptionActivity extends AppCompatActivity {
                 setupMediaRecorder();
                 try {
                     mediaRecorder.prepare();
-                    mediaRecorder.start();//TODO I don't know why sometimes crashes!
+                    mediaRecorder.start();
                 } catch (IOException e) {
                     e.printStackTrace();
                     new CustomToast().warning(getString(R.string.error_in_record_voice));
@@ -247,8 +247,7 @@ public class DescriptionActivity extends AppCompatActivity {
     }
 
     private void checkMultimediaAndToggle() {
-        voice = getApplicationComponent().MyDatabase().voiceDao().
-                getVoicesByOnOffLoadId(uuid);
+        voice = getApplicationComponent().MyDatabase().voiceDao().getVoicesByOnOffLoadId(uuid);
         if (voice == null) {
             voice = new Voice();
             binding.editTextMessage.setText(description);

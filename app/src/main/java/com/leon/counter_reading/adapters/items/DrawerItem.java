@@ -15,9 +15,8 @@ public class DrawerItem {
     }
 
     public static ArrayList<DrawerItem> createItemList(String[] menu, TypedArray drawable) {
-        ArrayList<DrawerItem> drawerItems = new ArrayList<>();
-        int numItem = menu.length;
-        for (int i = 0; i < numItem; i++) {
+        final ArrayList<DrawerItem> drawerItems = new ArrayList<>();
+        for (int i = 0; i < menu.length; i++) {
             drawerItems.add(new DrawerItem(menu[i], drawable.getDrawable(i)));
         }
         return drawerItems;

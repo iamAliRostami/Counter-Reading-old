@@ -10,14 +10,14 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Singleton
+//@Singleton
 @Module
 public class CustomDialogModule {
     private final LovelyStandardDialog lovelyStandardDialog;
 
     public CustomDialogModule(Context context) {
-        CustomDialogModel customDialogModel = new CustomDialogModel(context);
-        this.lovelyStandardDialog = customDialogModel.getLovelyStandardDialog();
+        final CustomDialogModel dialog = new CustomDialogModel(context);
+        this.lovelyStandardDialog = dialog.getLovelyStandardDialog();
     }
 
     @Singleton

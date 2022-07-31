@@ -1,6 +1,7 @@
 package com.leon.counter_reading.utils.downloading;
 
 import static com.leon.counter_reading.enums.ProgressType.SHOW;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
 import android.app.Activity;
@@ -9,7 +10,6 @@ import android.widget.Toast;
 
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
-import com.leon.counter_reading.fragments.DownloadFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
@@ -24,18 +24,15 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class Download extends AsyncTask<Activity, Void, Void> {
-    private final DownloadFragment fragment;
 
-    public Download(DownloadFragment fragment) {
+    public Download() {
         super();
-        this.fragment = fragment;
     }
 
     @Override
     protected Void doInBackground(Activity... activities) {
-        final Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
+        final Retrofit retrofit = getApplicationComponent().Retrofit();
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-        //TODO
         final Call<ReadingData> call = iAbfaService.loadData(BuildConfig.VERSION_CODE);
         activities[0].runOnUiThread(() ->
                 HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activities[0],
@@ -46,7 +43,6 @@ public class Download extends AsyncTask<Activity, Void, Void> {
     @Override
     protected void onPostExecute(Void unused) {
         super.onPostExecute(unused);
-        fragment.setButtonState();
 //        throw new RuntimeException("Test Force Crash"); // Force a crash
 
     }

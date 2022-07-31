@@ -25,14 +25,12 @@ public class MultiSelectionSpinner extends AppCompatSpinner implements
 
     public MultiSelectionSpinner(Context context) {
         super(context);
-//        adapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item);
         adapter = new ArrayAdapter(context, R.layout.item_dropdown_menu);
         super.setAdapter(adapter);
     }
 
     public MultiSelectionSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
-//        adapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item);
         adapter = new ArrayAdapter(context, R.layout.item_dropdown_menu);
         super.setAdapter(adapter);
     }
@@ -53,7 +51,7 @@ public class MultiSelectionSpinner extends AppCompatSpinner implements
     @Override
     public boolean performClick() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        String[] itemNames = new String[multiSelectionItems.size()];
+        final String[] itemNames = new String[multiSelectionItems.size()];
         for (int i = 0; i < multiSelectionItems.size(); i++) {
             itemNames[i] = multiSelectionItems.get(i).getName();
             selection[i] = multiSelectionItems.get(i).getValue();

@@ -1,5 +1,7 @@
 package com.leon.counter_reading.utils.reading;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.os.AsyncTask;
 
 import com.leon.counter_reading.helpers.MyApplication;
@@ -15,7 +17,7 @@ public class UpdateOnOffLoadDtoByLock extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        MyApplication.getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
+        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
         return null;
     }
 }

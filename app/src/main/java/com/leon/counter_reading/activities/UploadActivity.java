@@ -1,8 +1,11 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.UploadType.MULTIMEDIA;
 import static com.leon.counter_reading.helpers.Constants.ZIP_ROOT;
 import static com.leon.counter_reading.helpers.Constants.zipAddress;
 import static com.leon.counter_reading.utils.CustomFile.copyFile;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,7 +26,6 @@ import com.leon.counter_reading.enums.UploadType;
 import com.leon.counter_reading.fragments.upload.UploadFragment;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.DepthPageTransformer;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.uploading.GetUploadDBData;
 
 import java.io.File;
@@ -41,21 +43,21 @@ public class UploadActivity extends BaseActivity {
     @Override
     protected void initialize() {
         binding = ActivityUploadBinding.inflate(getLayoutInflater());
-        View childLayout = binding.getRoot();
-        ConstraintLayout parentLayout = findViewById(R.id.base_Content);
+        final View childLayout = binding.getRoot();
+        final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
-        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(DifferentCompanyManager.getCompanyName(DifferentCompanyManager.getActiveCompanyName()));
+        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
 
         new GetUploadDBData(this).execute(this);
     }
 
     private void setupViewPager() {
-        ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
+        final ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
         adapter.addFragment(UploadFragment.newInstance(UploadType.NORMAL.getValue()));
         adapter.addFragment(UploadFragment.newInstance(UploadType.OFFLINE.getValue()));
 //        adapter.addFragment(UploadOfflineFragment.newInstance());
-        adapter.addFragment(UploadFragment.newInstance(UploadType.MULTIMEDIA.getValue()));
+        adapter.addFragment(UploadFragment.newInstance(MULTIMEDIA.getValue()));
         binding.viewPager.setAdapter(adapter);
 
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -107,8 +109,8 @@ public class UploadActivity extends BaseActivity {
     void textViewUploadOff() {
         binding.textViewUploadOff.setOnClickListener(view -> {
             setColor();
-            binding.textViewUploadOff.setBackground(
-                    ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_white_2));
+            binding.textViewUploadOff.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(1);
         });
@@ -117,8 +119,8 @@ public class UploadActivity extends BaseActivity {
     void textViewUploadMultimedia() {
         binding.textViewUploadMultimedia.setOnClickListener(view -> {
             setColor();
-            binding.textViewUploadMultimedia.setBackground(
-                    ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_white_2));
+            binding.textViewUploadMultimedia.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(2);
         });
@@ -127,8 +129,8 @@ public class UploadActivity extends BaseActivity {
     void textViewUploadNormal() {
         binding.textViewUpload.setOnClickListener(view -> {
             setColor();
-            binding.textViewUpload.setBackground(
-                    ContextCompat.getDrawable(getApplicationContext(), R.drawable.border_white_2));
+            binding.textViewUpload.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+                    R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(0);
         });
@@ -136,26 +138,20 @@ public class UploadActivity extends BaseActivity {
 
     private void setColor() {
         binding.textViewUploadOff.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewUploadOff.setTextColor(
-                ContextCompat.getColor(getApplicationContext(), R.color.text_color_light));
+        binding.textViewUploadOff.setTextColor(ContextCompat.getColor(getApplicationContext(),
+                R.color.text_color_light));
         binding.textViewUpload.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewUpload.setTextColor(
-                ContextCompat.getColor(getApplicationContext(), R.color.text_color_light));
+        binding.textViewUpload.setTextColor(ContextCompat.getColor(getApplicationContext(),
+                R.color.text_color_light));
         binding.textViewUploadMultimedia.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewUploadMultimedia.setTextColor(
-                ContextCompat.getColor(getApplicationContext(), R.color.text_color_light));
+        binding.textViewUploadMultimedia.setTextColor(ContextCompat.getColor(getApplicationContext(),
+                R.color.text_color_light));
     }
 
     private void setPadding() {
-        binding.textViewUpload.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewUploadOff.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewUploadMultimedia.setPadding(0,
-                (int) getResources().getDimension(R.dimen.medium_dp), 0,
-                (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewUpload.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewUploadOff.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewUploadMultimedia.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
     }
 
     @Override

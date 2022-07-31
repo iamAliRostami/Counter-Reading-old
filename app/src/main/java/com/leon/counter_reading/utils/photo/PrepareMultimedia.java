@@ -3,10 +3,16 @@ package com.leon.counter_reading.utils.photo;
 import static com.leon.counter_reading.enums.ProgressType.SHOW_CANCELABLE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.TOKEN;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.utils.Converters.bitmapToFile;
+import static com.leon.counter_reading.utils.CustomFile.loadImage;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
@@ -20,7 +26,6 @@ import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.tables.ImageGrouped;
 import com.leon.counter_reading.tables.MultimediaUploadResponse;
 import com.leon.counter_reading.utils.CustomErrorHandling;
-import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 
 import java.util.ArrayList;
@@ -33,16 +38,17 @@ import retrofit2.Retrofit;
 
 public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
     private final ImageGrouped imageGrouped = new ImageGrouped();
-    private final CustomProgressModel customProgressModel;
+    private final CustomProgressModel progress;
     private final ArrayList<Image> images;
-    private final String description;
+    private final String description, tag;
     private final boolean result;
 
-    public PrepareMultimedia(ArrayList<Image> images, String description, boolean result,
-                             Activity activity) {
+    public PrepareMultimedia(Activity activity, ArrayList<Image> images, String description,
+                             String tag, boolean result) {
         super();
-        customProgressModel = getApplicationComponent().CustomProgressModel();
-        customProgressModel.show(activity, false);
+        this.tag = tag;
+        progress = getApplicationComponent().CustomProgressModel();
+        progress.show(activity, false);
         this.description = description;
         this.result = result;
         this.images = images;
@@ -53,9 +59,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
         imageGrouped.File.clear();
         for (int i = 0; i < images.size(); i++) {
             images.get(i).Description = description;
-            if (!images.get(i).isSent && images.get(i).File == null) {
-                imageGrouped.File.add(CustomFile.bitmapToFile(images.get(i).bitmap, activities[0]));
-            }
+            if (!images.get(i).isSent && images.get(i).File == null)
+                imageGrouped.File.add(bitmapToFile(loadImage(activities[0], images.get(i).address), activities[0]));
         }
         return activities[0];
     }
@@ -63,8 +68,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
     @Override
     protected void onPostExecute(Activity activity) {
         super.onPostExecute(activity);
-        if (customProgressModel.getDialog() != null)
-            customProgressModel.getDialog().dismiss();
+        if (progress.getDialog() != null)
+            progress.getDialog().dismiss();
         uploadImage(activity);
     }
 
@@ -84,32 +89,28 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
                     new UploadImages(activity), new UploadImagesIncomplete(activity),
                     new UploadImagesError(activity));
         } else if (result) {
-            setResult();
+            setResult(activity);
         } else {
             activity.runOnUiThread(() ->
                     new CustomToast().warning(activity.getString(R.string.there_is_no_images), Toast.LENGTH_LONG));
         }
     }
 
-    private void setResult() {
-        TakePhotoFragment.newInstance().setResult();
-
+    private void setResult(final Context context) {
+        final Fragment fragment = ((AppCompatActivity) context).getSupportFragmentManager()
+                .findFragmentByTag(tag);
+        if (fragment != null)
+            ((TakePhotoFragment) fragment).setResult();
     }
 
-    private void saveImages(boolean isSent, Activity activity) {
-//        for (int j = 0; j < 200; j++)//TODO
+    private void saveImages(boolean isSent) {
         for (int i = 0; i < images.size(); i++) {
             if (!images.get(i).isSent) {
-                images.get(i).isSent = isSent;//TODO
-                if (getApplicationComponent().MyDatabase().imageDao().getImagesById(images.get(i).id)
-                        .size() > 0) {
+                images.get(i).isSent = isSent;
+                if (getApplicationComponent().MyDatabase().imageDao().getImagesById(images.get(i).id).size() > 0)
                     getApplicationComponent().MyDatabase().imageDao().updateImage(images.get(i));
-                } else {
-                    String address = CustomFile.saveTempBitmap(images.get(i).bitmap, activity);
-                    if (!address.equals(activity.getString(R.string.error_external_storage_is_not_writable))) {
-                        images.get(i).address = address;
-                        getApplicationComponent().MyDatabase().imageDao().insertImage(images.get(i));
-                    }
+                else {
+                    getApplicationComponent().MyDatabase().imageDao().insertImage(images.get(i));
                 }
             }
         }
@@ -129,8 +130,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
             } else {
                 new CustomToast().warning(activity.getString(R.string.error_upload), Toast.LENGTH_LONG);
             }
-            saveImages(response.body() != null && response.body().status == 200, activity);
-            setResult();
+            saveImages(response.body() != null && response.body().status == 200);
+            setResult(activity);
         }
     }
 
@@ -146,8 +147,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
             final CustomErrorHandling errorHandling = new CustomErrorHandling(activity);
             final String error = errorHandling.getErrorMessageDefault(response);
             new CustomToast().warning(error, Toast.LENGTH_LONG);
-            saveImages(false, activity);
-            setResult();
+            saveImages(false);
+            setResult(activity);
         }
     }
 
@@ -165,8 +166,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
                 final String error = errorHandling.getErrorMessageTotal(t);
                 new CustomToast().error(error, Toast.LENGTH_LONG);
             }
-            saveImages(false, activity);
-            setResult();
+            saveImages(false);
+            setResult(activity);
         }
     }
 }

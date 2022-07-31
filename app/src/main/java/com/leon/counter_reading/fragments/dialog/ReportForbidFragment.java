@@ -1,9 +1,10 @@
 package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.ZONE_ID;
-import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
+import static com.leon.counter_reading.enums.DialogType.Red;
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
-import static com.leon.counter_reading.utils.CustomFile.bitmapToFile;
+import static com.leon.counter_reading.utils.Converters.bitmapToFile;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
@@ -24,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -36,7 +38,9 @@ import androidx.fragment.app.DialogFragment;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentReportForbidBinding;
+import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.tables.ForbiddenDto;
+import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.forbid.PrepareForbid;
 
 import java.io.File;
@@ -46,31 +50,31 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class ReportForbidFragment extends DialogFragment {
-    private final ForbiddenDto forbiddenDto = new ForbiddenDto();
     private FragmentReportForbidBinding binding;
-    private final ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null &&
-                        result.getData().getData() != null) {
-                    try {
-                        final InputStream inputStream = requireContext().getContentResolver()
-                                .openInputStream(result.getData().getData());
-                        addImage(compressBitmap(BitmapFactory.decodeStream(inputStream)));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-    private int zoneId;
+    private final ForbiddenDto forbiddenDto = new ForbiddenDto();
     private String path;
-    private final ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    addImage(compressBitmap(BitmapFactory.decodeFile(path)));
-                }
-            });
+    private int zoneId;
+    private final ActivityResultLauncher<Intent> galleryResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null &&
+                                result.getData().getData() != null) {
+                            try {
+                                final InputStream inputStream = requireContext().getContentResolver()
+                                        .openInputStream(result.getData().getData());
+                                addImage(compressBitmap(BitmapFactory.decodeStream(inputStream)));
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+    private final ActivityResultLauncher<Intent> cameraResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            addImage(compressBitmap(BitmapFactory.decodeFile(path)));
+                        }
+                    });
 
     public ReportForbidFragment() {
     }
@@ -105,7 +109,6 @@ public class ReportForbidFragment extends DialogFragment {
                 new InputFilter.LengthFilter(getEshterakMaxLength(getActiveCompanyName()))});
         binding.editTextPreAccount.setFilters(new InputFilter[]{
                 new InputFilter.LengthFilter(getEshterakMaxLength(getActiveCompanyName()))});
-
         forbiddenDto.File = new ArrayList<>();
         forbiddenDto.bitmaps = new ArrayList<>();
         setOnButtonPhotoClickListener();
@@ -184,36 +187,34 @@ public class ReportForbidFragment extends DialogFragment {
 
     private void setOnButtonSubmitClickListener() {
         binding.buttonSubmit.setOnClickListener(v -> {
-            View view = null;
             boolean cancel = false;
-            /*if (binding.editTextPreAccount.getText().length() < DifferentCompanyManager.
-                    getEshterakMinLength(getActiveCompanyName())) {
-                binding.editTextPreAccount.setError(getString(R.string.error_format));
-                view = binding.editTextPreAccount;
-                cancel = true;
-            } else if (binding.editTextNextAccount.getText().length() < DifferentCompanyManager.
-                    getEshterakMinLength(getActiveCompanyName())) {
-                binding.editTextNextAccount.setError(getString(R.string.error_format));
-                view = binding.editTextNextAccount;
-                cancel = true;
-            } else */
-            if (binding.editTextPostalCode.getText().length() > 0 &&
+            if (binding.radioButtonActivate.isChecked()) {
+                if (binding.editTextPreAccount.getText().toString().isEmpty()) {
+                    binding.editTextPreAccount.setError(getString(R.string.error_empty));
+                    binding.editTextPreAccount.requestFocus();
+                    cancel = true;
+                } else if (binding.editTextNextAccount.getText().toString().isEmpty()) {
+                    binding.editTextNextAccount.setError(getString(R.string.error_empty));
+                    binding.editTextNextAccount.requestFocus();
+                    cancel = true;
+                }
+            }
+            if (!cancel && binding.editTextPostalCode.getText().length() > 0 &&
                     binding.editTextPostalCode.getText().length() < 10) {
                 binding.editTextPostalCode.setError(getString(R.string.error_format));
-                view = binding.editTextPostalCode;
+                binding.editTextPostalCode.requestFocus();
                 cancel = true;
-            } else if (binding.editTextAhadNumber.getText().toString().isEmpty()) {
+            } else if (!cancel && binding.editTextAhadNumber.getText().toString().isEmpty()) {
                 binding.editTextAhadNumber.setError(getString(R.string.error_empty));
-                view = binding.editTextAhadNumber;
+                binding.editTextAhadNumber.requestFocus();
                 cancel = true;
-            } else if (binding.editTextDescription.getText().toString().isEmpty()) {
+            } else if (!cancel && binding.editTextDescription.getText().toString().isEmpty()) {
                 binding.editTextDescription.setError(getString(R.string.error_empty));
-                view = binding.editTextDescription;
+                binding.editTextDescription.requestFocus();
                 cancel = true;
             }
             if (!cancel)
                 sendForbid();
-            else view.requestFocus();
         });
     }
 
@@ -237,36 +238,36 @@ public class ReportForbidFragment extends DialogFragment {
                 binding.editTextDescription.getText().toString(),
                 binding.editTextPreAccount.getText().toString(),
                 binding.editTextNextAccount.getText().toString(),
-                getDigits(binding.editTextAhadNumber.getText().toString()), zoneId);
+                getDigits(binding.editTextAhadNumber.getText().toString()),
+                zoneId, binding.radioButtonActivate.isChecked());
         new PrepareForbid(requireActivity(), forbiddenDto, zoneId).execute(requireActivity());
         dismiss();
     }
 
     private void setOnImageViewTakenClickListener() {
         binding.imageViewTaken.setOnClickListener(v ->
-                ShowFragmentDialogOnce(requireContext(), "Image # 1",
+                ShowDialogOnce(requireContext(), "Image # 1",
                         HighQualityFragment.newInstance(forbiddenDto.bitmaps.get(forbiddenDto.bitmaps.size() - 1))));
     }
 
     private void setOnButtonPhotoClickListener() {
         binding.buttonPhoto.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(requireContext(), R.style.AlertDialogCustom));
+            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(requireContext(), R.style.AlertDialogCustom));
             builder.setTitle(R.string.choose_document);
             builder.setMessage(R.string.select_source);
             builder.setPositiveButton(R.string.gallery, (dialog, which) -> {
                 dialog.dismiss();
-                openGalleryActivityForResult();
+                openGalleryForResult();
             });
             builder.setNegativeButton(R.string.camera, (dialog, which) -> {
                 dialog.dismiss();
-                openCameraActivityForResult();
+                openCameraForResult();
             });
-            builder.setNeutralButton("", (dialog, which) -> dialog.dismiss());
             builder.create().show();
         });
     }
 
-    private void openCameraActivityForResult() {
+    private void openCameraForResult() {
         final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(requireContext().getPackageManager()) != null) {
             File photoFile = null;
@@ -279,17 +280,20 @@ public class ReportForbidFragment extends DialogFragment {
                 path = photoFile.getPath();
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(requireContext(),
                         BuildConfig.APPLICATION_ID.concat(".provider"), photoFile));
-                cameraActivityResultLauncher.launch(cameraIntent);
+                cameraResultLauncher.launch(cameraIntent);
             }
         }
     }
 
-    private void openGalleryActivityForResult() {
-        final Intent galleryIntent = new Intent("android.intent.action.PICK");
-        if (galleryIntent.resolveActivity(requireContext().getPackageManager()) != null) {
-            galleryIntent.setType("image/*");
-            galleryActivityResultLauncher.launch(galleryIntent);
-        }
+    private void openGalleryForResult() {
+        final Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("image/*");
+        galleryResultLauncher.launch(galleryIntent);
+//        final Intent galleryIntent = new Intent("android.intent.action.PICK");
+//        if (galleryIntent.resolveActivity(requireContext().getPackageManager()) != null) {
+//            galleryIntent.setType("image/*");
+//            galleryResultLauncher.launch(galleryIntent);
+//        }
     }
 
     private void addImage(final Bitmap bitmap) {
@@ -305,6 +309,10 @@ public class ReportForbidFragment extends DialogFragment {
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
+        } else {
+            new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
+                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
+                    getString(R.string.accepted));
         }
         super.onResume();
     }

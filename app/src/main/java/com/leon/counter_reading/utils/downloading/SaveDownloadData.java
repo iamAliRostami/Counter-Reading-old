@@ -1,5 +1,7 @@
 package com.leon.counter_reading.utils.downloading;
 
+import static com.leon.counter_reading.enums.DialogType.Green;
+import static com.leon.counter_reading.enums.DialogType.Yellow;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.Converters.replaceNonstandardDigits;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
@@ -40,7 +42,7 @@ public class SaveDownloadData {
                     .trackingDtos.get(i).trackNumber) > 0) {
                 final String message = String.format(activity.getString(R.string.download_message_error),
                         readingData.trackingDtos.get(i).trackNumber);
-                showMessage(activity, message, DialogType.Yellow);
+                showMessage(activity, message, Yellow);
                 return;
             } else {
                 myDatabase.counterReportDao().deleteAllCounterReport(readingData.counterReportDtos.get(0).zoneId);
@@ -71,7 +73,7 @@ public class SaveDownloadData {
         myDatabase.karbariDao().deleteKarbariDto();
         myDatabase.karbariDao().insertAllKarbariDtos(readingData.karbariDtos);
 
-        ArrayList<QotrDictionary> qotrDictionaries = new ArrayList<>(myDatabase.qotrDictionaryDao()
+        final ArrayList<QotrDictionary> qotrDictionaries = new ArrayList<>(myDatabase.qotrDictionaryDao()
                 .getAllQotrDictionaries());
         for (int j = 0; j < qotrDictionaries.size(); j++) {
             int i = 0;
@@ -104,13 +106,12 @@ public class SaveDownloadData {
         }
         final String message = String.format(MyApplication.getContext().getString(R.string.download_message),
                 readingData.trackingDtos.size(), readingData.onOffLoadDtos.size());
-        showMessage(activity, message, DialogType.Green);
+        showMessage(activity, message, Green);
     }
 
 
     private void showMessage(Activity activity, String message, DialogType dialogType) {
-        activity.runOnUiThread(() -> new CustomDialogModel(dialogType,
-                activity, message,
+        activity.runOnUiThread(() -> new CustomDialogModel(dialogType, activity, message,
                 MyApplication.getContext().getString(R.string.dear_user),
                 MyApplication.getContext().getString(R.string.download),
                 MyApplication.getContext().getString(R.string.accepted)));
@@ -123,26 +124,37 @@ public class SaveDownloadData {
             final String time = replaceNonstandardDigits(new SimpleDateFormat(activity
                     .getString(R.string.save_format_name))
                     .format(new Date()).concat(String.valueOf(new Random().nextInt(1000))));
-            final String query = "CREATE TABLE %s AS %s;";
+            int trackNumber = Integer.parseInt(replaceNonstandardDigits(String.valueOf(readingData.trackingDtos.get(i).trackNumber)));
+            final String query = "CREATE TABLE `%s` AS %s;";
             final String queryTrackDto = String.format(query, "TrackingDto_".concat(time),
                     String.format("SELECT * FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1",
-                            readingData.trackingDtos.get(i).trackNumber));
+                            trackNumber));
+
+//            final String queryTrackDto = String.format(query, "TrackingDto_".concat(time),
+//                    "SELECT * FROM TrackingDto WHERE trackNumber = ۱۲۳۴۵۶ AND isArchive = 1");
+//                final String test = "CREATE TABLE IF NOT EXISTS `copied` AS SELECT * FROM OnOffLoadDto WHERE 0";
+//                cursor = myDatabase.getOpenHelper().getWritableDatabase().query(test);
+//                cursor.moveToFirst();
+
             final String queryOnOffLoad = String.format(query, "OnOffLoadDto_".concat(time),
-                    String.format("SELECT * FROM OnOffLoadDto WHERE trackNumber = %d",
-                            readingData.trackingDtos.get(i).trackNumber));
+                    String.format("SELECT * FROM OnOffLoadDto WHERE trackNumber = %d", trackNumber));
+
             try {
                 Cursor cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryTrackDto);
                 cursor.moveToFirst();
                 cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryOnOffLoad);
                 cursor.moveToFirst();
+
                 myDatabase.trackingDao().deleteTrackingDto(readingData.trackingDtos.get(i).trackNumber, true);
                 myDatabase.onOffLoadDao().deleteOnOffLoads(readingData.trackingDtos.get(i).trackNumber);
                 return true;
             } catch (Exception e) {
+                e.printStackTrace();
                 new CustomToast().error(e.getMessage());
                 return false;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             new CustomToast().error(e.getMessage());
             return false;
         }

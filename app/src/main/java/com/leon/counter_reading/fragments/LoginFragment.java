@@ -187,7 +187,7 @@ public class LoginFragment extends Fragment {
 
     private void setOnImageViewPasswordClickListener() {
         binding.imageViewPassword.setOnClickListener(view -> {
-            initializeTextViewCompanyName();
+//            initializeTextViewCompanyName();
             if (binding.editTextPassword.getInputType() != InputType.TYPE_CLASS_TEXT) {
                 binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT);
             } else
@@ -287,10 +287,14 @@ public class LoginFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        binding.imageViewPerson.setImageDrawable(null);
-        binding.imageViewPassword.setImageDrawable(null);
-        binding.imageViewLogo.setImageDrawable(null);
-        binding.imageViewUsername.setImageDrawable(null);
+        try {
+            binding.imageViewPerson.setImageDrawable(null);
+            binding.imageViewPassword.setImageDrawable(null);
+            binding.imageViewLogo.setImageDrawable(null);
+            binding.imageViewUsername.setImageDrawable(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.onDestroy();
     }
 }

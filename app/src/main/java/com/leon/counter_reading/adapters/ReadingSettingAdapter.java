@@ -1,6 +1,6 @@
 package com.leon.counter_reading.adapters;
 
-import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowFragmentDialogOnce;
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.annotation.SuppressLint;
@@ -51,7 +51,6 @@ public class ReadingSettingAdapter extends BaseAdapter {
         holder.textViewStartDate.setText(trackingDto.fromDate);
         holder.textViewEndDate.setText(trackingDto.toDate);
         holder.textViewNumber.setText(String.valueOf(trackingDto.itemQuantity));
-        //TODO
         if (zoneId > 0 && trackingDtos.get(position).zoneId != zoneId && trackingDtos.get(position).isActive) {
             getApplicationComponent().MyDatabase().trackingDao()
                     .updateTrackingDtoByStatus(trackingDtos.get(position).id, false);
@@ -72,7 +71,7 @@ public class ReadingSettingAdapter extends BaseAdapter {
         });
         holder.imageViewMap1.setOnClickListener(v -> {
             if (checkLocation(trackingDto)) {
-                ShowFragmentDialogOnce(context, "ROAD_MAP_DIALOG", RoadMapFragment
+                ShowDialogOnce(context, "ROAD_MAP_DIALOG", RoadMapFragment
                         .newInstance(trackingDtos.get(position).x, trackingDtos.get(position).y));
             }
         });

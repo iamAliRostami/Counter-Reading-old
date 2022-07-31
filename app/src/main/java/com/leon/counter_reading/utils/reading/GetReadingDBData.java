@@ -19,8 +19,6 @@ import android.widget.Toast;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
-import com.leon.counter_reading.enums.ReadStatusEnum;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.MyDatabase;
@@ -28,14 +26,14 @@ import com.leon.counter_reading.utils.MyDatabase;
 import java.util.Collections;
 
 public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
-    private final CustomProgressModel customProgressModel;
+    private final CustomProgressModel progress;
     private final int readStatus, highLow;
     private final boolean sortType;
 
     public GetReadingDBData(Activity activity, int readStatus, int highLow, boolean sortType) {
         super();
-        customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
-        customProgressModel.show(activity, false);
+        progress = getApplicationComponent().CustomProgressModel();
+        progress.show(activity, false);
 
         readingData.trackingDtos.clear();
         readingData.onOffLoadDtos.clear();
@@ -60,13 +58,13 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
 
     @Override
     protected void onPostExecute(Integer integer) {
-        customProgressModel.getDialog().dismiss();
+        progress.getDialog().dismiss();
         super.onPostExecute(integer);
     }
 
     @Override
     protected Integer doInBackground(Activity... activities) {
-        MyDatabase myDatabase = getApplicationComponent().MyDatabase();
+        final MyDatabase myDatabase = getApplicationComponent().MyDatabase();
         readingData.trackingDtos.addAll(myDatabase.trackingDao().
                 getTrackingDtosIsActiveNotArchive(true, false));
         for (int i = 0, trackingDtosSize = readingData.trackingDtos.size(); i < trackingDtosSize; i++) {

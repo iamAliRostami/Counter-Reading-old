@@ -1,5 +1,6 @@
 package com.leon.counter_reading.di.view_model;
 
+import static com.leon.counter_reading.helpers.Constants.DBName;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.content.Context;
@@ -7,7 +8,6 @@ import android.database.Cursor;
 
 import androidx.room.Room;
 
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.utils.MyDatabase;
 
 import javax.inject.Inject;
@@ -19,7 +19,7 @@ public class MyDatabaseClientModel {
 
     @Inject
     public MyDatabaseClientModel(Context context) {
-        myDatabase = Room.databaseBuilder(context, MyDatabase.class, MyApplication.getDBName())
+        myDatabase = Room.databaseBuilder(context, MyDatabase.class, DBName)
                 .allowMainThreadQueries().build();
     }
 
@@ -31,12 +31,9 @@ public class MyDatabaseClientModel {
     }
 
     public static void migration(Context context) {
-        Room.databaseBuilder(context, MyDatabase.class,
-                MyApplication.getDBName()).
-                fallbackToDestructiveMigration().
-                addMigrations(MyDatabase.MIGRATION_6_7).
-                allowMainThreadQueries().
-                build();
+        Room.databaseBuilder(context, MyDatabase.class, DBName)
+                .fallbackToDestructiveMigration().addMigrations(MyDatabase.MIGRATION_6_7)
+                .allowMainThreadQueries().build();
     }
 
     public static boolean customTransaction(String... queries) {
@@ -46,7 +43,7 @@ public class MyDatabaseClientModel {
         }
         query = query.concat("COMMIT;");
 
-        Cursor cursor = getApplicationComponent().MyDatabase().getOpenHelper().getWritableDatabase().query(query);
+        final Cursor cursor = getApplicationComponent().MyDatabase().getOpenHelper().getWritableDatabase().query(query);
         cursor.moveToFirst();
 
         return true;

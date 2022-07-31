@@ -1,5 +1,8 @@
 package com.leon.counter_reading.di.module;
 
+import static com.leon.counter_reading.enums.SharedReferenceKeys.TOKEN;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import com.google.gson.Gson;
 import com.leon.counter_reading.di.view_model.NetworkHelperModel;
 import com.leon.counter_reading.enums.SharedReferenceKeys;
@@ -11,31 +14,31 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 
-@Singleton
+//@Singleton
 @Module
 public class NetworkModule {
-    final NetworkHelperModel networkHelperModel;
+    final NetworkHelperModel networkHelper;
 
     public NetworkModule() {
-        networkHelperModel = new NetworkHelperModel();
+        networkHelper = new NetworkHelperModel();
     }
 
     @Singleton
     @Provides
     public Gson providesGson() {
-        return networkHelperModel.getGson();
+        return networkHelper.getGson();
     }
 
     @Singleton
     @Provides
     public Retrofit providesRetrofit() {
-        return networkHelperModel.getInstance(MyApplication.getApplicationComponent()
-                .SharedPreferenceModel().getStringData(SharedReferenceKeys.TOKEN.getValue()));
+        return networkHelper.getInstance(getApplicationComponent().SharedPreferenceModel()
+                .getStringData(TOKEN.getValue()));
     }
 
     @Singleton
     @Provides
     public NetworkHelperModel providesNetworkHelperModel() {
-        return networkHelperModel;
+        return networkHelper;
     }
 }

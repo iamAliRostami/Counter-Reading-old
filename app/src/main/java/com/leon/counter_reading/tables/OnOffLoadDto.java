@@ -28,18 +28,7 @@ public class OnOffLoadDto {
     public int ahadTejariOrFari;
     public int ahadSaierOrAbBaha;
     public int qotrCode;
-    @Ignore
-    public String qotr;
     public int sifoonQotrCode;
-    @Ignore
-    public String sifoonQotr;
-
-    @Ignore
-    public boolean hasPreNumber;
-    @Ignore
-    public boolean displayBillId;
-    @Ignore
-    public boolean displayRadif;
 
     public String postalCode;
     public int preNumber;
@@ -55,6 +44,7 @@ public class OnOffLoadDto {
     public int trackNumber;
     public int zarfiat;
     public String mobile;
+    public String mobiles;
     public int hazf;//TODO 0 <  hazf movaqat
     public int noeVagozariId;//TODO 4: sax o saz or karbari isSaxt
     public Integer counterNumber;
@@ -70,11 +60,8 @@ public class OnOffLoadDto {
     public int possibleEmpty;
     public int possibleKarbariCode;
     public String description;
-    //    @Ignore
     public String phoneDateTime;
-    //    @Ignore
     public String locationDateTime;
-    //TODO
     public String d1;
     public String d2;
     public int offLoadStateId;
@@ -91,7 +78,19 @@ public class OnOffLoadDto {
     public int highLowStateId;
     public boolean isBazdid;
     public Integer counterStatePosition;
+    
+    public long balance;
 
+    @Ignore
+    public String qotr;
+    @Ignore
+    public String sifoonQotr;
+    @Ignore
+    public boolean hasPreNumber;
+    @Ignore
+    public boolean displayBillId;
+    @Ignore
+    public boolean displayRadif;
 
     public static class OffLoad {
         public String id;
@@ -124,7 +123,7 @@ public class OnOffLoadDto {
 
         public OffLoad(OnOffLoadDto onOffLoadDto) {
             id = onOffLoadDto.id;
-            counterNumber = onOffLoadDto.counterNumber;//TODO
+            counterNumber = onOffLoadDto.counterNumber;
             counterStateId = onOffLoadDto.counterStateId;
             possibleAddress = onOffLoadDto.possibleAddress;
             possibleCounterSerial = onOffLoadDto.possibleCounterSerial;
@@ -151,11 +150,19 @@ public class OnOffLoadDto {
         }
     }
 
+    public void updateIgnore(final OnOffLoadDto onOffLoadDto) {
+        displayBillId = onOffLoadDto.displayBillId;
+        displayRadif = onOffLoadDto.displayRadif;
+        hasPreNumber = onOffLoadDto.hasPreNumber;
+        qotr = onOffLoadDto.qotr;
+        sifoonQotr = onOffLoadDto.sifoonQotr;
+    }
+
     public static class OffLoadData {
         public final ArrayList<OffLoadReport> offLoadReports;
-        public boolean isFinal;//TODO upload or reading
+        public final ArrayList<OffLoad> offLoads;
         public int finalTrackNumber;
-        public ArrayList<OffLoad> offLoads;
+        public boolean isFinal;
 
         public OffLoadData() {
             offLoadReports = new ArrayList<>();

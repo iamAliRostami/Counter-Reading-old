@@ -1,5 +1,7 @@
 package com.leon.counter_reading.utils.downloading;
 
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 
@@ -14,14 +16,14 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class CopyTask extends AsyncTask<CopyTaskParam, Integer, Void> {
-    private final CustomProgressModel customProgressModel;
+    private final CustomProgressModel progress;
     private final ExplorerFragment parent;
     private CopyTaskParam param;
 
     public CopyTask(Activity activity, ExplorerFragment fragment) {
         super();
-        customProgressModel = MyApplication.getApplicationComponent().CustomProgressModel();
-        customProgressModel.show(activity, false);
+        progress = getApplicationComponent().CustomProgressModel();
+        progress.show(activity, false);
         this.parent = fragment;
     }
 
@@ -32,7 +34,7 @@ public class CopyTask extends AsyncTask<CopyTaskParam, Integer, Void> {
         long length = params[0].from.getLength();
         try {
             if (!param.to.exists()) if (!param.to.createNewFile()) return null;
-            FileOutputStream out = new FileOutputStream(param.to);
+            final FileOutputStream out = new FileOutputStream(param.to);
             for (long i = 0; i < length; i += buffer.limit()) {
                 if (!isCancelled()) {
                     buffer.limit((int) Math.min(buffer.capacity(), length - i));
@@ -51,7 +53,7 @@ public class CopyTask extends AsyncTask<CopyTaskParam, Integer, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        customProgressModel.getDialog().dismiss();
+        progress.getDialog().dismiss();
         parent.launchIntent(param.to);
         super.onPostExecute(result);
     }

@@ -1,5 +1,6 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.SharedReferenceKeys.POINT;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
@@ -17,7 +18,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Debug;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -29,7 +29,6 @@ import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityLocationBinding;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.tables.SavedLocation;
 import com.leon.counter_reading.utils.CustomToast;
@@ -55,8 +54,8 @@ public class LocationActivity extends BaseActivity {
     @Override
     protected void initialize() {
         binding = ActivityLocationBinding.inflate(getLayoutInflater());
-        View childLayout = binding.getRoot();
-        ConstraintLayout parentLayout = findViewById(R.id.base_Content);
+        final View childLayout = binding.getRoot();
+        final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
         activity = this;
         showOnMap = new ShowOnMap();
@@ -66,8 +65,8 @@ public class LocationActivity extends BaseActivity {
     }
 
     void initializeCheckBoxPoint() {
-        binding.checkBoxPoint.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.POINT.getValue()));
-        binding.checkBoxPoint.setOnClickListener(v -> sharedPreferenceManager.putData(SharedReferenceKeys.POINT.getValue(), binding.checkBoxPoint.isChecked()));
+        binding.checkBoxPoint.setChecked(sharedPreferenceManager.getBoolData(POINT.getValue()));
+        binding.checkBoxPoint.setOnClickListener(v -> sharedPreferenceManager.putData(POINT.getValue(), binding.checkBoxPoint.isChecked()));
         binding.checkBoxShowPoint.setOnClickListener(v -> {
             if (binding.checkBoxShowPoint.isChecked()) {
                 showOnMap = new ShowOnMap();
@@ -102,7 +101,7 @@ public class LocationActivity extends BaseActivity {
     }
 
     private void askStoragePermission() {
-        PermissionListener permissionlistener = new PermissionListener() {
+        final PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(getString(R.string.access_granted));
@@ -125,7 +124,7 @@ public class LocationActivity extends BaseActivity {
     }
 
     private void askLocationPermission() {
-        PermissionListener permissionlistener = new PermissionListener() {
+        final PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(getString(R.string.access_granted));
@@ -151,14 +150,14 @@ public class LocationActivity extends BaseActivity {
         binding.mapView.getZoomController().
                 setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
         binding.mapView.setMultiTouchControls(true);
-        IMapController mapController = binding.mapView.getController();
+        final IMapController mapController = binding.mapView.getController();
         mapController.setZoom(19.0);
         if (getLocationTracker(activity).getCurrentLocation() != null) {
-            GeoPoint startPoint = new GeoPoint(getLocationTracker(activity).getCurrentLocation().getLatitude(),
+            final GeoPoint startPoint = new GeoPoint(getLocationTracker(activity).getCurrentLocation().getLatitude(),
                     getLocationTracker(activity).getCurrentLocation().getLongitude());
             mapController.setCenter(startPoint);
         }
-        MyLocationNewOverlay locationOverlay =
+        final MyLocationNewOverlay locationOverlay =
                 new MyLocationNewOverlay(new GpsMyLocationProvider(activity), binding.mapView);
         locationOverlay.enableMyLocation();
         binding.mapView.getOverlays().add(locationOverlay);
@@ -208,13 +207,6 @@ public class LocationActivity extends BaseActivity {
         savedLocations.clear();
         binding = null;
         markers.clear();
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
         super.onDestroy();
     }
 
@@ -244,7 +236,6 @@ public class LocationActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
-            Log.e("size", String.valueOf(savedLocations.size()));
         }
     }
 
@@ -271,8 +262,8 @@ public class LocationActivity extends BaseActivity {
 
         void addPlace(GeoPoint p) {
             try {
-                GeoPoint startPoint = new GeoPoint(p.getLatitude(), p.getLongitude());
-                Marker marker = new Marker(binding.mapView);
+                final GeoPoint startPoint = new GeoPoint(p.getLatitude(), p.getLongitude());
+                final Marker marker = new Marker(binding.mapView);
                 marker.setPosition(startPoint);
                 marker.setIcon(ContextCompat.getDrawable(activity, R.drawable.img_marker));
                 markers.add(marker);

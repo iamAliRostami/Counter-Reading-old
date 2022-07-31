@@ -22,7 +22,7 @@ public class GetBundle extends AsyncTask<Void, Void, Void> {
             Gson gson = new Gson();
             IS_MANE.clear();
             for (int i = 0, jsonSize = json.size(); i < jsonSize; i++) {
-                String s = json.get(i);
+                final String s = json.get(i);
                 IS_MANE.add(gson.fromJson(s, Integer.class));
             }
         }

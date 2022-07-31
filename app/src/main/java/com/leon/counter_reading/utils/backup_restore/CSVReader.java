@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CSVReader {
-
     /**
      * The default separator to use if none is supplied to the constructor.
      */
