@@ -451,6 +451,12 @@
         <item name="android:paddingBottom">@dimen/medium_dp</item>
     </style>
 
+    <style name="ViewPagerItems.Horizontal">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:paddingStart">@dimen/large_dp</item>
+        <item name="android:paddingEnd">@dimen/large_dp</item>
+    </style>
+
     <style name="ViewPagerMenu">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

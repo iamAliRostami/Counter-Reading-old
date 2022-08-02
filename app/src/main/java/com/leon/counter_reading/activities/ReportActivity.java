@@ -13,6 +13,8 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ViewPagerAdapterTab;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReportBinding;
+import com.leon.counter_reading.fragments.report.ReportForbidsFragment;
+import com.leon.counter_reading.fragments.report.ReportInspectionFragment;
 import com.leon.counter_reading.fragments.report.ReportNotReadingFragment;
 import com.leon.counter_reading.fragments.report.ReportPerformanceFragment;
 import com.leon.counter_reading.fragments.report.ReportTemporaryFragment;
@@ -47,6 +49,8 @@ public class ReportActivity extends BaseActivity {
         textViewTotalNormal();
         textViewTemporary();
         textViewNotRead();
+        textViewInspection();
+        textViewForbid();
         textViewPerformance();
     }
 
@@ -80,13 +84,34 @@ public class ReportActivity extends BaseActivity {
         });
     }
 
+    private void textViewInspection() {
+        binding.textViewInspection.setOnClickListener(view -> {
+            setColor();
+            binding.textViewInspection.setBackground(ContextCompat.getDrawable(activity,
+                    R.drawable.border_white_2));
+            setPadding();
+            binding.viewPager.setCurrentItem(3);
+        });
+    }
+
+    private void textViewForbid() {
+        binding.textViewForbid.setOnClickListener(view -> {
+            setColor();
+            binding.textViewForbid.setBackground(ContextCompat.getDrawable(activity,
+                    R.drawable.border_white_2));
+            setPadding();
+            binding.viewPager.setCurrentItem(4);
+        });
+    }
+
+
     private void textViewPerformance() {
         binding.textViewPerformance.setOnClickListener(view -> {
             setColor();
             binding.textViewPerformance.setBackground(ContextCompat.getDrawable(activity,
                     R.drawable.border_white_2));
             setPadding();
-            binding.viewPager.setCurrentItem(3);
+            binding.viewPager.setCurrentItem(5);
         });
     }
 
@@ -97,15 +122,25 @@ public class ReportActivity extends BaseActivity {
         binding.textViewTotal.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
         binding.textViewTemporary.setBackgroundColor(Color.TRANSPARENT);
         binding.textViewTemporary.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
+
+        binding.textViewInspection.setBackgroundColor(Color.TRANSPARENT);
+        binding.textViewInspection.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
+        binding.textViewForbid.setBackgroundColor(Color.TRANSPARENT);
+        binding.textViewForbid.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
+
         binding.textViewPerformance.setBackgroundColor(Color.TRANSPARENT);
         binding.textViewPerformance.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
     }
 
     private void setPadding() {
-        binding.textViewTotal.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewNotRead.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewTemporary.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewPerformance.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewTotal.setPadding((int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp), (int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewNotRead.setPadding((int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp), (int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewTemporary.setPadding((int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp), (int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp));
+
+        binding.textViewInspection.setPadding((int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp), (int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewForbid.setPadding((int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp), (int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp));
+
+        binding.textViewPerformance.setPadding((int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp), (int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp));
     }
 
     public void setupViewPager(ArrayList<CounterStateDto> counterStateDtos,
@@ -118,6 +153,8 @@ public class ReportActivity extends BaseActivity {
         adapter.addFragment(ReportTotalFragment.newInstance(zero, normal, high, low));
         adapter.addFragment(ReportNotReadingFragment.newInstance(total, unread));
         adapter.addFragment(ReportTemporaryFragment.newInstance(total, isMane));
+        adapter.addFragment(ReportInspectionFragment.newInstance());
+        adapter.addFragment(ReportForbidsFragment.newInstance());
         adapter.addFragment(ReportPerformanceFragment.newInstance());
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -134,6 +171,10 @@ public class ReportActivity extends BaseActivity {
                 } else if (position == 2) {
                     binding.textViewTemporary.callOnClick();
                 } else if (position == 3) {
+                    binding.textViewInspection.callOnClick();
+                } else if (position == 4) {
+                    binding.textViewForbid.callOnClick();
+                } else if (position == 5) {
                     binding.textViewPerformance.callOnClick();
                 }
             }
@@ -141,11 +182,11 @@ public class ReportActivity extends BaseActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
                 final int currentPage = binding.viewPager.getCurrentItem();
-                if (currentPage == 3 || currentPage == 0) {
+                if (currentPage == 5 || currentPage == 0) {
                     previousState = currentState;
                     currentState = state;
                     if (previousState == 1 && currentState == 0) {
-                        binding.viewPager.setCurrentItem(currentPage == 0 ? 3 : 0);
+                        binding.viewPager.setCurrentItem(currentPage == 0 ? 5 : 0);
                     }
                 }
             }
