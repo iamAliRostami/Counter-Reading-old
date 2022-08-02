@@ -63,8 +63,6 @@ public class ReportTemporaryFragment extends Fragment {
     }
 
     private void initialize() {
-//        Log.e("page 1", String.valueOf(reportTemporary.getPage()));
-//        binding.spinner.setVisibility(View.VISIBLE);
         binding.imageViewTemporary.setImageDrawable(ContextCompat.getDrawable(activity,
                 R.drawable.img_temporary_report));
         binding.textViewTotal.setText(String.valueOf(total));

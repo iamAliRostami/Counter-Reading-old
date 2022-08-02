@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.fragments.ExplorerFragment;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.uploading.CopyTaskParam;
 

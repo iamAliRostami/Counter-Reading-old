@@ -1,7 +1,5 @@
 package com.leon.counter_reading.tables;
 
-import android.graphics.Bitmap;
-
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
@@ -23,6 +21,4 @@ public class Image {
     public boolean isArchived;
     @Ignore
     public MultipartBody.Part File;
-//    @Ignore
-//    public Bitmap bitmap;
 }

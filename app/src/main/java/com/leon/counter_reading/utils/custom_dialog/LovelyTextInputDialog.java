@@ -70,15 +70,14 @@ public class LovelyTextInputDialog extends AbsLovelyDialog<LovelyTextInputDialog
         return this;
     }
 
-    public LovelyTextInputDialog setNegativeButton(@StringRes int text, View.OnClickListener listener) {
-        return setNegativeButton(string(text), listener);
+    public void setNegativeButton(@StringRes int text, View.OnClickListener listener) {
+        setNegativeButton(string(text), listener);
     }
 
-    public LovelyTextInputDialog setNegativeButton(String text, View.OnClickListener listener) {
+    public void setNegativeButton(String text, View.OnClickListener listener) {
         negativeButton.setVisibility(View.VISIBLE);
         negativeButton.setText(text);
         negativeButton.setOnClickListener(new ClickListenerDecorator(listener, true));
-        return this;
     }
 
     public LovelyTextInputDialog setNegativeButtonColor(int color) {

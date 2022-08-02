@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
-import com.leon.counter_reading.helpers.MyApplication;
 
 import java.util.Collections;
 

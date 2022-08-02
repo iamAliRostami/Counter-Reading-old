@@ -1,6 +1,5 @@
 package com.leon.counter_reading.utils;
 
-import static com.leon.counter_reading.helpers.Constants.MAX_IMAGE_SIZE;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmapToByte;
 
 import android.annotation.SuppressLint;
@@ -14,7 +13,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.leon.counter_reading.R;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;

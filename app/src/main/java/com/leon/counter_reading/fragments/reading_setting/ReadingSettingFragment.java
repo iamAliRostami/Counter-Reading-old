@@ -5,7 +5,6 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,8 +79,6 @@ public class ReadingSettingFragment extends Fragment {
                 .getBoolData(KEYBOARD_TYPE.getValue()));
         binding.radioButtonSensitive.setChecked(getApplicationComponent().SharedPreferenceModel()
                 .getBoolData(KEYBOARD_TYPE.getValue()));
-//        binding.radioButtonStandard.setOnCheckedChangeListener((compoundButton, b) ->
-//                getApplicationComponent().SharedPreferenceModel().putData(KEYBOARD_TYPE.getValue(), b));
         binding.radioButtonSensitive.setOnCheckedChangeListener((compoundButton, b) ->
                 getApplicationComponent().SharedPreferenceModel().putData(KEYBOARD_TYPE.getValue(), b));
     }

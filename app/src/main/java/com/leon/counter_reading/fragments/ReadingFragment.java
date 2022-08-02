@@ -225,9 +225,6 @@ public class ReadingFragment extends Fragment {
         else
             binding.textViewSiphon.setText(onOffLoadDto.sifoonQotr.equals("مشخص نشده") ? "-" : onOffLoadDto.sifoonQotr);
 
-//        if (onOffLoadDto.counterNumberShown)
-//        binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.preNumber));
-//        binding.textViewPreNumber.setText(String.valueOf(Math.toIntExact(onOffLoadDto.balance)));
         binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.balance));
 
 
@@ -423,11 +420,6 @@ public class ReadingFragment extends Fragment {
                 //TODO
                 ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(position, currentNumber,
                         counterStateCode, counterStatePosition);
-//                ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
-//                new CustomDialogModel(Red, requireContext(), getString(R.string.error_on_download_counter_states)
-//                        .concat("\ncode: ").concat(String.valueOf(counterStateCode)),
-//                        getString(R.string.dear_user), getString(R.string.take_screen_shot),
-//                        getString(R.string.accepted));
             }
         }
     }

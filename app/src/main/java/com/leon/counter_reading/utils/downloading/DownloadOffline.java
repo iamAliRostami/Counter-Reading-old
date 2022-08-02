@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;

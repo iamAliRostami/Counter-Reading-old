@@ -5,8 +5,6 @@ import static com.leon.counter_reading.helpers.MyApplication.getApplicationCompo
 
 import com.google.gson.Gson;
 import com.leon.counter_reading.di.view_model.NetworkHelperModel;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
-import com.leon.counter_reading.helpers.MyApplication;
 
 import javax.inject.Singleton;
 

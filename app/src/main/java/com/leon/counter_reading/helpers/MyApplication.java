@@ -155,10 +155,6 @@ public class MyApplication extends Application {
         YandexMetrica.reportUserProfile(userProfile);
     }
 
-    //    private static final Pattern IP_PATTERN = Pattern.compile("(http(s)?)://(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(:(\\d{1,5}))?");
-//    private static final Pattern IP_PATTERN = Pattern.compile("^https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)");
-//    private static final Pattern PATTERN_SIMPLE = Pattern.compile("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)(\\.(?!$)|$)){4}$");
-//    private static final Pattern PATTERN_WITH_PORT = Pattern.compile("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):(\\d{1,5})");
     private static final Pattern IP_PATTERN = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)");
 
     public static boolean validate(final String ip) {
