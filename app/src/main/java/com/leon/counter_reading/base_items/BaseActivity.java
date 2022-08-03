@@ -37,7 +37,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -61,8 +60,8 @@ import com.leon.counter_reading.adapters.NavigationDrawerAdapter;
 import com.leon.counter_reading.adapters.RecyclerItemClickListener;
 import com.leon.counter_reading.adapters.items.DrawerItem;
 import com.leon.counter_reading.databinding.ActivityBaseBinding;
-import com.leon.counter_reading.di.view_model.GpsLocationTracking;
 import com.leon.counter_reading.di.view_model.GoogleLocationTracking;
+import com.leon.counter_reading.di.view_model.GpsLocationTracking;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.PermissionManager;
@@ -183,10 +182,10 @@ public abstract class BaseActivity extends AppCompatActivity implements
         binding.imageViewHeader.setOnClickListener(v -> {
             if (POSITION != -1) {
                 POSITION = -1;
-                Intent intent = new Intent(getContext(), HomeActivity.class);
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                final Intent intent = new Intent(getContext(), HomeActivity.class);
                 startActivity(intent);
                 finish();
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             } else
                 binding.drawerLayout.closeDrawer(GravityCompat.START);
         });
@@ -222,7 +221,13 @@ public abstract class BaseActivity extends AppCompatActivity implements
                             }
                             startActivity(intent);
                             finish();
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//                            if (position != 1)
+//                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//                            else
+//                                AppCompatDelegate.setDefaultNightMode(getApplicationComponent().
+//                                        SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
+//                                        AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+
                         }
                     }
 

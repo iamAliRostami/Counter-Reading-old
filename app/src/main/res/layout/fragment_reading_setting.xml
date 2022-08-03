@@ -22,6 +22,7 @@
         android:text="@string/paging_rtl" />
 
     <ImageView
+        android:id="@+id/image_view_reverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -29,7 +30,7 @@
         android:layout_marginTop="@dimen/medium_dp"
         android:layout_marginEnd="@dimen/low_dp"
         android:padding="@dimen/low_dp"
-        android:src="@drawable/mode_dark" />
+        android:src="@drawable/mode_light" />
 
     <RadioGroup
         android:id="@+id/radio_group_keyboard"
