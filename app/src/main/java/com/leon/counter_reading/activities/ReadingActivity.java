@@ -126,15 +126,14 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
 
     @Override
     protected void initialize() {
+        getDelegate().setLocalNightMode(getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(THEME_TEMPORARY.getValue()) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
         binding = ActivityReadingBinding.inflate(getLayoutInflater());
         final View childLayout = binding.getRoot();
         final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
-        //TODO
 //        AppCompatDelegate.setDefaultNightMode(getApplicationComponent().SharedPreferenceModel()
 //                .getBoolData(THEME_TEMPORARY.getValue()) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-        getDelegate().setLocalNightMode(getApplicationComponent().SharedPreferenceModel()
-                .getBoolData(THEME_TEMPORARY.getValue()) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
 
         sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
         imageSrc = ArrayUtils.clone(setAboveIcons());
