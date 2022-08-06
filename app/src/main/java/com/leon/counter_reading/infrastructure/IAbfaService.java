@@ -91,6 +91,9 @@ public interface IAbfaService {
     @POST("KontoriNew/V1/OffLoad/Data")
     Call<OnOffLoadDto.OffLoadResponses> OffLoadData(@Body OnOffLoadDto.OffLoadData offLoads);
 
+    @POST("KontoriNew/V1/OffLoad/ReportOnly")
+    Call<OnOffLoadDto.OffLoadResponses> ReportOnly(@Body OnOffLoadDto.OffLoadData offLoads);
+
     @GET("KontoriNew/V1/Apk/Last")
     Call<ResponseBody> getLastApk();
 

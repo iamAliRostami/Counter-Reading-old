@@ -1,9 +1,6 @@
 package com.leon.counter_reading.utils.reporting;
 
 import static com.leon.counter_reading.enums.DialogType.Red;
-import static com.leon.counter_reading.enums.OffloadStateEnum.INSERTED;
-import static com.leon.counter_reading.enums.OffloadStateEnum.SENT;
-import static com.leon.counter_reading.enums.OffloadStateEnum.SENT_WITH_ERROR;
 import static com.leon.counter_reading.enums.ProgressType.SHOW;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
@@ -13,6 +10,7 @@ import static com.leon.counter_reading.utils.DifferentCompanyManager.getShowErro
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
@@ -47,8 +45,6 @@ public class PrepareOffload extends AsyncTask<Activity, Activity, Activity> {
     @Override
     protected Activity doInBackground(Activity... activities) {
         offLoadData.isFinal = false;
-        offLoadData.offLoads.addAll(getApplicationComponent().MyDatabase().
-                onOffLoadDao().getAllOnOffLoadInsert(INSERTED.getValue(), true));
         offLoadData.offLoadReports.addAll(getApplicationComponent().MyDatabase().offLoadReportDao().
                 getAllOffLoadReportByActive(true, false));
         return activities[0];
@@ -59,13 +55,14 @@ public class PrepareOffload extends AsyncTask<Activity, Activity, Activity> {
         super.onPostExecute(activity);
         progress.getDialog().dismiss();
         if (offLoadData.offLoadReports.size() > 0) uploadOffload(activity);
+        else new CustomToast().error(activity.getString(R.string.data_not_found));
         fragment.setButtonState();
     }
 
     private void uploadOffload(Activity activity) {
         final Retrofit retrofit = getApplicationComponent().Retrofit();
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-        final Call<OnOffLoadDto.OffLoadResponses> call = iAbfaService.OffLoadData(offLoadData);
+        final Call<OnOffLoadDto.OffLoadResponses> call = iAbfaService.ReportOnly(offLoadData);
         HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activity,
                 new offLoadData(activity, fragment), new offLoadDataIncomplete(activity), new offLoadError(activity));
     }
@@ -83,11 +80,8 @@ class offLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
     @Override
     public void execute(Response<OnOffLoadDto.OffLoadResponses> response) {
         if (response.body() != null && response.body().status == 200) {
-            final OnOffLoadDto.OffLoadResponses offLoadResponses = response.body();
             getApplicationComponent().MyDatabase().offLoadReportDao().updateOffLoadReportByIsSent(true);
-            final int state = offLoadResponses.isValid ? SENT.getValue() : SENT_WITH_ERROR.getValue();
-            getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(state,
-                    offLoadResponses.targetObject);
+            new CustomToast().success(response.body().message, Toast.LENGTH_LONG);
             fragment.setReportInspection();
         } else if (response.body() != null) {
             try {
