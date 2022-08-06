@@ -4,6 +4,7 @@ import static com.leon.counter_reading.enums.ProgressType.SHOW;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.Converters.bitmapToFile;
+import static com.leon.counter_reading.utils.CustomFile.loadImage;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,7 +24,6 @@ import com.leon.counter_reading.tables.ForbiddenDtoMultiple;
 import com.leon.counter_reading.tables.ForbiddenDtoRequestMultiple;
 import com.leon.counter_reading.tables.ForbiddenDtoResponses;
 import com.leon.counter_reading.utils.CustomErrorHandling;
-import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 
 import java.util.ArrayList;
@@ -72,8 +72,7 @@ public class PrepareReport extends AsyncTask<Activity, Activity, Activity> {
                             forbiddenDto.postalCode, forbiddenDto.tedadVahed, forbiddenDto.x,
                             forbiddenDto.y, forbiddenDto.gisAccuracy);
             if (forbiddenDto.address != null)
-                forbiddenDtoMultiple.File = bitmapToFile(CustomFile.loadImage(activity,
-                        forbiddenDto.address), activity);
+                forbiddenDtoMultiple.File = bitmapToFile(loadImage(activity, forbiddenDto.address), activity);
             forbiddenDtoRequestMultiple.forbiddenDtos.add(forbiddenDtoMultiple);
         }
         final Call<ForbiddenDtoResponses> call = iAbfaService.multipleForbidden(forbiddenDtoRequestMultiple);

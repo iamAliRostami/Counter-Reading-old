@@ -49,16 +49,16 @@ public class OnOffLoadDto {
     public int noeVagozariId;//TODO 4: sax o saz or karbari isSaxt
     public Integer counterNumber;
     public int counterStateId;
+    public int possibleKarbariCode;
+    public Integer possibleAhadMaskooniOrAsli;
+    public Integer possibleAhadTejariOrFari;
+    public Integer possibleAhadSaierOrAbBaha;
+    public Integer possibleEmpty;
     public String possibleAddress;
     public String possibleCounterSerial;
     public String possibleEshterak;
     public String possibleMobile;
     public String possiblePhoneNumber;
-    public int possibleAhadMaskooniOrAsli;
-    public int possibleAhadTejariOrFari;
-    public int possibleAhadSaierOrAbBaha;
-    public int possibleEmpty;
-    public int possibleKarbariCode;
     public String description;
     public String phoneDateTime;
     public String locationDateTime;

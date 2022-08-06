@@ -214,13 +214,13 @@ public class PossibleFragment extends DialogFragment {
             binding.editTextAccount.setText(onOffLoadDto.possibleEshterak);
         if (onOffLoadDto.possibleCounterSerial != null)
             binding.editTextSerial.setText(onOffLoadDto.possibleCounterSerial);
-        if (onOffLoadDto.possibleEmpty > 0)
+        if (onOffLoadDto.possibleEmpty != null)
             binding.editTextAhadEmpty.setText(String.valueOf(onOffLoadDto.possibleEmpty));
-        if (onOffLoadDto.possibleAhadMaskooniOrAsli > 0)
+        if (onOffLoadDto.possibleAhadMaskooniOrAsli != null)
             binding.editTextAhad1.setText(String.valueOf(onOffLoadDto.possibleAhadMaskooniOrAsli));
-        if (onOffLoadDto.possibleAhadTejariOrFari > 0)
+        if (onOffLoadDto.possibleAhadTejariOrFari != null)
             binding.editTextAhad2.setText(String.valueOf(onOffLoadDto.possibleAhadTejariOrFari));
-        if (onOffLoadDto.possibleAhadSaierOrAbBaha > 0)
+        if (onOffLoadDto.possibleAhadSaierOrAbBaha != null)
             binding.editTextAhadTotal.setText(String.valueOf(onOffLoadDto.possibleAhadSaierOrAbBaha));
 
         if (onOffLoadDto.description != null)
@@ -372,11 +372,11 @@ public class PossibleFragment extends DialogFragment {
         binding.buttonClose.setOnClickListener(v -> dismiss());
     }
 
-    private int getDigits(String number) {
+    private Integer getDigits(String number) {
         if (!TextUtils.isEmpty(number) && TextUtils.isDigitsOnly(number)) {
             return Integer.parseInt(number);
         } else {
-            return 0;
+            return null;
         }
     }
 
