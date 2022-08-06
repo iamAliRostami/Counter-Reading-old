@@ -34,16 +34,17 @@
                 android:textColor="@color/text_color_light" />
 
             <TextView
+                android:id="@+id/text_view_forbid"
+                style="@style/ViewPagerItems.Horizontal"
+                android:text="@string/forbidden"
+                android:textColor="@color/text_color_light" />
+
+            <TextView
                 android:id="@+id/text_view_inspection"
                 style="@style/ViewPagerItems.Horizontal"
                 android:text="@string/inspection"
                 android:textColor="@color/text_color_light" />
 
-            <TextView
-                android:id="@+id/text_view_forbid"
-                style="@style/ViewPagerItems.Horizontal"
-                android:text="@string/forbidden"
-                android:textColor="@color/text_color_light" />
 
             <TextView
                 android:id="@+id/text_view_performance"

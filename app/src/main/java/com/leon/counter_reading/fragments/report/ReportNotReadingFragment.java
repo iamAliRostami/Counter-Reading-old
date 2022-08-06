@@ -1,5 +1,7 @@
 package com.leon.counter_reading.fragments.report;
 
+import static com.leon.counter_reading.enums.BundleEnum.TOTAL;
+import static com.leon.counter_reading.enums.BundleEnum.UNREAD;
 import static com.leon.counter_reading.helpers.Constants.POSITION;
 
 import android.app.Activity;
@@ -33,8 +35,8 @@ public class ReportNotReadingFragment extends Fragment {
 
     static Bundle putBundle(int total, int unread) {
         Bundle args = new Bundle();
-        args.putInt(BundleEnum.UNREAD.getValue(), unread);
-        args.putInt(BundleEnum.TOTAL.getValue(), total);
+        args.putInt(UNREAD.getValue(), unread);
+        args.putInt(TOTAL.getValue(), total);
         return args;
     }
 
@@ -53,7 +55,7 @@ public class ReportNotReadingFragment extends Fragment {
         return binding.getRoot();
     }
 
-    void initialize() {
+    private void initialize() {
         binding.textViewNotRead.setText(String.valueOf(unread));
         binding.textViewTotal.setText(String.valueOf(total));
         binding.imageViewNotRead.setImageDrawable(ContextCompat.getDrawable(activity,
@@ -66,10 +68,10 @@ public class ReportNotReadingFragment extends Fragment {
         });
     }
 
-    void getBundle() {
+    private void getBundle() {
         if (getArguments() != null) {
-            total = getArguments().getInt(BundleEnum.TOTAL.getValue());
-            unread = getArguments().getInt(BundleEnum.UNREAD.getValue());
+            total = getArguments().getInt(TOTAL.getValue());
+            unread = getArguments().getInt(UNREAD.getValue());
             getArguments().clear();
         }
     }

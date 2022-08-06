@@ -1,13 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/border_gray_3"
+    android:gravity="center"
     tools:context=".fragments.report.ReportInspectionFragment">
 
-    <TextView
+    <RelativeLayout
+        android:id="@+id/relative_layout_inspection"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_dp"
+        android:background="@drawable/border_gray_4">
 
-</FrameLayout>
+        <LinearLayout
+            android:id="@+id/linear_layout_6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/medium_dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/total_number"
+                android:textColor="@color/text_color_dark"
+                android:textSize="@dimen/text_size_medium" />
+
+            <TextView
+                android:id="@+id/text_view_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_0"
+                android:textColor="@color/text_color_dark" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linear_layout_6"
+            android:orientation="horizontal"
+            android:padding="@dimen/medium_dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/not_reading_number"
+                android:textColor="@color/text_color_dark"
+                android:textSize="@dimen/text_size_medium" />
+
+            <TextView
+                android:id="@+id/text_view_not_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_0"
+                android:textColor="@color/text_color_dark" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/button_submit_inspection"
+        style="@style/ButtonSubmit.Fragment"
+        android:layout_width="match_parent"
+        android:layout_below="@id/relative_layout_inspection"
+        android:layout_margin="@dimen/small_dp"
+        android:background="@drawable/border_yellow_3"
+        android:text="ارسال جامانده ها" />
+</RelativeLayout>

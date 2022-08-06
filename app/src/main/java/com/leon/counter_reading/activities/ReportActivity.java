@@ -84,20 +84,20 @@ public class ReportActivity extends BaseActivity {
         });
     }
 
-    private void textViewInspection() {
-        binding.textViewInspection.setOnClickListener(view -> {
+    private void textViewForbid() {
+        binding.textViewForbid.setOnClickListener(view -> {
             setColor();
-            binding.textViewInspection.setBackground(ContextCompat.getDrawable(activity,
+            binding.textViewForbid.setBackground(ContextCompat.getDrawable(activity,
                     R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(3);
         });
     }
 
-    private void textViewForbid() {
-        binding.textViewForbid.setOnClickListener(view -> {
+    private void textViewInspection() {
+        binding.textViewInspection.setOnClickListener(view -> {
             setColor();
-            binding.textViewForbid.setBackground(ContextCompat.getDrawable(activity,
+            binding.textViewInspection.setBackground(ContextCompat.getDrawable(activity,
                     R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(4);
@@ -133,28 +133,29 @@ public class ReportActivity extends BaseActivity {
     }
 
     private void setPadding() {
-        binding.textViewTotal.setPadding((int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp), (int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewNotRead.setPadding((int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp), (int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewTemporary.setPadding((int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp), (int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp));
-
-        binding.textViewInspection.setPadding((int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp), (int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewForbid.setPadding((int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp), (int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp));
-
-        binding.textViewPerformance.setPadding((int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp), (int) getResources().getDimension(R.dimen.large_dp), (int) getResources().getDimension(R.dimen.medium_dp));
+        final int medium = (int) getResources().getDimension(R.dimen.medium_dp);
+        final int large = (int) getResources().getDimension(R.dimen.large_dp);
+        binding.textViewTotal.setPadding(large, medium, large, medium);
+        binding.textViewNotRead.setPadding(large, medium, large, medium);
+        binding.textViewTemporary.setPadding(large, medium, large, medium);
+        binding.textViewInspection.setPadding(large, medium, large, medium);
+        binding.textViewForbid.setPadding(large, medium, large, medium);
+        binding.textViewPerformance.setPadding(large, medium, large, medium);
     }
 
-    public void setupViewPager(ArrayList<CounterStateDto> counterStateDtos,
-                               ArrayList<TrackingDto> trackingDtos, int zero, int normal, int high,
-                               int low, int total, int isMane, int unread) {
-        this.counterStateDtos = new ArrayList<>(counterStateDtos);
-        this.trackingDtos = new ArrayList<>(trackingDtos);
+    public void setupViewPager(ArrayList<CounterStateDto> counterState, ArrayList<TrackingDto> tracking,
+                               int zero, int normal, int high, int low, int total, int isMane,
+                               int unread) {
+        this.counterStateDtos = new ArrayList<>(counterState);
+        this.trackingDtos = new ArrayList<>(tracking);
 
         final ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
         adapter.addFragment(ReportTotalFragment.newInstance(zero, normal, high, low));
         adapter.addFragment(ReportNotReadingFragment.newInstance(total, unread));
         adapter.addFragment(ReportTemporaryFragment.newInstance(total, isMane));
+        adapter.addFragment(ReportForbidsFragment.newInstance(
+        ));
         adapter.addFragment(ReportInspectionFragment.newInstance());
-        adapter.addFragment(ReportForbidsFragment.newInstance());
         adapter.addFragment(ReportPerformanceFragment.newInstance());
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -171,9 +172,9 @@ public class ReportActivity extends BaseActivity {
                 } else if (position == 2) {
                     binding.textViewTemporary.callOnClick();
                 } else if (position == 3) {
-                    binding.textViewInspection.callOnClick();
-                } else if (position == 4) {
                     binding.textViewForbid.callOnClick();
+                } else if (position == 4) {
+                    binding.textViewInspection.callOnClick();
                 } else if (position == 5) {
                     binding.textViewPerformance.callOnClick();
                 }

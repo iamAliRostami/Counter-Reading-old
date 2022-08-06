@@ -1,5 +1,9 @@
 package com.leon.counter_reading.utils.reporting;
 
+import static com.leon.counter_reading.enums.HighLowStateEnum.HIGH;
+import static com.leon.counter_reading.enums.HighLowStateEnum.LOW;
+import static com.leon.counter_reading.enums.HighLowStateEnum.NORMAL;
+import static com.leon.counter_reading.enums.HighLowStateEnum.ZERO;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -7,7 +11,6 @@ import android.os.AsyncTask;
 
 import com.leon.counter_reading.activities.ReportActivity;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
-import com.leon.counter_reading.enums.HighLowStateEnum;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.MyDatabase;
@@ -19,7 +22,13 @@ public class GetReportDBData extends AsyncTask<Activity, Integer, Integer> {
     private final MyDatabase myDatabase;
     private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
     private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
-    private int zero, normal, high, low, unread, total, isMane;
+    private int zero;
+    private int normal;
+    private int high;
+    private int low;
+    private int unread;
+    private int total;
+    private int isMane;
 
     public GetReportDBData(Activity activity) {
         super();
@@ -45,23 +54,20 @@ public class GetReportDBData extends AsyncTask<Activity, Integer, Integer> {
             for (int i = 0; i < isManes.size(); i++) {
                 isMane += myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(isManes.get(i), trackingDto.id);
             }
-            zero += myDatabase.onOffLoadDao().getOnOffLoadReadCountByStatus(trackingDto.id,
-                    HighLowStateEnum.ZERO.getValue());
-            high += myDatabase.onOffLoadDao().getOnOffLoadReadCountByStatus(trackingDto.id,
-                    HighLowStateEnum.HIGH.getValue());
-            low += myDatabase.onOffLoadDao().getOnOffLoadReadCountByStatus(trackingDto.id,
-                    HighLowStateEnum.LOW.getValue());
-            normal += myDatabase.onOffLoadDao().getOnOffLoadReadCountByStatus(trackingDto.id,
-                    HighLowStateEnum.NORMAL.getValue());
+            zero += myDatabase.onOffLoadDao().getOnOffLoadReadCountByStatus(trackingDto.id, ZERO.getValue());
+            high += myDatabase.onOffLoadDao().getOnOffLoadReadCountByStatus(trackingDto.id, HIGH.getValue());
+            low += myDatabase.onOffLoadDao().getOnOffLoadReadCountByStatus(trackingDto.id, LOW.getValue());
+            normal += myDatabase.onOffLoadDao().getOnOffLoadReadCountByStatus(trackingDto.id, NORMAL.getValue());
             unread += myDatabase.onOffLoadDao().getOnOffLoadReadCount(0, trackingDto.id);
             total += myDatabase.onOffLoadDao().getOnOffLoadCount(trackingDto.id);
         }
         if (trackingDtos.size() > 0)
             counterStateDtos.addAll(myDatabase.counterStateDao().getCounterStateDtos(trackingDtos.get(0).zoneId));
         try {
-            activities[0].runOnUiThread(() -> ((ReportActivity) (activities[0])).
-                    setupViewPager(counterStateDtos, trackingDtos,
-                            zero, normal, high, low, total, isMane, unread));
+            activities[0].runOnUiThread(() ->
+                    ((ReportActivity) (activities[0])).setupViewPager(counterStateDtos, trackingDtos,
+                            zero, normal, high, low, total, isMane, unread
+                    ));
         } catch (Exception e) {
             e.printStackTrace();
         }

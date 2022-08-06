@@ -1,14 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.report.ReportForbidsFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+        <variable
+            name="reportForbid"
+            type="com.leon.counter_reading.utils.reporting.ReportForbidViewModel" />
+    </data>
+
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="@drawable/border_gray_3"
+        android:gravity="center"
+        android:padding="@dimen/medium_dp"
+        tools:context=".fragments.report.ReportForbidsFragment">
 
-</FrameLayout>
+
+        <RelativeLayout
+            android:id="@+id/relative_layout_forbid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/linear_layout_1"
+                style="@style/ReadingSettingItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_blue_2">
+
+                <TextView
+                    style="@style/ReadingSettingItemWhite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="مجموع غیرمجاز / فعالسازی" />
+
+                <TextView
+                    android:id="@+id/text_view_total_forbid"
+                    style="@style/ReadingSettingItemWhiteBold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@={reportForbid.totalReport}" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_2"
+                style="@style/ReadingSettingItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_layout_1"
+                android:background="@drawable/border_blue_3">
+
+                <TextView
+                    style="@style/ReadingSettingItem"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="غیرمجاز" />
+
+                <TextView
+                    android:id="@+id/text_view_forbid"
+                    style="@style/ReadingSettingItemBlueBold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@={reportForbid.forbiddenReports}" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_3"
+                style="@style/ReadingSettingItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_layout_2"
+                android:background="@drawable/border_blue_2">
+
+                <TextView
+                    style="@style/ReadingSettingItemWhite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="فعالسازی" />
+
+                <TextView
+                    android:id="@+id/text_view_activation"
+                    style="@style/ReadingSettingItemWhiteBold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@={reportForbid.activationReports}" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_4"
+                style="@style/ReadingSettingItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_layout_3"
+                android:background="@drawable/border_blue_3">
+
+                <TextView
+                    style="@style/ReadingSettingItem"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="ارسال موفق" />
+
+                <TextView
+                    android:id="@+id/text_view_forbid_sent"
+                    style="@style/ReadingSettingItemBlueBold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@={reportForbid.sentReports}" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_5"
+                style="@style/ReadingSettingItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_layout_4"
+                android:background="@drawable/border_blue_2">
+
+                <TextView
+                    style="@style/ReadingSettingItemWhite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="در صف ارسال" />
+
+                <TextView
+                    android:id="@+id/text_view_forbid_unsent"
+                    style="@style/ReadingSettingItemWhiteBold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@={reportForbid.unsentReports}" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/button_submit_forbidden"
+            style="@style/ButtonSubmit.Fragment"
+            android:layout_width="match_parent"
+            android:layout_below="@id/relative_layout_forbid"
+            android:layout_margin="@dimen/small_dp"
+            android:background="@drawable/border_yellow_3"
+            android:text="ارسال جامانده ها" />
+
+    </RelativeLayout>
+</layout>

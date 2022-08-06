@@ -90,7 +90,7 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
         activities[0].runOnUiThread(() -> {
             customProgressModel.getDialog().dismiss();
             HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activities[0],
-                    new Forbidden(forbiddenDto), new ForbiddenIncomplete(activities[0]),
+                    new Forbidden(activities[0], forbiddenDto), new ForbiddenIncomplete(activities[0]),
                     new ForbiddenError(activities[0]));
         });
         return null;
@@ -113,6 +113,28 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
             }
         else
             getApplicationComponent().MyDatabase().forbiddenDao().insertForbiddenDto(forbiddenDto);
+    }
+
+    class Forbidden implements ICallback<ForbiddenDtoResponses> {
+        private final Activity activity;
+        private final ForbiddenDto forbiddenDto;
+
+        public Forbidden(Activity activity, ForbiddenDto forbiddenDto) {
+            this.activity = activity;
+            this.forbiddenDto = forbiddenDto;
+        }
+
+        @Override
+        public void execute(Response<ForbiddenDtoResponses> response) {
+            if (response.isSuccessful()) {
+                forbiddenDto.isSent = true;
+//            getApplicationComponent().MyDatabase().forbiddenDao().insertForbiddenDto(forbiddenDto);
+                if (response.body() != null) {
+                    new CustomToast().success(response.body().message);
+                }
+            }
+            saveForbidden(activity);
+        }
     }
 
     class ForbiddenIncomplete implements ICallbackIncomplete<ForbiddenDtoResponses> {
@@ -142,21 +164,3 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
     }
 }
 
-class Forbidden implements ICallback<ForbiddenDtoResponses> {
-    private final ForbiddenDto forbiddenDto;
-
-    public Forbidden(ForbiddenDto forbiddenDto) {
-        this.forbiddenDto = forbiddenDto;
-    }
-
-    @Override
-    public void execute(Response<ForbiddenDtoResponses> response) {
-        if (!response.isSuccessful())
-            getApplicationComponent().MyDatabase().forbiddenDao().insertForbiddenDto(forbiddenDto);
-        else {
-            if (response.body() != null) {
-                new CustomToast().success(response.body().message);
-            }
-        }
-    }
-}
