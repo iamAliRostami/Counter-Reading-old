@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.leon.counter_reading.databinding.FragmentReportForbidsBinding;
 import com.leon.counter_reading.utils.MyDatabase;
 import com.leon.counter_reading.utils.reporting.PrepareReport;
-import com.leon.counter_reading.utils.reporting.ReportForbidViewModel;
+import com.leon.counter_reading.view_models.ReportForbidViewModel;
 
 public class ReportForbidsFragment extends Fragment {
     private final ReportForbidViewModel reportForbid = new ReportForbidViewModel();
@@ -52,7 +52,7 @@ public class ReportForbidsFragment extends Fragment {
         reportForbid.setTotalReport(myDatabase.forbiddenDao().getTotalForbidden());
         reportForbid.setUnsentReports(myDatabase.forbiddenDao().getTotalForbiddenBySent(false));
         reportForbid.setSentReports(myDatabase.forbiddenDao().getTotalForbiddenBySent(true));
-        reportForbid.setActivationReports(myDatabase.forbiddenDao().getTotalForbiddenByType(true));
         reportForbid.setForbiddenReports(myDatabase.forbiddenDao().getTotalForbiddenByType(false));
+        reportForbid.setActivationReports(myDatabase.forbiddenDao().getTotalForbiddenByType(true));
     }
 }

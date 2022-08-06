@@ -37,4 +37,11 @@ public interface OffLoadReportDao {
 
     @Query("UPDATE OffLoadReport SET isSent = :isSent")
     void updateOffLoadReportByIsSent(boolean isSent);
+
+
+    @Query("select COUNT(*) From OffLoadReport")
+    int getTotalReport();
+
+    @Query("select COUNT(*) From OffLoadReport Where isSent = :type")
+    int getReportBySent(boolean type);
 }

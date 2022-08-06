@@ -5,7 +5,7 @@
 
         <variable
             name="reportForbid"
-            type="com.leon.counter_reading.utils.reporting.ReportForbidViewModel" />
+            type="com.leon.counter_reading.view_models.ReportForbidViewModel" />
     </data>
 
     <RelativeLayout xmlns:tools="http://schemas.android.com/tools"

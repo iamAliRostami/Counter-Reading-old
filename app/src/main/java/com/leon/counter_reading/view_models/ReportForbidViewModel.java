@@ -1,4 +1,4 @@
-package com.leon.counter_reading.utils.reporting;
+package com.leon.counter_reading.view_models;
 
 import android.annotation.SuppressLint;
 import android.widget.TextView;
