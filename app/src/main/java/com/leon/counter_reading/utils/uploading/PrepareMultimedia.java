@@ -65,9 +65,11 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
             final Bitmap bitmap = loadImage(activities[0], images.get(i).address);
             if (images.get(i) != null && bitmap != null && images.get(i).OnOffLoadId != null) {
                 try {
-                    imageMultiples.Description.add(RequestBody.create((images.get(i).Description == null ||
-                                    images.get(i).Description.isEmpty()) ? "-" : images.get(i).Description,
+                    imageMultiples.Description.add(RequestBody.create(images.get(i).Description,
                             MediaType.parse("text/plain")));
+//                    imageMultiples.Description.add(RequestBody.create((images.get(i).Description == null ||
+//                                    images.get(i).Description.isEmpty()) ? "-" : images.get(i).Description,
+//                            MediaType.parse("text/plain")));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -86,9 +88,11 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
                 voiceMultiples.OnOffLoadId.add(RequestBody.create(voice.get(i).OnOffLoadId,
                         MediaType.parse("text/plain")));
                 try {
-                    voiceMultiples.Description.add(RequestBody.create((voice.get(i).Description == null ||
-                                    voice.get(i).Description.isEmpty()) ? "-" : voice.get(i).Description,
+                    voiceMultiples.Description.add(RequestBody.create(voice.get(i).Description,
                             MediaType.parse("text/plain")));
+//                    voiceMultiples.Description.add(RequestBody.create((voice.get(i).Description == null ||
+//                                    voice.get(i).Description.isEmpty()) ? "-" : voice.get(i).Description,
+//                            MediaType.parse("text/plain")));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

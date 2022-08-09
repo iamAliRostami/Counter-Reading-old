@@ -47,10 +47,10 @@ public class OnOffLoadDtoTemp {
     public int hazf;
     public int noeVagozariId;
     public int counterStateId;
-    public int possibleAhadMaskooniOrAsli;
-    public int possibleAhadTejariOrFari;
-    public int possibleAhadSaierOrAbBaha;
-    public int possibleEmpty;
+    public Integer possibleAhadMaskooniOrAsli;
+    public Integer possibleAhadTejariOrFari;
+    public Integer possibleAhadSaierOrAbBaha;
+    public Integer possibleEmpty;
     public int possibleKarbariCode;
     public int offLoadStateId;
     public int zoneId;

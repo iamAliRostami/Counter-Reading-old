@@ -101,10 +101,10 @@ public class OnOffLoadDto {
         public String possibleEshterak;
         public String possibleMobile;
         public String possiblePhoneNumber;
-        public int possibleAhadMaskooniOrAsli;
-        public int possibleAhadTejariOrFari;
-        public int possibleAhadSaierOrAbBaha;
-        public int possibleEmpty;
+        public Integer possibleAhadMaskooniOrAsli;
+        public Integer possibleAhadTejariOrFari;
+        public Integer possibleAhadSaierOrAbBaha;
+        public Integer possibleEmpty;
         public int possibleKarbariCode;
         public String description;
         public boolean counterNumberShown;
