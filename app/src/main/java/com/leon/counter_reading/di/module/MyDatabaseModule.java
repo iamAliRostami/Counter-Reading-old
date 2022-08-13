@@ -4,7 +4,6 @@ import static com.leon.counter_reading.di.view_model.MyDatabaseClientModel.getIn
 
 import android.content.Context;
 
-import com.leon.counter_reading.di.view_model.MyDatabaseClientModel;
 import com.leon.counter_reading.utils.MyDatabase;
 
 import javax.inject.Singleton;

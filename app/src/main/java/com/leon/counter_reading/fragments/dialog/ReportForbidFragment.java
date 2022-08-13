@@ -287,11 +287,6 @@ public class ReportForbidFragment extends DialogFragment {
         final Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
         galleryResultLauncher.launch(galleryIntent);
-//        final Intent galleryIntent = new Intent("android.intent.action.PICK");
-//        if (galleryIntent.resolveActivity(requireContext().getPackageManager()) != null) {
-//            galleryIntent.setType("image/*");
-//            galleryResultLauncher.launch(galleryIntent);
-//        }
     }
 
     private void addImage(final Bitmap bitmap) {

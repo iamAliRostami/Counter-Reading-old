@@ -130,12 +130,6 @@ public class SaveDownloadData {
                     String.format("SELECT * FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1",
                             trackNumber));
 
-//            final String queryTrackDto = String.format(query, "TrackingDto_".concat(time),
-//                    "SELECT * FROM TrackingDto WHERE trackNumber = ۱۲۳۴۵۶ AND isArchive = 1");
-//                final String test = "CREATE TABLE IF NOT EXISTS `copied` AS SELECT * FROM OnOffLoadDto WHERE 0";
-//                cursor = myDatabase.getOpenHelper().getWritableDatabase().query(test);
-//                cursor.moveToFirst();
-
             final String queryOnOffLoad = String.format(query, "OnOffLoadDto_".concat(time),
                     String.format("SELECT * FROM OnOffLoadDto WHERE trackNumber = %d", trackNumber));
 

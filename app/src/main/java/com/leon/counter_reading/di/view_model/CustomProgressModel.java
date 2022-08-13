@@ -37,8 +37,8 @@ public final class CustomProgressModel {
                         Toast.LENGTH_LONG));
     }
 
-    public Dialog show(Context context, boolean cancelable) {
-        return show(context, context.getString(R.string.waiting), cancelable, dialog ->
+    public void show(Context context, boolean cancelable) {
+        show(context, context.getString(R.string.waiting), cancelable, dialog ->
                 new CustomToast().warning(MyApplication.getContext().getString(R.string.canceled),
                         Toast.LENGTH_LONG));
     }

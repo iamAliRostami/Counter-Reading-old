@@ -8,6 +8,8 @@ import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.enums.BundleEnum.TYPE;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.DialogType.Yellow;
+import static com.leon.counter_reading.enums.FragmentTags.REPORT_FORBID;
+import static com.leon.counter_reading.enums.FragmentTags.SEARCH;
 import static com.leon.counter_reading.enums.FragmentTags.TAKE_PHOTO;
 import static com.leon.counter_reading.enums.NotificationType.LIGHT_OFF;
 import static com.leon.counter_reading.enums.NotificationType.LIGHT_ON;
@@ -28,6 +30,7 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.READING_REPORT;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SERIAL;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SORT_TYPE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_TEMPORARY;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.TOKEN;
 import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.Constants.CAMERA;
@@ -58,6 +61,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
@@ -70,6 +74,7 @@ import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReadingBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.BundleEnum;
+import com.leon.counter_reading.enums.FragmentTags;
 import com.leon.counter_reading.fragments.dialog.CounterPlaceFragment;
 import com.leon.counter_reading.fragments.dialog.NavigationFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
@@ -121,10 +126,15 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
 
     @Override
     protected void initialize() {
+        getDelegate().setLocalNightMode(getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(THEME_TEMPORARY.getValue()) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
         binding = ActivityReadingBinding.inflate(getLayoutInflater());
         final View childLayout = binding.getRoot();
         final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
+//        AppCompatDelegate.setDefaultNightMode(getApplicationComponent().SharedPreferenceModel()
+//                .getBoolData(THEME_TEMPORARY.getValue()) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+
         sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
         imageSrc = ArrayUtils.clone(setAboveIcons());
         getBundle();
@@ -465,6 +475,8 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 new CustomToast().warning("به دلیل تست، تغییر تم میسر نیست.");
 //                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode() < 2 ?
 //                        AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+//                getDelegate().setLocalNightMode(getDelegate().getLocalNightMode() < 2 ?
+//                        AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
             });
 
             final ImageView imageViewCamera = findViewById(R.id.image_view_camera);
@@ -474,12 +486,10 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 if (readingData.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
-                    ShowDialogOnce(this, TAKE_PHOTO.getValue().concat(readingData.onOffLoadDtos
-                                    .get(binding.viewPager.getCurrentItem()).id),
-                            TakePhotoFragment.newInstance(readingData.onOffLoadDtos
-                                            .get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
-                                    readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
-                                    readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber));
+                    final OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem());
+                    ShowDialogOnce(this, TAKE_PHOTO.getValue().concat(onOffLoadDtoTemp.id),
+                            TakePhotoFragment.newInstance(onOffLoadDtoTemp.offLoadStateId > 0,
+                                    onOffLoadDtoTemp.id, onOffLoadDtoTemp.trackNumber));
                 }
             });
 
@@ -490,10 +500,10 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 if (readingData.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
-                    ShowDialogOnce(this, "READING_REPORT", ReadingReportFragment.newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
-                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber,
-                            binding.viewPager.getCurrentItem(),
-                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).zoneId));
+                    final OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem());
+                    ShowDialogOnce(this, READING_REPORT.getValue(), ReadingReportFragment
+                            .newInstance(onOffLoadDtoTemp.id, onOffLoadDtoTemp.trackNumber,
+                                    binding.viewPager.getCurrentItem(), onOffLoadDtoTemp.zoneId));
                 }
             });
 
@@ -504,7 +514,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 if (readingDataTemp.onOffLoadDtos.isEmpty()) {
                     showNoEshterakFound();
                 } else {
-                    ShowDialogOnce(this, "SEARCH_DIALOG", new SearchFragment());
+                    ShowDialogOnce(this, SEARCH.getValue(), new SearchFragment());
                 }
             });
         }
@@ -531,24 +541,22 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                ShowDialogOnce(this, "NAVIGATION", NavigationFragment
+                ShowDialogOnce(this, FragmentTags.NAVIGATION.getValue(), NavigationFragment
                         .newInstance(binding.viewPager.getCurrentItem()));
             }
         } else if (id == R.id.menu_report_forbid) {
-            ShowDialogOnce(this, "REPORT_FORBID", ReportForbidFragment.newInstance(
-                    readingData.onOffLoadDtos.size() > 0 ? readingData.onOffLoadDtos
-                            .get(binding.viewPager.getCurrentItem()).zoneId : 0));
+            ShowDialogOnce(this, REPORT_FORBID.getValue(),
+                    ReportForbidFragment.newInstance(readingData.onOffLoadDtos.size() > 0 ?
+                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).zoneId : 0));
         } else if (id == R.id.menu_description) {
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
                 intent = new Intent(this, DescriptionActivity.class);
-                intent.putExtra(BILL_ID.getValue(),
-                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id);
-                intent.putExtra(TRACKING.getValue(),
-                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber);
-                intent.putExtra(BundleEnum.DESCRIPTION.getValue(),
-                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).description);
+                final OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem());
+                intent.putExtra(BILL_ID.getValue(), onOffLoadDtoTemp.id);
+                intent.putExtra(TRACKING.getValue(), onOffLoadDtoTemp.trackNumber);
+                intent.putExtra(BundleEnum.DESCRIPTION.getValue(), onOffLoadDtoTemp.description);
                 intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
                 startActivityForResult(intent, DESCRIPTION);
             }
@@ -557,7 +565,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                ShowDialogOnce(this, "COUNTER_PLACE", CounterPlaceFragment
+                ShowDialogOnce(this, FragmentTags.COUNTER_PLACE.getValue(), CounterPlaceFragment
                         .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                                 binding.viewPager.getCurrentItem()));
             }

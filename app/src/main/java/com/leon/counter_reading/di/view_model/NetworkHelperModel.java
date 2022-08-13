@@ -10,8 +10,6 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.helpers.MyApplication;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;

@@ -37,10 +37,6 @@
                     android:maxLength="10"
                     android:padding="@dimen/low_dp"
                     android:textSize="@dimen/text_size_large" />
-                <!--                <TextView-->
-                <!--                    android:padding="@dimen/low_dp"-->
-                <!--                    android:id="@+id/text_view_from"-->
-                <!--                    style="@style/InputPossible" />-->
 
             </LinearLayout>
 

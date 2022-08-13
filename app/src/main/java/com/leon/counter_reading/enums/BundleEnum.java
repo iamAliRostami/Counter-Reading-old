@@ -23,6 +23,12 @@ public enum BundleEnum {
     DESCRIPTION("description"),
     LATITUDE("latitude"),
     LONGITUDE("longitude"),
+
+    TOTAL_REPORTS("all_report"),
+    SENT_REPORT("sent_report"),
+    UNSENT_REPORT("unsent_report"),
+    ACTIVATION_REPORT("activation_report"),
+    FORBIDDEN_REPORT("forbidden_report"),
     TYPE("type");
 
     private final String value;

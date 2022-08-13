@@ -6,34 +6,53 @@
     android:layout_height="match_parent"
     tools:context="com.leon.counter_reading.activities.ReportActivity">
 
-    <LinearLayout
+    <HorizontalScrollView
         android:id="@+id/linear_layout_header"
-        style="@style/ViewPagerMenu">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimaryDark">
 
-        <TextView
-            android:id="@+id/text_view_total"
-            style="@style/ViewPagerItems"
-            android:background="@drawable/border_white_2"
-            android:text="@string/total_statistic" />
+        <LinearLayout
+            style="@style/ViewPagerMenu"
+            android:layout_width="wrap_content">
 
-        <TextView
-            android:id="@+id/text_view_not_read"
-            style="@style/ViewPagerItems"
-            android:text="@string/not_read" />
+            <TextView
+                android:id="@+id/text_view_total"
+                style="@style/ViewPagerItems.Horizontal"
+                android:background="@drawable/border_white_2"
+                android:text="@string/total_statistic" />
 
-        <TextView
-            android:id="@+id/text_view_temporary"
-            style="@style/ViewPagerItems"
-            android:text="@string/temporary"
-            android:textColor="@color/text_color_light" />
+            <TextView
+                android:id="@+id/text_view_not_read"
+                style="@style/ViewPagerItems.Horizontal"
+                android:text="@string/not_read" />
 
-        <TextView
-            android:id="@+id/text_view_performance"
-            style="@style/ViewPagerItems"
-            android:text="@string/performance"
-            android:textColor="@color/text_color_light" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/text_view_temporary"
+                style="@style/ViewPagerItems.Horizontal"
+                android:text="@string/temporary"
+                android:textColor="@color/text_color_light" />
 
+            <TextView
+                android:id="@+id/text_view_forbid"
+                style="@style/ViewPagerItems.Horizontal"
+                android:text="@string/forbidden"
+                android:textColor="@color/text_color_light" />
+
+            <TextView
+                android:id="@+id/text_view_inspection"
+                style="@style/ViewPagerItems.Horizontal"
+                android:text="@string/inspection"
+                android:textColor="@color/text_color_light" />
+
+
+            <TextView
+                android:id="@+id/text_view_performance"
+                style="@style/ViewPagerItems.Horizontal"
+                android:text="@string/performance"
+                android:textColor="@color/text_color_light" />
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"

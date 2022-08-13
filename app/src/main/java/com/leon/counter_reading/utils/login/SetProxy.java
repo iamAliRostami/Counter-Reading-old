@@ -14,7 +14,6 @@ import android.view.inputmethod.InputMethodManager;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.DialogType;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.utils.custom_dialog.LovelyTextInputDialog;
 
@@ -33,8 +32,6 @@ public class SetProxy {
                 .setInputFilter(R.string.error_format, text -> {
                     final String ip = lovelyTextInputDialog.getEditTextNumber().getText().toString();
                     return !(ip.length() == 0 || validate(ip));
-//                    return ip.length() == 0 || ip.startsWith("https://") || ip.startsWith("http://")/**/;
-//                    return true;
                 })
                 .setConfirmButton(R.string.confirm, text -> {
                     InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);

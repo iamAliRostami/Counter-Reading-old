@@ -16,7 +16,6 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.SettingActivity;
 import com.leon.counter_reading.databinding.FragmentSettingChangeThemeBinding;
 import com.leon.counter_reading.enums.BundleEnum;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.utils.CustomToast;
 

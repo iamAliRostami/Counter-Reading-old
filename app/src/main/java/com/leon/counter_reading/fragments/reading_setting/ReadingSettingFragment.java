@@ -2,17 +2,19 @@ package com.leon.counter_reading.fragments.reading_setting;
 
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KEYBOARD_TYPE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_TEMPORARY;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ReadingSettingAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingSettingBinding;
 import com.leon.counter_reading.tables.TrackingDto;
@@ -53,6 +55,20 @@ public class ReadingSettingFragment extends Fragment {
         setupListView();
         initializeCheckbox();
         initializeRadioGroup();
+        initializeImageViewReverse();
+    }
+
+    private void initializeImageViewReverse() {
+        binding.imageViewReverse.setImageDrawable(ContextCompat.getDrawable(requireContext(),
+                getApplicationComponent().SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
+                        R.drawable.mode_dark : R.drawable.mode_light));
+        binding.imageViewReverse.setOnClickListener(view -> {
+            getApplicationComponent().SharedPreferenceModel().putData(THEME_TEMPORARY.getValue(),
+                    !getApplicationComponent().SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()));
+            binding.imageViewReverse.setImageDrawable(ContextCompat.getDrawable(requireContext(),
+                    getApplicationComponent().SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
+                            R.drawable.mode_dark : R.drawable.mode_light));
+        });
     }
 
     private void setupListView() {
@@ -80,8 +96,6 @@ public class ReadingSettingFragment extends Fragment {
                 .getBoolData(KEYBOARD_TYPE.getValue()));
         binding.radioButtonSensitive.setChecked(getApplicationComponent().SharedPreferenceModel()
                 .getBoolData(KEYBOARD_TYPE.getValue()));
-//        binding.radioButtonStandard.setOnCheckedChangeListener((compoundButton, b) ->
-//                getApplicationComponent().SharedPreferenceModel().putData(KEYBOARD_TYPE.getValue(), b));
         binding.radioButtonSensitive.setOnCheckedChangeListener((compoundButton, b) ->
                 getApplicationComponent().SharedPreferenceModel().putData(KEYBOARD_TYPE.getValue(), b));
     }
