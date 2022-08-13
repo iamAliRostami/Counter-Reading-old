@@ -3,8 +3,6 @@ package com.leon.counter_reading.infrastructure;
 import com.leon.counter_reading.tables.ForbiddenDtoRequestMultiple;
 import com.leon.counter_reading.tables.ForbiddenDtoResponses;
 import com.leon.counter_reading.tables.LastInfo;
-import com.leon.counter_reading.tables.LoginFeedBack;
-import com.leon.counter_reading.tables.LoginInfo;
 import com.leon.counter_reading.tables.MultimediaUploadResponse;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.tables.PasswordInfo;
@@ -12,6 +10,7 @@ import com.leon.counter_reading.tables.PerformanceInfo;
 import com.leon.counter_reading.tables.PerformanceResponse;
 import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.tables.SimpleResponse;
+import com.leon.counter_reading.view_models.LoginViewModel;
 
 import java.util.ArrayList;
 
@@ -29,10 +28,10 @@ import retrofit2.http.Query;
 public interface IAbfaService {
 
     @POST("kontoriNew/V1/Account/Login")
-    Call<LoginFeedBack> login(@Body LoginInfo logininfo);
+    Call<LoginViewModel> login(@Body LoginViewModel loginViewModel);
 
     @POST("kontoriNew/V1/User/RegisterDevice")
-    Call<LoginFeedBack> register(@Body LoginInfo logininfo);
+    Call<LoginViewModel> register(@Body LoginViewModel loginViewModel);
 
     @POST("kontoriNew/V1/Account/ChangePassword")
     Call<SimpleResponse> changePassword(@Body PasswordInfo passwordInfo);

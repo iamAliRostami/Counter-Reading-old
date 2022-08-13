@@ -7,7 +7,6 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.AVATAR;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
-import static com.leon.counter_reading.helpers.MyApplication.getAndroidVersion;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getSerial;
 import static com.leon.counter_reading.helpers.MyApplication.setActivityComponent;
@@ -39,7 +38,6 @@ import androidx.fragment.app.Fragment;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.HomeActivity;
 import com.leon.counter_reading.databinding.FragmentLoginBinding;
@@ -48,13 +46,15 @@ import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.login.AttemptLogin;
 import com.leon.counter_reading.utils.login.AttemptRegister;
+import com.leon.counter_reading.view_models.LoginViewModel;
 
 import java.util.ArrayList;
 
 public class LoginFragment extends Fragment {
     private ISharedPreferenceManager sharedPreferenceManager;
+    private LoginViewModel login;
     private FragmentLoginBinding binding;
-    private String username, password;
+//    private String username, password;
     private int counter = 0;
 
     public LoginFragment() {
@@ -74,6 +74,8 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         setActivityComponent(requireActivity());
+        login = new LoginViewModel(getString(R.string.version));
+        binding.setLogin(login);
         checkReadPhoneStatePermission();
         return binding.getRoot();
     }
@@ -126,13 +128,17 @@ public class LoginFragment extends Fragment {
     }
 
     private void initialize() {
-        binding.textViewVersion.setText(getString(R.string.version).concat(" ").concat(getAndroidVersion())
-                .concat(" *** ").concat(BuildConfig.VERSION_NAME));
-        loadPreference();
+//        binding.textViewVersion.setText(getString(R.string.version).concat(" ").concat(getAndroidVersion())
+//                .concat(" *** ").concat(BuildConfig.VERSION_NAME));
+//        loadPreference();
+        sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
+
+
         binding.imageViewPassword.setImageResource(R.drawable.img_password);
         binding.imageViewLogo.setImageResource(R.drawable.img_login_logo);
 
-        if (sharedPreferenceManager.checkIsNotEmpty(AVATAR.getValue()))
+
+        if (getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(AVATAR.getValue()))
             binding.imageViewPerson.setImageBitmap(loadImage(requireContext(), getApplicationComponent()
                     .SharedPreferenceModel().getStringData(AVATAR.getValue())));
         else
@@ -272,17 +278,6 @@ public class LoginFragment extends Fragment {
             new CustomToast().warning(getString(R.string.error_is_not_match), Toast.LENGTH_LONG);
         }
         counter = 0;
-    }
-
-    private void loadPreference() {
-        sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
-        if (sharedPreferenceManager.checkIsNotEmpty(USERNAME.getValue()) &&
-                sharedPreferenceManager.checkIsNotEmpty(PASSWORD.getValue())) {
-            binding.editTextUsername.setText(sharedPreferenceManager.getStringData(
-                    USERNAME.getValue()));
-            binding.editTextPassword.setText(decrypt(sharedPreferenceManager
-                    .getStringData(PASSWORD.getValue())));
-        }
     }
 
     @Override

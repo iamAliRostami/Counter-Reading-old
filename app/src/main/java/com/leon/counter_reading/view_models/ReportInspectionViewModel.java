@@ -1,7 +1,6 @@
 package com.leon.counter_reading.view_models;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.databinding.BaseObservable;

@@ -26,6 +26,7 @@ import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
 import android.telephony.CellSignalStrengthWcdma;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
@@ -270,15 +271,19 @@ public class PermissionManager {
                 if (info instanceof CellInfoGsm) {
                     final CellSignalStrengthGsm cell = ((CellInfoGsm) info).getCellSignalStrength();
                     outOfService = cell.getDbm() <= -110;
+                    Log.e("signal 1", String.valueOf(cell.getDbm()));
                 } else if (info instanceof CellInfoCdma) {
                     final CellSignalStrengthCdma cell = ((CellInfoCdma) info).getCellSignalStrength();
                     outOfService = cell.getDbm() <= -110;
+                    Log.e("signal 2", String.valueOf(cell.getDbm()));
                 } else if (info instanceof CellInfoLte) {
                     final CellSignalStrengthLte cell = ((CellInfoLte) info).getCellSignalStrength();
                     outOfService = cell.getDbm() <= -110;
+                    Log.e("signal 3", String.valueOf(cell.getDbm()));
                 } else if (info instanceof CellInfoWcdma) {
                     final CellSignalStrengthWcdma cell = ((CellInfoWcdma) info).getCellSignalStrength();
                     outOfService = cell.getDbm() <= -110;
+                    Log.e("signal 4", String.valueOf(cell.getDbm()));
                 }
             }
         } catch (Exception e) {

@@ -138,7 +138,6 @@ public class TakePhotoFragment extends DialogFragment {
 
     private void setOnButtonSendClickListener() {
         binding.buttonSaveSend.setOnClickListener(v -> {
-//            binding.buttonSaveSend.setEnabled(false);
             if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
             lastClickTime = SystemClock.elapsedRealtime();
             new PrepareMultimedia(requireActivity(), images, binding.editTextDescription.getText().toString(),

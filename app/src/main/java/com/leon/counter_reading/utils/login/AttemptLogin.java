@@ -1,6 +1,15 @@
 package com.leon.counter_reading.utils.login;
 
 import static com.leon.counter_reading.enums.ProgressType.SHOW;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.DISPLAY_NAME;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD_TEMP;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.REFRESH_TOKEN;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.TOKEN;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME_TEMP;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.USER_CODE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.XSRF;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -14,7 +23,6 @@ import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.HomeActivity;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
@@ -22,6 +30,7 @@ import com.leon.counter_reading.tables.LoginFeedBack;
 import com.leon.counter_reading.tables.LoginInfo;
 import com.leon.counter_reading.utils.Crypto;
 import com.leon.counter_reading.utils.CustomToast;
+import com.leon.counter_reading.view_models.LoginViewModel;
 
 import java.util.List;
 
@@ -49,12 +58,12 @@ public class AttemptLogin extends AsyncTask<Activity, Activity, Void> {
     protected Void doInBackground(Activity... activities) {
         final Retrofit retrofit = getApplicationComponent().NetworkHelperModel().getInstance();
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-        final Call<LoginFeedBack> call = iAbfaService.login(new LoginInfo(username, password, serial,
-                BuildConfig.VERSION_NAME));
-        activities[0].runOnUiThread(() ->
-                HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activities[0],
-                        new LoginCompleted(activities[0], isChecked, username, password),
-                        new Incomplete(activities[0]), new Error(activities[0])));
+//        final Call<LoginViewModel> call = iAbfaService.login(new LoginInfo(username, password, serial,
+//                BuildConfig.VERSION_NAME));
+//        activities[0].runOnUiThread(() ->
+//                HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activities[0],
+//                        new LoginCompleted(activities[0], isChecked, username, password),
+//                        new Incomplete(activities[0]), new Error(activities[0])));
         return null;
     }
 
@@ -89,15 +98,15 @@ class LoginCompleted implements ICallback<LoginFeedBack> {
     @Override
     public void execute(Response<LoginFeedBack> response) {
         LoginFeedBack loginFeedBack = response.body();
-        if (loginFeedBack == null || loginFeedBack.access_token == null ||
+        if (loginFeedBack == null || loginFeedBack.accessToken == null ||
                 loginFeedBack.refresh_token == null ||
-                loginFeedBack.access_token.length() < 1 ||
+                loginFeedBack.accessToken.length() < 1 ||
                 loginFeedBack.refresh_token.length() < 1) {
             new CustomToast().warning(activity.getString(R.string.error_is_not_match), Toast.LENGTH_LONG);
         } else {
             List<String> cookieList = response.headers().values("Set-Cookie");
             loginFeedBack.XSRFToken = (cookieList.get(1).split(";"))[0];
-            JWT jwt = new JWT(loginFeedBack.access_token);
+            JWT jwt = new JWT(loginFeedBack.accessToken);
             loginFeedBack.displayName = jwt.getClaim("DisplayName").asString();
             loginFeedBack.userCode = jwt.getClaim("UserCode").asString();
             savePreference(loginFeedBack, isChecked);
@@ -109,16 +118,16 @@ class LoginCompleted implements ICallback<LoginFeedBack> {
 
     private void savePreference(LoginFeedBack loginFeedBack, boolean isChecked) {
         final ISharedPreferenceManager sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
-        sharedPreferenceManager.putData(SharedReferenceKeys.DISPLAY_NAME.getValue(), loginFeedBack.displayName);
-        sharedPreferenceManager.putData(SharedReferenceKeys.USER_CODE.getValue(), loginFeedBack.userCode);
-        sharedPreferenceManager.putData(SharedReferenceKeys.TOKEN.getValue(), loginFeedBack.access_token);
-        sharedPreferenceManager.putData(SharedReferenceKeys.REFRESH_TOKEN.getValue(), loginFeedBack.refresh_token);
-        sharedPreferenceManager.putData(SharedReferenceKeys.XSRF.getValue(), loginFeedBack.XSRFToken);
-        sharedPreferenceManager.putData(SharedReferenceKeys.USERNAME_TEMP.getValue(), username);
-        sharedPreferenceManager.putData(SharedReferenceKeys.PASSWORD_TEMP.getValue(), Crypto.encrypt(password));
+        sharedPreferenceManager.putData(DISPLAY_NAME.getValue(), loginFeedBack.displayName);
+        sharedPreferenceManager.putData(USER_CODE.getValue(), loginFeedBack.userCode);
+        sharedPreferenceManager.putData(TOKEN.getValue(), loginFeedBack.accessToken);
+        sharedPreferenceManager.putData(REFRESH_TOKEN.getValue(), loginFeedBack.refresh_token);
+        sharedPreferenceManager.putData(XSRF.getValue(), loginFeedBack.XSRFToken);
+        sharedPreferenceManager.putData(USERNAME_TEMP.getValue(), username);
+        sharedPreferenceManager.putData(PASSWORD_TEMP.getValue(), Crypto.encrypt(password));
         if (isChecked) {
-            sharedPreferenceManager.putData(SharedReferenceKeys.USERNAME.getValue(), username);
-            sharedPreferenceManager.putData(SharedReferenceKeys.PASSWORD.getValue(), Crypto.encrypt(password));
+            sharedPreferenceManager.putData(USERNAME.getValue(), username);
+            sharedPreferenceManager.putData(PASSWORD.getValue(), Crypto.encrypt(password));
         }
     }
 }

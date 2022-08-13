@@ -1,7 +1,10 @@
 package com.leon.counter_reading.tables;
 
+import com.google.gson.annotations.SerializedName;
+
 public class LoginFeedBack {
-    public final String access_token;
+    @SerializedName("access_token")
+    public final String accessToken;
     public final String refresh_token;
     public String displayName;
     public String userCode;
@@ -11,7 +14,7 @@ public class LoginFeedBack {
     public boolean isValid;
 
     public LoginFeedBack(String access_token, String refresh_token) {
-        this.access_token = access_token;
+        this.accessToken = access_token;
         this.refresh_token = refresh_token;
     }
 }
