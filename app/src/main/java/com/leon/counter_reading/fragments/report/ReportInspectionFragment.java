@@ -3,11 +3,13 @@ package com.leon.counter_reading.fragments.report;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.BindingAdapter;
 import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.databinding.FragmentReportInspectionBinding;
@@ -18,6 +20,7 @@ import com.leon.counter_reading.view_models.ReportInspectionViewModel;
 public class ReportInspectionFragment extends Fragment {
     private final ReportInspectionViewModel reportInspection = new ReportInspectionViewModel();
     private FragmentReportInspectionBinding binding;
+    private long lastClickTime = 0;
 
     public static ReportInspectionFragment newInstance() {
         return new ReportInspectionFragment();
@@ -39,13 +42,18 @@ public class ReportInspectionFragment extends Fragment {
     }
 
     private void initialize() {
-        binding.buttonSubmitInspection.setOnClickListener(view ->
-                new PrepareOffload(requireActivity(), this).execute(requireActivity()));
+        binding.buttonSubmitInspection.setOnClickListener(view -> {
+            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
+            lastClickTime = SystemClock.elapsedRealtime();
+            new PrepareOffload(requireActivity(), this).execute(requireActivity());
+        });
     }
 
-    public void setButtonState() {
-        binding.buttonSubmitInspection.setEnabled(true);
-    }
+//    @BindingAdapter({"toastMessage"})
+//    public static void runMe(View view) {
+//        if (message != null)
+//            Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
+//    }
 
     public void setReportInspection() {
         final MyDatabase myDatabase = getApplicationComponent().MyDatabase();

@@ -229,8 +229,9 @@ public class DifferentCompanyManager {
             case ESF:
             case KSH:
             case ZONE4:
-            case TSE:
                 return 15;
+            case TSE:
+                return 12;
             default:
                 return 10;
         }

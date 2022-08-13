@@ -1,6 +1,7 @@
 package com.leon.counter_reading.view_models;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.databinding.BaseObservable;
@@ -55,4 +56,8 @@ public class ReportInspectionViewModel extends BaseObservable {
     public static int getText(TextView view) {
         return Integer.parseInt(view.getText().toString());
     }
+
+//    public void getToastMessage() {
+//        Log.e("here","getToastMessage");
+//    }
 }

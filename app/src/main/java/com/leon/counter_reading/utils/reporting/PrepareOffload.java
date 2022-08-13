@@ -56,7 +56,6 @@ public class PrepareOffload extends AsyncTask<Activity, Activity, Activity> {
         progress.getDialog().dismiss();
         if (offLoadData.offLoadReports.size() > 0) uploadOffload(activity);
         else new CustomToast().error(activity.getString(R.string.data_not_found));
-        fragment.setButtonState();
     }
 
     private void uploadOffload(Activity activity) {

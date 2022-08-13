@@ -44,7 +44,7 @@ public class HttpClientWrapper {
         }
 
         if (isNetworkAvailable(context)) {
-            call.enqueue(new Callback<T>() {
+            call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
                     if (!cancel) {
