@@ -56,8 +56,4 @@ public class ReportInspectionViewModel extends BaseObservable {
     public static int getText(TextView view) {
         return Integer.parseInt(view.getText().toString());
     }
-
-//    public void getToastMessage() {
-//        Log.e("here","getToastMessage");
-//    }
 }

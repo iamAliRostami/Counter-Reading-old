@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.BindingAdapter;
 import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.databinding.FragmentReportInspectionBinding;
@@ -48,12 +47,6 @@ public class ReportInspectionFragment extends Fragment {
             new PrepareOffload(requireActivity(), this).execute(requireActivity());
         });
     }
-
-//    @BindingAdapter({"toastMessage"})
-//    public static void runMe(View view) {
-//        if (message != null)
-//            Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
-//    }
 
     public void setReportInspection() {
         final MyDatabase myDatabase = getApplicationComponent().MyDatabase();
