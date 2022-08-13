@@ -44,7 +44,7 @@ public class ReportInspectionFragment extends Fragment {
     private void initialize() {
         binding.buttonSubmitInspection.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
-//            lastClickTime = SystemClock.elapsedRealtime();
+            lastClickTime = SystemClock.elapsedRealtime();
             new PrepareOffload(requireActivity(), this).execute(requireActivity());
         });
     }
