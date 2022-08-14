@@ -1,6 +1,7 @@
 package com.leon.counter_reading.fragments;
 
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.enums.FragmentTags.POSSIBLE_DIALOG;
 import static com.leon.counter_reading.enums.HighLowStateEnum.HIGH;
 import static com.leon.counter_reading.enums.HighLowStateEnum.LOW;
 import static com.leon.counter_reading.enums.HighLowStateEnum.NORMAL;
@@ -638,7 +639,7 @@ public class ReadingFragment extends Fragment {
     private final View.OnLongClickListener onLongClickListener = view -> {
         final int id = view.getId();
         if (id == R.id.text_view_address)
-            ShowDialogOnce(requireContext(), "SHOW_POSSIBLE_DIALOG_".concat(onOffLoadDto.eshterak),
+            ShowDialogOnce(requireContext(), POSSIBLE_DIALOG.getValue().concat(onOffLoadDto.eshterak),
                     PossibleFragment.newInstance(onOffLoadDto, position, true));
         else if (id == textViewId)
             textView.setText("");
