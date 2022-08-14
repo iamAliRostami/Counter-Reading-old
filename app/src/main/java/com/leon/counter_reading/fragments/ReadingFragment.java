@@ -418,7 +418,6 @@ public class ReadingFragment extends Fragment {
                 new CustomToast().warning(message, Toast.LENGTH_LONG);
                 textView.requestFocus();
             } else {
-                //TODO
                 ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(position, currentNumber,
                         counterStateCode, counterStatePosition);
             }
@@ -431,9 +430,6 @@ public class ReadingFragment extends Fragment {
             String message = getString(R.string.counter_empty);
             textView.setError(message);
             textView.requestFocus();
-            message = message.concat("\n").concat(onOffLoadDto.eshterak)
-                    .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
-                    .concat(String.valueOf(textViewId));
             new CustomToast().warning(message, Toast.LENGTH_LONG);
         } else if (lockProcess(false)) {
             final int currentNumber = getDigits(textView.getText().toString());
