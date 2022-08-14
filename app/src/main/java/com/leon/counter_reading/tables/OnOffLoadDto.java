@@ -1,11 +1,13 @@
 package com.leon.counter_reading.tables;
 
+import androidx.databinding.BaseObservable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
 @Entity(tableName = "OnOffLoadDto", indices = @Index(value = {"customId"}, unique = true))
 public class OnOffLoadDto {

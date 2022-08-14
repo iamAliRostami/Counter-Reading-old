@@ -8,8 +8,10 @@ import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.enums.BundleEnum.TYPE;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.DialogType.Yellow;
+import static com.leon.counter_reading.enums.FragmentTags.POSSIBLE_DIALOG;
 import static com.leon.counter_reading.enums.FragmentTags.REPORT_FORBID;
 import static com.leon.counter_reading.enums.FragmentTags.SEARCH;
+import static com.leon.counter_reading.enums.FragmentTags.SERIAL_DIALOG;
 import static com.leon.counter_reading.enums.FragmentTags.TAKE_PHOTO;
 import static com.leon.counter_reading.enums.NotificationType.LIGHT_OFF;
 import static com.leon.counter_reading.enums.NotificationType.LIGHT_ON;
@@ -132,9 +134,6 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
         final View childLayout = binding.getRoot();
         final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
-//        AppCompatDelegate.setDefaultNightMode(getApplicationComponent().SharedPreferenceModel()
-//                .getBoolData(THEME_TEMPORARY.getValue()) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-
         sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
         imageSrc = ArrayUtils.clone(setAboveIcons());
         getBundle();
@@ -357,11 +356,10 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                         .onOffLoadDtos.get(position).counterStatePosition);
                 if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
                         counterStateDto.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {
-                    ShowDialogOnce(this, "SERIAL_DIALOG_".concat(readingData.onOffLoadDtos.get(position).eshterak),
+                    ShowDialogOnce(this, SERIAL_DIALOG.getValue().concat(readingData.onOffLoadDtos.get(position).eshterak),
                             SerialFragment.newInstance(position, counterStateDto.id,
                                     readingData.onOffLoadDtos.get(position).counterStatePosition));
-                } else
-                    isShowing = true;
+                } else isShowing = true;
             }
             if (isShowing) {
                 updateAdapter(position);
@@ -383,7 +381,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     }
 
     private void showPossible(int position) {
-        ShowDialogOnce(this, "SHOW_POSSIBLE_DIALOG_".concat(readingData.onOffLoadDtos.get(position).eshterak),
+        ShowDialogOnce(this, POSSIBLE_DIALOG.getValue().concat(readingData.onOffLoadDtos.get(position).eshterak),
                 PossibleFragment.newInstance(readingData.onOffLoadDtos.get(position), position, false));
     }
 
@@ -466,17 +464,6 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 makeRing(this, isOn ? LIGHT_ON : LIGHT_OFF);
                 imageViewFlash.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                         isOn ? R.drawable.img_flash_on : R.drawable.img_flash_off));
-            });
-
-            final ImageView imageViewReverse = findViewById(R.id.image_view_reverse);
-            imageViewReverse.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
-                    R.drawable.img_inverse));
-            imageViewReverse.setOnClickListener(v -> {
-                new CustomToast().warning("به دلیل تست، تغییر تم میسر نیست.");
-//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode() < 2 ?
-//                        AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-//                getDelegate().setLocalNightMode(getDelegate().getLocalNightMode() < 2 ?
-//                        AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
             });
 
             final ImageView imageViewCamera = findViewById(R.id.image_view_camera);

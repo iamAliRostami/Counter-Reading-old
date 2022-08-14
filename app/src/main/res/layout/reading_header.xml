@@ -44,5 +44,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:src="@drawable/img_inverse"
+        android:visibility="gone"
         tools:ignore="ContentDescription" />
 </LinearLayout>

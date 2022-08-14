@@ -210,9 +210,12 @@ public class ReadingFragment extends Fragment {
         binding.textViewAhad2.setText(String.valueOf(onOffLoadDto.ahadTejariOrFari));
         binding.textViewAhadTotal.setText(String.valueOf(onOffLoadDto.ahadSaierOrAbBaha));
 
-        if (readingConfigDefaultDto.isOnQeraatCode)
-            binding.textViewCode.setText(onOffLoadDto.qeraatCode);
-        else binding.textViewCode.setText(onOffLoadDto.eshterak);
+        binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.balance));
+        binding.textViewPreNumber.setOnClickListener(onClickListener);
+        binding.textViewAddress.setOnLongClickListener(onLongClickListener);
+
+        binding.textViewCode.setText(readingConfigDefaultDto.isOnQeraatCode ? onOffLoadDto.qeraatCode : onOffLoadDto.eshterak);
+
         if (karbariDto.title == null)
             new CustomToast().warning(String.format("کاربری اشتراک %s به درستی بارگیری نشده است.", onOffLoadDto.eshterak));
         else binding.textViewKarbari.setText(karbariDto.title);
@@ -225,11 +228,6 @@ public class ReadingFragment extends Fragment {
         else
             binding.textViewSiphon.setText(onOffLoadDto.sifoonQotr.equals("مشخص نشده") ? "-" : onOffLoadDto.sifoonQotr);
 
-        binding.textViewPreNumber.setText(String.valueOf(onOffLoadDto.balance));
-
-
-        binding.textViewPreNumber.setOnClickListener(onClickListener);
-        binding.textViewAddress.setOnLongClickListener(onLongClickListener);
     }
 
     private void initializeSpinner() {
