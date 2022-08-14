@@ -103,10 +103,9 @@ public class MyApplication extends Application {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     public static String getAndroidVersion() {
-        final String release = Build.VERSION.RELEASE;
-        final int sdkVersion = Build.VERSION.SDK_INT;
-        return "Android SDK: " + sdkVersion + " (" + release + ")";
+        return String.format("Android SDK: %d (%s)", Build.VERSION.SDK_INT, Build.VERSION.RELEASE);
     }
 
     @SuppressLint("HardwareIds")

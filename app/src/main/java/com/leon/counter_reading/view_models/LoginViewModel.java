@@ -6,6 +6,10 @@ import static com.leon.counter_reading.helpers.MyApplication.getAndroidVersion;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.Crypto.decrypt;
 
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -17,24 +21,27 @@ import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 public class LoginViewModel extends BaseObservable {
     @SerializedName("access_token")
     private String accessToken;
-    @SerializedName("access_token")
+    @SerializedName("refresh_token")
     private String refreshToken;
     private String username;
     private String password;
+    private transient String version;
+    private transient String oldUsername;
+    private transient String oldPassword;
+    private transient boolean saved;
+    private int status;
     private String deviceSerial;
     private String appVersion;
-    private String version;
     private String displayName;
     private String userCode;
     private String XSRFToken;
     private String message;
     private boolean isValid;
-    private boolean saved;
-    private int status;
 
-    public LoginViewModel(String version) {
-        setVersion(version.concat(" ").concat(getAndroidVersion()).concat(" *** ")
-                .concat(BuildConfig.VERSION_NAME));
+    public LoginViewModel(String deviceSerial) {
+        setAppVersion(BuildConfig.VERSION_NAME);
+        setDeviceSerial(deviceSerial);
+        setVersion(String.format("%s *** %s", getAndroidVersion(), BuildConfig.VERSION_NAME));
         final ISharedPreferenceManager sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
         if (sharedPreferenceManager.checkIsNotEmpty(USERNAME.getValue()) &&
                 sharedPreferenceManager.checkIsNotEmpty(PASSWORD.getValue())) {
@@ -63,24 +70,36 @@ public class LoginViewModel extends BaseObservable {
         notifyPropertyChanged(BR.password);
     }
 
-    @Bindable
+    public String getOldUsername() {
+        return oldUsername;
+    }
+
+    public void setOldUsername(String oldUsername) {
+        this.oldUsername = oldUsername;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
     public String getDeviceSerial() {
         return deviceSerial;
     }
 
     public void setDeviceSerial(String deviceSerial) {
         this.deviceSerial = deviceSerial;
-        notifyPropertyChanged(BR.deviceSerial);
     }
 
-    @Bindable
     public String getAppVersion() {
         return appVersion;
     }
 
     public void setAppVersion(String appVersion) {
         this.appVersion = appVersion;
-        notifyPropertyChanged(BR.appVersion);
     }
 
     @Bindable
@@ -143,24 +162,20 @@ public class LoginViewModel extends BaseObservable {
         notifyPropertyChanged(BR.message);
     }
 
-    @Bindable
     public int getStatus() {
         return status;
     }
 
     public void setStatus(int status) {
         this.status = status;
-        notifyPropertyChanged(BR.status);
     }
 
-    @Bindable
     public boolean isValid() {
         return isValid;
     }
 
     public void setValid(boolean valid) {
         isValid = valid;
-        notifyPropertyChanged(BR.valid);
     }
 
     @Bindable
@@ -183,8 +198,69 @@ public class LoginViewModel extends BaseObservable {
         notifyPropertyChanged(BR.version);
     }
 
+    public boolean setLoginFeedback(LoginViewModel loginFeedback) {
+        if (loginFeedback == null)
+            return true;
+        setAccessToken(loginFeedback.getAccessToken());
+        setRefreshToken(loginFeedback.getRefreshToken());
+        setUserCode(loginFeedback.getUserCode());
+        setXSRFToken(loginFeedback.getXSRFToken());
+        setMessage(loginFeedback.getMessage());
+        setStatus(loginFeedback.getStatus());
+        setValid(loginFeedback.isValid());
+        return false;
+    }
+
     public boolean checkUserPassword() {
         return getApplicationComponent().SharedPreferenceModel().getStringData(USERNAME.getValue()).equals(username) &&
                 decrypt(getApplicationComponent().SharedPreferenceModel().getStringData(PASSWORD.getValue())).equals(password);
+    }
+
+    public boolean checkUserPasswordChange() {
+        return !username.equals(getOldUsername()) && !password.equals(getOldPassword());
+    }
+
+    private void validation() {
+        final boolean isUsernameValid = !TextUtils.isEmpty(getUsername());
+        final boolean isPasswordValid = !TextUtils.isEmpty(getPassword());
+        setValid(isUsernameValid && isPasswordValid);
+    }
+
+    public TextWatcher usernameWatcher() {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                setUsername(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                validation();
+            }
+        };
+    }
+
+    public TextWatcher passwordWatcher() {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                setPassword(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                validation();
+            }
+        };
     }
 }

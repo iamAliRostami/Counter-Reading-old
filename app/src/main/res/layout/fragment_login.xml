@@ -72,7 +72,7 @@
                 android:hint="@string/username"
                 android:inputType="text"
                 android:lines="1"
-                android:text="@{login.username}"
+                android:text="@={login.username}"
                 tools:ignore="Autofill" />
 
         </LinearLayout>
@@ -101,7 +101,7 @@
                 style="@style/InputGray"
                 android:hint="@string/password"
                 android:inputType="textPassword"
-                android:text="@{login.password}"
+                android:text="@={login.password}"
                 tools:ignore="Autofill" />
 
         </LinearLayout>
@@ -114,7 +114,7 @@
             android:layout_marginTop="@dimen/low_dp"
             android:layout_marginRight="@dimen/_50sdp"
             android:layout_marginBottom="@dimen/low_dp"
-            android:checked="@{login.saved}"
+            android:checked="@={login.saved}"
             android:text="@string/save" />
 
         <Button
@@ -137,12 +137,12 @@
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:text="@{login.version}"
             android:id="@+id/text_view_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/linear_layout_footer"
             android:layout_centerInParent="true"
+            android:text="@{@string/version + ' ' + login.version}"
             android:textColor="@color/text_color_dark" />
 
         <include layout="@layout/footer" />
