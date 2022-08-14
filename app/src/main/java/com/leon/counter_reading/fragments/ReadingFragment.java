@@ -1,6 +1,7 @@
 package com.leon.counter_reading.fragments;
 
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.enums.FragmentTags.ARE_YOU_SURE;
 import static com.leon.counter_reading.enums.FragmentTags.POSSIBLE_DIALOG;
 import static com.leon.counter_reading.enums.HighLowStateEnum.HIGH;
 import static com.leon.counter_reading.enums.HighLowStateEnum.LOW;
@@ -141,9 +142,7 @@ public class ReadingFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (savedInstanceState != null) {
-            savedInstanceState.clear();
-        }
+        if (savedInstanceState != null) savedInstanceState.clear();
         if (getApplicationComponent().SharedPreferenceModel().getBoolData(RTL_PAGING.getValue()))
             binding.relativeLayoutReading.setRotationY(180);
         initialize();
@@ -193,11 +192,11 @@ public class ReadingFragment extends Fragment {
     }
 
     private void initializeViews() {
-        binding.textViewAhad1Title.setText(getAhad1(getActiveCompanyName()).concat(" : "));
-        binding.textViewAhad2Title.setText(getAhad2(getActiveCompanyName()).concat(" : "));
-        binding.textViewAhadTotalTitle.setText(getAhadTotal(getActiveCompanyName()).concat(" : "));
+        binding.textViewAhad1Title.setText(String.format("%s : ", getAhad1(getActiveCompanyName())));
+        binding.textViewAhad2Title.setText(String.format("%s : ", getAhad2(getActiveCompanyName())));
+        binding.textViewAhadTotalTitle.setText(String.format("%s : ", getAhadTotal(getActiveCompanyName())));
         binding.textViewAddress.setText(onOffLoadDto.address);
-        binding.textViewName.setText(onOffLoadDto.firstName.concat(" ").concat(onOffLoadDto.sureName));
+        binding.textViewName.setText(String.format("%s %s", onOffLoadDto.firstName, onOffLoadDto.sureName));
         binding.textViewPreDate.setText(onOffLoadDto.preDate);
         binding.textViewSerial.setText(onOffLoadDto.counterSerial);
 
@@ -215,14 +214,14 @@ public class ReadingFragment extends Fragment {
             binding.textViewCode.setText(onOffLoadDto.qeraatCode);
         else binding.textViewCode.setText(onOffLoadDto.eshterak);
         if (karbariDto.title == null)
-            new CustomToast().warning("کاربری اشتراک ".concat(onOffLoadDto.eshterak).concat(" به درستی بارگیری نشده است."));
+            new CustomToast().warning(String.format("کاربری اشتراک %s به درستی بارگیری نشده است.", onOffLoadDto.eshterak));
         else binding.textViewKarbari.setText(karbariDto.title);
         if (onOffLoadDto.qotr == null)
-            new CustomToast().warning("قطر اشتراک ".concat(onOffLoadDto.eshterak).concat(" به درستی بارگیری نشده است."));
+            new CustomToast().warning(String.format("قطر اشتراک %s به درستی بارگیری نشده است.", onOffLoadDto.eshterak));
         else
             binding.textViewBranch.setText(onOffLoadDto.qotr.equals("مشخص نشده") ? "-" : onOffLoadDto.qotr);
         if (onOffLoadDto.sifoonQotr == null)
-            new CustomToast().warning("قطر سیفون اشتراک ".concat(onOffLoadDto.eshterak).concat(" به درستی بارگیری نشده است."));
+            new CustomToast().warning(String.format("قطر سیفون اشتراک %s به درستی بارگیری نشده است.", onOffLoadDto.eshterak));
         else
             binding.textViewSiphon.setText(onOffLoadDto.sifoonQotr.equals("مشخص نشده") ? "-" : onOffLoadDto.sifoonQotr);
 
@@ -379,15 +378,10 @@ public class ReadingFragment extends Fragment {
         onOffLoadDto.attemptCount++;
         ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position);
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount + 1 == getLockNumber(getActiveCompanyName()))
-            new CustomToast().error(getString(R.string.mistakes_error).concat(onOffLoadDto.eshterak)
-                            .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
-                            .concat(String.valueOf(textViewId))
-                    , Toast.LENGTH_LONG);
+            new CustomToast().error(getString(R.string.mistakes_error), Toast.LENGTH_LONG);
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount == getLockNumber(getActiveCompanyName()))
             new CustomToast().error(getString(R.string.by_mistakes).
-                    concat(onOffLoadDto.eshterak).concat(getString(R.string.is_locked))
-                    .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
-                    .concat(String.valueOf(textViewId)), Toast.LENGTH_SHORT);
+                    concat(onOffLoadDto.eshterak).concat(getString(R.string.is_locked)), Toast.LENGTH_SHORT);
         if (!onOffLoadDto.isLocked && onOffLoadDto.attemptCount >= getLockNumber(getActiveCompanyName())) {
             onOffLoadDto.isLocked = true;
             textView.setText("");
@@ -410,12 +404,9 @@ public class ReadingFragment extends Fragment {
                 lessThanPre(currentNumber);
             } else if (use < 0) {
                 makeRing(requireContext(), NOT_SAVE);
-                String message = getString(R.string.less_than_pre);
-                textView.setError(message);
-                message = message.concat("\n").concat(onOffLoadDto.eshterak)
-                        .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
-                        .concat(String.valueOf(textViewId));
+                final String message = getString(R.string.less_than_pre);
                 new CustomToast().warning(message, Toast.LENGTH_LONG);
+                textView.setError(message);
                 textView.requestFocus();
             } else {
                 ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(position, currentNumber,
@@ -438,12 +429,9 @@ public class ReadingFragment extends Fragment {
                 lessThanPre(currentNumber);
             } else if (use < 0) {
                 makeRing(requireContext(), NOT_SAVE);
-                String message = getString(R.string.less_than_pre);
+                final String message = getString(R.string.less_than_pre);
                 textView.setError(message);
                 textView.requestFocus();
-                message = message.concat("\n").concat(onOffLoadDto.eshterak)
-                        .concat("\nbtn: ").concat(String.valueOf(buttonId)).concat(" , txt: ")
-                        .concat(String.valueOf(textViewId));
                 new CustomToast().warning(message, Toast.LENGTH_LONG);
             } else {
                 notEmpty(currentNumber);
@@ -483,7 +471,7 @@ public class ReadingFragment extends Fragment {
         if (type != null) {
             final FragmentManager fm = requireActivity().getSupportFragmentManager();
             AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
-                    counterStatePosition).show(fm, "ARE_YOU_SURE_".concat(onOffLoadDto.eshterak));
+                    counterStatePosition).show(fm, ARE_YOU_SURE.getValue().concat(onOffLoadDto.eshterak));
         }
     }
 
@@ -509,7 +497,7 @@ public class ReadingFragment extends Fragment {
         if (type != null) {
             final FragmentManager fm = requireActivity().getSupportFragmentManager();
             AreYouSureFragment.newInstance(position, currentNumber, type, counterStateCode,
-                    counterStatePosition).show(fm, "ARE_YOU_SURE_".concat(onOffLoadDto.eshterak));
+                    counterStatePosition).show(fm, ARE_YOU_SURE.getValue().concat(onOffLoadDto.eshterak));
         }
     }
 
