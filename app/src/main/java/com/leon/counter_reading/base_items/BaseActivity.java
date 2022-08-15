@@ -4,6 +4,7 @@ import static com.leon.counter_reading.di.view_model.MyDatabaseClientModel.migra
 import static com.leon.counter_reading.enums.BundleEnum.THEME;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.DISPLAY_NAME;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_TEMPORARY;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USER_CODE;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
@@ -37,6 +38,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;

@@ -168,11 +168,11 @@ public class ReadingFragment extends Fragment {
     private void initializeTextViewNumber() {
         binding.editTextNumber.setId(View.generateViewId());
         textView = binding.editTextNumber;
-        textView.setOnLongClickListener(onLongClickListener);
-        textView.setOnClickListener(onClickListener);
         textViewId = textView.getId();
         if (onOffLoadDto.counterNumber != null)
             textView.setText(String.valueOf(onOffLoadDto.counterNumber));
+        textView.setOnLongClickListener(onLongClickListener);
+        textView.setOnClickListener(onClickListener);
     }
 
     private void initializeButtonSubmit() {
