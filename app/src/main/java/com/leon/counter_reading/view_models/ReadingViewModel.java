@@ -3,6 +3,8 @@ package com.leon.counter_reading.view_models;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
+import android.view.View;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -17,11 +19,104 @@ public class ReadingViewModel extends BaseObservable {
     private ReadingConfigDefaultDto readingConfigDefaultDto;
     private int rotation;
     private int position;
+    private int counterStateCode;
+    private int counterStatePosition;
+    private int textViewId;
+    private int buttonId;
+    private boolean shouldEnterNumber;
+    private boolean canLessThanPre;
+    private boolean canEnterNumber;
+    private boolean debtOrNumber;
+    private boolean isMakoos;
+    private boolean isMane;
 
     public ReadingViewModel() {
         if (getApplicationComponent().SharedPreferenceModel().getBoolData(RTL_PAGING.getValue()))
             setRotation(180);
+        setButtonId(View.generateViewId());
+        setTextViewId(View.generateViewId());
     }
+
+    @Bindable
+    public int getCounterStateCode() {
+        return counterStateCode;
+    }
+
+    public void setCounterStateCode(int counterStateCode) {
+        this.counterStateCode = counterStateCode;
+        notifyPropertyChanged(BR.counterStateCode);
+    }
+
+    @Bindable
+    public int getCounterStatePosition() {
+        return counterStatePosition;
+    }
+
+    public void setCounterStatePosition(int counterStatePosition) {
+        this.counterStatePosition = counterStatePosition;
+        notifyPropertyChanged(BR.counterStatePosition);
+    }
+
+    @Bindable
+    public boolean isShouldEnterNumber() {
+        return shouldEnterNumber;
+    }
+
+    public void setShouldEnterNumber(boolean shouldEnterNumber) {
+        this.shouldEnterNumber = shouldEnterNumber;
+        notifyPropertyChanged(BR.shouldEnterNumber);
+    }
+
+    @Bindable
+    public boolean isCanLessThanPre() {
+        return canLessThanPre;
+    }
+
+    public void setCanLessThanPre(boolean canLessThanPre) {
+        this.canLessThanPre = canLessThanPre;
+        notifyPropertyChanged(BR.canLessThanPre);
+    }
+
+    @Bindable
+    public boolean isCanEnterNumber() {
+        return canEnterNumber;
+    }
+
+    public void setCanEnterNumber(boolean canEnterNumber) {
+        this.canEnterNumber = canEnterNumber;
+        notifyPropertyChanged(BR.canEnterNumber);
+    }
+
+    @Bindable
+    public boolean isDebtOrNumber() {
+        return debtOrNumber;
+    }
+
+    public void setDebtOrNumber(boolean debtOrNumber) {
+        this.debtOrNumber = debtOrNumber;
+        notifyPropertyChanged(BR.debtOrNumber);
+    }
+
+    @Bindable
+    public boolean isMakoos() {
+        return isMakoos;
+    }
+
+    public void setMakoos(boolean makoos) {
+        isMakoos = makoos;
+        notifyPropertyChanged(BR.makoos);
+    }
+
+    @Bindable
+    public boolean isMane() {
+        return isMane;
+    }
+
+    public void setMane(boolean mane) {
+        isMane = mane;
+        notifyPropertyChanged(BR.mane);
+    }
+
 
     @Bindable
     public OnOffLoadDto getOnOffLoadDto() {
@@ -81,5 +176,25 @@ public class ReadingViewModel extends BaseObservable {
     public void setPosition(int position) {
         this.position = position;
         notifyPropertyChanged(BR.position);
+    }
+
+    @Bindable
+    public int getTextViewId() {
+        return textViewId;
+    }
+
+    public void setTextViewId(int textViewId) {
+        this.textViewId = textViewId;
+        notifyPropertyChanged(BR.textViewId);
+    }
+
+    @Bindable
+    public int getButtonId() {
+        return buttonId;
+    }
+
+    public void setButtonId(int buttonId) {
+        this.buttonId = buttonId;
+        notifyPropertyChanged(BR.buttonId);
     }
 }

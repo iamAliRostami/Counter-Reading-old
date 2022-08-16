@@ -70,20 +70,20 @@ import java.util.ArrayList;
 
 public class ReadingFragment extends Fragment {
     private FragmentReadingBinding binding;
-    private final ReadingViewModel readingViewModel = new ReadingViewModel();
+    private final ReadingViewModel readingVM = new ReadingViewModel();
     private long lastClickTime = 0;
-    private int counterStateCode, counterStatePosition, textViewId, buttonId;
-    private boolean isMakoos, isMane, canLessThanPre, canEnterNumber, shouldEnterNumber, debtOrNumber;
     private TextView textView;
+//    private int textViewId;
+//    private int buttonId;
 
     public ReadingFragment() {
     }
 
     private ReadingFragment(int position) {
-        readingViewModel.setPosition(position);
-        readingViewModel.setOnOffLoadDto(Constants.onOffLoadDtos.get(position));
-        readingViewModel.setReadingConfigDefaultDto(Constants.readingConfigDefaultDtos.get(position));
-        readingViewModel.setKarbariDto(Constants.karbariDtos.get(position));
+        readingVM.setPosition(position);
+        readingVM.setOnOffLoadDto(Constants.onOffLoadDtos.get(position));
+        readingVM.setReadingConfigDefaultDto(Constants.readingConfigDefaultDtos.get(position));
+        readingVM.setKarbariDto(Constants.karbariDtos.get(position));
     }
 
     public static ReadingFragment newInstance(int position) {
@@ -102,7 +102,7 @@ public class ReadingFragment extends Fragment {
         super.onSaveInstanceState(outState);
         try {
             outState.clear();
-            outState.putAll(putBundle(readingViewModel.getPosition()));
+            outState.putAll(putBundle(readingVM.getPosition()));
         } catch (Exception e) {
             new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
         }
@@ -122,13 +122,13 @@ public class ReadingFragment extends Fragment {
 
     private void getBundle(final Bundle bundle) {
         try {
-            readingViewModel.setPosition(bundle.getInt(POSITION.getValue()));
+            readingVM.setPosition(bundle.getInt(POSITION.getValue()));
 
-            readingViewModel.setOnOffLoadDto(Constants.onOffLoadDtos.get(readingViewModel.getPosition()));
-            readingViewModel.setKarbariDto(Constants.karbariDtos.get(readingViewModel.getPosition()));
-            readingViewModel.setReadingConfigDefaultDto(Constants.readingConfigDefaultDtos.get(readingViewModel.getPosition()));
-            readingViewModel.setReadingConfigDefaultDto(Constants.readingConfigDefaultDtos.get(readingViewModel.getPosition()));
-            readingViewModel.setKarbariDto(Constants.karbariDtos.get(readingViewModel.getPosition()));
+            readingVM.setOnOffLoadDto(Constants.onOffLoadDtos.get(readingVM.getPosition()));
+            readingVM.setKarbariDto(Constants.karbariDtos.get(readingVM.getPosition()));
+            readingVM.setReadingConfigDefaultDto(Constants.readingConfigDefaultDtos.get(readingVM.getPosition()));
+            readingVM.setReadingConfigDefaultDto(Constants.readingConfigDefaultDtos.get(readingVM.getPosition()));
+            readingVM.setKarbariDto(Constants.karbariDtos.get(readingVM.getPosition()));
 
         } catch (Exception e) {
             final Intent intent = requireActivity().getIntent();
@@ -151,7 +151,7 @@ public class ReadingFragment extends Fragment {
                              Bundle savedInstanceState) {
         if (savedInstanceState != null) savedInstanceState.clear();
         binding = FragmentReadingBinding.inflate(inflater, container, false);
-        binding.setOnOffLoad(readingViewModel);
+        binding.setOnOffLoad(readingVM);
         return binding.getRoot();
     }
 
@@ -164,24 +164,28 @@ public class ReadingFragment extends Fragment {
     }
 
     private void initializeTextViewNumber() {
-        binding.editTextNumber.setId(View.generateViewId());
+        //TODO
+//        binding.editTextNumber.setId(View.generateViewId());
+        binding.editTextNumber.setId(readingVM.getTextViewId());
         textView = binding.editTextNumber;
-        textViewId = textView.getId();
+//        textViewId = textView.getId();
         textView.setOnLongClickListener(onLongClickListener);
         textView.setOnClickListener(onClickListener);
     }
 
     private void initializeButtonSubmit() {
-        binding.buttonSubmit.setId(View.generateViewId());
-        buttonId = binding.buttonSubmit.getId();
+        //TODO
+        binding.buttonSubmit.setId(readingVM.getButtonId());
+//        binding.buttonSubmit.setId(View.generateViewId());
+//        buttonId = binding.buttonSubmit.getId();
         binding.buttonSubmit.setOnClickListener(onClickListener);
     }
 
     private void changeKeyboardState() {
-        if (readingViewModel.getOnOffLoadDto().isLocked) {
+        if (readingVM.getOnOffLoadDto().isLocked) {
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
             binding.imageButtonShowKeyboard.setVisibility(View.GONE);
-        } else if (FOCUS_ON_EDIT_TEXT && (shouldEnterNumber || canEnterNumber))
+        } else if (FOCUS_ON_EDIT_TEXT && (readingVM.isShouldEnterNumber() || readingVM.isCanEnterNumber()))
             binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
         else
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
@@ -191,38 +195,38 @@ public class ReadingFragment extends Fragment {
         binding.textViewAhad1Title.setText(String.format("%s : ", getAhad1(getActiveCompanyName())));
         binding.textViewAhad2Title.setText(String.format("%s : ", getAhad2(getActiveCompanyName())));
         binding.textViewAhadTotalTitle.setText(String.format("%s : ", getAhadTotal(getActiveCompanyName())));
-        binding.textViewAddress.setText(readingViewModel.getOnOffLoadDto().address);
-        binding.textViewName.setText(String.format("%s %s", readingViewModel.getOnOffLoadDto().firstName, readingViewModel.getOnOffLoadDto().sureName));
-        binding.textViewPreDate.setText(readingViewModel.getOnOffLoadDto().preDate);
-        binding.textViewSerial.setText(readingViewModel.getOnOffLoadDto().counterSerial);
+        binding.textViewAddress.setText(readingVM.getOnOffLoadDto().address);
+        binding.textViewName.setText(String.format("%s %s", readingVM.getOnOffLoadDto().firstName, readingVM.getOnOffLoadDto().sureName));
+        binding.textViewPreDate.setText(readingVM.getOnOffLoadDto().preDate);
+        binding.textViewSerial.setText(readingVM.getOnOffLoadDto().counterSerial);
 
-        if (readingViewModel.getOnOffLoadDto().displayRadif)
-            binding.textViewRadif.setText(String.valueOf(readingViewModel.getOnOffLoadDto().radif));
-        else if (readingViewModel.getOnOffLoadDto().displayBillId)
-            binding.textViewRadif.setText(String.valueOf(readingViewModel.getOnOffLoadDto().billId));
+        if (readingVM.getOnOffLoadDto().displayRadif)
+            binding.textViewRadif.setText(String.valueOf(readingVM.getOnOffLoadDto().radif));
+        else if (readingVM.getOnOffLoadDto().displayBillId)
+            binding.textViewRadif.setText(String.valueOf(readingVM.getOnOffLoadDto().billId));
         else binding.textViewRadif.setVisibility(View.GONE);
 
-        binding.textViewAhad1.setText(String.valueOf(readingViewModel.getOnOffLoadDto().ahadMaskooniOrAsli));
-        binding.textViewAhad2.setText(String.valueOf(readingViewModel.getOnOffLoadDto().ahadTejariOrFari));
-        binding.textViewAhadTotal.setText(String.valueOf(readingViewModel.getOnOffLoadDto().ahadSaierOrAbBaha));
+        binding.textViewAhad1.setText(String.valueOf(readingVM.getOnOffLoadDto().ahadMaskooniOrAsli));
+        binding.textViewAhad2.setText(String.valueOf(readingVM.getOnOffLoadDto().ahadTejariOrFari));
+        binding.textViewAhadTotal.setText(String.valueOf(readingVM.getOnOffLoadDto().ahadSaierOrAbBaha));
 
-        binding.textViewPreNumber.setText(String.valueOf(readingViewModel.getOnOffLoadDto().balance));
+        binding.textViewPreNumber.setText(String.valueOf(readingVM.getOnOffLoadDto().balance));
         binding.textViewPreNumber.setOnClickListener(onClickListener);
         binding.textViewAddress.setOnLongClickListener(onLongClickListener);
 
-        binding.textViewCode.setText(readingViewModel.getReadingConfigDefaultDto().isOnQeraatCode ? readingViewModel.getOnOffLoadDto().qeraatCode : readingViewModel.getOnOffLoadDto().eshterak);
+        binding.textViewCode.setText(readingVM.getReadingConfigDefaultDto().isOnQeraatCode ? readingVM.getOnOffLoadDto().qeraatCode : readingVM.getOnOffLoadDto().eshterak);
 
-        if (readingViewModel.getKarbariDto().title == null)
-            new CustomToast().warning(String.format("کاربری اشتراک %s به درستی بارگیری نشده است.", readingViewModel.getOnOffLoadDto().eshterak));
-        else binding.textViewKarbari.setText(readingViewModel.getKarbariDto().title);
-        if (readingViewModel.getOnOffLoadDto().qotr == null)
-            new CustomToast().warning(String.format("قطر اشتراک %s به درستی بارگیری نشده است.", readingViewModel.getOnOffLoadDto().eshterak));
+        if (readingVM.getKarbariDto().title == null)
+            new CustomToast().warning(String.format("کاربری اشتراک %s به درستی بارگیری نشده است.", readingVM.getOnOffLoadDto().eshterak));
+        else binding.textViewKarbari.setText(readingVM.getKarbariDto().title);
+        if (readingVM.getOnOffLoadDto().qotr == null)
+            new CustomToast().warning(String.format("قطر اشتراک %s به درستی بارگیری نشده است.", readingVM.getOnOffLoadDto().eshterak));
         else
-            binding.textViewBranch.setText(readingViewModel.getOnOffLoadDto().qotr.equals("مشخص نشده") ? "-" : readingViewModel.getOnOffLoadDto().qotr);
-        if (readingViewModel.getOnOffLoadDto().sifoonQotr == null)
-            new CustomToast().warning(String.format("قطر سیفون اشتراک %s به درستی بارگیری نشده است.", readingViewModel.getOnOffLoadDto().eshterak));
+            binding.textViewBranch.setText(readingVM.getOnOffLoadDto().qotr.equals("مشخص نشده") ? "-" : readingVM.getOnOffLoadDto().qotr);
+        if (readingVM.getOnOffLoadDto().sifoonQotr == null)
+            new CustomToast().warning(String.format("قطر سیفون اشتراک %s به درستی بارگیری نشده است.", readingVM.getOnOffLoadDto().eshterak));
         else
-            binding.textViewSiphon.setText(readingViewModel.getOnOffLoadDto().sifoonQotr.equals("مشخص نشده") ? "-" : readingViewModel.getOnOffLoadDto().sifoonQotr);
+            binding.textViewSiphon.setText(readingVM.getOnOffLoadDto().sifoonQotr.equals("مشخص نشده") ? "-" : readingVM.getOnOffLoadDto().sifoonQotr);
 
     }
 
@@ -236,7 +240,7 @@ public class ReadingFragment extends Fragment {
         boolean found = false;
         int i;
         for (i = 0; i < counterStateDtos.size() && !found; i++)
-            if (counterStateDtos.get(i).id == readingViewModel.getOnOffLoadDto().counterStateId) {
+            if (counterStateDtos.get(i).id == readingVM.getOnOffLoadDto().counterStateId) {
                 found = true;
             }
         binding.spinner.setSelection(found ? i - 1 : 0);
@@ -258,17 +262,18 @@ public class ReadingFragment extends Fragment {
     }
 
     private void setCounterStateField(int i) {
-        counterStatePosition = i;
-        final CounterStateDto counterStateDto = counterStateDtos.get(counterStatePosition);
-        counterStateCode = counterStateDto.id;
-        isMane = counterStateDto.isMane;
-        shouldEnterNumber = counterStateDto.shouldEnterNumber;
-        canEnterNumber = counterStateDto.canEnterNumber;
-        canLessThanPre = counterStateDto.canNumberBeLessThanPre;
-        isMakoos = counterStateDto.title.equals("معکوس");
-        binding.imageButtonShowKeyboard.setVisibility(canEnterNumber || shouldEnterNumber ?
-                View.VISIBLE : View.GONE);
-        if (!canEnterNumber && !shouldEnterNumber) textView.setText("");
+        readingVM.setCounterStatePosition(i);
+        final CounterStateDto counterStateDto = counterStateDtos.get(readingVM.getCounterStatePosition());
+        readingVM.setCounterStateCode(counterStateDto.id);
+        readingVM.setMane(counterStateDto.isMane);
+        readingVM.setShouldEnterNumber(counterStateDto.shouldEnterNumber);
+        readingVM.setCanEnterNumber(counterStateDto.canEnterNumber);
+        readingVM.setCanLessThanPre(counterStateDto.canNumberBeLessThanPre);
+        readingVM.setMakoos(counterStateDto.title.equals("معکوس"));
+        binding.imageButtonShowKeyboard.setVisibility(readingVM.isCanEnterNumber() ||
+                readingVM.isShouldEnterNumber() ? View.VISIBLE : View.GONE);
+        if (!readingVM.isCanEnterNumber() && !readingVM.isShouldEnterNumber())
+            textView.setText("");
         changeKeyboardState();
     }
 
@@ -361,7 +366,7 @@ public class ReadingFragment extends Fragment {
     }
 
     private void attemptSend() {
-        if (!shouldEnterNumber && lockProcess(true)) {
+        if (!readingVM.isShouldEnterNumber() && lockProcess(true)) {
             canBeEmpty();
         } else {
             canNotBeEmpty();
@@ -369,17 +374,17 @@ public class ReadingFragment extends Fragment {
     }
 
     private boolean lockProcess(final boolean canContinue) {
-        readingViewModel.getOnOffLoadDto().attemptCount++;
-        ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(readingViewModel.getPosition());
-        if (!readingViewModel.getOnOffLoadDto().isLocked && readingViewModel.getOnOffLoadDto().attemptCount + 1 == getLockNumber(getActiveCompanyName()))
+        readingVM.getOnOffLoadDto().attemptCount++;
+        ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(readingVM.getPosition());
+        if (!readingVM.getOnOffLoadDto().isLocked && readingVM.getOnOffLoadDto().attemptCount + 1 == getLockNumber(getActiveCompanyName()))
             new CustomToast().error(getString(R.string.mistakes_error), Toast.LENGTH_LONG);
-        if (!readingViewModel.getOnOffLoadDto().isLocked && readingViewModel.getOnOffLoadDto().attemptCount == getLockNumber(getActiveCompanyName()))
+        if (!readingVM.getOnOffLoadDto().isLocked && readingVM.getOnOffLoadDto().attemptCount == getLockNumber(getActiveCompanyName()))
             new CustomToast().error(getString(R.string.by_mistakes).
-                    concat(readingViewModel.getOnOffLoadDto().eshterak).concat(getString(R.string.is_locked)), Toast.LENGTH_SHORT);
-        if (!readingViewModel.getOnOffLoadDto().isLocked && readingViewModel.getOnOffLoadDto().attemptCount >= getLockNumber(getActiveCompanyName())) {
-            readingViewModel.getOnOffLoadDto().isLocked = true;
+                    concat(readingVM.getOnOffLoadDto().eshterak).concat(getString(R.string.is_locked)), Toast.LENGTH_SHORT);
+        if (!readingVM.getOnOffLoadDto().isLocked && readingVM.getOnOffLoadDto().attemptCount >= getLockNumber(getActiveCompanyName())) {
+            readingVM.getOnOffLoadDto().isLocked = true;
             textView.setText("");
-            ((ReadingActivity) requireActivity()).updateOnOffLoadByLock(readingViewModel.getPosition());
+            ((ReadingActivity) requireActivity()).updateOnOffLoadByLock(readingVM.getPosition());
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
             binding.imageButtonShowKeyboard.setVisibility(View.GONE);
             return canContinue;
@@ -388,13 +393,13 @@ public class ReadingFragment extends Fragment {
     }
 
     private void canBeEmpty() {
-        if (textView.getText().toString().isEmpty() || isMane) {
-            ((ReadingActivity) requireActivity()).updateOnOffLoadWithoutCounterNumber(readingViewModel.getPosition(),
-                    counterStateCode, counterStatePosition);
+        if (textView.getText().toString().isEmpty() || readingVM.isMane()) {
+            ((ReadingActivity) requireActivity()).updateOnOffLoadWithoutCounterNumber(readingVM.getPosition(),
+                    readingVM.getCounterStateCode(), readingVM.getCounterStatePosition());
         } else {
             final int currentNumber = getDigits(textView.getText().toString());
-            final int use = currentNumber - readingViewModel.getOnOffLoadDto().preNumber;
-            if (canLessThanPre) {
+            final int use = currentNumber - readingVM.getOnOffLoadDto().preNumber;
+            if (readingVM.isCanLessThanPre()) {
                 lessThanPre(currentNumber);
             } else if (use < 0) {
                 makeRing(requireContext(), NOT_SAVE);
@@ -403,8 +408,8 @@ public class ReadingFragment extends Fragment {
                 textView.setError(message);
                 textView.requestFocus();
             } else {
-                ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingViewModel.getPosition(),
-                        currentNumber, counterStateCode, counterStatePosition);
+                ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingVM.getPosition(),
+                        currentNumber, readingVM.getCounterStateCode(), readingVM.getCounterStatePosition());
             }
         }
     }
@@ -418,8 +423,8 @@ public class ReadingFragment extends Fragment {
             new CustomToast().warning(message, Toast.LENGTH_LONG);
         } else if (lockProcess(false)) {
             final int currentNumber = getDigits(textView.getText().toString());
-            final int use = currentNumber - readingViewModel.getOnOffLoadDto().preNumber;
-            if (canLessThanPre) {
+            final int use = currentNumber - readingVM.getOnOffLoadDto().preNumber;
+            if (readingVM.isCanLessThanPre()) {
                 lessThanPre(currentNumber);
             } else if (use < 0) {
                 makeRing(requireContext(), NOT_SAVE);
@@ -434,9 +439,9 @@ public class ReadingFragment extends Fragment {
     }
 
     private void lessThanPre(int currentNumber) {
-        if (!isMakoos)
-            ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingViewModel.getPosition(),
-                    currentNumber, counterStateCode, counterStatePosition);
+        if (!readingVM.isMakoos())
+            ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingVM.getPosition(),
+                    currentNumber, readingVM.getCounterStateCode(), readingVM.getCounterStatePosition());
         else {
             notEmptyIsMakoos(currentNumber);
         }
@@ -444,11 +449,11 @@ public class ReadingFragment extends Fragment {
 
     private void notEmptyIsMakoos(int currentNumber) {
         Integer type = null;
-        if (currentNumber == readingViewModel.getOnOffLoadDto().preNumber) {
+        if (currentNumber == readingVM.getOnOffLoadDto().preNumber) {
             type = ZERO.getValue();
         } else {
-            final int status = checkHighLowMakoos(readingViewModel.getOnOffLoadDto(), readingViewModel.getKarbariDto(),
-                    readingViewModel.getReadingConfigDefaultDto(), currentNumber);
+            final int status = checkHighLowMakoos(readingVM.getOnOffLoadDto(), readingVM.getKarbariDto(),
+                    readingVM.getReadingConfigDefaultDto(), currentNumber);
             switch (status) {
                 case 1:
                     type = HIGH.getValue();
@@ -457,25 +462,26 @@ public class ReadingFragment extends Fragment {
                     type = LOW.getValue();
                     break;
                 case 0:
-                    ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingViewModel.getPosition(),
-                            currentNumber, counterStateCode, counterStatePosition, NORMAL.getValue());
+                    ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingVM.getPosition(),
+                            currentNumber, readingVM.getCounterStateCode(), readingVM.getCounterStatePosition(), NORMAL.getValue());
                     break;
             }
         }
         if (type != null) {
             final FragmentManager fm = requireActivity().getSupportFragmentManager();
-            AreYouSureFragment.newInstance(readingViewModel.getPosition(), currentNumber, type, counterStateCode,
-                    counterStatePosition).show(fm, ARE_YOU_SURE.getValue().concat(readingViewModel.getOnOffLoadDto().eshterak));
+            AreYouSureFragment.newInstance(readingVM.getPosition(), currentNumber, type,
+                    readingVM.getCounterStateCode(), readingVM.getCounterStatePosition()).show(fm,
+                    String.format("%s%s", ARE_YOU_SURE.getValue(), readingVM.getOnOffLoadDto().eshterak));
         }
     }
 
     private void notEmpty(int currentNumber) {
         Integer type = null;
-        if (currentNumber == readingViewModel.getOnOffLoadDto().preNumber) {
+        if (currentNumber == readingVM.getOnOffLoadDto().preNumber) {
             type = ZERO.getValue();
         } else {
-            final int status = checkHighLow(readingViewModel.getOnOffLoadDto(), readingViewModel.getKarbariDto(),
-                    readingViewModel.getReadingConfigDefaultDto(), currentNumber);
+            final int status = checkHighLow(readingVM.getOnOffLoadDto(), readingVM.getKarbariDto(),
+                    readingVM.getReadingConfigDefaultDto(), currentNumber);
             switch (status) {
                 case 1:
                     type = HIGH.getValue();
@@ -484,15 +490,15 @@ public class ReadingFragment extends Fragment {
                     type = LOW.getValue();
                     break;
                 case 0:
-                    ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingViewModel.getPosition(),
-                            currentNumber, counterStateCode, counterStatePosition, NORMAL.getValue());
+                    ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingVM.getPosition(),
+                            currentNumber, readingVM.getCounterStateCode(), readingVM.getCounterStatePosition(), NORMAL.getValue());
                     break;
             }
         }
         if (type != null) {
             final FragmentManager fm = requireActivity().getSupportFragmentManager();
-            AreYouSureFragment.newInstance(readingViewModel.getPosition(), currentNumber, type, counterStateCode,
-                    counterStatePosition).show(fm, ARE_YOU_SURE.getValue().concat(readingViewModel.getOnOffLoadDto().eshterak));
+            AreYouSureFragment.newInstance(readingVM.getPosition(), currentNumber, type, readingVM.getCounterStateCode(),
+                    readingVM.getCounterStatePosition()).show(fm, ARE_YOU_SURE.getValue().concat(readingVM.getOnOffLoadDto().eshterak));
         }
     }
 
@@ -588,29 +594,29 @@ public class ReadingFragment extends Fragment {
     };
     private final View.OnClickListener onClickListener = view -> {
         final int id = view.getId();
-        if (id == buttonId) {
+        if (id == readingVM.getButtonId()) {
             if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
             lastClickTime = SystemClock.elapsedRealtime();
             checkPermissions();
         } else if (id == R.id.text_view_pre_number) {
-            if (debtOrNumber) {
-                debtOrNumber = false;
-                binding.textViewPreNumber.setText(String.valueOf(readingViewModel.getOnOffLoadDto().balance));
+            if (readingVM.isDebtOrNumber()) {
+                readingVM.setDebtOrNumber(false);
+                binding.textViewPreNumber.setText(String.valueOf(readingVM.getOnOffLoadDto().balance));
                 binding.textViewPreNumber.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
             } else {
-                if (readingViewModel.getOnOffLoadDto().hasPreNumber) {
-                    debtOrNumber = true;
+                if (readingVM.getOnOffLoadDto().hasPreNumber) {
+                    readingVM.setDebtOrNumber(true);
                     requireActivity().runOnUiThread(() -> {
-                        binding.textViewPreNumber.setText(String.valueOf(readingViewModel.getOnOffLoadDto().preNumber));
+                        binding.textViewPreNumber.setText(String.valueOf(readingVM.getOnOffLoadDto().preNumber));
                         final TypedValue typedValue = new TypedValue();
                         requireActivity().getTheme().resolveAttribute(android.R.attr.textColor, typedValue, true);
                         binding.textViewPreNumber.setTextColor(typedValue.data);
                     });
-                    ((ReadingActivity) requireActivity()).updateOnOffLoadByPreNumber(readingViewModel.getPosition());
+                    ((ReadingActivity) requireActivity()).updateOnOffLoadByPreNumber(readingVM.getPosition());
                 } else new CustomToast().warning(getString(R.string.can_not_show_pre));
             }
-        } else if (id == textViewId)
-            if (!readingViewModel.getOnOffLoadDto().isLocked && (shouldEnterNumber || canEnterNumber)) {
+        } else if (id == readingVM.getTextViewId())
+            if (!readingVM.getOnOffLoadDto().isLocked && (readingVM.isShouldEnterNumber() || readingVM.isCanEnterNumber())) {
                 FOCUS_ON_EDIT_TEXT = true;
                 binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
             }
@@ -618,9 +624,9 @@ public class ReadingFragment extends Fragment {
     private final View.OnLongClickListener onLongClickListener = view -> {
         final int id = view.getId();
         if (id == R.id.text_view_address)
-            ShowDialogOnce(requireContext(), POSSIBLE_DIALOG.getValue().concat(readingViewModel.getOnOffLoadDto().eshterak),
-                    PossibleFragment.newInstance(readingViewModel.getOnOffLoadDto(), readingViewModel.getPosition(), true));
-        else if (id == textViewId)
+            ShowDialogOnce(requireContext(), POSSIBLE_DIALOG.getValue().concat(readingVM.getOnOffLoadDto().eshterak),
+                    PossibleFragment.newInstance(readingVM.getOnOffLoadDto(), readingVM.getPosition(), true));
+        else if (id == readingVM.getTextViewId())
             textView.setText("");
         return false;
     };
