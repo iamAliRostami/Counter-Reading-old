@@ -111,7 +111,6 @@ import java.util.ArrayList;
 public class ReadingActivity extends BaseActivity implements ReadingReportFragment.Callback,
         CounterPlaceFragment.Callback, NavigationFragment.Callback {
     public static int offlineAttempts = 0;
-
     private ISharedPreferenceManager sharedPreferenceManager;
     private ViewPagerStateAdapter2 viewPagerAdapterReading;
     private IFlashLightManager flashLightManager;
