@@ -73,8 +73,6 @@ public class ReadingFragment extends Fragment {
     private final ReadingViewModel readingVM = new ReadingViewModel();
     private long lastClickTime = 0;
     private TextView textView;
-//    private int textViewId;
-//    private int buttonId;
 
     public ReadingFragment() {
     }
@@ -123,7 +121,6 @@ public class ReadingFragment extends Fragment {
     private void getBundle(final Bundle bundle) {
         try {
             readingVM.setPosition(bundle.getInt(POSITION.getValue()));
-
             readingVM.setOnOffLoadDto(Constants.onOffLoadDtos.get(readingVM.getPosition()));
             readingVM.setKarbariDto(Constants.karbariDtos.get(readingVM.getPosition()));
             readingVM.setReadingConfigDefaultDto(Constants.readingConfigDefaultDtos.get(readingVM.getPosition()));
@@ -164,20 +161,14 @@ public class ReadingFragment extends Fragment {
     }
 
     private void initializeTextViewNumber() {
-        //TODO
-//        binding.editTextNumber.setId(View.generateViewId());
         binding.editTextNumber.setId(readingVM.getTextViewId());
         textView = binding.editTextNumber;
-//        textViewId = textView.getId();
         textView.setOnLongClickListener(onLongClickListener);
         textView.setOnClickListener(onClickListener);
     }
 
     private void initializeButtonSubmit() {
-        //TODO
         binding.buttonSubmit.setId(readingVM.getButtonId());
-//        binding.buttonSubmit.setId(View.generateViewId());
-//        buttonId = binding.buttonSubmit.getId();
         binding.buttonSubmit.setOnClickListener(onClickListener);
     }
 
