@@ -8,17 +8,12 @@ import static com.leon.counter_reading.enums.HighLowStateEnum.LOW;
 import static com.leon.counter_reading.enums.HighLowStateEnum.NORMAL;
 import static com.leon.counter_reading.enums.HighLowStateEnum.ZERO;
 import static com.leon.counter_reading.enums.NotificationType.NOT_SAVE;
-import static com.leon.counter_reading.enums.SharedReferenceKeys.KEYBOARD_TYPE;
 import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.STORAGE_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.counterStateDtos;
-import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad1;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad2;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhadTotal;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getLockNumber;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
@@ -29,20 +24,16 @@ import static com.leon.counter_reading.utils.reading.Counting.checkHighLow;
 import static com.leon.counter_reading.utils.reading.Counting.checkHighLowMakoos;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -69,10 +60,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class ReadingFragment extends Fragment {
-    private FragmentReadingBinding binding;
     private final ReadingViewModel readingVM = new ReadingViewModel();
+    private FragmentReadingBinding binding;
     private long lastClickTime = 0;
-    private TextView textView;
 
     public ReadingFragment() {
     }
@@ -124,9 +114,6 @@ public class ReadingFragment extends Fragment {
             readingVM.setOnOffLoadDto(Constants.onOffLoadDtos.get(readingVM.getPosition()));
             readingVM.setKarbariDto(Constants.karbariDtos.get(readingVM.getPosition()));
             readingVM.setReadingConfigDefaultDto(Constants.readingConfigDefaultDtos.get(readingVM.getPosition()));
-            readingVM.setReadingConfigDefaultDto(Constants.readingConfigDefaultDtos.get(readingVM.getPosition()));
-            readingVM.setKarbariDto(Constants.karbariDtos.get(readingVM.getPosition()));
-
         } catch (Exception e) {
             final Intent intent = requireActivity().getIntent();
             requireActivity().finish();
@@ -148,23 +135,21 @@ public class ReadingFragment extends Fragment {
                              Bundle savedInstanceState) {
         if (savedInstanceState != null) savedInstanceState.clear();
         binding = FragmentReadingBinding.inflate(inflater, container, false);
-        binding.setOnOffLoad(readingVM);
+        binding.setReadingVM(readingVM);
         return binding.getRoot();
     }
 
     private void initialize() {
-        initializeTextViewNumber();
         initializeViews();
         initializeSpinner();
         initializeButtonSubmit();
+        initializeTextViewNumber();
         setOnKeyboardButtonsClickListener();
     }
 
     private void initializeTextViewNumber() {
         binding.editTextNumber.setId(readingVM.getTextViewId());
-        textView = binding.editTextNumber;
-        textView.setOnLongClickListener(onLongClickListener);
-        textView.setOnClickListener(onClickListener);
+        binding.editTextNumber.setOnClickListener(onClickListener);
     }
 
     private void initializeButtonSubmit() {
@@ -183,29 +168,15 @@ public class ReadingFragment extends Fragment {
     }
 
     private void initializeViews() {
-        binding.textViewAhad1Title.setText(String.format("%s : ", getAhad1(getActiveCompanyName())));
-        binding.textViewAhad2Title.setText(String.format("%s : ", getAhad2(getActiveCompanyName())));
-        binding.textViewAhadTotalTitle.setText(String.format("%s : ", getAhadTotal(getActiveCompanyName())));
-        binding.textViewAddress.setText(readingVM.getOnOffLoadDto().address);
-        binding.textViewName.setText(String.format("%s %s", readingVM.getOnOffLoadDto().firstName, readingVM.getOnOffLoadDto().sureName));
-        binding.textViewPreDate.setText(readingVM.getOnOffLoadDto().preDate);
-        binding.textViewSerial.setText(readingVM.getOnOffLoadDto().counterSerial);
-
         if (readingVM.getOnOffLoadDto().displayRadif)
             binding.textViewRadif.setText(String.valueOf(readingVM.getOnOffLoadDto().radif));
         else if (readingVM.getOnOffLoadDto().displayBillId)
             binding.textViewRadif.setText(String.valueOf(readingVM.getOnOffLoadDto().billId));
         else binding.textViewRadif.setVisibility(View.GONE);
 
-        binding.textViewAhad1.setText(String.valueOf(readingVM.getOnOffLoadDto().ahadMaskooniOrAsli));
-        binding.textViewAhad2.setText(String.valueOf(readingVM.getOnOffLoadDto().ahadTejariOrFari));
-        binding.textViewAhadTotal.setText(String.valueOf(readingVM.getOnOffLoadDto().ahadSaierOrAbBaha));
-
         binding.textViewPreNumber.setText(String.valueOf(readingVM.getOnOffLoadDto().balance));
         binding.textViewPreNumber.setOnClickListener(onClickListener);
         binding.textViewAddress.setOnLongClickListener(onLongClickListener);
-
-        binding.textViewCode.setText(readingVM.getReadingConfigDefaultDto().isOnQeraatCode ? readingVM.getOnOffLoadDto().qeraatCode : readingVM.getOnOffLoadDto().eshterak);
 
         if (readingVM.getKarbariDto().title == null)
             new CustomToast().warning(String.format("کاربری اشتراک %s به درستی بارگیری نشده است.", readingVM.getOnOffLoadDto().eshterak));
@@ -218,7 +189,6 @@ public class ReadingFragment extends Fragment {
             new CustomToast().warning(String.format("قطر سیفون اشتراک %s به درستی بارگیری نشده است.", readingVM.getOnOffLoadDto().eshterak));
         else
             binding.textViewSiphon.setText(readingVM.getOnOffLoadDto().sifoonQotr.equals("مشخص نشده") ? "-" : readingVM.getOnOffLoadDto().sifoonQotr);
-
     }
 
     private void initializeSpinner() {
@@ -264,37 +234,12 @@ public class ReadingFragment extends Fragment {
         binding.imageButtonShowKeyboard.setVisibility(readingVM.isCanEnterNumber() ||
                 readingVM.isShouldEnterNumber() ? View.VISIBLE : View.GONE);
         if (!readingVM.isCanEnterNumber() && !readingVM.isShouldEnterNumber())
-            textView.setText("");
+            binding.editTextNumber.setText("");
         changeKeyboardState();
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void setOnKeyboardButtonsClickListener() {
-        if (!getApplicationComponent().SharedPreferenceModel().getBoolData(KEYBOARD_TYPE.getValue())) {
-            binding.buttonKeyboard0.setOnClickListener(onKeyboardClickListener);
-            binding.buttonKeyboard1.setOnClickListener(onKeyboardClickListener);
-            binding.buttonKeyboard2.setOnClickListener(onKeyboardClickListener);
-            binding.buttonKeyboard3.setOnClickListener(onKeyboardClickListener);
-            binding.buttonKeyboard4.setOnClickListener(onKeyboardClickListener);
-            binding.buttonKeyboard5.setOnClickListener(onKeyboardClickListener);
-            binding.buttonKeyboard6.setOnClickListener(onKeyboardClickListener);
-            binding.buttonKeyboard7.setOnClickListener(onKeyboardClickListener);
-            binding.buttonKeyboard8.setOnClickListener(onKeyboardClickListener);
-            binding.buttonKeyboard9.setOnClickListener(onKeyboardClickListener);
-            binding.buttonKeyboardBackspace.setOnClickListener(onKeyboardClickListener);
-        } else {
-            binding.buttonKeyboard0.setOnTouchListener(onTouchListener);
-            binding.buttonKeyboard1.setOnTouchListener(onTouchListener);
-            binding.buttonKeyboard2.setOnTouchListener(onTouchListener);
-            binding.buttonKeyboard3.setOnTouchListener(onTouchListener);
-            binding.buttonKeyboard4.setOnTouchListener(onTouchListener);
-            binding.buttonKeyboard5.setOnTouchListener(onTouchListener);
-            binding.buttonKeyboard6.setOnTouchListener(onTouchListener);
-            binding.buttonKeyboard7.setOnTouchListener(onTouchListener);
-            binding.buttonKeyboard8.setOnTouchListener(onTouchListener);
-            binding.buttonKeyboard9.setOnTouchListener(onTouchListener);
-            binding.buttonKeyboardBackspace.setOnTouchListener(onTouchListener);
-        }
         binding.imageButtonHideKeyboard.setOnClickListener(onKeyboardClickListener);
         binding.imageButtonShowKeyboard.setOnClickListener(onKeyboardClickListener);
     }
@@ -309,7 +254,7 @@ public class ReadingFragment extends Fragment {
 
             @Override
             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                new CustomToast().warning("به علت عدم دسترسی به مکان یابی، امکان ثبت وجود ندارد.");
+                new CustomToast().warning(getString(R.string.cant_fine_location));
             }
         };
         new TedPermission(requireContext())
@@ -374,7 +319,7 @@ public class ReadingFragment extends Fragment {
                     concat(readingVM.getOnOffLoadDto().eshterak).concat(getString(R.string.is_locked)), Toast.LENGTH_SHORT);
         if (!readingVM.getOnOffLoadDto().isLocked && readingVM.getOnOffLoadDto().attemptCount >= getLockNumber(getActiveCompanyName())) {
             readingVM.getOnOffLoadDto().isLocked = true;
-            textView.setText("");
+            binding.editTextNumber.setText("");
             ((ReadingActivity) requireActivity()).updateOnOffLoadByLock(readingVM.getPosition());
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
             binding.imageButtonShowKeyboard.setVisibility(View.GONE);
@@ -384,11 +329,11 @@ public class ReadingFragment extends Fragment {
     }
 
     private void canBeEmpty() {
-        if (textView.getText().toString().isEmpty() || readingVM.isMane()) {
+        if (binding.editTextNumber.getText().toString().isEmpty() || readingVM.isMane()) {
             ((ReadingActivity) requireActivity()).updateOnOffLoadWithoutCounterNumber(readingVM.getPosition(),
                     readingVM.getCounterStateCode(), readingVM.getCounterStatePosition());
         } else {
-            final int currentNumber = getDigits(textView.getText().toString());
+            final int currentNumber = getDigits(binding.editTextNumber.getText().toString());
             final int use = currentNumber - readingVM.getOnOffLoadDto().preNumber;
             if (readingVM.isCanLessThanPre()) {
                 lessThanPre(currentNumber);
@@ -396,8 +341,8 @@ public class ReadingFragment extends Fragment {
                 makeRing(requireContext(), NOT_SAVE);
                 final String message = getString(R.string.less_than_pre);
                 new CustomToast().warning(message, Toast.LENGTH_LONG);
-                textView.setError(message);
-                textView.requestFocus();
+                binding.editTextNumber.setError(message);
+                binding.editTextNumber.requestFocus();
             } else {
                 ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingVM.getPosition(),
                         currentNumber, readingVM.getCounterStateCode(), readingVM.getCounterStatePosition());
@@ -406,22 +351,22 @@ public class ReadingFragment extends Fragment {
     }
 
     private void canNotBeEmpty() {
-        if (textView.getText().toString().isEmpty()) {
+        if (binding.editTextNumber.getText().toString().isEmpty()) {
             makeRing(requireContext(), NOT_SAVE);
             String message = getString(R.string.counter_empty);
-            textView.setError(message);
-            textView.requestFocus();
+            binding.editTextNumber.setError(message);
+            binding.editTextNumber.requestFocus();
             new CustomToast().warning(message, Toast.LENGTH_LONG);
         } else if (lockProcess(false)) {
-            final int currentNumber = getDigits(textView.getText().toString());
+            final int currentNumber = getDigits(binding.editTextNumber.getText().toString());
             final int use = currentNumber - readingVM.getOnOffLoadDto().preNumber;
             if (readingVM.isCanLessThanPre()) {
                 lessThanPre(currentNumber);
             } else if (use < 0) {
                 makeRing(requireContext(), NOT_SAVE);
                 final String message = getString(R.string.less_than_pre);
-                textView.setError(message);
-                textView.requestFocus();
+                binding.editTextNumber.setError(message);
+                binding.editTextNumber.requestFocus();
                 new CustomToast().warning(message, Toast.LENGTH_LONG);
             } else {
                 notEmpty(currentNumber);
@@ -501,86 +446,12 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-    private final View.OnTouchListener onTouchListener = new View.OnTouchListener() {
-        @SuppressLint("ClickableViewAccessibility")
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                try {
-                    final AudioManager am = (AudioManager) requireContext().getSystemService(Context.AUDIO_SERVICE);
-                    am.playSoundEffect(AudioManager.FX_KEY_CLICK, 1);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                final int id = view.getId();
-                if (id == R.id.image_button_show_keyboard || id == R.id.image_button_hide_keyboard) {
-                    FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
-                    changeKeyboardState();
-                } else if (id == R.id.button_keyboard_backspace) {
-                    if (textView.getText().toString().length() > 0)
-                        textView.setText(textView.getText().toString()
-                                .substring(0, textView.getText().toString().length() - 1));
-                } else if (id == R.id.button_keyboard_0) {
-                    textView.setText(textView.getText().toString().concat("0"));
-                } else if (id == R.id.button_keyboard_1) {
-                    textView.setText(textView.getText().toString().concat("1"));
-                } else if (id == R.id.button_keyboard_2) {
-                    textView.setText(textView.getText().toString().concat("2"));
-                } else if (id == R.id.button_keyboard_3) {
-                    textView.setText(textView.getText().toString().concat("3"));
-                } else if (id == R.id.button_keyboard_4) {
-                    textView.setText(textView.getText().toString().concat("4"));
-                } else if (id == R.id.button_keyboard_5) {
-                    textView.setText(textView.getText().toString().concat("5"));
-                } else if (id == R.id.button_keyboard_6) {
-                    textView.setText(textView.getText().toString().concat("6"));
-                } else if (id == R.id.button_keyboard_7) {
-                    textView.setText(textView.getText().toString().concat("7"));
-                } else if (id == R.id.button_keyboard_8) {
-                    textView.setText(textView.getText().toString().concat("8"));
-                } else if (id == R.id.button_keyboard_9) {
-                    textView.setText(textView.getText().toString().concat("9"));
-                }
-            }
-            return false;
-        }
-    };
-
     private final View.OnClickListener onKeyboardClickListener = view -> {
-        try {
-            final AudioManager am = (AudioManager) requireContext().getSystemService(Context.AUDIO_SERVICE);
-            am.playSoundEffect(AudioManager.FX_KEY_CLICK, 1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        readingVM.ringNotification();
         final int id = view.getId();
         if (id == R.id.image_button_show_keyboard || id == R.id.image_button_hide_keyboard) {
             FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
             changeKeyboardState();
-        } else if (id == R.id.button_keyboard_backspace) {
-            if (textView.getText().toString().length() > 0)
-                textView.setText(textView.getText().toString()
-                        .substring(0, textView.getText().toString().length() - 1));
-        } else if (id == R.id.button_keyboard_0) {
-            textView.setText(textView.getText().toString().concat("0"));
-        } else if (id == R.id.button_keyboard_1) {
-            textView.setText(textView.getText().toString().concat("1"));
-        } else if (id == R.id.button_keyboard_2) {
-            textView.setText(textView.getText().toString().concat("2"));
-        } else if (id == R.id.button_keyboard_3) {
-            textView.setText(textView.getText().toString().concat("3"));
-        } else if (id == R.id.button_keyboard_4) {
-            textView.setText(textView.getText().toString().concat("4"));
-        } else if (id == R.id.button_keyboard_5) {
-            textView.setText(textView.getText().toString().concat("5"));
-        } else if (id == R.id.button_keyboard_6) {
-            textView.setText(textView.getText().toString().concat("6"));
-        } else if (id == R.id.button_keyboard_7) {
-            textView.setText(textView.getText().toString().concat("7"));
-        } else if (id == R.id.button_keyboard_8) {
-            textView.setText(textView.getText().toString().concat("8"));
-        } else if (id == R.id.button_keyboard_9) {
-            textView.setText(textView.getText().toString().concat("9"));
         }
     };
     private final View.OnClickListener onClickListener = view -> {
@@ -617,8 +488,6 @@ public class ReadingFragment extends Fragment {
         if (id == R.id.text_view_address)
             ShowDialogOnce(requireContext(), POSSIBLE_DIALOG.getValue().concat(readingVM.getOnOffLoadDto().eshterak),
                     PossibleFragment.newInstance(readingVM.getOnOffLoadDto(), readingVM.getPosition(), true));
-        else if (id == readingVM.getTextViewId())
-            textView.setText("");
         return false;
     };
 
@@ -644,12 +513,6 @@ public class ReadingFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
         binding = null;
     }
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
-            name="onOffLoad"
+            name="readingVM"
             type="com.leon.counter_reading.view_models.ReadingViewModel" />
     </data>
 
@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false"
-        android:rotationY="@{onOffLoad.rotation}"
+        android:rotationY="@{readingVM.rotation}"
         tools:context="com.leon.counter_reading.fragments.ReadingFragment">
 
         <ScrollView
@@ -59,6 +59,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
+                        android:text="@{readingVM.serial}"
                         android:textSize="@dimen/text_size_small" />
                 </LinearLayout>
 
@@ -96,6 +97,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/view_1"
                             android:gravity="center"
+                            android:text="@{readingVM.preDate}"
                             android:textSize="@dimen/text_size_medium" />
                     </RelativeLayout>
 
@@ -189,14 +191,15 @@
                             android:id="@+id/text_view_ahad_1_title"
                             style="@style/text_bold"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:text="@{readingVM.ahad1Title}" />
 
                         <TextView
                             android:id="@+id/text_view_ahad_1"
                             style="@style/text_bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/_0"
+                            android:text="@{readingVM.ahad1}"
                             android:textSize="@dimen/text_size_medium" />
                     </LinearLayout>
 
@@ -216,14 +219,15 @@
                             android:id="@+id/text_view_ahad_2_title"
                             style="@style/text_bold"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:text="@{readingVM.ahad2Title}" />
 
                         <TextView
                             android:id="@+id/text_view_ahad_2"
                             style="@style/text_bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/_0"
+                            android:text="@{readingVM.ahad2}"
                             android:textSize="@dimen/text_size_medium" />
                     </LinearLayout>
 
@@ -241,14 +245,15 @@
                             android:id="@+id/text_view_ahad_total_title"
                             style="@style/text_bold"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:text="@{readingVM.ahadTotalTitle}" />
 
                         <TextView
                             android:id="@+id/text_view_ahad_total"
                             style="@style/text_bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/_0"
+                            android:text="@{readingVM.ahadTotal}"
                             android:textSize="@dimen/text_size_medium" />
                     </LinearLayout>
                 </LinearLayout>
@@ -288,19 +293,19 @@
                         android:gravity="center"
                         android:hint="@string/_0"
                         android:maxLength="9"
-                        android:text="@{onOffLoad.counterNumber}"
+                        android:onLongClick="@{()-> readingVM.onTextViewLongClickListener()}"
+                        android:text="@={readingVM.counterNumber}"
                         android:textColor="@color/text_color_dark"
                         android:textSize="@dimen/text_size_large" />
                 </LinearLayout>
 
-                <!--                android:text="@{onOffLoad.onOffLoadDto.counterNumber ?? ' '}"-->
-                <!--                android:text="@{onOffLoad.onOffLoadDto.counterNumber != null ? onOffLoad.onOffLoadDto.counterNumber : ' '}"-->
                 <TextView
                     android:id="@+id/text_view_code"
                     style="@style/ReadingLineBold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/linear_layout_4"
+                    android:text="@{readingVM.code}"
                     android:textSize="@dimen/text_size_large" />
 
                 <TextView
@@ -317,6 +322,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/text_view_karbari"
+                    android:text="@{readingVM.address}"
                     android:textSize="@dimen/text_size_large" />
 
                 <TextView
@@ -334,8 +340,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/text_view_radif"
                     android:lines="1"
+                    android:text="@{readingVM.name}"
                     android:textSize="@dimen/text_size_large" />
-
 
                 <Spinner
                     android:id="@+id/spinner"
@@ -375,17 +381,23 @@
                 <Button
                     android:id="@+id/button_keyboard_3"
                     style="@style/ButtonKeyboard"
-                    android:text="@string/_3" />
+                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
+                    android:text="@string/_3"
+                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
 
                 <Button
                     android:id="@+id/button_keyboard_2"
                     style="@style/ButtonKeyboard"
-                    android:text="@string/_2" />
+                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
+                    android:text="@string/_2"
+                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
 
                 <Button
                     android:id="@+id/button_keyboard_1"
                     style="@style/ButtonKeyboard"
-                    android:text="@string/_1" />
+                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
+                    android:text="@string/_1"
+                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
             </LinearLayout>
 
             <LinearLayout
@@ -397,17 +409,23 @@
                 <Button
                     android:id="@+id/button_keyboard_6"
                     style="@style/ButtonKeyboard"
-                    android:text="@string/_6" />
+                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
+                    android:text="@string/_6"
+                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
 
                 <Button
                     android:id="@+id/button_keyboard_5"
                     style="@style/ButtonKeyboard"
-                    android:text="@string/_5" />
+                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
+                    android:text="@string/_5"
+                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
 
                 <Button
                     android:id="@+id/button_keyboard_4"
                     style="@style/ButtonKeyboard"
-                    android:text="@string/_4" />
+                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
+                    android:text="@string/_4"
+                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
             </LinearLayout>
 
             <LinearLayout
@@ -419,17 +437,23 @@
                 <Button
                     android:id="@+id/button_keyboard_9"
                     style="@style/ButtonKeyboard"
-                    android:text="@string/_9" />
+                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
+                    android:text="@string/_9"
+                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
 
                 <Button
                     android:id="@+id/button_keyboard_8"
                     style="@style/ButtonKeyboard"
-                    android:text="@string/_8" />
+                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
+                    android:text="@string/_8"
+                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
 
                 <Button
                     android:id="@+id/button_keyboard_7"
                     style="@style/ButtonKeyboard"
-                    android:text="@string/_7" />
+                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
+                    android:text="@string/_7"
+                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
             </LinearLayout>
 
             <LinearLayout
@@ -441,12 +465,16 @@
                 <Button
                     android:id="@+id/button_keyboard_backspace"
                     style="@style/ButtonKeyboard"
-                    android:text="@string/backspace" />
+                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
+                    android:text="@string/backspace"
+                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
 
                 <Button
                     android:id="@+id/button_keyboard_0"
                     style="@style/ButtonKeyboard"
-                    android:text="@string/_0" />
+                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
+                    android:text="@string/_0"
+                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
 
                 <ImageButton
                     android:id="@+id/image_button_hide_keyboard"

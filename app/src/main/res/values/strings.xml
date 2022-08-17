@@ -302,4 +302,5 @@
     <string name="debt">بدهی</string>
     <string name="forbidden">غیرمجاز</string>
     <string name="refresh_page">صفحه را رفرش کنید.</string>
+    <string name="cant_fine_location">به علت عدم دسترسی به مکان یابی، امکان ثبت وجود ندارد.</string>
 </resources>
