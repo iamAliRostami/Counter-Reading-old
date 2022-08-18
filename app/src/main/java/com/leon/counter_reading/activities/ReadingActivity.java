@@ -113,7 +113,7 @@ import java.util.ArrayList;
 public class ReadingActivity extends BaseActivity implements View.OnClickListener,
         ReadingReportFragment.Callback, CounterPlaceFragment.Callback, NavigationFragment.Callback,
         ReadingFragment.Callback, TakePhotoFragment.Callback, SerialFragment.Callback,
-        AreYouSureFragment.Callback {
+        AreYouSureFragment.Callback, PossibleFragment.Callback {
     private ISharedPreferenceManager sharedPreferenceManager;
     private ViewPagerStateAdapter2 adapter;
     private IFlashLightManager flashLightManager;
@@ -229,7 +229,8 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         updateOnOffLoadByNumber(position, number, counterStateCode, counterStatePosition);
     }
 
-    public void updateOnOffLoadByNavigation(int position, OnOffLoadDto onOffLoadDto, boolean justMobile) {
+    @Override
+    public void updateOnOffLoadByNavigation(boolean justMobile, int position, OnOffLoadDto onOffLoadDto) {
         readingData.onOffLoadDtos.get(position).possibleMobile = onOffLoadDto.possibleMobile;
         if (justMobile) return;
         readingData.onOffLoadDtos.get(position).possibleCounterSerial = onOffLoadDto.possibleCounterSerial;

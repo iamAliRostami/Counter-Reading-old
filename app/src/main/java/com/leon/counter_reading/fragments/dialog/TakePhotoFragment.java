@@ -46,10 +46,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class TakePhotoFragment extends DialogFragment {
+    private final ArrayList<Image> images = new ArrayList<>();
     private FragmentTakePhotoBinding binding;
     private ImageViewAdapter imageViewAdapter;
     private Callback readingActivity;
-    private final ArrayList<Image> images = new ArrayList<>();
     private int replace = 0, position, trackNumber;
     private String uuid, path;
     private boolean result;

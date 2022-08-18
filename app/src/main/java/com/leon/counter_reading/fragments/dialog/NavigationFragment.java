@@ -3,6 +3,9 @@ package com.leon.counter_reading.fragments.dialog;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.helpers.Constants.readingData;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getEshterakMaxLength;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,7 +29,7 @@ import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 import com.leon.counter_reading.utils.navigation.Navigating;
 
-public class NavigationFragment extends DialogFragment {
+public class NavigationFragment extends DialogFragment implements TextWatcher {
     private static NavigationFragment instance;
     public Callback readingActivity;
     private FragmentNavigationBinding binding;
@@ -73,20 +76,16 @@ public class NavigationFragment extends DialogFragment {
     }
 
     private void setTextViews() {
-        binding.textViewEmpty.setText(DifferentCompanyManager.getAhad(
-                DifferentCompanyManager.getActiveCompanyName()).concat(getString(R.string.empty)));
-        binding.editTextAccount.setFilters(
-                new InputFilter[]{
-                        new InputFilter.LengthFilter(DifferentCompanyManager.
-                                getEshterakMaxLength(DifferentCompanyManager.getActiveCompanyName()))});
+        binding.textViewEmpty.setText(getAhad(getActiveCompanyName()).concat(getString(R.string.empty)));
+        binding.editTextAccount.setFilters(new InputFilter[]{new InputFilter.LengthFilter(getEshterakMaxLength(getActiveCompanyName()))});
 
         binding.editTextAccount.setText(onOffLoadDto.possibleEshterak);
         if (onOffLoadDto.possibleEmpty > 0)
             binding.editTextEmpty.setText(String.valueOf(onOffLoadDto.possibleEmpty));
-        binding.editTextMobile.setText(onOffLoadDto.possibleMobile);
-        binding.editTextPhone.setText(onOffLoadDto.possiblePhoneNumber);
         binding.editTextSerialCounter.setText(onOffLoadDto.possibleCounterSerial);
+        binding.editTextPhone.setText(onOffLoadDto.possiblePhoneNumber);
         binding.editTextAddress.setText(onOffLoadDto.possibleAddress);
+        binding.editTextMobile.setText(onOffLoadDto.possibleMobile);
     }
 
     void setOnButtonNavigationClickListener() {
@@ -95,7 +94,7 @@ public class NavigationFragment extends DialogFragment {
             boolean cancel = false;
             if (binding.editTextAccount.getText().toString().length() > 0 &&
                     binding.editTextAccount.getText().toString().length() < DifferentCompanyManager.
-                            getEshterakMinLength(DifferentCompanyManager.getActiveCompanyName())) {
+                            getEshterakMinLength(getActiveCompanyName())) {
                 binding.editTextAccount.setError(getString(R.string.error_format));
                 view = binding.editTextAccount;
                 cancel = true;
@@ -132,6 +131,21 @@ public class NavigationFragment extends DialogFragment {
         });
     }
 
+    private void initializeImageViews() {
+        binding.imageViewAccount.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
+                R.drawable.img_subscribe));
+        binding.imageViewAddress.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
+                R.drawable.img_address));
+        binding.imageViewCounterSerial.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
+                R.drawable.img_counter));
+        binding.imageViewPhoneNumber.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
+                R.drawable.img_phone));
+        binding.imageViewMobile.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
+                R.drawable.img_mobile));
+        binding.imageViewEmpty.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
+                R.drawable.img_home));
+    }
+
     private void setOnEditTextChangeListener() {
         binding.editTextAccount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -144,8 +158,7 @@ public class NavigationFragment extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().length() == DifferentCompanyManager.
-                        getEshterakMaxLength(DifferentCompanyManager.getActiveCompanyName())) {
+                if (s.toString().length() == getEshterakMaxLength(getActiveCompanyName())) {
                     final View view = binding.editTextPhone;
                     view.requestFocus();
                 }
@@ -201,21 +214,21 @@ public class NavigationFragment extends DialogFragment {
         });
     }
 
-    private void initializeImageViews() {
-        binding.imageViewAccount.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
-                R.drawable.img_subscribe));
-        binding.imageViewAddress.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
-                R.drawable.img_address));
-        binding.imageViewCounterSerial.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
-                R.drawable.img_counter));
-        binding.imageViewPhoneNumber.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
-                R.drawable.img_phone));
-        binding.imageViewMobile.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
-                R.drawable.img_mobile));
-        binding.imageViewEmpty.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
-                R.drawable.img_home));
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
     }
 
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+    }
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
