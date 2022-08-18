@@ -2,24 +2,27 @@ package com.leon.counter_reading.view_models;
 
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KEYBOARD_TYPE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_TEMPORARY;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.MakeNotification.ringNotification;
 
-import android.content.Context;
-import android.media.AudioManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.core.content.ContextCompat;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.leon.counter_reading.BR;
 import com.leon.counter_reading.R;
+import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
+import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DifferentCompanyManager;
 
 public class ReadingViewModel extends BaseObservable {
@@ -32,7 +35,9 @@ public class ReadingViewModel extends BaseObservable {
     private int counterStatePosition;
     private int textViewId;
     private int buttonId;
+    private int counterNumberColor;
 
+    private String debtNumber;
     private String ahadTotal;
     private String ahad1;
     private String ahad2;
@@ -40,6 +45,11 @@ public class ReadingViewModel extends BaseObservable {
     private String preDate;
     private String serial;
     private String name;
+
+    private String karbariTitle;
+    private String sifoonQotr;
+    private String qotr;
+    private String radifOrBillId;
 
     private String counterNumber;
     private boolean shouldEnterNumber;
@@ -54,6 +64,182 @@ public class ReadingViewModel extends BaseObservable {
             setRotation(180);
         setButtonId(View.generateViewId());
         setTextViewId(View.generateViewId());
+        setCounterNumberColor(ContextCompat.getColor(getContext(), R.color.red));
+    }
+
+    public boolean onTextViewLongClickListener() {
+        setCounterNumber(null);
+        return false;
+    }
+
+    public final void onKeyboardClickListener(View view) {
+        if (getApplicationComponent().SharedPreferenceModel().getBoolData(KEYBOARD_TYPE.getValue()))
+            keyboardEvent(view);
+    }
+
+    public boolean onKeyboardTouchListener(View view, MotionEvent motionEvent) {
+        if (!getApplicationComponent().SharedPreferenceModel().getBoolData(KEYBOARD_TYPE.getValue()))
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
+                keyboardEvent(view);
+        return false;
+    }
+
+    private void keyboardEvent(View view) {
+        ringNotification();
+        if (view.getId() == R.id.button_keyboard_backspace) {
+            if (getCounterNumber().length() > 0)
+                setCounterNumber(getCounterNumber().substring(0, getCounterNumber().length() - 1));
+        } else if (getCounterNumber() != null && getCounterNumber().length() < 9) {
+            setCounterNumber((getCounterNumber() != null ? getCounterNumber() : "")
+                    .concat(((Button) view).getText().toString()));
+        }
+    }
+
+    public boolean switchDebtNumber() {
+        if (isDebtOrNumber()) {
+            setDebtOrNumber(!isDebtOrNumber());
+            setDebtNumber(String.valueOf(getOnOffLoadDto().balance));
+            setCounterNumberColor(ContextCompat.getColor(getContext(), R.color.red));
+        } else {
+            if (getOnOffLoadDto().hasPreNumber) {
+                setDebtOrNumber(!isDebtOrNumber());
+                setDebtNumber(String.valueOf(getOnOffLoadDto().preNumber));
+                setCounterNumberColor(ContextCompat.getColor(getContext(), getApplicationComponent()
+                        .SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
+                        R.color.text_color_light : R.color.text_color_dark));
+                return true;
+            } else new CustomToast().warning(getContext().getString(R.string.can_not_show_pre));
+        }
+        return false;
+    }
+
+    private void setOnOffLoad() {
+        setCounterNumber(getOnOffLoadDto().counterNumber != null ? String.valueOf(getOnOffLoadDto().counterNumber) : "");
+        setName(String.format("%s %s", getOnOffLoadDto().firstName, getOnOffLoadDto().sureName));
+        setAhadTotal(String.valueOf(getOnOffLoadDto().ahadSaierOrAbBaha));
+        setAhad1(String.valueOf(getOnOffLoadDto().ahadMaskooniOrAsli));
+        setAhad2(String.valueOf(getOnOffLoadDto().ahadTejariOrFari));
+        setDebtNumber(String.valueOf(getOnOffLoadDto().balance));
+        setSerial(getOnOffLoadDto().counterSerial);
+        setPreDate(getOnOffLoadDto().preDate);
+        setAddress(getOnOffLoadDto().address);
+
+        if (getKarbariDto().title == null)
+            new CustomToast().warning(String.format("کاربری اشتراک %s به درستی بارگیری نشده است.", getOnOffLoadDto().eshterak));
+        else setKarbariTitle(getKarbariDto().title);
+        if (getOnOffLoadDto().qotr == null)
+            new CustomToast().warning(String.format("قطر اشتراک %s به درستی بارگیری نشده است.", getOnOffLoadDto().eshterak));
+        else
+            setQotr(getOnOffLoadDto().qotr.equals("مشخص نشده") ? "-" : getOnOffLoadDto().qotr);
+        if (getOnOffLoadDto().sifoonQotr == null)
+            new CustomToast().warning(String.format("قطر سیفون اشتراک %s به درستی بارگیری نشده است.", getOnOffLoadDto().eshterak));
+        else
+            setSifoonQotr(getOnOffLoadDto().sifoonQotr.equals("مشخص نشده") ? "-" : getOnOffLoadDto().sifoonQotr);
+
+
+        if (getOnOffLoadDto().displayRadif)
+            setRadifOrBillId(String.valueOf(getOnOffLoadDto().radif));
+        else if (getOnOffLoadDto().displayBillId)
+            setRadifOrBillId(String.valueOf(getOnOffLoadDto().billId));
+    }
+
+    public void setCounterStateField(CounterStateDto counterStateDto, int i) {
+        setCounterStatePosition(i);
+        setCounterStateCode(counterStateDto.id);
+        setMane(counterStateDto.isMane);
+        setShouldEnterNumber(counterStateDto.shouldEnterNumber);
+        setCanEnterNumber(counterStateDto.canEnterNumber);
+        setCanLessThanPre(counterStateDto.canNumberBeLessThanPre);
+        setMakoos(counterStateDto.title.equals("معکوس"));
+        if (!isCanEnterNumber() && !isShouldEnterNumber())
+            setCounterNumber("");
+    }
+
+    @Bindable
+    public String getCode() {
+        return getReadingConfigDefaultDto().isOnQeraatCode ? getOnOffLoadDto().qeraatCode : getOnOffLoadDto().eshterak;
+    }
+
+    @Bindable
+    public OnOffLoadDto getOnOffLoadDto() {
+        return onOffLoadDto;
+    }
+
+    public void setOnOffLoadDto(OnOffLoadDto onOffLoadDto) {
+        this.onOffLoadDto = onOffLoadDto;
+        notifyPropertyChanged(BR.onOffLoadDto);
+        setOnOffLoad();
+    }
+
+    @Bindable
+    public KarbariDto getKarbariDto() {
+        return karbariDto;
+    }
+
+    public void setKarbariDto(KarbariDto karbariDto) {
+        this.karbariDto = karbariDto;
+        notifyPropertyChanged(BR.karbariDto);
+    }
+
+    @Bindable
+    public ReadingConfigDefaultDto getReadingConfigDefaultDto() {
+        return readingConfigDefaultDto;
+    }
+
+    public void setReadingConfigDefaultDto(ReadingConfigDefaultDto readingConfigDefaultDto) {
+        this.readingConfigDefaultDto = readingConfigDefaultDto;
+        notifyPropertyChanged(BR.readingConfigDefaultDto);
+    }
+
+    @Bindable
+    public int getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(int rotation) {
+        this.rotation = rotation;
+        notifyPropertyChanged(BR.rotation);
+    }
+
+    @Bindable
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+        notifyPropertyChanged(BR.position);
+    }
+
+
+    @Bindable
+    public int getTextViewId() {
+        return textViewId;
+    }
+
+    public void setTextViewId(int textViewId) {
+        this.textViewId = textViewId;
+        notifyPropertyChanged(BR.textViewId);
+    }
+
+    @Bindable
+    public int getButtonId() {
+        return buttonId;
+    }
+
+    public void setButtonId(int buttonId) {
+        this.buttonId = buttonId;
+        notifyPropertyChanged(BR.buttonId);
+    }
+
+    @Bindable
+    public int getCounterNumberColor() {
+        return counterNumberColor;
+    }
+
+    public void setCounterNumberColor(int counterNumberColor) {
+        this.counterNumberColor = counterNumberColor;
+        notifyPropertyChanged(BR.counterNumberColor);
     }
 
     @Bindable
@@ -116,6 +302,7 @@ public class ReadingViewModel extends BaseObservable {
         notifyPropertyChanged(BR.debtOrNumber);
     }
 
+
     @Bindable
     public boolean isMakoos() {
         return isMakoos;
@@ -134,6 +321,16 @@ public class ReadingViewModel extends BaseObservable {
     public void setMane(boolean mane) {
         isMane = mane;
         notifyPropertyChanged(BR.mane);
+    }
+
+    @Bindable
+    public String getDebtNumber() {
+        return debtNumber;
+    }
+
+    public void setDebtNumber(String debtNumber) {
+        this.debtNumber = debtNumber;
+        notifyPropertyChanged(BR.debtNumber);
     }
 
     @Bindable
@@ -235,144 +432,42 @@ public class ReadingViewModel extends BaseObservable {
     }
 
     @Bindable
-    public OnOffLoadDto getOnOffLoadDto() {
-        return onOffLoadDto;
+    public String getKarbariTitle() {
+        return karbariTitle;
     }
 
-    public void setOnOffLoadDto(OnOffLoadDto onOffLoadDto) {
-        this.onOffLoadDto = onOffLoadDto;
-        notifyPropertyChanged(BR.onOffLoadDto);
-        setOnOffLoad();
-    }
-
-    private void setOnOffLoad() {
-        setCounterNumber(getOnOffLoadDto().counterNumber != null ? String.valueOf(getOnOffLoadDto().counterNumber) : null);
-        setName(String.format("%s %s", getOnOffLoadDto().firstName, getOnOffLoadDto().sureName));
-        setAhadTotal(String.valueOf(getOnOffLoadDto().ahadSaierOrAbBaha));
-        setAhad1(String.valueOf(getOnOffLoadDto().ahadMaskooniOrAsli));
-        setAhad2(String.valueOf(getOnOffLoadDto().ahadTejariOrFari));
-        setSerial(getOnOffLoadDto().counterSerial);
-        setPreDate(getOnOffLoadDto().preDate);
-        setAddress(getOnOffLoadDto().address);
+    public void setKarbariTitle(String karbariTitle) {
+        this.karbariTitle = karbariTitle;
+        notifyPropertyChanged(BR.karbariTitle);
     }
 
     @Bindable
-    public KarbariDto getKarbariDto() {
-        return karbariDto;
+    public String getSifoonQotr() {
+        return sifoonQotr;
     }
 
-    public void setKarbariDto(KarbariDto karbariDto) {
-        this.karbariDto = karbariDto;
-        notifyPropertyChanged(BR.karbariDto);
-    }
-
-    @Bindable
-    public ReadingConfigDefaultDto getReadingConfigDefaultDto() {
-        return readingConfigDefaultDto;
-    }
-
-    public void setReadingConfigDefaultDto(ReadingConfigDefaultDto readingConfigDefaultDto) {
-        this.readingConfigDefaultDto = readingConfigDefaultDto;
-        notifyPropertyChanged(BR.readingConfigDefaultDto);
+    public void setSifoonQotr(String sifoonQotr) {
+        this.sifoonQotr = sifoonQotr;
+        notifyPropertyChanged(BR.sifoonQotr);
     }
 
     @Bindable
-    public int getRotation() {
-        return rotation;
+    public String getQotr() {
+        return qotr;
     }
 
-    public void setRotation(int rotation) {
-        this.rotation = rotation;
-        notifyPropertyChanged(BR.rotation);
-    }
-
-    @Bindable
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
-        notifyPropertyChanged(BR.position);
+    public void setQotr(String qotr) {
+        this.qotr = qotr;
+        notifyPropertyChanged(BR.qotr);
     }
 
     @Bindable
-    public String getCode() {
-        return getReadingConfigDefaultDto().isOnQeraatCode ? getOnOffLoadDto().qeraatCode : getOnOffLoadDto().eshterak;
+    public String getRadifOrBillId() {
+        return radifOrBillId;
     }
 
-    @Bindable
-    public int getTextViewId() {
-        return textViewId;
-    }
-
-    public void setTextViewId(int textViewId) {
-        this.textViewId = textViewId;
-        notifyPropertyChanged(BR.textViewId);
-    }
-
-    @Bindable
-    public int getButtonId() {
-        return buttonId;
-    }
-
-    public void setButtonId(int buttonId) {
-        this.buttonId = buttonId;
-        notifyPropertyChanged(BR.buttonId);
-    }
-
-    public boolean onTextViewLongClickListener() {
-        setCounterNumber(null);
-        return false;
-    }
-
-    public final void onKeyboardClickListener(View view) {
-        if (getApplicationComponent().SharedPreferenceModel().getBoolData(KEYBOARD_TYPE.getValue()))
-            keyboardEvent(view);
-//        {
-//            if (view.getId() == R.id.button_keyboard_backspace) {
-//                if (getCounterNumber().length() > 0)
-//                    setCounterNumber(getCounterNumber().substring(0, getCounterNumber().length() - 1));
-//            } else if (getCounterNumber() != null && getCounterNumber().length() < 9) {
-//                setCounterNumber((getCounterNumber() != null ? getCounterNumber() : "")
-//                        .concat(((Button) view).getText().toString()));
-//            }
-//        }
-    }
-
-    public boolean onKeyboardTouchListener(View view, MotionEvent motionEvent) {
-//        ringNotification();
-        if (!getApplicationComponent().SharedPreferenceModel().getBoolData(KEYBOARD_TYPE.getValue())) {
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
-                keyboardEvent(view);
-//                {if (view.getId() == R.id.button_keyboard_backspace) {
-//                    if (getCounterNumber().length() > 0)
-//                        setCounterNumber(getCounterNumber().substring(0, getCounterNumber().length() - 1));
-//                } else if (getCounterNumber() != null && getCounterNumber().length() < 9)
-//                    setCounterNumber((getCounterNumber() != null ? getCounterNumber() : "")
-//                            .concat(((Button) view).getText().toString()));
-            }
-//        }
-        return false;
-    }
-
-    private void keyboardEvent(View view) {
-        ringNotification();
-        if (view.getId() == R.id.button_keyboard_backspace) {
-            if (getCounterNumber().length() > 0)
-                setCounterNumber(getCounterNumber().substring(0, getCounterNumber().length() - 1));
-        } else if (getCounterNumber() != null && getCounterNumber().length() < 9) {
-            setCounterNumber((getCounterNumber() != null ? getCounterNumber() : "")
-                    .concat(((Button) view).getText().toString()));
-        }
-    }
-
-    public void ringNotification() {
-        try {
-            final AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
-            am.playSoundEffect(AudioManager.FX_KEY_CLICK, 1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void setRadifOrBillId(String radifOrBillId) {
+        this.radifOrBillId = radifOrBillId;
+        notifyPropertyChanged(BR.radifOrBillId);
     }
 }

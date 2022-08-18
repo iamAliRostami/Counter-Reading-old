@@ -1,5 +1,8 @@
 package com.leon.counter_reading.utils.reading;
 
+import static com.leon.counter_reading.enums.HighLowStateEnum.HIGH;
+import static com.leon.counter_reading.enums.HighLowStateEnum.LOW;
+import static com.leon.counter_reading.enums.HighLowStateEnum.NORMAL;
 import static com.leon.counter_reading.utils.CalendarTool.findDifferentDays;
 
 import com.leon.counter_reading.tables.KarbariDto;
@@ -37,15 +40,15 @@ public class Counting {
             average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate, onOffLoadDto.ahadMaskooniOrAsli);
 
             if (readingConfigDefaultDto.highConstBoundMaskooni < difference)
-                return 1;
+                return HIGH.getValue();
             else if (readingConfigDefaultDto.lowConstBoundMaskooni > difference)
-                return -1;
+                return LOW.getValue();
             double highBoundMaskooni = (preAverage + ((double) readingConfigDefaultDto.highPercentBoundMaskooni / 100) * preAverage);
             if (highBoundMaskooni < average)
-                return 1;
+                return HIGH.getValue();
             double lowBoundMaskooni = (preAverage - ((double) readingConfigDefaultDto.lowPercentBoundMaskooni / 100) * preAverage);
             if (lowBoundMaskooni > average)
-                return -1;
+                return LOW.getValue();
         } else if (karbariDto.isTejari) {
             /*
              * محاسبه فقط تجاری ساده با ظرفیت
@@ -55,33 +58,33 @@ public class Counting {
                     ((double) readingConfigDefaultDto.lowPercentZarfiatBound / 100) * onOffLoadDto.zarfiat;
 
             if (average < lowBoundRate)
-                return -1;
+                return LOW.getValue();
             double highBoundRate = onOffLoadDto.zarfiat +
                     ((double) readingConfigDefaultDto.highPercentZarfiatBound / 100) * onOffLoadDto.zarfiat;
 
             if (average > highBoundRate)
-                return 1;
+                return HIGH.getValue();
 
             if (readingConfigDefaultDto.highConstZarfiatBound < difference)
-                return 1;
+                return HIGH.getValue();
             else if (readingConfigDefaultDto.lowConstZarfiatBound > difference)
-                return -1;
+                return LOW.getValue();
         } else if (karbariDto.isSaxt || onOffLoadDto.noeVagozariId == 4) {
             if (readingConfigDefaultDto.highConstBoundSaxt < difference)
-                return 1;
+                return HIGH.getValue();
             else if (readingConfigDefaultDto.lowConstBoundSaxt > difference)
-                return -1;
+                return LOW.getValue();
             else if ((preAverage + ((double) readingConfigDefaultDto.highPercentBoundSaxt / 100) * preAverage) < average)
-                return 1;
+                return HIGH.getValue();
             else if ((preAverage - ((double) readingConfigDefaultDto.lowPercentBoundSaxt / 100)) * preAverage > average)
-                return -1;
+                return LOW.getValue();
         } else {
             if ((preAverage + ((double) readingConfigDefaultDto.highPercentRateBoundNonMaskooni / 100)) * preAverage < average)
-                return 1;
+                return HIGH.getValue();
             else if ((preAverage - ((double) readingConfigDefaultDto.lowPercentRateBoundNonMaskooni / 100) * preAverage > average))
-                return -1;
+                return LOW.getValue();
         }
-        return 0;
+        return NORMAL.getValue();
     }
 
     public static int checkHighLowMakoos(OnOffLoadDto onOffLoadDto, KarbariDto karbariDto,

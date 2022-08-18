@@ -4,6 +4,7 @@ import static android.os.Build.UNKNOWN;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
 import static com.leon.counter_reading.enums.SharedReferenceNames.ACCOUNT;
 import static com.leon.counter_reading.helpers.Constants.FONT_NAME;
+import static com.leon.counter_reading.helpers.Constants.IP_PATTERN;
 import static com.leon.counter_reading.helpers.Constants.TOAST_TEXT_SIZE;
 import static com.leon.counter_reading.utils.PermissionManager.hasCarrierPrivileges;
 import static com.leon.counter_reading.utils.locating.CheckSensor.checkSensor;
@@ -16,6 +17,7 @@ import android.content.ContextWrapper;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.provider.Settings;
+import android.text.TextUtils;
 
 import androidx.multidex.MultiDex;
 
@@ -38,8 +40,6 @@ import com.yandex.metrica.YandexMetricaConfig;
 import com.yandex.metrica.profile.Attribute;
 import com.yandex.metrica.profile.UserProfile;
 
-import java.util.regex.Pattern;
-
 import es.dmoral.toasty.Toasty;
 
 public class MyApplication extends Application {
@@ -47,6 +47,48 @@ public class MyApplication extends Application {
     private static int ERROR_COUNTER = 0;
     private static ApplicationComponent applicationComponent;
     private static ActivityComponent activityComponent;
+
+    @Override
+    public void onCreate() {
+        appContext = getApplicationContext();
+        Toasty.Config.getInstance().tintIcon(true)
+                .setToastTypeface(Typeface.createFromAsset(appContext.getAssets(), FONT_NAME))
+                .setTextSize(TOAST_TEXT_SIZE).allowQueue(true).apply();
+        applicationComponent = DaggerApplicationComponent
+                .builder().networkModule(new NetworkModule())
+                .flashModule(new FlashModule(appContext))
+                .customProgressModule(new CustomProgressModule())
+                .myDatabaseModule(new MyDatabaseModule(appContext))
+                .sharedPreferenceModule(new SharedPreferenceModule(appContext, ACCOUNT)).build();
+        applicationComponent.inject(this);
+        super.onCreate();
+        if (!BuildConfig.BUILD_TYPE.equals("release")) {
+            setupYandex();
+        }
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
+    protected void setupYandex() {
+        final UserProfile userProfile = UserProfile.newBuilder().apply(Attribute.name()
+                .withValue(applicationComponent.SharedPreferenceModel()
+                        .getStringData(USERNAME.getValue()))).build();
+        final YandexMetricaConfig config = com.yandex.metrica.YandexMetricaConfig
+                .newConfigBuilder("6d39e473-5c5c-4163-9c4c-21eb91758e8f").withLogs()
+                .withAppVersion(BuildConfig.VERSION_NAME).build();
+        YandexMetrica.activate(appContext, config);
+        YandexMetrica.enableActivityAutoTracking(this);
+        YandexMetrica.activate(getApplicationContext(), config);
+        YandexMetrica.reportUserProfile(userProfile);
+    }
+
+    public static boolean validate(final String ip) {
+        return IP_PATTERN.matcher(ip).matches();
+    }
 
     public static ActivityComponent getActivityComponent() {
         return activityComponent;
@@ -121,48 +163,11 @@ public class MyApplication extends Application {
         return serial;
     }
 
-    @Override
-    public void onCreate() {
-        appContext = getApplicationContext();
-        Toasty.Config.getInstance().tintIcon(true)
-                .setToastTypeface(Typeface.createFromAsset(appContext.getAssets(), FONT_NAME))
-                .setTextSize(TOAST_TEXT_SIZE).allowQueue(true).apply();
-        applicationComponent = DaggerApplicationComponent
-                .builder().networkModule(new NetworkModule())
-                .flashModule(new FlashModule(appContext))
-                .customProgressModule(new CustomProgressModule())
-                .myDatabaseModule(new MyDatabaseModule(appContext))
-                .sharedPreferenceModule(new SharedPreferenceModule(appContext, ACCOUNT)).build();
-        applicationComponent.inject(this);
-        super.onCreate();
-        if (!BuildConfig.BUILD_TYPE.equals("release")) {
-            setupYandex();
+    public static int getDigits(String number) {
+        if (!TextUtils.isEmpty(number) && TextUtils.isDigitsOnly(number)) {
+            return Integer.parseInt(number);
+        } else {
+            return 0;
         }
-    }
-
-
-    protected void setupYandex() {
-        final UserProfile userProfile = UserProfile.newBuilder().apply(Attribute.name()
-                .withValue(applicationComponent.SharedPreferenceModel()
-                        .getStringData(USERNAME.getValue()))).build();
-        final YandexMetricaConfig config = com.yandex.metrica.YandexMetricaConfig
-                .newConfigBuilder("6d39e473-5c5c-4163-9c4c-21eb91758e8f").withLogs()
-                .withAppVersion(BuildConfig.VERSION_NAME).build();
-        YandexMetrica.activate(appContext, config);
-        YandexMetrica.enableActivityAutoTracking(this);
-        YandexMetrica.activate(getApplicationContext(), config);
-        YandexMetrica.reportUserProfile(userProfile);
-    }
-
-    private static final Pattern IP_PATTERN = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)");
-
-    public static boolean validate(final String ip) {
-        return IP_PATTERN.matcher(ip).matches();
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
     }
 }

@@ -4,6 +4,7 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.PERSONAL_CODE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PROXY;
 import static com.leon.counter_reading.helpers.MyApplication.getAndroidVersion;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.getDigits;
 import static com.leon.counter_reading.helpers.MyApplication.getSerial;
 import static com.leon.counter_reading.helpers.MyApplication.validate;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
@@ -100,14 +101,6 @@ public class BasicFragment extends Fragment {
             return "خوب";
         else
             return "عالی";
-    }
-
-    private int getDigits(String number) {
-        if (!TextUtils.isEmpty(number) && TextUtils.isDigitsOnly(number)) {
-            return Integer.parseInt(number);
-        } else {
-            return 0;
-        }
     }
 
 }

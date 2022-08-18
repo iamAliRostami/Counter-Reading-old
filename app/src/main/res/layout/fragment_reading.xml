@@ -3,6 +3,8 @@
 
     <data>
 
+        <import type="androidx.core.content.ContextCompat" />
+
         <variable
             name="readingVM"
             type="com.leon.counter_reading.view_models.ReadingViewModel" />
@@ -43,8 +45,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/pre_number"
-                        android:textColor="@color/red"
+                        android:text="@{readingVM.debtNumber}"
+                        android:textColor="@{readingVM.counterNumberColor}"
                         android:textSize="@dimen/text_size_medium" />
 
                     <View
@@ -131,6 +133,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/view_2"
                             android:gravity="center"
+                            android:text="@{readingVM.qotr}"
                             android:textSize="@dimen/text_size_medium" />
                     </RelativeLayout>
 
@@ -162,6 +165,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/view_3"
                             android:gravity="center"
+                            android:text="@{readingVM.sifoonQotr}"
                             android:textSize="@dimen/text_size_medium" />
                     </RelativeLayout>
 
@@ -314,6 +318,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/text_view_code"
+                    android:text="@{readingVM.karbariTitle}"
                     android:textSize="@dimen/text_size_large" />
 
                 <TextView
@@ -331,6 +336,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/text_view_address"
+                    android:text="@{readingVM.radifOrBillId}"
                     android:textSize="@dimen/text_size_large" />
 
                 <TextView

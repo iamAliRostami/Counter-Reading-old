@@ -7,6 +7,7 @@ import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.NotificationType.OTHER;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KARBARI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.getDigits;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getEshterakMinLength;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
@@ -370,14 +371,6 @@ public class PossibleFragment extends DialogFragment {
             }
         });
         binding.buttonClose.setOnClickListener(v -> dismiss());
-    }
-
-    private Integer getDigits(String number) {
-        if (!TextUtils.isEmpty(number) && TextUtils.isDigitsOnly(number)) {
-            return Integer.parseInt(number);
-        } else {
-            return null;
-        }
     }
 
     private void initializeSpinner() {

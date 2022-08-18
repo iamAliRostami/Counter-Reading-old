@@ -1,5 +1,6 @@
 package com.leon.counter_reading.fragments.setting;
 
+import static com.leon.counter_reading.enums.BundleEnum.THEME;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
@@ -82,7 +83,7 @@ public class SettingChangeThemeFragment extends Fragment {
 
     private void changeTheme() {
         Intent intent = new Intent(getActivity(), SettingActivity.class);
-        intent.putExtra(BundleEnum.THEME.getValue(), theme);
+        intent.putExtra(THEME.getValue(), theme);
         requireActivity().finish();
         startActivity(intent);
     }

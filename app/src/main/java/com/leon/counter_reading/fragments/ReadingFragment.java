@@ -13,9 +13,11 @@ import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.STORAGE_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.counterStateDtos;
+import static com.leon.counter_reading.helpers.MyApplication.getDigits;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getLockNumber;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
+import static com.leon.counter_reading.utils.MakeNotification.ringNotification;
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
 import static com.leon.counter_reading.utils.PermissionManager.checkStoragePermission;
 import static com.leon.counter_reading.utils.PermissionManager.enableGps;
@@ -23,12 +25,9 @@ import static com.leon.counter_reading.utils.PermissionManager.forceClose;
 import static com.leon.counter_reading.utils.reading.Counting.checkHighLow;
 import static com.leon.counter_reading.utils.reading.Counting.checkHighLowMakoos;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +37,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -51,7 +49,6 @@ import com.leon.counter_reading.databinding.FragmentReadingBinding;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
 import com.leon.counter_reading.helpers.Constants;
-import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.view_models.ReadingViewModel;
 
@@ -63,27 +60,47 @@ public class ReadingFragment extends Fragment {
     private final ReadingViewModel readingVM = new ReadingViewModel();
     private FragmentReadingBinding binding;
     private long lastClickTime = 0;
+    private final View.OnClickListener onClickListener = view -> {
+        final int id = view.getId();
+        if (id == readingVM.getButtonId()) {
+            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
+            lastClickTime = SystemClock.elapsedRealtime();
+            checkPermissions();
+        } else if (id == R.id.text_view_pre_number) {
+            if (readingVM.switchDebtNumber())
+                ((ReadingActivity) requireActivity()).updateOnOffLoadByPreNumber(readingVM.getPosition());
+        } else if (id == readingVM.getTextViewId()) {
+            if (!readingVM.getOnOffLoadDto().isLocked && (readingVM.isShouldEnterNumber() || readingVM.isCanEnterNumber())) {
+                FOCUS_ON_EDIT_TEXT = true;
+                binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
+            }
+        } else if (id == R.id.image_button_show_keyboard || id == R.id.image_button_hide_keyboard) {
+            ringNotification();
+            FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
+            changeKeyboardState();
+        }
+    };
+    private final View.OnLongClickListener onLongClickListener = view -> {
+        final int id = view.getId();
+        if (id == R.id.text_view_address)
+            ShowDialogOnce(requireContext(), POSSIBLE_DIALOG.getValue().concat(readingVM.getOnOffLoadDto().eshterak),
+                    PossibleFragment.newInstance(readingVM.getOnOffLoadDto(), readingVM.getPosition(), true));
+        return false;
+    };
 
     public ReadingFragment() {
     }
 
     private ReadingFragment(int position) {
         readingVM.setPosition(position);
-        readingVM.setOnOffLoadDto(Constants.onOffLoadDtos.get(position));
         readingVM.setReadingConfigDefaultDto(Constants.readingConfigDefaultDtos.get(position));
         readingVM.setKarbariDto(Constants.karbariDtos.get(position));
+        readingVM.setOnOffLoadDto(Constants.onOffLoadDtos.get(position));
     }
 
     public static ReadingFragment newInstance(int position) {
         return new ReadingFragment(position);
     }
-
-    private static Bundle putBundle(int position) {
-        final Bundle args = new Bundle();
-        args.putInt(POSITION.getValue(), position);
-        return args;
-    }
-
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -94,6 +111,12 @@ public class ReadingFragment extends Fragment {
         } catch (Exception e) {
             new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
         }
+    }
+
+    private static Bundle putBundle(int position) {
+        final Bundle args = new Bundle();
+        args.putInt(POSITION.getValue(), position);
+        return args;
     }
 
     @Override
@@ -111,9 +134,9 @@ public class ReadingFragment extends Fragment {
     private void getBundle(final Bundle bundle) {
         try {
             readingVM.setPosition(bundle.getInt(POSITION.getValue()));
-            readingVM.setOnOffLoadDto(Constants.onOffLoadDtos.get(readingVM.getPosition()));
             readingVM.setKarbariDto(Constants.karbariDtos.get(readingVM.getPosition()));
             readingVM.setReadingConfigDefaultDto(Constants.readingConfigDefaultDtos.get(readingVM.getPosition()));
+            readingVM.setOnOffLoadDto(Constants.onOffLoadDtos.get(readingVM.getPosition()));
         } catch (Exception e) {
             final Intent intent = requireActivity().getIntent();
             requireActivity().finish();
@@ -140,21 +163,25 @@ public class ReadingFragment extends Fragment {
     }
 
     private void initialize() {
-        initializeViews();
+        generateId();
         initializeSpinner();
-        initializeButtonSubmit();
-        initializeTextViewNumber();
-        setOnKeyboardButtonsClickListener();
+        setOnEventsListener();
+        if (!readingVM.getOnOffLoadDto().displayRadif && !readingVM.getOnOffLoadDto().displayBillId)
+            binding.textViewRadif.setVisibility(View.GONE);
     }
 
-    private void initializeTextViewNumber() {
-        binding.editTextNumber.setId(readingVM.getTextViewId());
-        binding.editTextNumber.setOnClickListener(onClickListener);
-    }
-
-    private void initializeButtonSubmit() {
+    private void generateId() {
         binding.buttonSubmit.setId(readingVM.getButtonId());
+        binding.editTextNumber.setId(readingVM.getTextViewId());
+    }
+
+    private void setOnEventsListener() {
+        binding.editTextNumber.setOnClickListener(onClickListener);
         binding.buttonSubmit.setOnClickListener(onClickListener);
+        binding.textViewPreNumber.setOnClickListener(onClickListener);
+        binding.imageButtonHideKeyboard.setOnClickListener(onClickListener);
+        binding.imageButtonShowKeyboard.setOnClickListener(onClickListener);
+        binding.textViewAddress.setOnLongClickListener(onLongClickListener);
     }
 
     private void changeKeyboardState() {
@@ -165,30 +192,6 @@ public class ReadingFragment extends Fragment {
             binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
         else
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
-    }
-
-    private void initializeViews() {
-        if (readingVM.getOnOffLoadDto().displayRadif)
-            binding.textViewRadif.setText(String.valueOf(readingVM.getOnOffLoadDto().radif));
-        else if (readingVM.getOnOffLoadDto().displayBillId)
-            binding.textViewRadif.setText(String.valueOf(readingVM.getOnOffLoadDto().billId));
-        else binding.textViewRadif.setVisibility(View.GONE);
-
-        binding.textViewPreNumber.setText(String.valueOf(readingVM.getOnOffLoadDto().balance));
-        binding.textViewPreNumber.setOnClickListener(onClickListener);
-        binding.textViewAddress.setOnLongClickListener(onLongClickListener);
-
-        if (readingVM.getKarbariDto().title == null)
-            new CustomToast().warning(String.format("کاربری اشتراک %s به درستی بارگیری نشده است.", readingVM.getOnOffLoadDto().eshterak));
-        else binding.textViewKarbari.setText(readingVM.getKarbariDto().title);
-        if (readingVM.getOnOffLoadDto().qotr == null)
-            new CustomToast().warning(String.format("قطر اشتراک %s به درستی بارگیری نشده است.", readingVM.getOnOffLoadDto().eshterak));
-        else
-            binding.textViewBranch.setText(readingVM.getOnOffLoadDto().qotr.equals("مشخص نشده") ? "-" : readingVM.getOnOffLoadDto().qotr);
-        if (readingVM.getOnOffLoadDto().sifoonQotr == null)
-            new CustomToast().warning(String.format("قطر سیفون اشتراک %s به درستی بارگیری نشده است.", readingVM.getOnOffLoadDto().eshterak));
-        else
-            binding.textViewSiphon.setText(readingVM.getOnOffLoadDto().sifoonQotr.equals("مشخص نشده") ? "-" : readingVM.getOnOffLoadDto().sifoonQotr);
     }
 
     private void initializeSpinner() {
@@ -223,25 +226,10 @@ public class ReadingFragment extends Fragment {
     }
 
     private void setCounterStateField(int i) {
-        readingVM.setCounterStatePosition(i);
-        final CounterStateDto counterStateDto = counterStateDtos.get(readingVM.getCounterStatePosition());
-        readingVM.setCounterStateCode(counterStateDto.id);
-        readingVM.setMane(counterStateDto.isMane);
-        readingVM.setShouldEnterNumber(counterStateDto.shouldEnterNumber);
-        readingVM.setCanEnterNumber(counterStateDto.canEnterNumber);
-        readingVM.setCanLessThanPre(counterStateDto.canNumberBeLessThanPre);
-        readingVM.setMakoos(counterStateDto.title.equals("معکوس"));
+        readingVM.setCounterStateField(counterStateDtos.get(i), i);
         binding.imageButtonShowKeyboard.setVisibility(readingVM.isCanEnterNumber() ||
                 readingVM.isShouldEnterNumber() ? View.VISIBLE : View.GONE);
-        if (!readingVM.isCanEnterNumber() && !readingVM.isShouldEnterNumber())
-            binding.editTextNumber.setText("");
         changeKeyboardState();
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private void setOnKeyboardButtonsClickListener() {
-        binding.imageButtonHideKeyboard.setOnClickListener(onKeyboardClickListener);
-        binding.imageButtonShowKeyboard.setOnClickListener(onKeyboardClickListener);
     }
 
     private void askLocationPermission() {
@@ -319,7 +307,7 @@ public class ReadingFragment extends Fragment {
                     concat(readingVM.getOnOffLoadDto().eshterak).concat(getString(R.string.is_locked)), Toast.LENGTH_SHORT);
         if (!readingVM.getOnOffLoadDto().isLocked && readingVM.getOnOffLoadDto().attemptCount >= getLockNumber(getActiveCompanyName())) {
             readingVM.getOnOffLoadDto().isLocked = true;
-            binding.editTextNumber.setText("");
+            readingVM.setCounterNumber("");
             ((ReadingActivity) requireActivity()).updateOnOffLoadByLock(readingVM.getPosition());
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
             binding.imageButtonShowKeyboard.setVisibility(View.GONE);
@@ -329,11 +317,11 @@ public class ReadingFragment extends Fragment {
     }
 
     private void canBeEmpty() {
-        if (binding.editTextNumber.getText().toString().isEmpty() || readingVM.isMane()) {
+        if (readingVM.getCounterNumber().isEmpty() || readingVM.isMane()) {
             ((ReadingActivity) requireActivity()).updateOnOffLoadWithoutCounterNumber(readingVM.getPosition(),
                     readingVM.getCounterStateCode(), readingVM.getCounterStatePosition());
         } else {
-            final int currentNumber = getDigits(binding.editTextNumber.getText().toString());
+            final int currentNumber = getDigits(readingVM.getCounterNumber());
             final int use = currentNumber - readingVM.getOnOffLoadDto().preNumber;
             if (readingVM.isCanLessThanPre()) {
                 lessThanPre(currentNumber);
@@ -351,14 +339,14 @@ public class ReadingFragment extends Fragment {
     }
 
     private void canNotBeEmpty() {
-        if (binding.editTextNumber.getText().toString().isEmpty()) {
+        if (readingVM.getCounterNumber().isEmpty()) {
             makeRing(requireContext(), NOT_SAVE);
             String message = getString(R.string.counter_empty);
             binding.editTextNumber.setError(message);
             binding.editTextNumber.requestFocus();
             new CustomToast().warning(message, Toast.LENGTH_LONG);
         } else if (lockProcess(false)) {
-            final int currentNumber = getDigits(binding.editTextNumber.getText().toString());
+            final int currentNumber = getDigits(readingVM.getCounterNumber());
             final int use = currentNumber - readingVM.getOnOffLoadDto().preNumber;
             if (readingVM.isCanLessThanPre()) {
                 lessThanPre(currentNumber);
@@ -390,17 +378,11 @@ public class ReadingFragment extends Fragment {
         } else {
             final int status = checkHighLowMakoos(readingVM.getOnOffLoadDto(), readingVM.getKarbariDto(),
                     readingVM.getReadingConfigDefaultDto(), currentNumber);
-            switch (status) {
-                case 1:
-                    type = HIGH.getValue();
-                    break;
-                case -1:
-                    type = LOW.getValue();
-                    break;
-                case 0:
-                    ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingVM.getPosition(),
-                            currentNumber, readingVM.getCounterStateCode(), readingVM.getCounterStatePosition(), NORMAL.getValue());
-                    break;
+            if (status == HIGH.getValue() || status == LOW.getValue()) {
+                type = status;
+            } else if (status == NORMAL.getValue()) {
+                ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingVM.getPosition(),
+                        currentNumber, readingVM.getCounterStateCode(), readingVM.getCounterStatePosition(), NORMAL.getValue());
             }
         }
         if (type != null) {
@@ -418,17 +400,11 @@ public class ReadingFragment extends Fragment {
         } else {
             final int status = checkHighLow(readingVM.getOnOffLoadDto(), readingVM.getKarbariDto(),
                     readingVM.getReadingConfigDefaultDto(), currentNumber);
-            switch (status) {
-                case 1:
-                    type = HIGH.getValue();
-                    break;
-                case -1:
-                    type = LOW.getValue();
-                    break;
-                case 0:
-                    ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingVM.getPosition(),
-                            currentNumber, readingVM.getCounterStateCode(), readingVM.getCounterStatePosition(), NORMAL.getValue());
-                    break;
+            if (status == HIGH.getValue() || status == LOW.getValue()) {
+                type = status;
+            } else if (status == NORMAL.getValue()) {
+                ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingVM.getPosition(),
+                        currentNumber, readingVM.getCounterStateCode(), readingVM.getCounterStatePosition(), NORMAL.getValue());
             }
         }
         if (type != null) {
@@ -438,58 +414,6 @@ public class ReadingFragment extends Fragment {
         }
     }
 
-    private int getDigits(String number) {
-        if (!TextUtils.isEmpty(number) && TextUtils.isDigitsOnly(number)) {
-            return Integer.parseInt(number);
-        } else {
-            return 0;
-        }
-    }
-
-    private final View.OnClickListener onKeyboardClickListener = view -> {
-        readingVM.ringNotification();
-        final int id = view.getId();
-        if (id == R.id.image_button_show_keyboard || id == R.id.image_button_hide_keyboard) {
-            FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
-            changeKeyboardState();
-        }
-    };
-    private final View.OnClickListener onClickListener = view -> {
-        final int id = view.getId();
-        if (id == readingVM.getButtonId()) {
-            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
-            lastClickTime = SystemClock.elapsedRealtime();
-            checkPermissions();
-        } else if (id == R.id.text_view_pre_number) {
-            if (readingVM.isDebtOrNumber()) {
-                readingVM.setDebtOrNumber(false);
-                binding.textViewPreNumber.setText(String.valueOf(readingVM.getOnOffLoadDto().balance));
-                binding.textViewPreNumber.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
-            } else {
-                if (readingVM.getOnOffLoadDto().hasPreNumber) {
-                    readingVM.setDebtOrNumber(true);
-                    requireActivity().runOnUiThread(() -> {
-                        binding.textViewPreNumber.setText(String.valueOf(readingVM.getOnOffLoadDto().preNumber));
-                        final TypedValue typedValue = new TypedValue();
-                        requireActivity().getTheme().resolveAttribute(android.R.attr.textColor, typedValue, true);
-                        binding.textViewPreNumber.setTextColor(typedValue.data);
-                    });
-                    ((ReadingActivity) requireActivity()).updateOnOffLoadByPreNumber(readingVM.getPosition());
-                } else new CustomToast().warning(getString(R.string.can_not_show_pre));
-            }
-        } else if (id == readingVM.getTextViewId())
-            if (!readingVM.getOnOffLoadDto().isLocked && (readingVM.isShouldEnterNumber() || readingVM.isCanEnterNumber())) {
-                FOCUS_ON_EDIT_TEXT = true;
-                binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
-            }
-    };
-    private final View.OnLongClickListener onLongClickListener = view -> {
-        final int id = view.getId();
-        if (id == R.id.text_view_address)
-            ShowDialogOnce(requireContext(), POSSIBLE_DIALOG.getValue().concat(readingVM.getOnOffLoadDto().eshterak),
-                    PossibleFragment.newInstance(readingVM.getOnOffLoadDto(), readingVM.getPosition(), true));
-        return false;
-    };
 
     @Override
     public void onResume() {
