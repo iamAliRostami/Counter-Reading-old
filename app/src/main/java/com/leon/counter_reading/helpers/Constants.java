@@ -5,10 +5,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 
-import com.leon.counter_reading.tables.CounterStateDto;
-import com.leon.counter_reading.tables.KarbariDto;
-import com.leon.counter_reading.tables.OnOffLoadDto;
-import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.tables.ReadingData;
 
 import java.io.File;
@@ -30,11 +26,7 @@ public class Constants {
     public static final int SETTING_REQUEST = 922;
     public static final int GALLERY_REQUEST = 1889;
 
-    public static final int COUNTER_PLACE = 1914;
-    public static final int DESCRIPTION = 1909;
-    public static final int NAVIGATION = 1903;
     public static final int CAMERA = 1446;
-    public static final int REPORT = 1445;
 
     public static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
     public static final long MIN_TIME_BW_UPDATES = 10000;

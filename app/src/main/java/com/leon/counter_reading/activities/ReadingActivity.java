@@ -1,6 +1,7 @@
 package com.leon.counter_reading.activities;
 
 import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
+import static com.leon.counter_reading.enums.BundleEnum.DESCRIPTION;
 import static com.leon.counter_reading.enums.BundleEnum.IS_MANE;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.READ_STATUS;
@@ -36,11 +37,7 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_TEMPORARY
 import static com.leon.counter_reading.enums.SharedReferenceKeys.TOKEN;
 import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.Constants.CAMERA;
-import static com.leon.counter_reading.helpers.Constants.COUNTER_PLACE;
-import static com.leon.counter_reading.helpers.Constants.DESCRIPTION;
 import static com.leon.counter_reading.helpers.Constants.MAX_OFFLINE_ATTEMPT;
-import static com.leon.counter_reading.helpers.Constants.NAVIGATION;
-import static com.leon.counter_reading.helpers.Constants.REPORT;
 import static com.leon.counter_reading.helpers.Constants.currentOfflineAttempts;
 import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
@@ -62,6 +59,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -75,9 +74,9 @@ import com.leon.counter_reading.adapters.ViewPagerStateAdapter2;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReadingBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
-import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.FragmentTags;
 import com.leon.counter_reading.fragments.ReadingFragment;
+import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
 import com.leon.counter_reading.fragments.dialog.CounterPlaceFragment;
 import com.leon.counter_reading.fragments.dialog.NavigationFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
@@ -113,13 +112,15 @@ import java.util.ArrayList;
 
 public class ReadingActivity extends BaseActivity implements View.OnClickListener,
         ReadingReportFragment.Callback, CounterPlaceFragment.Callback, NavigationFragment.Callback,
-        ReadingFragment.Callback {
+        ReadingFragment.Callback, TakePhotoFragment.Callback, SerialFragment.Callback,
+        AreYouSureFragment.Callback {
     private ISharedPreferenceManager sharedPreferenceManager;
     private ViewPagerStateAdapter2 adapter;
     private IFlashLightManager flashLightManager;
     private ActivityReadingBinding binding;
     private int readStatus = 0, highLow = 1;
     private boolean isShowing = false;
+    public boolean searchResult;
     private int[] imageSrc;
 
     @Override
@@ -173,6 +174,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+    @Override
     public void updateOnOffLoadByPreNumber(int position) {
         readingData.onOffLoadDtos.get(position).counterNumberShown = true;
         readingData.onOffLoadDtos.get(position).isBazdid = true;
@@ -180,6 +182,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         updateAdapter(position);
     }
 
+    @Override
     public void updateOnOffLoadByAttempt(int position, boolean... booleans) {
         if (booleans != null && booleans.length > 0)
             readingData.onOffLoadDtos.get(position).attemptCount--;
@@ -187,12 +190,14 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         updateAdapter(position);
     }
 
+    @Override
     public void updateOnOffLoadByLock(int position) {
         readingData.onOffLoadDtos.get(position).isLocked = true;
         new UpdateOnOffLoadDtoByLock(readingData.onOffLoadDtos.get(position)).execute();
         updateAdapter(position);
     }
 
+    @Override
     public void updateOnOffLoadWithoutCounterNumber(int position, int counterStateCode,
                                                     int counterStatePosition) {
         readingData.onOffLoadDtos.get(position).counterNumber = null;
@@ -200,6 +205,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         attemptSend(position, true, true);
     }
 
+    @Override
     public void updateOnOffLoadByCounterSerial(int position, int counterStatePosition,
                                                int counterStateCode, String counterSerial) {
         updateOnOffLoad(position, counterStateCode, counterStatePosition);
@@ -208,6 +214,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         attemptSend(position, false, false);
     }
 
+    @Override
     public void updateOnOffLoadByNumber(int position, int number, int counterStateCode,
                                         int counterStatePosition) {
         updateOnOffLoad(position, counterStateCode, counterStatePosition);
@@ -215,6 +222,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         attemptSend(position, true, true);
     }
 
+    @Override
     public void updateOnOffLoadByNumber(int position, int number, int counterStateCode,
                                         int counterStatePosition, int type) {
         readingData.onOffLoadDtos.get(position).highLowStateId = type;
@@ -252,7 +260,6 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    public boolean searchResult;
 
     public boolean search(int type, String key, boolean goToPage) {
         if (type == PAGE_NUMBER.getValue()) {
@@ -360,8 +367,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
                         counterStateDto.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {
                     ShowDialogOnce(this, SERIAL_DIALOG.getValue().concat(readingData.onOffLoadDtos.get(position).eshterak),
-                            SerialFragment.newInstance(position, counterStateDto.id,
-                                    readingData.onOffLoadDtos.get(position).counterStatePosition));
+                            SerialFragment.newInstance(position));
                 } else isShowing = true;
             }
             if (isShowing) {
@@ -553,9 +559,9 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 final OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem());
                 intent.putExtra(BILL_ID.getValue(), onOffLoadDtoTemp.id);
                 intent.putExtra(TRACKING.getValue(), onOffLoadDtoTemp.trackNumber);
-                intent.putExtra(BundleEnum.DESCRIPTION.getValue(), onOffLoadDtoTemp.description);
+                intent.putExtra(DESCRIPTION.getValue(), onOffLoadDtoTemp.description);
                 intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
-                startActivityForResult(intent, DESCRIPTION);
+                resultLauncher.launch(intent);
             }
         }
         if (id == R.id.menu_location) {
@@ -586,13 +592,17 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         return super.onOptionsItemSelected(item);
     }
 
+    private final ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    new DataResult(result.getData()).execute(this);
+                }
+            });
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if ((requestCode == REPORT || requestCode == NAVIGATION || requestCode == DESCRIPTION ||
-                requestCode == COUNTER_PLACE) && resultCode == RESULT_OK) {
-            new DataResult(data).execute(this);
-        } else if (requestCode == CAMERA && resultCode == RESULT_OK) {
+        if (requestCode == CAMERA && resultCode == RESULT_OK) {
             int position = data.getExtras().getInt(POSITION.getValue());
             attemptSend(position, false, false);
         }
@@ -603,6 +613,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         new Result(position, uuid).execute(this);
     }
 
+    @Override
     public void setPhotoResult(int position) {
         attemptSend(position, false, false);
     }
@@ -610,6 +621,16 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     @Override
     public int getPosition() {
         return binding.viewPager.getCurrentItem();
+    }
+
+    @Override
+    public int getCounterStateCode(int position) {
+        return readingData.counterStateDtos.get(readingData.onOffLoadDtos.get(position).counterStatePosition).id;
+    }
+
+    @Override
+    public int getCounterStatePosition(int position) {
+        return readingData.onOffLoadDtos.get(position).counterStatePosition;
     }
 
     @Override
@@ -657,5 +678,4 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         Runtime.getRuntime().gc();
         System.gc();
     }
-
 }

@@ -13,6 +13,7 @@ import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 import static com.leon.counter_reading.utils.CustomFile.saveTempBitmap;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -31,7 +32,6 @@ import androidx.fragment.app.DialogFragment;
 
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.ImageViewAdapter;
 import com.leon.counter_reading.databinding.FragmentTakePhotoBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
@@ -48,6 +48,7 @@ import java.util.ArrayList;
 public class TakePhotoFragment extends DialogFragment {
     private FragmentTakePhotoBinding binding;
     private ImageViewAdapter imageViewAdapter;
+    private Callback readingActivity;
     private final ArrayList<Image> images = new ArrayList<>();
     private int replace = 0, position, trackNumber;
     private String uuid, path;
@@ -182,13 +183,6 @@ public class TakePhotoFragment extends DialogFragment {
         }
     }
 
-    private final ActivityResultLauncher<Intent> cameraResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) prepareImage();
-                imageViewAdapter.notifyDataSetChanged();
-                binding.buttonSaveSend.setEnabled(true);
-            });
-
     private final ActivityResultLauncher<Intent> galleryResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -204,6 +198,12 @@ public class TakePhotoFragment extends DialogFragment {
                         e.printStackTrace();
                     }
                 }
+                imageViewAdapter.notifyDataSetChanged();
+                binding.buttonSaveSend.setEnabled(true);
+            });
+    private final ActivityResultLauncher<Intent> cameraResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) prepareImage();
                 imageViewAdapter.notifyDataSetChanged();
                 binding.buttonSaveSend.setEnabled(true);
             });
@@ -244,10 +244,16 @@ public class TakePhotoFragment extends DialogFragment {
         try {
             dismiss();
             if (result)
-                ((ReadingActivity) requireActivity()).setPhotoResult(position);
+                readingActivity.setPhotoResult(position);
         } catch (Exception e) {
             new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
         }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity) readingActivity = (Callback) context;
     }
 
     @Override
@@ -258,11 +264,17 @@ public class TakePhotoFragment extends DialogFragment {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
         } else {
-            ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
+            readingActivity.updateOnOffLoadByAttempt(position, true);
             new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
                     getString(R.string.dear_user), getString(R.string.take_screen_shot),
                     getString(R.string.accepted));
         }
         super.onResume();
+    }
+
+    public interface Callback {
+        void setPhotoResult(int position);
+
+        void updateOnOffLoadByAttempt(int position, boolean... booleans);
     }
 }

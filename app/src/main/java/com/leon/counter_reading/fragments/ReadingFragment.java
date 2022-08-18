@@ -44,7 +44,6 @@ import androidx.fragment.app.FragmentManager;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingBinding;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
@@ -217,7 +216,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
 
     private boolean lockProcess(final boolean canContinue) {
         readingVM.getOnOffLoadDto().attemptCount++;
-        ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(readingVM.getPosition());
+        readingActivity.updateOnOffLoadByAttempt(readingVM.getPosition());
         if (!readingVM.getOnOffLoadDto().isLocked && readingVM.getOnOffLoadDto().attemptCount + 1 == getLockNumber(getActiveCompanyName()))
             new CustomToast().error(getString(R.string.mistakes_error), Toast.LENGTH_LONG);
         if (!readingVM.getOnOffLoadDto().isLocked && readingVM.getOnOffLoadDto().attemptCount == getLockNumber(getActiveCompanyName()))
@@ -226,7 +225,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         if (!readingVM.getOnOffLoadDto().isLocked && readingVM.getOnOffLoadDto().attemptCount >= getLockNumber(getActiveCompanyName())) {
             readingVM.getOnOffLoadDto().isLocked = true;
             readingVM.setCounterNumber("");
-            ((ReadingActivity) requireActivity()).updateOnOffLoadByLock(readingVM.getPosition());
+            readingActivity.updateOnOffLoadByLock(readingVM.getPosition());
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
             binding.imageButtonShowKeyboard.setVisibility(View.GONE);
             return canContinue;
@@ -236,7 +235,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
 
     private void canBeEmpty() {
         if (readingVM.getCounterNumber().isEmpty() || readingVM.isMane()) {
-            ((ReadingActivity) requireActivity()).updateOnOffLoadWithoutCounterNumber(readingVM.getPosition(),
+            readingActivity.updateOnOffLoadWithoutCounterNumber(readingVM.getPosition(),
                     readingVM.getCounterStateCode(), readingVM.getCounterStatePosition());
         } else {
             final int currentNumber = getDigits(readingVM.getCounterNumber());
@@ -250,8 +249,8 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
                 binding.editTextNumber.setError(message);
                 binding.editTextNumber.requestFocus();
             } else {
-                ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingVM.getPosition(),
-                        currentNumber, readingVM.getCounterStateCode(), readingVM.getCounterStatePosition());
+                readingActivity.updateOnOffLoadByNumber(readingVM.getPosition(), currentNumber,
+                        readingVM.getCounterStateCode(), readingVM.getCounterStatePosition());
             }
         }
     }
@@ -282,8 +281,8 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
 
     private void lessThanPre(int currentNumber) {
         if (!readingVM.isMakoos())
-            ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingVM.getPosition(),
-                    currentNumber, readingVM.getCounterStateCode(), readingVM.getCounterStatePosition());
+            readingActivity.updateOnOffLoadByNumber(readingVM.getPosition(), currentNumber,
+                    readingVM.getCounterStateCode(), readingVM.getCounterStatePosition());
         else {
             notEmptyIsMakoos(currentNumber);
         }
@@ -299,8 +298,8 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
             if (status == HIGH.getValue() || status == LOW.getValue()) {
                 type = status;
             } else if (status == NORMAL.getValue()) {
-                ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingVM.getPosition(),
-                        currentNumber, readingVM.getCounterStateCode(), readingVM.getCounterStatePosition(), NORMAL.getValue());
+                readingActivity.updateOnOffLoadByNumber(readingVM.getPosition(), currentNumber,
+                        readingVM.getCounterStateCode(), readingVM.getCounterStatePosition(), NORMAL.getValue());
             }
         }
         if (type != null) {
@@ -321,7 +320,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
             if (status == HIGH.getValue() || status == LOW.getValue()) {
                 type = status;
             } else if (status == NORMAL.getValue()) {
-                ((ReadingActivity) requireActivity()).updateOnOffLoadByNumber(readingVM.getPosition(),
+                readingActivity.updateOnOffLoadByNumber(readingVM.getPosition(),
                         currentNumber, readingVM.getCounterStateCode(), readingVM.getCounterStatePosition(), NORMAL.getValue());
             }
         }
@@ -341,7 +340,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
             checkPermissions();
         } else if (id == R.id.text_view_pre_number) {
             if (readingVM.switchDebtNumber())
-                ((ReadingActivity) requireActivity()).updateOnOffLoadByPreNumber(readingVM.getPosition());
+                readingActivity.updateOnOffLoadByPreNumber(readingVM.getPosition());
         } else if (id == readingVM.getTextViewId()) {
             if (!readingVM.getOnOffLoadDto().isLocked && (readingVM.isShouldEnterNumber() || readingVM.isCanEnterNumber())) {
                 FOCUS_ON_EDIT_TEXT = true;
@@ -461,5 +460,20 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         ReadingConfigDefaultDto getReadingConfigDefaultDto(int position);
 
         ArrayList<CounterStateDto> getCounterStateDtos();
+
+        void updateOnOffLoadByPreNumber(int position);
+
+        void updateOnOffLoadByLock(int position);
+
+        void updateOnOffLoadWithoutCounterNumber(int position, int counterStateCode,
+                                                 int counterStatePosition);
+
+        void updateOnOffLoadByAttempt(int position, boolean... booleans);
+
+        void updateOnOffLoadByNumber(int position, int number, int counterStateCode,
+                                     int counterStatePosition);
+
+        void updateOnOffLoadByNumber(int position, int number, int counterStateCode,
+                                     int counterStatePosition, int type);
     }
 }

@@ -6,28 +6,33 @@ import static com.leon.counter_reading.enums.BundleEnum.NUMBER;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.TYPE;
 import static com.leon.counter_reading.enums.DialogType.Red;
+import static com.leon.counter_reading.enums.HighLowStateEnum.HIGH;
+import static com.leon.counter_reading.enums.HighLowStateEnum.LOW;
+import static com.leon.counter_reading.enums.HighLowStateEnum.ZERO;
+import static com.leon.counter_reading.enums.NotificationType.OTHER;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.databinding.FragmentAreYouSureBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
-import com.leon.counter_reading.enums.HighLowStateEnum;
-import com.leon.counter_reading.enums.NotificationType;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AreYouSureFragment extends DialogFragment {
+public class AreYouSureFragment extends DialogFragment implements View.OnClickListener {
     private FragmentAreYouSureBinding binding;
+    private Callback readingActivity;
     private int position, currentNumber, type, counterStateCode, counterStatePosition;
 
     public static AreYouSureFragment newInstance(int position, int number, int type,
@@ -65,32 +70,39 @@ public class AreYouSureFragment extends DialogFragment {
     }
 
     private void initialize() {
-        makeRing(getContext(), NotificationType.OTHER);
+        makeRing(getContext(), OTHER);
         setTextViewMessage();
-        setOnButtonsClickListener();
+        binding.buttonSubmit.setOnClickListener(this);
+        binding.buttonClose.setOnClickListener(this);
     }
 
     private void setTextViewMessage() {
-        if (type == HighLowStateEnum.HIGH.getValue()) {
+        if (type == HIGH.getValue()) {
             binding.textViewAreYouSure.setText(getString(R.string.high_use));
             binding.buttonSubmit.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.border_red_1));
-        } else if (type == HighLowStateEnum.LOW.getValue()) {
+        } else if (type == LOW.getValue()) {
             binding.textViewAreYouSure.setText(getString(R.string.low_use));
             binding.buttonSubmit.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.border_yellow_1));
-        } else if (type == HighLowStateEnum.ZERO.getValue()) {
+        } else if (type == ZERO.getValue()) {
             binding.textViewAreYouSure.setText(getString(R.string.zero_use));
             binding.buttonSubmit.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.border_yellow_1));
         }
     }
 
-    private void setOnButtonsClickListener() {
-        binding.buttonSubmit.setOnClickListener(v -> {
-            dismiss();
-            ((ReadingActivity) requireActivity()).
-                    updateOnOffLoadByNumber(position, currentNumber, counterStateCode,
-                            counterStatePosition, type);
-        });
-        binding.buttonClose.setOnClickListener(v -> dismiss());
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        dismiss();
+        if (id == R.id.button_submit) {
+            readingActivity.updateOnOffLoadByNumber(position, currentNumber, counterStateCode,
+                    counterStatePosition, type);
+        }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity) readingActivity = (Callback) context;
     }
 
     @Override
@@ -101,7 +113,7 @@ public class AreYouSureFragment extends DialogFragment {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
         } else {
-            ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
+            readingActivity.updateOnOffLoadByAttempt(position, true);
             new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
                     getString(R.string.dear_user), getString(R.string.take_screen_shot),
                     getString(R.string.accepted));
@@ -113,5 +125,13 @@ public class AreYouSureFragment extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+
+    public interface Callback {
+        void updateOnOffLoadByAttempt(int position, boolean... booleans);
+
+        void updateOnOffLoadByNumber(int position, int number, int counterStateCode,
+                                     int counterStatePosition, int type);
     }
 }

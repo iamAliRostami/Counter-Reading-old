@@ -1,39 +1,36 @@
 package com.leon.counter_reading.fragments.dialog;
 
-import static com.leon.counter_reading.enums.BundleEnum.COUNTER_STATE_CODE;
-import static com.leon.counter_reading.enums.BundleEnum.COUNTER_STATE_POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.DialogType.Red;
+import static com.leon.counter_reading.enums.NotificationType.OTHER;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.databinding.FragmentSerialBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
-import com.leon.counter_reading.enums.NotificationType;
 
 import org.jetbrains.annotations.NotNull;
 
-public class SerialFragment extends DialogFragment {
-    private int position;
-    private int counterStatePosition;
-    private int counterStateCode;
+public class SerialFragment extends DialogFragment implements View.OnClickListener {
+    private Callback readingActivity;
     private FragmentSerialBinding binding;
+    private int position;
 
-    public static SerialFragment newInstance(int position, int counterStateCode, int counterStatePosition) {
+    public static SerialFragment newInstance(int position) {
         final SerialFragment fragment = new SerialFragment();
         final Bundle args = new Bundle();
         args.putInt(POSITION.getValue(), position);
-        args.putInt(COUNTER_STATE_CODE.getValue(), counterStateCode);
-        args.putInt(COUNTER_STATE_POSITION.getValue(), counterStatePosition);
         fragment.setArguments(args);
         fragment.setCancelable(false);
         return fragment;
@@ -44,8 +41,6 @@ public class SerialFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             position = getArguments().getInt(POSITION.getValue());
-            counterStateCode = getArguments().getInt(COUNTER_STATE_CODE.getValue());
-            counterStatePosition = getArguments().getInt(COUNTER_STATE_POSITION.getValue());
             getArguments().clear();
         }
     }
@@ -58,36 +53,46 @@ public class SerialFragment extends DialogFragment {
         return binding.getRoot();
     }
 
-    void initialize() {
-        makeRing(getContext(), NotificationType.OTHER);
-        setOnButtonsClickListener();
+    private void initialize() {
+        makeRing(getContext(), OTHER);
+        binding.buttonClose.setOnClickListener(this);
+        binding.buttonSubmit.setOnClickListener(this);
     }
 
-    void setOnButtonsClickListener() {
-        binding.buttonClose.setOnClickListener(v -> dismiss());
-        binding.buttonSubmit.setOnClickListener(v -> {
-            String number = binding.editTextSerial.getText().toString();
+    @Override
+    public void onClick(View view) {
+        final int id = view.getId();
+        if (id == R.id.button_close)
+            dismiss();
+        else if (id == R.id.button_submit) {
+            final String number = binding.editTextSerial.getText().toString();
             if (number.length() > 0 && number.length() < 3) {
-                View view = binding.editTextSerial;
                 binding.editTextSerial.setError(getString(R.string.error_format));
-                view.requestFocus();
+                binding.editTextSerial.requestFocus();
             } else {
-                ((ReadingActivity) (requireActivity())).updateOnOffLoadByCounterSerial(
-                        position, counterStatePosition, counterStateCode, number);
+                readingActivity.updateOnOffLoadByCounterSerial(position,
+                        readingActivity.getCounterStatePosition(position),
+                        readingActivity.getCounterStateCode(position), number);
                 dismiss();
             }
-        });
+        }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity) readingActivity = (Callback) context;
     }
 
     @Override
     public void onResume() {
         if (getDialog() != null) {
-             WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
         } else {
-            ((ReadingActivity) requireActivity()).updateOnOffLoadByAttempt(position, true);
+            readingActivity.updateOnOffLoadByAttempt(position, true);
             new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
                     getString(R.string.dear_user), getString(R.string.take_screen_shot),
                     getString(R.string.accepted));
@@ -98,5 +103,17 @@ public class SerialFragment extends DialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+
+    public interface Callback {
+        void updateOnOffLoadByCounterSerial(int position, int counterStatePosition,
+                                            int counterStateCode, String counterSerial);
+
+        void updateOnOffLoadByAttempt(int position, boolean... booleans);
+
+        int getCounterStateCode(int position);
+
+        int getCounterStatePosition(int position);
     }
 }
