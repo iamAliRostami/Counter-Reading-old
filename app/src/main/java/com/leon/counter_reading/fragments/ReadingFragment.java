@@ -56,37 +56,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class ReadingFragment extends Fragment {
+public class ReadingFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
     private final ReadingViewModel readingVM = new ReadingViewModel();
     private FragmentReadingBinding binding;
     private long lastClickTime = 0;
-    private final View.OnClickListener onClickListener = view -> {
-        final int id = view.getId();
-        if (id == readingVM.getButtonId()) {
-            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
-            lastClickTime = SystemClock.elapsedRealtime();
-            checkPermissions();
-        } else if (id == R.id.text_view_pre_number) {
-            if (readingVM.switchDebtNumber())
-                ((ReadingActivity) requireActivity()).updateOnOffLoadByPreNumber(readingVM.getPosition());
-        } else if (id == readingVM.getTextViewId()) {
-            if (!readingVM.getOnOffLoadDto().isLocked && (readingVM.isShouldEnterNumber() || readingVM.isCanEnterNumber())) {
-                FOCUS_ON_EDIT_TEXT = true;
-                binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
-            }
-        } else if (id == R.id.image_button_show_keyboard || id == R.id.image_button_hide_keyboard) {
-            ringNotification();
-            FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
-            changeKeyboardState();
-        }
-    };
-    private final View.OnLongClickListener onLongClickListener = view -> {
-        final int id = view.getId();
-        if (id == R.id.text_view_address)
-            ShowDialogOnce(requireContext(), POSSIBLE_DIALOG.getValue().concat(readingVM.getOnOffLoadDto().eshterak),
-                    PossibleFragment.newInstance(readingVM.getOnOffLoadDto(), readingVM.getPosition(), true));
-        return false;
-    };
+
 
     public ReadingFragment() {
     }
@@ -176,12 +150,12 @@ public class ReadingFragment extends Fragment {
     }
 
     private void setOnEventsListener() {
-        binding.editTextNumber.setOnClickListener(onClickListener);
-        binding.buttonSubmit.setOnClickListener(onClickListener);
-        binding.textViewPreNumber.setOnClickListener(onClickListener);
-        binding.imageButtonHideKeyboard.setOnClickListener(onClickListener);
-        binding.imageButtonShowKeyboard.setOnClickListener(onClickListener);
-        binding.textViewAddress.setOnLongClickListener(onLongClickListener);
+        binding.editTextNumber.setOnClickListener(this);
+        binding.buttonSubmit.setOnClickListener(this);
+        binding.textViewPreNumber.setOnClickListener(this);
+        binding.imageButtonHideKeyboard.setOnClickListener(this);
+        binding.imageButtonShowKeyboard.setOnClickListener(this);
+        binding.textViewAddress.setOnLongClickListener(this);
     }
 
     private void changeKeyboardState() {
@@ -414,6 +388,36 @@ public class ReadingFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onClick(View view) {
+        final int id = view.getId();
+        if (id == readingVM.getButtonId()) {
+            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
+            lastClickTime = SystemClock.elapsedRealtime();
+            checkPermissions();
+        } else if (id == R.id.text_view_pre_number) {
+            if (readingVM.switchDebtNumber())
+                ((ReadingActivity) requireActivity()).updateOnOffLoadByPreNumber(readingVM.getPosition());
+        } else if (id == readingVM.getTextViewId()) {
+            if (!readingVM.getOnOffLoadDto().isLocked && (readingVM.isShouldEnterNumber() || readingVM.isCanEnterNumber())) {
+                FOCUS_ON_EDIT_TEXT = true;
+                binding.relativeLayoutKeyboard.setVisibility(View.VISIBLE);
+            }
+        } else if (id == R.id.image_button_show_keyboard || id == R.id.image_button_hide_keyboard) {
+            ringNotification();
+            FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
+            changeKeyboardState();
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        final int id = view.getId();
+        if (id == R.id.text_view_address)
+            ShowDialogOnce(requireContext(), POSSIBLE_DIALOG.getValue().concat(readingVM.getOnOffLoadDto().eshterak),
+                    PossibleFragment.newInstance(readingVM.getOnOffLoadDto(), readingVM.getPosition(), true));
+        return false;
+    }
 
     @Override
     public void onResume() {
@@ -439,4 +443,5 @@ public class ReadingFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
 }
