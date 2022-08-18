@@ -260,7 +260,6 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-
     public boolean search(int type, String key, boolean goToPage) {
         if (type == PAGE_NUMBER.getValue()) {
             runOnUiThread(() -> binding.viewPager.setCurrentItem(Integer.parseInt(key) - 1));
