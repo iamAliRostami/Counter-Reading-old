@@ -12,7 +12,6 @@ import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowD
 import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.STORAGE_PERMISSIONS;
-import static com.leon.counter_reading.helpers.Constants.counterStateDtos;
 import static com.leon.counter_reading.helpers.MyApplication.getDigits;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getLockNumber;
@@ -25,6 +24,8 @@ import static com.leon.counter_reading.utils.PermissionManager.forceClose;
 import static com.leon.counter_reading.utils.reading.Counting.checkHighLow;
 import static com.leon.counter_reading.utils.reading.Counting.checkHighLowMakoos;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -48,7 +49,10 @@ import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingBinding;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
-import com.leon.counter_reading.helpers.Constants;
+import com.leon.counter_reading.tables.CounterStateDto;
+import com.leon.counter_reading.tables.KarbariDto;
+import com.leon.counter_reading.tables.OnOffLoadDto;
+import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.view_models.ReadingViewModel;
 
@@ -60,20 +64,13 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     private final ReadingViewModel readingVM = new ReadingViewModel();
     private FragmentReadingBinding binding;
     private long lastClickTime = 0;
-
+    private Callback readingActivity;
 
     public ReadingFragment() {
     }
 
-    private ReadingFragment(int position) {
-        readingVM.setPosition(position);
-        readingVM.setReadingConfigDefaultDto(Constants.readingConfigDefaultDtos.get(position));
-        readingVM.setKarbariDto(Constants.karbariDtos.get(position));
-        readingVM.setOnOffLoadDto(Constants.onOffLoadDtos.get(position));
-    }
-
-    public static ReadingFragment newInstance(int position) {
-        return new ReadingFragment(position);
+    public static ReadingFragment newInstance() {
+        return new ReadingFragment();
     }
 
     @Override
@@ -107,10 +104,10 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
 
     private void getBundle(final Bundle bundle) {
         try {
-            readingVM.setPosition(bundle.getInt(POSITION.getValue()));
-            readingVM.setKarbariDto(Constants.karbariDtos.get(readingVM.getPosition()));
-            readingVM.setReadingConfigDefaultDto(Constants.readingConfigDefaultDtos.get(readingVM.getPosition()));
-            readingVM.setOnOffLoadDto(Constants.onOffLoadDtos.get(readingVM.getPosition()));
+            readingVM.setPosition(readingActivity.getPosition());
+            readingVM.setReadingConfigDefaultDto(readingActivity.getReadingConfigDefaultDto(readingVM.getPosition()));
+            readingVM.setKarbariDto(readingActivity.getKarbariDto(readingVM.getPosition()));
+            readingVM.setOnOffLoadDto(readingActivity.getOnOffLoad(readingVM.getPosition()));
         } catch (Exception e) {
             final Intent intent = requireActivity().getIntent();
             requireActivity().finish();
@@ -132,6 +129,10 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
                              Bundle savedInstanceState) {
         if (savedInstanceState != null) savedInstanceState.clear();
         binding = FragmentReadingBinding.inflate(inflater, container, false);
+        readingVM.setPosition(readingActivity.getPosition());
+        readingVM.setReadingConfigDefaultDto(readingActivity.getReadingConfigDefaultDto(readingVM.getPosition()));
+        readingVM.setKarbariDto(readingActivity.getKarbariDto(readingVM.getPosition()));
+        readingVM.setOnOffLoadDto(readingActivity.getOnOffLoad(readingVM.getPosition()));
         binding.setReadingVM(readingVM);
         return binding.getRoot();
     }
@@ -150,12 +151,12 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     }
 
     private void setOnEventsListener() {
-        binding.editTextNumber.setOnClickListener(this);
-        binding.buttonSubmit.setOnClickListener(this);
-        binding.textViewPreNumber.setOnClickListener(this);
         binding.imageButtonHideKeyboard.setOnClickListener(this);
         binding.imageButtonShowKeyboard.setOnClickListener(this);
         binding.textViewAddress.setOnLongClickListener(this);
+        binding.textViewPreNumber.setOnClickListener(this);
+        binding.editTextNumber.setOnClickListener(this);
+        binding.buttonSubmit.setOnClickListener(this);
     }
 
     private void changeKeyboardState() {
@@ -169,16 +170,16 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     }
 
     private void initializeSpinner() {
-        final String[] items = new String[counterStateDtos.size()];
-        for (int i = 0; i < counterStateDtos.size(); i++) {
-            items[i] = counterStateDtos.get(i).title;
+        final String[] items = new String[readingActivity.getCounterStateDtos().size()];
+        for (int i = 0; i < readingActivity.getCounterStateDtos().size(); i++) {
+            items[i] = readingActivity.getCounterStateDtos().get(i).title;
         }
         final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
         binding.spinner.setAdapter(adapter);
         boolean found = false;
         int i;
-        for (i = 0; i < counterStateDtos.size() && !found; i++)
-            if (counterStateDtos.get(i).id == readingVM.getOnOffLoadDto().counterStateId) {
+        for (i = 0; i < readingActivity.getCounterStateDtos().size() && !found; i++)
+            if (readingActivity.getCounterStateDtos().get(i).id == readingVM.getOnOffLoadDto().counterStateId) {
                 found = true;
             }
         binding.spinner.setSelection(found ? i - 1 : 0);
@@ -200,67 +201,10 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     }
 
     private void setCounterStateField(int i) {
-        readingVM.setCounterStateField(counterStateDtos.get(i), i);
+        readingVM.setCounterStateField(readingActivity.getCounterStateDtos().get(i), i);
         binding.imageButtonShowKeyboard.setVisibility(readingVM.isCanEnterNumber() ||
                 readingVM.isShouldEnterNumber() ? View.VISIBLE : View.GONE);
         changeKeyboardState();
-    }
-
-    private void askLocationPermission() {
-        final PermissionListener permissionlistener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                new CustomToast().info(getString(R.string.access_granted));
-                checkPermissions();
-            }
-
-            @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                new CustomToast().warning(getString(R.string.cant_fine_location));
-            }
-        };
-        new TedPermission(requireContext())
-                .setPermissionListener(permissionlistener)
-                .setRationaleMessage(getString(R.string.confirm_permission))
-                .setRationaleConfirmText(getString(R.string.allow_permission))
-                .setDeniedMessage(getString(R.string.if_reject_permission))
-                .setDeniedCloseButtonText(getString(R.string.close))
-                .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(LOCATION_PERMISSIONS).check();
-    }
-
-    private void askStoragePermission() {
-        final PermissionListener permissionlistener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                new CustomToast().info(getString(R.string.access_granted));
-                checkPermissions();
-            }
-
-            @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                forceClose(requireActivity());
-            }
-        };
-        new TedPermission(requireContext())
-                .setPermissionListener(permissionlistener)
-                .setRationaleMessage(getString(R.string.confirm_permission))
-                .setRationaleConfirmText(getString(R.string.allow_permission))
-                .setDeniedMessage(getString(R.string.if_reject_permission))
-                .setDeniedCloseButtonText(getString(R.string.close))
-                .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(STORAGE_PERMISSIONS).check();
-    }
-
-    private void checkPermissions() {
-        if (enableGps(requireActivity()))
-            if (!checkLocationPermission(requireContext())) {
-                askLocationPermission();
-            } else if (!checkStoragePermission(getContext())) {
-                askStoragePermission();
-            } else {
-                attemptSend();
-            }
     }
 
     private void attemptSend() {
@@ -419,6 +363,69 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         return false;
     }
 
+    private void askLocationPermission() {
+        final PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                new CustomToast().info(getString(R.string.access_granted));
+                checkPermissions();
+            }
+
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                new CustomToast().warning(getString(R.string.cant_fine_location));
+            }
+        };
+        new TedPermission(requireContext())
+                .setPermissionListener(permissionlistener)
+                .setRationaleMessage(getString(R.string.confirm_permission))
+                .setRationaleConfirmText(getString(R.string.allow_permission))
+                .setDeniedMessage(getString(R.string.if_reject_permission))
+                .setDeniedCloseButtonText(getString(R.string.close))
+                .setGotoSettingButtonText(getString(R.string.allow_permission))
+                .setPermissions(LOCATION_PERMISSIONS).check();
+    }
+
+    private void askStoragePermission() {
+        final PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                new CustomToast().info(getString(R.string.access_granted));
+                checkPermissions();
+            }
+
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                forceClose(requireActivity());
+            }
+        };
+        new TedPermission(requireContext())
+                .setPermissionListener(permissionlistener)
+                .setRationaleMessage(getString(R.string.confirm_permission))
+                .setRationaleConfirmText(getString(R.string.allow_permission))
+                .setDeniedMessage(getString(R.string.if_reject_permission))
+                .setDeniedCloseButtonText(getString(R.string.close))
+                .setGotoSettingButtonText(getString(R.string.allow_permission))
+                .setPermissions(STORAGE_PERMISSIONS).check();
+    }
+
+    private void checkPermissions() {
+        if (enableGps(requireActivity()))
+            if (!checkLocationPermission(requireContext())) {
+                askLocationPermission();
+            } else if (!checkStoragePermission(getContext())) {
+                askStoragePermission();
+            } else {
+                attemptSend();
+            }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity) readingActivity = (Callback) context;
+    }
+
     @Override
     public void onResume() {
         if (getView() != null) {
@@ -444,4 +451,15 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         binding = null;
     }
 
+    public interface Callback {
+        int getPosition();
+
+        OnOffLoadDto getOnOffLoad(int position);
+
+        KarbariDto getKarbariDto(int position);
+
+        ReadingConfigDefaultDto getReadingConfigDefaultDto(int position);
+
+        ArrayList<CounterStateDto> getCounterStateDtos();
+    }
 }

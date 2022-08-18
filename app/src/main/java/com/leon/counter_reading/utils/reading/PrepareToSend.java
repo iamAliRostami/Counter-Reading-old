@@ -1,10 +1,10 @@
 package com.leon.counter_reading.utils.reading;
 
-import static com.leon.counter_reading.activities.ReadingActivity.offlineAttempts;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.OffloadStateEnum.INSERTED;
 import static com.leon.counter_reading.enums.ProgressType.NOT_SHOW;
-import static com.leon.counter_reading.helpers.Constants.OFFLINE_ATTEMPT;
+import static com.leon.counter_reading.helpers.Constants.MAX_OFFLINE_ATTEMPT;
+import static com.leon.counter_reading.helpers.Constants.currentOfflineAttempts;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.helpers.MyApplication.getErrorCounter;
@@ -119,8 +119,8 @@ class offLoadError implements ICallbackError {
             }
         }
         setErrorCounter(getErrorCounter() + 1);
-        offlineAttempts++;
-        if (offlineAttempts == OFFLINE_ATTEMPT) {
+        currentOfflineAttempts++;
+        if (currentOfflineAttempts == MAX_OFFLINE_ATTEMPT) {
             activity.runOnUiThread(() -> new CustomToast().warning("حالت آفلاین فعال گردید."));
         }
     }

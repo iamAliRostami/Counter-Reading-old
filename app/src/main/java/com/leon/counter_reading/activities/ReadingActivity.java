@@ -38,10 +38,10 @@ import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowD
 import static com.leon.counter_reading.helpers.Constants.CAMERA;
 import static com.leon.counter_reading.helpers.Constants.COUNTER_PLACE;
 import static com.leon.counter_reading.helpers.Constants.DESCRIPTION;
+import static com.leon.counter_reading.helpers.Constants.MAX_OFFLINE_ATTEMPT;
 import static com.leon.counter_reading.helpers.Constants.NAVIGATION;
-import static com.leon.counter_reading.helpers.Constants.OFFLINE_ATTEMPT;
 import static com.leon.counter_reading.helpers.Constants.REPORT;
-import static com.leon.counter_reading.helpers.Constants.onOffLoadDtos;
+import static com.leon.counter_reading.helpers.Constants.currentOfflineAttempts;
 import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
@@ -77,6 +77,7 @@ import com.leon.counter_reading.databinding.ActivityReadingBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.FragmentTags;
+import com.leon.counter_reading.fragments.ReadingFragment;
 import com.leon.counter_reading.fragments.dialog.CounterPlaceFragment;
 import com.leon.counter_reading.fragments.dialog.NavigationFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
@@ -88,7 +89,9 @@ import com.leon.counter_reading.fragments.dialog.TakePhotoFragment;
 import com.leon.counter_reading.infrastructure.IFlashLightManager;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.tables.CounterStateDto;
+import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
+import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DepthPageTransformer2;
 import com.leon.counter_reading.utils.reading.ChangeSortType;
@@ -108,11 +111,11 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 
-public class ReadingActivity extends BaseActivity implements ReadingReportFragment.Callback,
-        CounterPlaceFragment.Callback, NavigationFragment.Callback {
-    public static int offlineAttempts = 0;
+public class ReadingActivity extends BaseActivity implements View.OnClickListener,
+        ReadingReportFragment.Callback, CounterPlaceFragment.Callback, NavigationFragment.Callback,
+        ReadingFragment.Callback {
     private ISharedPreferenceManager sharedPreferenceManager;
-    private ViewPagerStateAdapter2 viewPagerAdapterReading;
+    private ViewPagerStateAdapter2 adapter;
     private IFlashLightManager flashLightManager;
     private ActivityReadingBinding binding;
     private int readStatus = 0, highLow = 1;
@@ -128,7 +131,8 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     @Override
     protected void initialize() {
         getDelegate().setLocalNightMode(getApplicationComponent().SharedPreferenceModel()
-                .getBoolData(THEME_TEMPORARY.getValue()) ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+                .getBoolData(THEME_TEMPORARY.getValue()) ? AppCompatDelegate.MODE_NIGHT_YES :
+                AppCompatDelegate.MODE_NIGHT_NO);
         binding = ActivityReadingBinding.inflate(getLayoutInflater());
         final View childLayout = binding.getRoot();
         final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
@@ -160,8 +164,8 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                 }
                 i++;
             }
-            onOffLoadDtos.set(position, readingData.onOffLoadDtos.get(position));
-            runOnUiThread(() -> viewPagerAdapterReading.notifyDataSetChanged());
+            adapter.getOnOffLoadDtos().set(position, readingData.onOffLoadDtos.get(position));
+            runOnUiThread(() -> adapter.notifyDataSetChanged());
         } catch (Exception e) {
             runOnUiThread(() -> new CustomDialogModel(Red, this, e.getMessage(),
                     getString(R.string.dear_user), getString(R.string.take_screen_shot),
@@ -280,10 +284,10 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
 
     private void setupViewPagerAdapter() {
         runOnUiThread(() -> {
-            viewPagerAdapterReading = new ViewPagerStateAdapter2(this, readingData);
+            adapter = new ViewPagerStateAdapter2(this, readingData);
             try {
                 binding.viewPager.setOffscreenPageLimit(1);
-                binding.viewPager.setAdapter(viewPagerAdapterReading);
+                binding.viewPager.setAdapter(adapter);
                 final RecyclerView recyclerView = ((RecyclerView) (binding.viewPager.getChildAt(0)));
                 if (recyclerView != null) {
                     recyclerView.setItemViewCacheSize(0);
@@ -371,7 +375,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
                     e.printStackTrace();
                 }
                 new Update(readingData.onOffLoadDtos.get(position), location).execute(this);
-                if (offlineAttempts < OFFLINE_ATTEMPT)
+                if (currentOfflineAttempts < MAX_OFFLINE_ATTEMPT)
                     new PrepareToSend(sharedPreferenceManager.getStringData(TOKEN.getValue()))
                             .execute(this);
                 changePage(binding.viewPager.getCurrentItem() + 1);
@@ -455,55 +459,62 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     private void setOnImageViewsClickListener() {
         flashLightManager = getApplicationComponent().FlashViewModel();
         final ImageView imageViewFlash = findViewById(R.id.image_view_flash);
-        if (imageViewFlash != null) {
+        final ImageView imageViewCamera = findViewById(R.id.image_view_camera);
+        final ImageView imageViewSearch = findViewById(R.id.image_view_search);
+        final ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
+        if (imageViewFlash != null && imageViewCamera != null && imageViewSearch != null && imageViewCheck != null) {
             imageViewFlash.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_flash_off));
-            imageViewFlash.setOnClickListener(v -> {
-                boolean isOn = flashLightManager.toggleFlash();
-                makeRing(this, isOn ? LIGHT_ON : LIGHT_OFF);
-                imageViewFlash.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
-                        isOn ? R.drawable.img_flash_on : R.drawable.img_flash_off));
-            });
+            imageViewFlash.setOnClickListener(this);
 
-            final ImageView imageViewCamera = findViewById(R.id.image_view_camera);
             imageViewCamera.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_camera));
-            imageViewCamera.setOnClickListener(v -> {
-                if (readingData.onOffLoadDtos.isEmpty()) {
-                    showNoEshterakFound();
-                } else {
-                    final OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem());
-                    ShowDialogOnce(this, TAKE_PHOTO.getValue().concat(onOffLoadDtoTemp.id),
-                            TakePhotoFragment.newInstance(onOffLoadDtoTemp.offLoadStateId > 0,
-                                    onOffLoadDtoTemp.id, onOffLoadDtoTemp.trackNumber));
-                }
-            });
+            imageViewCamera.setOnClickListener(this);
 
-            final ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
             imageViewCheck.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_checked));
-            imageViewCheck.setOnClickListener(v -> {
-                if (readingData.onOffLoadDtos.isEmpty()) {
-                    showNoEshterakFound();
-                } else {
-                    final OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem());
-                    ShowDialogOnce(this, READING_REPORT.getValue(), ReadingReportFragment
-                            .newInstance(onOffLoadDtoTemp.id, onOffLoadDtoTemp.trackNumber,
-                                    binding.viewPager.getCurrentItem(), onOffLoadDtoTemp.zoneId));
-                }
-            });
+            imageViewCheck.setOnClickListener(this);
 
-            final ImageView imageViewSearch = findViewById(R.id.image_view_search);
             imageViewSearch.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_search));
-            imageViewSearch.setOnClickListener(v -> {
-                if (readingDataTemp.onOffLoadDtos.isEmpty()) {
-                    showNoEshterakFound();
-                } else {
-                    ShowDialogOnce(this, SEARCH.getValue(), new SearchFragment());
-                }
-            });
+            imageViewSearch.setOnClickListener(this);
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        final int id = view.getId();
+        if (id == R.id.image_view_flash) {
+            boolean isOn = flashLightManager.toggleFlash();
+            makeRing(this, isOn ? LIGHT_ON : LIGHT_OFF);
+            ((ImageView) view).setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
+                    isOn ? R.drawable.img_flash_on : R.drawable.img_flash_off));
+        } else if (id == R.id.image_view_camera) {
+            if (readingData.onOffLoadDtos.isEmpty()) {
+                showNoEshterakFound();
+            } else {
+                final OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem());
+                ShowDialogOnce(this, TAKE_PHOTO.getValue().concat(onOffLoadDtoTemp.id),
+                        TakePhotoFragment.newInstance(onOffLoadDtoTemp.offLoadStateId > 0,
+                                onOffLoadDtoTemp.id, onOffLoadDtoTemp.trackNumber));
+            }
+        } else if (id == R.id.image_view_reading_report) {
+            if (readingData.onOffLoadDtos.isEmpty()) {
+                showNoEshterakFound();
+            } else {
+                final OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem());
+                ShowDialogOnce(this, READING_REPORT.getValue(), ReadingReportFragment
+                        .newInstance(onOffLoadDtoTemp.id, onOffLoadDtoTemp.trackNumber,
+                                binding.viewPager.getCurrentItem(), onOffLoadDtoTemp.zoneId));
+            }
+        } else if (id == R.id.image_view_search) {
+            if (readingDataTemp.onOffLoadDtos.isEmpty()) {
+                showNoEshterakFound();
+            } else {
+                ShowDialogOnce(this, SEARCH.getValue(), new SearchFragment());
+            }
+        }
+
     }
 
     @Override
@@ -597,13 +608,38 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     }
 
     @Override
+    public int getPosition() {
+        return binding.viewPager.getCurrentItem();
+    }
+
+    @Override
+    public OnOffLoadDto getOnOffLoad(int position) {
+        return adapter.getOnOffLoadDtos().get(position);
+    }
+
+    @Override
+    public KarbariDto getKarbariDto(int position) {
+        return adapter.getKarbariDtos().get(position);
+    }
+
+    @Override
+    public ReadingConfigDefaultDto getReadingConfigDefaultDto(int position) {
+        return adapter.getReadingConfigDefaultDtos().get(position);
+    }
+
+    @Override
+    public ArrayList<CounterStateDto> getCounterStateDtos() {
+        return adapter.getCounterStateDtos();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         try {
+            flashLightManager.turnOff();
             final ImageView imageViewFlash = findViewById(R.id.image_view_flash);
             imageViewFlash.setImageDrawable(AppCompatResources.getDrawable(this,
                     R.drawable.img_flash_off));
-            flashLightManager.turnOff();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -612,7 +648,7 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        offlineAttempts = 0;
+        currentOfflineAttempts = 0;
         Debug.getNativeHeapAllocatedSize();
         System.runFinalization();
         Runtime.getRuntime().totalMemory();
@@ -621,4 +657,5 @@ public class ReadingActivity extends BaseActivity implements ReadingReportFragme
         Runtime.getRuntime().gc();
         System.gc();
     }
+
 }

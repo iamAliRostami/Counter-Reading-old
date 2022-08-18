@@ -1,9 +1,5 @@
 package com.leon.counter_reading.adapters;
 
-import static com.leon.counter_reading.helpers.Constants.counterStateDtos;
-import static com.leon.counter_reading.helpers.Constants.karbariDtos;
-import static com.leon.counter_reading.helpers.Constants.onOffLoadDtos;
-import static com.leon.counter_reading.helpers.Constants.readingConfigDefaultDtos;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
 import android.widget.Toast;
@@ -15,11 +11,21 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.fragments.ReadingFragment;
+import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.KarbariDto;
+import com.leon.counter_reading.tables.OnOffLoadDto;
+import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.utils.CustomToast;
 
+import java.util.ArrayList;
+
 public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
+    private final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
+    private final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
+    private final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
+    private final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
+
     public ViewPagerStateAdapter2(@NonNull FragmentActivity fragmentActivity, ReadingData readingData) {
         super(fragmentActivity);
         karbariDtos.clear();
@@ -76,17 +82,33 @@ public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
         try {
             if (counterStateDtos.isEmpty()) {
                 new CustomToast().error(getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
-                return ReadingFragment.newInstance(i);
+                return ReadingFragment.newInstance();
             }
-            return ReadingFragment.newInstance(i);
+            return ReadingFragment.newInstance();
         } catch (Exception e) {
             new CustomToast().error(getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
-            return ReadingFragment.newInstance(i);
+            return ReadingFragment.newInstance();
         }
     }
 
     @Override
     public int getItemCount() {
         return onOffLoadDtos.size();
+    }
+
+    public ArrayList<ReadingConfigDefaultDto> getReadingConfigDefaultDtos() {
+        return readingConfigDefaultDtos;
+    }
+
+    public ArrayList<CounterStateDto> getCounterStateDtos() {
+        return counterStateDtos;
+    }
+
+    public ArrayList<OnOffLoadDto> getOnOffLoadDtos() {
+        return onOffLoadDtos;
+    }
+
+    public ArrayList<KarbariDto> getKarbariDtos() {
+        return karbariDtos;
     }
 }
