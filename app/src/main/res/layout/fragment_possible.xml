@@ -1,284 +1,316 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="@style/FragmentStyle"
-    tools:context=".fragments.dialog.PossibleFragment">
+<layout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <data>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/small_dp"
-            android:background="?attr/colorAccent" />
+        <variable
+            name="possible"
+            type="com.leon.counter_reading.view_models.PossibleViewModel" />
+    </data>
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scroll_view_form"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_debt"
-                    style="@style/ItemLinePossible"
-                    android:visibility="gone">
-
-                    <TextView
-                        style="@style/TitlePossible"
-                        android:text="@string/debt" />
-
-                    <TextView
-                        android:id="@+id/text_view_debt"
-                        style="@style/TitlePossible"
-                        android:layout_width="match_parent" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_old_radif"
-                    style="@style/ItemLinePossible"
-                    android:visibility="gone">
-
-                    <TextView
-                        style="@style/TitlePossible"
-                        android:text="@string/old_radif" />
-
-                    <TextView
-                        android:id="@+id/text_view_old_radif"
-                        style="@style/TitlePossible"
-                        android:layout_width="match_parent" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_old_eshterak"
-                    style="@style/ItemLinePossible"
-                    android:visibility="gone">
-
-                    <TextView
-                        style="@style/TitlePossible"
-                        android:text="@string/old_eshterak" />
-
-                    <TextView
-                        android:id="@+id/text_view_old_eshterak"
-                        style="@style/TitlePossible"
-                        android:layout_width="match_parent" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_father_name"
-                    style="@style/ItemLinePossible"
-                    android:visibility="gone">
-
-                    <TextView
-                        style="@style/TitlePossible"
-                        android:text="@string/father_name" />
-
-                    <TextView
-                        android:id="@+id/text_view_father_name"
-                        style="@style/TitlePossible"
-                        android:layout_width="match_parent" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_mobile"
-                    style="@style/ItemLinePossible"
-                    android:padding="@dimen/medium_dp">
-
-                    <TextView
-                        style="@style/TitlePossible"
-                        android:text="@string/mobile_number" />
-
-                    <TextView
-                        android:id="@+id/text_view_mobile"
-                        style="@style/TitlePossible"
-                        android:layout_width="match_parent" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/text_view_mobiles"
-                    style="@style/InputPossible"
-                    android:background="@drawable/border_gray_3"
-                    android:visibility="gone" />
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/linear_layout_mobile_input"
-                    style="@style/ItemLinePossible"
-                    android:background="@drawable/border_gray_6"
-                    android:padding="@dimen/small_dp">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/image_view_mobile"
-                        android:layout_width="40dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/img_mobile" />
-
-                    <EditText
-                        android:id="@+id/edit_text_mobile"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:hint="@string/mobile_number"
-                        android:inputType="phone"
-                        android:maxLength="11"
-                        android:paddingStart="0dp"
-                        android:paddingEnd="40dp"
-                        tools:ignore="Autofill" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                <EditText
-                    android:id="@+id/edit_text_address"
-                    style="@style/InputPossible"
-                    android:hint="@string/address"
-                    tools:ignore="Autofill,TextFields" />
-
-                <EditText
-                    android:id="@+id/edit_text_search"
-                    style="@style/InputPossible"
-                    android:hint="@string/karbari_search"
-                    tools:ignore="Autofill,TextFields" />
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_karbari"
-                    style="@style/ItemLinePossible"
-                    android:padding="@dimen/small_dp">
-
-                    <Spinner
-                        android:id="@+id/spinner_karbari"
-                        style="@style/Spinner"
-                        tools:listitem="@layout/item_dropdown_menu" />
-                </LinearLayout>
-
-                <EditText
-                    android:id="@+id/edit_text_account"
-                    style="@style/InputPossible"
-                    android:hint="@string/account"
-                    android:inputType="number"
-                    tools:ignore="Autofill" />
-
-                <EditText
-                    android:id="@+id/edit_text_serial"
-                    style="@style/InputPossible"
-                    android:hint="@string/counter_serial"
-                    android:inputType="number"
-                    android:maxLength="15"
-                    tools:ignore="Autofill" />
-
-                <EditText
-                    android:id="@+id/edit_text_ahad_empty"
-                    style="@style/InputPossible"
-                    android:inputType="number"
-                    android:maxLength="9"
-                    tools:ignore="Autofill,LabelFor" />
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_ahad"
-                    style="@style/ItemLinePossible">
-
-                    <TextView
-                        android:id="@+id/text_view_ahad_1_title"
-                        style="@style/TitlePossible"
-                        android:layout_marginLeft="@dimen/small_dp"
-                        android:layout_marginRight="@dimen/small_dp" />
-
-                    <TextView
-                        android:id="@+id/text_view_ahad_1"
-                        style="@style/TitlePossible"
-                        android:layout_marginLeft="@dimen/small_dp"
-                        android:layout_marginRight="@dimen/small_dp" />
-
-                    <View
-                        android:layout_width="@dimen/small_dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/smoked" />
-
-                    <TextView
-                        android:id="@+id/text_view_ahad2_title"
-                        style="@style/TitlePossible"
-                        android:layout_marginLeft="@dimen/small_dp"
-                        android:layout_marginRight="@dimen/small_dp" />
-
-                    <TextView
-                        android:id="@+id/text_view_ahad_2"
-                        style="@style/TitlePossible"
-                        android:layout_marginLeft="@dimen/small_dp"
-                        android:layout_marginRight="@dimen/small_dp" />
-
-                    <View
-                        android:layout_width="@dimen/small_dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/smoked" />
-
-                    <TextView
-                        android:id="@+id/text_view_ahad_total_title"
-                        style="@style/TitlePossible"
-                        android:layout_marginLeft="@dimen/small_dp"
-                        android:layout_marginRight="@dimen/small_dp" />
-
-                    <TextView
-                        android:id="@+id/text_view_ahad_total"
-                        style="@style/TitlePossible"
-                        android:layout_marginLeft="@dimen/small_dp"
-                        android:layout_marginRight="@dimen/small_dp" />
-                </LinearLayout>
-
-                <EditText
-                    android:id="@+id/edit_text_ahad_1"
-                    style="@style/InputPossible"
-                    android:inputType="number"
-                    android:maxLength="9"
-                    tools:ignore="LabelFor" />
-
-                <EditText
-                    android:id="@+id/edit_text_ahad_2"
-                    style="@style/InputPossible"
-                    android:inputType="number"
-                    android:maxLength="9"
-                    tools:ignore="LabelFor" />
-
-                <EditText
-                    android:id="@+id/edit_text_ahad_total"
-                    style="@style/InputPossible"
-                    android:inputType="number"
-                    android:maxLength="9" />
-
-                <EditText
-                    android:id="@+id/edit_text_description"
-                    style="@style/InputPossible"
-                    android:hint="@string/description"
-                    tools:ignore="TextFields" />
-
-                <TextView
-                    android:id="@+id/text_view_report"
-                    style="@style/ItemLinePossible"
-                    android:padding="@dimen/low_dp"
-                    android:text="@string/reports"
-                    android:textSize="@dimen/text_size_large" />
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        style="@style/FragmentStyle"
+        tools:context=".fragments.dialog.PossibleFragment">
 
         <LinearLayout
-            android:id="@+id/linear_layout_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/button_submit"
-                style="@style/ButtonSubmit.Fragment"
-                android:text="@string/submit" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/small_dp"
+                android:background="?attr/colorAccent" />
 
-            <Button
-                android:id="@+id/button_close"
-                style="@style/ButtonSubmit.Fragment.Error"
-                android:text="@string/close"
-                android:visibility="gone" />
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/scroll_view_form"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/linear_layout_debt"
+                        style="@style/ItemLinePossible"
+                        android:visibility="@{possible.debtVisibility}">
+
+                        <TextView
+                            style="@style/TitlePossible"
+                            android:text="@string/debt" />
+
+                        <TextView
+                            android:id="@+id/text_view_debt"
+                            style="@style/TitlePossible"
+                            android:layout_width="match_parent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linear_layout_old_radif"
+                        style="@style/ItemLinePossible"
+                        android:visibility="@{possible.oldRadifVisibility}">
+
+                        <TextView
+                            style="@style/TitlePossible"
+                            android:text="@string/old_radif" />
+
+                        <TextView
+                            android:id="@+id/text_view_old_radif"
+                            style="@style/TitlePossible"
+                            android:layout_width="match_parent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linear_layout_old_eshterak"
+                        style="@style/ItemLinePossible"
+                        android:visibility="@{possible.oldEshterakVisibility}">
+
+                        <TextView
+                            style="@style/TitlePossible"
+                            android:text="@string/old_eshterak" />
+
+                        <TextView
+                            android:id="@+id/text_view_old_eshterak"
+                            style="@style/TitlePossible"
+                            android:layout_width="match_parent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linear_layout_father_name"
+                        style="@style/ItemLinePossible"
+                        android:visibility="@{possible.fatherNameVisibility}">
+
+                        <TextView
+                            style="@style/TitlePossible"
+                            android:text="@string/father_name" />
+
+                        <TextView
+                            android:id="@+id/text_view_father_name"
+                            style="@style/TitlePossible"
+                            android:layout_width="match_parent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linear_layout_mobile"
+                        style="@style/ItemLinePossible"
+                        android:padding="@dimen/medium_dp"
+                        android:visibility="@{possible.mobileVisibility}">
+
+                        <TextView
+                            style="@style/TitlePossible"
+                            android:text="@string/mobile_number" />
+
+                        <TextView
+                            android:id="@+id/text_view_mobile"
+                            style="@style/TitlePossible"
+                            android:layout_width="match_parent" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/text_view_mobiles"
+                        style="@style/InputPossible"
+                        android:background="@drawable/border_gray_3"
+                        android:visibility="gone" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/linear_layout_mobile_input"
+                        style="@style/ItemLinePossible"
+                        android:background="@drawable/border_gray_6"
+                        android:padding="@dimen/small_dp"
+                        android:visibility="@{possible.mobileVisibility}">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/image_view_mobile"
+                            android:layout_width="40dp"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/img_mobile" />
+
+                        <EditText
+                            android:id="@+id/edit_text_mobile"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:hint="@string/mobile_number"
+                            android:inputType="phone"
+                            android:maxLength="11"
+                            android:paddingStart="0dp"
+                            android:paddingEnd="40dp"
+                            tools:ignore="Autofill" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <EditText
+                        android:id="@+id/edit_text_address"
+                        style="@style/InputPossible"
+                        android:hint="@string/address"
+                        android:visibility="@{possible.addressVisibility}"
+                        tools:ignore="Autofill,TextFields" />
+
+                    <EditText
+                        android:id="@+id/edit_text_search"
+                        style="@style/InputPossible"
+                        android:hint="@string/karbari_search"
+                        android:visibility="@{possible.karbariVisibility}"
+                        tools:ignore="Autofill,TextFields" />
+
+                    <LinearLayout
+                        android:id="@+id/linear_layout_karbari"
+                        style="@style/ItemLinePossible"
+                        android:padding="@dimen/small_dp"
+                        android:visibility="@{possible.karbariVisibility}">
+
+                        <Spinner
+                            android:id="@+id/spinner_karbari"
+                            style="@style/Spinner"
+                            tools:listitem="@layout/item_dropdown_menu" />
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/edit_text_account"
+                        style="@style/InputPossible"
+                        android:hint="@string/account"
+                        android:inputType="number"
+                        android:maxLength="@{possible.eshterakMaxLength}"
+                        android:visibility="@{possible.accountVisibility}"
+                        tools:ignore="Autofill" />
+
+                    <EditText
+                        android:id="@+id/edit_text_serial"
+                        style="@style/InputPossible"
+                        android:hint="@string/counter_serial"
+                        android:inputType="number"
+                        android:maxLength="15"
+                        android:visibility="@{possible.serialVisibility}"
+                        tools:ignore="Autofill" />
+
+                    <EditText
+                        android:id="@+id/edit_text_ahad_empty"
+                        style="@style/InputPossible"
+                        android:hint="@{possible.ahadEmptyHint}"
+                        android:inputType="number"
+                        android:maxLength="9"
+                        android:visibility="@{possible.ahadEmptyVisibility}"
+                        tools:ignore="Autofill,LabelFor" />
+
+                    <LinearLayout
+                        android:id="@+id/linear_layout_ahad"
+                        style="@style/ItemLinePossible"
+                        android:visibility="@{possible.ahadVisibility}">
+
+                        <TextView
+                            android:id="@+id/text_view_ahad_1_title"
+                            style="@style/TitlePossible"
+                            android:layout_marginLeft="@dimen/small_dp"
+                            android:layout_marginRight="@dimen/small_dp"
+                            android:text="@{possible.ahad1Title}" />
+
+                        <TextView
+                            android:id="@+id/text_view_ahad_1"
+                            style="@style/TitlePossible"
+                            android:layout_marginLeft="@dimen/small_dp"
+                            android:layout_marginRight="@dimen/small_dp" />
+
+                        <View
+                            android:layout_width="@dimen/small_dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/smoked" />
+
+                        <TextView
+                            android:id="@+id/text_view_ahad2_title"
+                            style="@style/TitlePossible"
+                            android:layout_marginLeft="@dimen/small_dp"
+                            android:layout_marginRight="@dimen/small_dp"
+                            android:text="@{possible.ahad2Title}" />
+
+                        <TextView
+                            android:id="@+id/text_view_ahad_2"
+                            style="@style/TitlePossible"
+                            android:layout_marginLeft="@dimen/small_dp"
+                            android:layout_marginRight="@dimen/small_dp" />
+
+                        <View
+                            android:layout_width="@dimen/small_dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/smoked" />
+
+                        <TextView
+                            android:id="@+id/text_view_ahad_total_title"
+                            style="@style/TitlePossible"
+                            android:layout_marginLeft="@dimen/small_dp"
+                            android:layout_marginRight="@dimen/small_dp"
+                            android:text="@{possible.ahadTotalTitle}" />
+
+                        <TextView
+                            android:id="@+id/text_view_ahad_total"
+                            style="@style/TitlePossible"
+                            android:layout_marginLeft="@dimen/small_dp"
+                            android:layout_marginRight="@dimen/small_dp" />
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/edit_text_ahad_1"
+                        style="@style/InputPossible"
+                        android:hint="@{possible.ahad1Hint}"
+                        android:inputType="number"
+                        android:maxLength="9"
+                        android:visibility="@{possible.ahad1Visibility}"
+                        tools:ignore="LabelFor" />
+
+                    <EditText
+                        android:id="@+id/edit_text_ahad_2"
+                        style="@style/InputPossible"
+                        android:hint="@{possible.ahad2Hint}"
+                        android:inputType="number"
+                        android:maxLength="9"
+                        android:visibility="@{possible.ahad2Visibility}"
+                        tools:ignore="LabelFor" />
+
+                    <EditText
+                        android:id="@+id/edit_text_ahad_total"
+                        style="@style/InputPossible"
+                        android:hint="@{possible.ahadTotalHint}"
+                        android:inputType="number"
+                        android:maxLength="9"
+                        android:visibility="@{possible.ahadTotalVisibility}" />
+
+                    <EditText
+                        android:id="@+id/edit_text_description"
+                        style="@style/InputPossible"
+                        android:hint="@string/description"
+                        android:visibility="@{possible.descriptionVisibility}"
+                        tools:ignore="TextFields" />
+
+                    <TextView
+                        android:id="@+id/text_view_report"
+                        style="@style/ItemLinePossible"
+                        android:padding="@dimen/low_dp"
+                        android:text="@string/reports"
+                        android:textSize="@dimen/text_size_large"
+                        android:visibility="@{possible.readingReportVisibility}" />
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_submit"
+                    style="@style/ButtonSubmit.Fragment"
+                    android:text="@string/submit" />
+
+                <Button
+                    android:id="@+id/button_close"
+                    style="@style/ButtonSubmit.Fragment.Error"
+                    android:text="@string/close"
+                    android:visibility="gone" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

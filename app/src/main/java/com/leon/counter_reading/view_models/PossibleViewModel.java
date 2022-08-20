@@ -7,11 +7,13 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_2;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_EMPTY;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_TOTAL;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.DESCRIPTION;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.KARBARI;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.MOBILE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.READING_REPORT;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SERIAL;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SHOW_AHAD_TITLE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
 
 import android.view.View;
@@ -20,6 +22,7 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.leon.counter_reading.BR;
+import com.leon.counter_reading.R;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OffLoadReport;
@@ -61,6 +64,12 @@ public class PossibleViewModel extends BaseObservable {
     private String ahad1;
     private String ahad2;
 
+    boolean justMobile;
+
+    public PossibleViewModel(boolean justMobile) {
+        this.justMobile = justMobile;
+    }
+
     @Bindable
     public String getAhad1Title() {
         return String.format("%s:", DifferentCompanyManager.getAhad1(getActiveCompanyName()));
@@ -68,108 +77,46 @@ public class PossibleViewModel extends BaseObservable {
 
     @Bindable
     public String getAhad2Title() {
-        return String.format("%s:", DifferentCompanyManager.getAhad2(getActiveCompanyName()).replaceFirst("آحاد ", ""));
+        return String.format("%s:", DifferentCompanyManager.getAhad2(getActiveCompanyName())
+                .replaceFirst("آحاد ", "").replaceFirst("واحد", ""));
     }
 
     @Bindable
     public String getAhadTotalTitle() {
-        return String.format("%s:", DifferentCompanyManager.getAhadTotal(getActiveCompanyName()).replaceFirst("آحاد ", ""));
+        return String.format("%s:", DifferentCompanyManager.getAhadTotal(getActiveCompanyName())
+                .replaceFirst("آحاد ", "").replaceFirst("واحد", ""));
     }
 
     @Bindable
     public String getAhadEmptyTitle() {
-        return String.format("%s:", DifferentCompanyManager.getAhad(getActiveCompanyName()).replaceFirst("آحاد ", ""));
+        return DifferentCompanyManager.getAhad(getActiveCompanyName()).replaceFirst("آحاد ", "")
+                .replaceFirst("واحد", "");
     }
 
     @Bindable
     public String getAhad1Hint() {
-        return String.format("%s:", DifferentCompanyManager.getAhad1(getActiveCompanyName()));
+        return DifferentCompanyManager.getAhad1(getActiveCompanyName());
     }
 
     @Bindable
     public String getAhad2Hint() {
-        return String.format("%s:", DifferentCompanyManager.getAhad2(getActiveCompanyName()));
+        return DifferentCompanyManager.getAhad2(getActiveCompanyName());
     }
 
     @Bindable
     public String getAhadTotalHint() {
-        return String.format("%s:", DifferentCompanyManager.getAhadTotal(getActiveCompanyName()));
+        return DifferentCompanyManager.getAhadTotal(getActiveCompanyName());
     }
 
     @Bindable
     public String getAhadEmptyHint() {
-        return String.format("%s:", DifferentCompanyManager.getAhad(getActiveCompanyName()));
+        return DifferentCompanyManager.getAhad(getActiveCompanyName())
+                .concat(getContext().getString(R.string.empty));
     }
 
     @Bindable
     public int getEshterakMaxLength() {
         return DifferentCompanyManager.getEshterakMaxLength(getActiveCompanyName());
-    }
-
-    @Bindable
-    public int getSerialVisibility() {
-        return getApplicationComponent().SharedPreferenceModel().getBoolData(SERIAL.getValue()) ?
-                View.VISIBLE : View.GONE;
-    }
-
-    @Bindable
-    public int getAddressVisibility() {
-        return getApplicationComponent().SharedPreferenceModel().getBoolData(ADDRESS.getValue()) ?
-                View.VISIBLE : View.GONE;
-    }
-
-    @Bindable
-    public int getAccountVisibility() {
-        return getApplicationComponent().SharedPreferenceModel().getBoolData(ACCOUNT.getValue()) ?
-                View.VISIBLE : View.GONE;
-    }
-
-    @Bindable
-    public int getAhadEmptyVisibility() {
-        return getApplicationComponent().SharedPreferenceModel().getBoolData(AHAD_EMPTY.getValue()) ?
-                View.VISIBLE : View.GONE;
-    }
-
-    @Bindable
-    public int getDescriptionVisibility() {
-        return getApplicationComponent().SharedPreferenceModel().getBoolData(DESCRIPTION.getValue()) ?
-                View.VISIBLE : View.GONE;
-    }
-
-    @Bindable
-    public int getAhadVisibility() {
-        return getApplicationComponent().SharedPreferenceModel().getBoolData(SHOW_AHAD_TITLE.getValue()) ?
-                View.VISIBLE : View.GONE;
-    }
-
-    @Bindable
-    public int getAhad1Visibility() {
-        return getApplicationComponent().SharedPreferenceModel().getBoolData(AHAD_1.getValue()) ?
-                View.VISIBLE : View.GONE;
-    }
-
-    @Bindable
-    public int getAhad2Visibility() {
-        return getApplicationComponent().SharedPreferenceModel().getBoolData(AHAD_2.getValue()) ?
-                View.VISIBLE : View.GONE;
-    }
-
-    @Bindable
-    public int getAhadTotalVisibility() {
-        return getApplicationComponent().SharedPreferenceModel().getBoolData(AHAD_TOTAL.getValue()) ?
-                View.VISIBLE : View.GONE;
-    }
-
-    @Bindable
-    public int getMobileVisibility() {
-        return getApplicationComponent().SharedPreferenceModel().getBoolData(MOBILE.getValue()) ?
-                View.VISIBLE : View.GONE;
-    }
-
-    @Bindable
-    public int getReadingReportVisibility() {
-        return getApplicationComponent().SharedPreferenceModel().getBoolData(READING_REPORT.getValue()) ?
-                View.VISIBLE : View.GONE;
     }
 
     @Bindable
@@ -430,5 +377,105 @@ public class PossibleViewModel extends BaseObservable {
     public void setAhad2(String ahad2) {
         this.ahad2 = ahad2;
         notifyPropertyChanged(BR.ahad2);
+    }
+
+    public boolean isJustMobile() {
+        return justMobile;
+    }
+
+    public void setJustMobile(boolean justMobile) {
+        this.justMobile = justMobile;
+    }
+
+    @Bindable
+    public int getSerialVisibility() {
+        return isJustMobile() ? View.GONE : getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(SERIAL.getValue()) ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getAddressVisibility() {
+        return isJustMobile() ? View.GONE : getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(ADDRESS.getValue()) ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getAccountVisibility() {
+        return isJustMobile() ? View.GONE : getApplicationComponent().SharedPreferenceModel().
+                getBoolData(ACCOUNT.getValue()) ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getAhadEmptyVisibility() {
+        return isJustMobile() ? View.GONE : getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(AHAD_EMPTY.getValue()) ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getDescriptionVisibility() {
+        return isJustMobile() ? View.GONE : getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(DESCRIPTION.getValue()) ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getAhadVisibility() {
+        return isJustMobile() ? View.GONE : getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(SHOW_AHAD_TITLE.getValue()) ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getAhad1Visibility() {
+        return isJustMobile() ? View.GONE : getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(AHAD_1.getValue()) ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getAhad2Visibility() {
+        return isJustMobile() ? View.GONE : getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(AHAD_2.getValue()) ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getAhadTotalVisibility() {
+        return isJustMobile() ? View.GONE : getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(AHAD_TOTAL.getValue()) ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getMobileVisibility() {
+        return isJustMobile() ? View.VISIBLE : getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(MOBILE.getValue()) ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getDebtVisibility() {
+        return isJustMobile() ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getFatherNameVisibility() {
+        return isJustMobile() ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getOldRadifVisibility() {
+        return isJustMobile() ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getOldEshterakVisibility() {
+        return isJustMobile() ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getReadingReportVisibility() {
+        return isJustMobile() ? View.GONE : getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(READING_REPORT.getValue()) ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getKarbariVisibility() {
+        return isJustMobile() ? View.GONE : getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(KARBARI.getValue()) ? View.VISIBLE : View.GONE;
     }
 }
