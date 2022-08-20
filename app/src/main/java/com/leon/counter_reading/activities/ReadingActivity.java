@@ -391,7 +391,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
 
     private void showPossible(int position) {
         ShowDialogOnce(this, POSSIBLE_DIALOG.getValue().concat(readingData.onOffLoadDtos.get(position).eshterak),
-                PossibleFragment.newInstance(readingData.onOffLoadDtos.get(position), position, false));
+                PossibleFragment.newInstance(false,position,readingData.onOffLoadDtos.get(position)));
     }
 
     private void showNoEshterakFound() {
@@ -520,7 +520,6 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 ShowDialogOnce(this, SEARCH.getValue(), new SearchFragment());
             }
         }
-
     }
 
     @Override

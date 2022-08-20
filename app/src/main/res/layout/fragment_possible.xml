@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -8,8 +9,7 @@
             type="com.leon.counter_reading.view_models.PossibleViewModel" />
     </data>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         style="@style/FragmentStyle"
         tools:context=".fragments.dialog.PossibleFragment">
 
@@ -46,7 +46,8 @@
                         <TextView
                             android:id="@+id/text_view_debt"
                             style="@style/TitlePossible"
-                            android:layout_width="match_parent" />
+                            android:layout_width="match_parent"
+                            android:text="@{possible.balance}" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -61,7 +62,8 @@
                         <TextView
                             android:id="@+id/text_view_old_radif"
                             style="@style/TitlePossible"
-                            android:layout_width="match_parent" />
+                            android:layout_width="match_parent"
+                            android:text="@{possible.oldRadif}" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -76,7 +78,8 @@
                         <TextView
                             android:id="@+id/text_view_old_eshterak"
                             style="@style/TitlePossible"
-                            android:layout_width="match_parent" />
+                            android:layout_width="match_parent"
+                            android:text="@{possible.oldEshterak}" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -91,7 +94,8 @@
                         <TextView
                             android:id="@+id/text_view_father_name"
                             style="@style/TitlePossible"
-                            android:layout_width="match_parent" />
+                            android:layout_width="match_parent"
+                            android:text="@{possible.fatherName}" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -107,13 +111,15 @@
                         <TextView
                             android:id="@+id/text_view_mobile"
                             style="@style/TitlePossible"
-                            android:layout_width="match_parent" />
+                            android:layout_width="match_parent"
+                            android:text="@{possible.mobile}" />
                     </LinearLayout>
 
                     <TextView
                         android:id="@+id/text_view_mobiles"
                         style="@style/InputPossible"
                         android:background="@drawable/border_gray_3"
+                        android:text="@{possible.mobiles}"
                         android:visibility="gone" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
@@ -140,15 +146,15 @@
                             android:maxLength="11"
                             android:paddingStart="0dp"
                             android:paddingEnd="40dp"
-                            tools:ignore="Autofill" />
+                            android:text="@={possible.possibleMobile}" />
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <EditText
                         android:id="@+id/edit_text_address"
                         style="@style/InputPossible"
                         android:hint="@string/address"
-                        android:visibility="@{possible.addressVisibility}"
-                        tools:ignore="Autofill,TextFields" />
+                        android:text="@={possible.possibleAddress}"
+                        android:visibility="@{possible.addressVisibility}" />
 
                     <EditText
                         android:id="@+id/edit_text_search"
@@ -175,8 +181,8 @@
                         android:hint="@string/account"
                         android:inputType="number"
                         android:maxLength="@{possible.eshterakMaxLength}"
-                        android:visibility="@{possible.accountVisibility}"
-                        tools:ignore="Autofill" />
+                        android:text="@={possible.possibleEshterak}"
+                        android:visibility="@{possible.accountVisibility}" />
 
                     <EditText
                         android:id="@+id/edit_text_serial"
@@ -184,8 +190,8 @@
                         android:hint="@string/counter_serial"
                         android:inputType="number"
                         android:maxLength="15"
-                        android:visibility="@{possible.serialVisibility}"
-                        tools:ignore="Autofill" />
+                        android:text="@={possible.possibleCounterSerial}"
+                        android:visibility="@{possible.serialVisibility}" />
 
                     <EditText
                         android:id="@+id/edit_text_ahad_empty"
@@ -193,8 +199,8 @@
                         android:hint="@{possible.ahadEmptyHint}"
                         android:inputType="number"
                         android:maxLength="9"
-                        android:visibility="@{possible.ahadEmptyVisibility}"
-                        tools:ignore="Autofill,LabelFor" />
+                        android:text="@={possible.possibleEmpty}"
+                        android:visibility="@{possible.ahadEmptyVisibility}" />
 
                     <LinearLayout
                         android:id="@+id/linear_layout_ahad"
@@ -212,7 +218,8 @@
                             android:id="@+id/text_view_ahad_1"
                             style="@style/TitlePossible"
                             android:layout_marginLeft="@dimen/small_dp"
-                            android:layout_marginRight="@dimen/small_dp" />
+                            android:layout_marginRight="@dimen/small_dp"
+                            android:text="@{possible.ahadMaskooniOrAsli}" />
 
                         <View
                             android:layout_width="@dimen/small_dp"
@@ -230,7 +237,8 @@
                             android:id="@+id/text_view_ahad_2"
                             style="@style/TitlePossible"
                             android:layout_marginLeft="@dimen/small_dp"
-                            android:layout_marginRight="@dimen/small_dp" />
+                            android:layout_marginRight="@dimen/small_dp"
+                            android:text="@{possible.ahadTejariOrFari}" />
 
                         <View
                             android:layout_width="@dimen/small_dp"
@@ -248,7 +256,8 @@
                             android:id="@+id/text_view_ahad_total"
                             style="@style/TitlePossible"
                             android:layout_marginLeft="@dimen/small_dp"
-                            android:layout_marginRight="@dimen/small_dp" />
+                            android:layout_marginRight="@dimen/small_dp"
+                            android:text="@{possible.ahadSaierOrAbBaha}" />
                     </LinearLayout>
 
                     <EditText
@@ -257,8 +266,8 @@
                         android:hint="@{possible.ahad1Hint}"
                         android:inputType="number"
                         android:maxLength="9"
-                        android:visibility="@{possible.ahad1Visibility}"
-                        tools:ignore="LabelFor" />
+                        android:text="@={possible.possibleAhadMaskooniOrAsli}"
+                        android:visibility="@{possible.ahad1Visibility}" />
 
                     <EditText
                         android:id="@+id/edit_text_ahad_2"
@@ -266,8 +275,8 @@
                         android:hint="@{possible.ahad2Hint}"
                         android:inputType="number"
                         android:maxLength="9"
-                        android:visibility="@{possible.ahad2Visibility}"
-                        tools:ignore="LabelFor" />
+                        android:text="@={possible.possibleAhadTejariOrFari}"
+                        android:visibility="@{possible.ahad2Visibility}" />
 
                     <EditText
                         android:id="@+id/edit_text_ahad_total"
@@ -275,14 +284,15 @@
                         android:hint="@{possible.ahadTotalHint}"
                         android:inputType="number"
                         android:maxLength="9"
+                        android:text="@={possible.possibleAhadSaierOrAbBaha}"
                         android:visibility="@{possible.ahadTotalVisibility}" />
 
                     <EditText
                         android:id="@+id/edit_text_description"
                         style="@style/InputPossible"
                         android:hint="@string/description"
-                        android:visibility="@{possible.descriptionVisibility}"
-                        tools:ignore="TextFields" />
+                        android:text="@={possible.description}"
+                        android:visibility="@{possible.descriptionVisibility}" />
 
                     <TextView
                         android:id="@+id/text_view_report"

@@ -358,7 +358,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         final int id = view.getId();
         if (id == R.id.text_view_address)
             ShowDialogOnce(requireContext(), POSSIBLE_DIALOG.getValue().concat(readingVM.getOnOffLoadDto().eshterak),
-                    PossibleFragment.newInstance(readingVM.getOnOffLoadDto(), readingVM.getPosition(), true));
+                    PossibleFragment.newInstance(true, readingVM.getPosition(), readingVM.getOnOffLoadDto()));
         return false;
     }
 

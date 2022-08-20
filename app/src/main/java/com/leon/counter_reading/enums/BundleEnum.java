@@ -5,6 +5,7 @@ public enum BundleEnum {
     IMAGE("image"),
     THEME("theme"),
     ON_OFF_LOAD("on_off_load"),
+    JUST_MOBILE("just_mobile"),
     COUNTER_STATE_POSITION("counter_state_position"),
     COUNTER_STATE_CODE("counter_state_code"),
     TRACKING("tracking"),

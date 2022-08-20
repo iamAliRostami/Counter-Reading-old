@@ -32,9 +32,8 @@ import com.leon.counter_reading.utils.DifferentCompanyManager;
 import java.util.ArrayList;
 
 public class PossibleViewModel extends BaseObservable {
-    private ArrayList<CounterReportDto> counterReportDtos = new ArrayList<>();
+    private ArrayList<CounterReportDto> counterReports = new ArrayList<>();
     private ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
-    private ArrayList<KarbariDto> karbariDtosTemp = new ArrayList<>();
     private ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
     private OnOffLoadDto onOffLoadDto;
     private String balance;
@@ -59,15 +58,58 @@ public class PossibleViewModel extends BaseObservable {
     private String mobiles;
     private String mobile;
 
+    private boolean justMobile;
+    private int position;
 
-    private String ahadTotal;
-    private String ahad1;
-    private String ahad2;
+    public PossibleViewModel(boolean justMobile, int position, OnOffLoadDto onOffLoadDto) {
+        setJustMobile(justMobile);
+        setPosition(position);
+        setOnOffLoadDto(onOffLoadDto);
+        setOnOffLoad();
+        setCounterReports(new ArrayList<>(getApplicationComponent().MyDatabase().counterReportDao()
+                .getAllCounterReportByZone(getOnOffLoadDto().zoneId)));
+        setOffLoadReports(new ArrayList<>(getApplicationComponent().MyDatabase().offLoadReportDao()
+                .getAllOffLoadReportById(getOnOffLoadDto().id, getOnOffLoadDto().trackNumber)));
+        setKarbariDtos(new ArrayList<>(getApplicationComponent().MyDatabase().karbariDao()
+                .getAllKarbariDto()));
+    }
 
-    boolean justMobile;
+    private void setOnOffLoad() {
+        setBalance(String.valueOf(getOnOffLoadDto().balance));
+        setOldRadif(getOnOffLoadDto().oldRadif != null ? getOnOffLoadDto().oldRadif : "-");
+        setOldEshterak(getOnOffLoadDto().oldEshterak != null ? getOnOffLoadDto().oldEshterak : "-");
+        setFatherName(getOnOffLoadDto().fatherName != null ? getOnOffLoadDto().fatherName : "-");
+        setPossibleMobile(getOnOffLoadDto().possibleMobile);
+        setMobile(getOnOffLoadDto().mobile != null ? getOnOffLoadDto().mobile : "-");
+        if (getOnOffLoadDto().mobiles != null) {
+            final String[] mobiles = getOnOffLoadDto().mobiles.split(",");
+            String mobile = "";
+            for (String mobileTemp : mobiles) {
+                mobile = mobile.concat(mobileTemp.trim().concat("\n"));
+            }
+            setMobiles(mobile.substring(0, mobile.length() - 1));
+        }
+        if (getOnOffLoadDto().possibleAddress != null)
+            setPossibleAddress(getOnOffLoadDto().possibleAddress);
+        if (getOnOffLoadDto().possibleEshterak != null)
+            setPossibleEshterak(getOnOffLoadDto().possibleEshterak);
+        if (getOnOffLoadDto().possibleCounterSerial != null)
+            setPossibleCounterSerial(getOnOffLoadDto().possibleCounterSerial);
+        if (getOnOffLoadDto().possibleEmpty != null)
+            setPossibleEmpty(String.valueOf(getOnOffLoadDto().possibleEmpty));
 
-    public PossibleViewModel(boolean justMobile) {
-        this.justMobile = justMobile;
+        setAhadMaskooniOrAsli(String.valueOf(getOnOffLoadDto().ahadMaskooniOrAsli));
+        setAhadTejariOrFari(String.valueOf(getOnOffLoadDto().ahadTejariOrFari));
+        setAhadSaierOrAbBaha(String.valueOf(getOnOffLoadDto().ahadSaierOrAbBaha));
+        if (getOnOffLoadDto().possibleAhadMaskooniOrAsli != null)
+            setPossibleAhadMaskooniOrAsli(String.valueOf(getOnOffLoadDto().possibleAhadMaskooniOrAsli));
+        if (getOnOffLoadDto().possibleAhadTejariOrFari != null)
+            setPossibleAhadTejariOrFari(String.valueOf(getOnOffLoadDto().possibleAhadTejariOrFari));
+        if (getOnOffLoadDto().possibleAhadSaierOrAbBaha != null)
+            setPossibleAhadSaierOrAbBaha(String.valueOf(getOnOffLoadDto().possibleAhadSaierOrAbBaha));
+
+        if (getOnOffLoadDto().description != null)
+            setDescription(getOnOffLoadDto().description);
     }
 
     @Bindable
@@ -88,12 +130,6 @@ public class PossibleViewModel extends BaseObservable {
     }
 
     @Bindable
-    public String getAhadEmptyTitle() {
-        return DifferentCompanyManager.getAhad(getActiveCompanyName()).replaceFirst("آحاد ", "")
-                .replaceFirst("واحد", "");
-    }
-
-    @Bindable
     public String getAhad1Hint() {
         return DifferentCompanyManager.getAhad1(getActiveCompanyName());
     }
@@ -110,8 +146,9 @@ public class PossibleViewModel extends BaseObservable {
 
     @Bindable
     public String getAhadEmptyHint() {
-        return DifferentCompanyManager.getAhad(getActiveCompanyName())
-                .concat(getContext().getString(R.string.empty));
+
+        return DifferentCompanyManager.getAhad(getActiveCompanyName()).replaceFirst("آحاد ", "")
+                .replaceFirst("واحد", "").concat(getContext().getString(R.string.empty));
     }
 
     @Bindable
@@ -120,13 +157,13 @@ public class PossibleViewModel extends BaseObservable {
     }
 
     @Bindable
-    public ArrayList<CounterReportDto> getCounterReportDtos() {
-        return counterReportDtos;
+    public ArrayList<CounterReportDto> getCounterReports() {
+        return counterReports;
     }
 
-    public void setCounterReportDtos(ArrayList<CounterReportDto> counterReportDtos) {
-        this.counterReportDtos = counterReportDtos;
-        notifyPropertyChanged(BR.counterReportDtos);
+    public void setCounterReports(ArrayList<CounterReportDto> counterReports) {
+        this.counterReports = counterReports;
+        notifyPropertyChanged(BR.counterReports);
     }
 
     @Bindable
@@ -137,16 +174,6 @@ public class PossibleViewModel extends BaseObservable {
     public void setOffLoadReports(ArrayList<OffLoadReport> offLoadReports) {
         this.offLoadReports = offLoadReports;
         notifyPropertyChanged(BR.offLoadReports);
-    }
-
-    @Bindable
-    public ArrayList<KarbariDto> getKarbariDtosTemp() {
-        return karbariDtosTemp;
-    }
-
-    public void setKarbariDtosTemp(ArrayList<KarbariDto> karbariDtosTemp) {
-        this.karbariDtosTemp = karbariDtosTemp;
-        notifyPropertyChanged(BR.karbariDtosTemp);
     }
 
     @Bindable
@@ -349,42 +376,20 @@ public class PossibleViewModel extends BaseObservable {
         notifyPropertyChanged(BR.mobile);
     }
 
-    @Bindable
-    public String getAhadTotal() {
-        return ahadTotal;
-    }
-
-    public void setAhadTotal(String ahadTotal) {
-        this.ahadTotal = ahadTotal;
-        notifyPropertyChanged(BR.ahadTotal);
-    }
-
-    @Bindable
-    public String getAhad1() {
-        return ahad1;
-    }
-
-    public void setAhad1(String ahad1) {
-        this.ahad1 = ahad1;
-        notifyPropertyChanged(BR.ahad1);
-    }
-
-    @Bindable
-    public String getAhad2() {
-        return ahad2;
-    }
-
-    public void setAhad2(String ahad2) {
-        this.ahad2 = ahad2;
-        notifyPropertyChanged(BR.ahad2);
-    }
-
     public boolean isJustMobile() {
         return justMobile;
     }
 
     public void setJustMobile(boolean justMobile) {
         this.justMobile = justMobile;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     @Bindable
