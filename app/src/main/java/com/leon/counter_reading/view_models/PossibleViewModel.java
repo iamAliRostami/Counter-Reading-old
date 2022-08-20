@@ -15,6 +15,9 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.SHOW_AHAD_TITLE
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad1;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad2;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhadTotal;
 
 import android.view.View;
 
@@ -34,7 +37,7 @@ import java.util.ArrayList;
 public class PossibleViewModel extends BaseObservable {
     private ArrayList<CounterReportDto> counterReports = new ArrayList<>();
     private ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
-    private ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
+    private ArrayList<KarbariDto> karbari = new ArrayList<>();
     private OnOffLoadDto onOffLoadDto;
     private String balance;
     private String oldRadif;
@@ -70,7 +73,7 @@ public class PossibleViewModel extends BaseObservable {
                 .getAllCounterReportByZone(getOnOffLoadDto().zoneId)));
         setOffLoadReports(new ArrayList<>(getApplicationComponent().MyDatabase().offLoadReportDao()
                 .getAllOffLoadReportById(getOnOffLoadDto().id, getOnOffLoadDto().trackNumber)));
-        setKarbariDtos(new ArrayList<>(getApplicationComponent().MyDatabase().karbariDao()
+        setKarbari(new ArrayList<>(getApplicationComponent().MyDatabase().karbariDao()
                 .getAllKarbariDto()));
     }
 
@@ -112,36 +115,57 @@ public class PossibleViewModel extends BaseObservable {
             setDescription(getOnOffLoadDto().description);
     }
 
+    private void updateOnOffLoadDto() {
+        if (getPossibleMobile() != null)
+            getOnOffLoadDto().possibleMobile = getPossibleMobile();
+        if (getPossibleAddress() != null)
+            getOnOffLoadDto().address = getPossibleAddress();
+        if (getPossibleEshterak() != null)
+            getOnOffLoadDto().eshterak = getPossibleEshterak();
+        if (getPossibleCounterSerial() != null)
+            getOnOffLoadDto().possibleCounterSerial = getPossibleCounterSerial();
+        if (getPossibleAhadMaskooniOrAsli() != null && !getPossibleAhadMaskooniOrAsli().isEmpty())
+            getOnOffLoadDto().possibleAhadMaskooniOrAsli = Integer.valueOf(getPossibleAhadMaskooniOrAsli());
+        if (getPossibleAhadTejariOrFari() != null && !getPossibleAhadTejariOrFari().isEmpty())
+            getOnOffLoadDto().possibleAhadTejariOrFari = Integer.valueOf(getPossibleAhadTejariOrFari());
+        if (getPossibleAhadSaierOrAbBaha() != null && !getPossibleAhadSaierOrAbBaha().isEmpty())
+            getOnOffLoadDto().possibleAhadSaierOrAbBaha = Integer.valueOf(getPossibleAhadSaierOrAbBaha());
+        if (getDescription() != null)
+            getOnOffLoadDto().description = getDescription();
+
+        notifyPropertyChanged(BR.onOffLoadDto);
+    }
+
     @Bindable
     public String getAhad1Title() {
-        return String.format("%s:", DifferentCompanyManager.getAhad1(getActiveCompanyName()));
+        return String.format("%s:", getAhad1(getActiveCompanyName()));
     }
 
     @Bindable
     public String getAhad2Title() {
-        return String.format("%s:", DifferentCompanyManager.getAhad2(getActiveCompanyName())
-                .replaceFirst("آحاد ", "").replaceFirst("واحد", ""));
+        return String.format("%s:", getAhad2(getActiveCompanyName()).replaceFirst("آحاد ", "")
+                .replaceFirst("واحد", ""));
     }
 
     @Bindable
     public String getAhadTotalTitle() {
-        return String.format("%s:", DifferentCompanyManager.getAhadTotal(getActiveCompanyName())
-                .replaceFirst("آحاد ", "").replaceFirst("واحد", ""));
+        return String.format("%s:", getAhadTotal(getActiveCompanyName()).replaceFirst("آحاد ", "")
+                .replaceFirst("واحد", ""));
     }
 
     @Bindable
     public String getAhad1Hint() {
-        return DifferentCompanyManager.getAhad1(getActiveCompanyName());
+        return getAhad1(getActiveCompanyName());
     }
 
     @Bindable
     public String getAhad2Hint() {
-        return DifferentCompanyManager.getAhad2(getActiveCompanyName());
+        return getAhad2(getActiveCompanyName());
     }
 
     @Bindable
     public String getAhadTotalHint() {
-        return DifferentCompanyManager.getAhadTotal(getActiveCompanyName());
+        return getAhadTotal(getActiveCompanyName());
     }
 
     @Bindable
@@ -177,12 +201,12 @@ public class PossibleViewModel extends BaseObservable {
     }
 
     @Bindable
-    public ArrayList<KarbariDto> getKarbariDtos() {
-        return karbariDtos;
+    public ArrayList<KarbariDto> getKarbari() {
+        return karbari;
     }
 
-    public void setKarbariDtos(ArrayList<KarbariDto> karbariDtos) {
-        this.karbariDtos = karbariDtos;
+    public void setKarbari(ArrayList<KarbariDto> karbari) {
+        this.karbari = karbari;
         notifyPropertyChanged(BR.karbariDto);
     }
 

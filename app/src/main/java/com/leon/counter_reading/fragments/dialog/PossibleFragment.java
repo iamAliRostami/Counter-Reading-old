@@ -95,8 +95,6 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
                              Bundle savedInstanceState) {
         binding = FragmentPossibleBinding.inflate(inflater, container, false);
         binding.setPossible(possible);
-        //TODO
-//        initialize();
         return binding.getRoot();
     }
 
@@ -121,10 +119,10 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
                 final ArrayList<String> itemsTemp = new ArrayList<>();
                 itemsTemp.add(getString(R.string.select_one));
                 karbariDtosTemp.clear();
-                for (int j = 0; j < possible.getKarbariDtos().size(); j++) {
-                    if (possible.getKarbariDtos().get(j).title.contains(charSequence)) {
-                        karbariDtosTemp.add(possible.getKarbariDtos().get(j));
-                        itemsTemp.add(possible.getKarbariDtos().get(j).title);
+                for (int j = 0; j < possible.getKarbari().size(); j++) {
+                    if (possible.getKarbari().get(j).title.contains(charSequence)) {
+                        karbariDtosTemp.add(possible.getKarbari().get(j));
+                        itemsTemp.add(possible.getKarbari().get(j).title);
                     }
                 }
                 final String[] items = itemsTemp.toArray(new String[0]);
@@ -236,7 +234,7 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
     }
 
     private void initializeSpinner() {
-        karbariDtosTemp = new ArrayList<>(possible.getKarbariDtos());
+        karbariDtosTemp = new ArrayList<>(possible.getKarbari());
         String[] items = new String[karbariDtosTemp.size() + 1];
         for (int i = 0; i < karbariDtosTemp.size(); i++) {
             items[i + 1] = karbariDtosTemp.get(i).title;
@@ -253,10 +251,6 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         final int id = view.getId();
         if (id == R.id.text_view_mobile || id == R.id.image_view_mobile) {
             if (possible.getMobiles() != null) {
-//                final String[] mobiles = possible.getOnOffLoadDto().mobiles.split(",");
-//                String mobile = "";
-//                for (String mobileTemp : mobiles)
-//                    mobile = mobile.concat(mobileTemp.trim().concat("\n"));
                 new CustomDialogModel(Green, requireContext(), possible.getMobiles(),
                         getString(R.string.dear_user), getString(R.string.mobile_number),
                         getString(R.string.accepted));
