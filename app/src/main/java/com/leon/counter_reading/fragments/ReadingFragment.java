@@ -29,6 +29,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,6 +129,12 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         readingVM.setReadingConfigDefaultDto(readingActivity.getReadingConfigDefaultDto(readingVM.getPosition()));
         readingVM.setKarbariDto(readingActivity.getKarbariDto(readingVM.getPosition()));
         readingVM.setOnOffLoadDto(readingActivity.getOnOffLoad(readingVM.getPosition()));
+
+        Log.e("position", String.valueOf(readingActivity.getPosition()));
+        Log.e("name", readingActivity.getOnOffLoad(readingActivity.getPosition()).firstName.concat(readingActivity.getOnOffLoad(readingActivity.getPosition()).sureName));
+        Log.e("position", String.valueOf(readingVM.getPosition()));
+        Log.e("name", readingVM.getOnOffLoadDto().firstName.concat(readingVM.getOnOffLoadDto().sureName));
+
         binding.setReadingVM(readingVM);
         return binding.getRoot();
     }

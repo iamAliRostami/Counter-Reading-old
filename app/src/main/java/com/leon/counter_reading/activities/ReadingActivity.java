@@ -544,9 +544,6 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-
-//                ShowDialogOnce(this, FragmentTags.NAVIGATION.getValue(), NavigationFragment
-//                        .newInstance(binding.viewPager.getCurrentItem()));
                 ShowDialogOnce(this, NAVIGATION.getValue(), NavigationFragment
                         .newInstance(binding.viewPager.getCurrentItem(), readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem())));
             }
