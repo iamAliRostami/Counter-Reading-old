@@ -62,8 +62,8 @@ import java.util.ArrayList;
 public class ReadingFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
     private final ReadingViewModel readingVM = new ReadingViewModel();
     private FragmentReadingBinding binding;
-    private long lastClickTime = 0;
     private Callback readingActivity;
+    private long lastClickTime = 0;
 
     public ReadingFragment() {
     }
@@ -77,16 +77,12 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         super.onSaveInstanceState(outState);
         try {
             outState.clear();
-            outState.putAll(putBundle(readingVM.getPosition()));
+            final Bundle args = new Bundle();
+            args.putInt(POSITION.getValue(), readingVM.getPosition());
+            outState.putAll(args);
         } catch (Exception e) {
             new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
         }
-    }
-
-    private static Bundle putBundle(int position) {
-        final Bundle args = new Bundle();
-        args.putInt(POSITION.getValue(), position);
-        return args;
     }
 
     @Override
@@ -137,16 +133,12 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     }
 
     private void initialize() {
-        generateId();
+        binding.buttonSubmit.setId(readingVM.getButtonId());
+        binding.editTextNumber.setId(readingVM.getTextViewId());
         initializeSpinner();
         setOnEventsListener();
         if (!readingVM.getOnOffLoadDto().displayRadif && !readingVM.getOnOffLoadDto().displayBillId)
             binding.textViewRadif.setVisibility(View.GONE);
-    }
-
-    private void generateId() {
-        binding.buttonSubmit.setId(readingVM.getButtonId());
-        binding.editTextNumber.setId(readingVM.getTextViewId());
     }
 
     private void setOnEventsListener() {

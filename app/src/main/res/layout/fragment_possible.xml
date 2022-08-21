@@ -314,12 +314,6 @@
                     android:id="@+id/button_submit"
                     style="@style/ButtonSubmit.Fragment"
                     android:text="@string/submit" />
-
-                <Button
-                    android:id="@+id/button_close"
-                    style="@style/ButtonSubmit.Fragment.Error"
-                    android:text="@string/close"
-                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

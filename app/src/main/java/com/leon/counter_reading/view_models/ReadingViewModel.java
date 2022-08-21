@@ -123,7 +123,6 @@ public class ReadingViewModel extends BaseObservable {
         setSerial(getOnOffLoadDto().counterSerial);
         setPreDate(getOnOffLoadDto().preDate);
         setAddress(getOnOffLoadDto().address);
-
         if (getKarbariDto().title == null)
             new CustomToast().warning(String.format("کاربری اشتراک %s به درستی بارگیری نشده است.", getOnOffLoadDto().eshterak));
         else setKarbariTitle(getKarbariDto().title);
@@ -135,8 +134,6 @@ public class ReadingViewModel extends BaseObservable {
             new CustomToast().warning(String.format("قطر سیفون اشتراک %s به درستی بارگیری نشده است.", getOnOffLoadDto().eshterak));
         else
             setSifoonQotr(getOnOffLoadDto().sifoonQotr.equals("مشخص نشده") ? "-" : getOnOffLoadDto().sifoonQotr);
-
-
         if (getOnOffLoadDto().displayRadif)
             setRadifOrBillId(String.valueOf(getOnOffLoadDto().radif));
         else if (getOnOffLoadDto().displayBillId)

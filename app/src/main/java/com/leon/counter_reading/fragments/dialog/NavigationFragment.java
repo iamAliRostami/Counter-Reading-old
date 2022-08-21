@@ -1,17 +1,16 @@
 package com.leon.counter_reading.fragments.dialog;
 
+import static com.leon.counter_reading.enums.BundleEnum.ON_OFF_LOAD;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.DialogType.Red;
-import static com.leon.counter_reading.helpers.Constants.readingData;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getEshterakMaxLength;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getEshterakMinLength;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,43 +18,41 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.gson.Gson;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentNavigationBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.tables.OnOffLoadDto;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
-import com.leon.counter_reading.utils.navigation.Navigating;
+import com.leon.counter_reading.view_models.NavigationViewModel;
 
-public class NavigationFragment extends DialogFragment implements TextWatcher {
-    private static NavigationFragment instance;
-    public Callback readingActivity;
+public class NavigationFragment extends DialogFragment implements View.OnClickListener, TextWatcher {
     private FragmentNavigationBinding binding;
-    private OnOffLoadDto onOffLoadDto;
-    private int position;
+    private NavigationViewModel navigationVM;
+    private Callback readingActivity;
 
     public NavigationFragment() {
     }
 
-    public static NavigationFragment newInstance() {
-        return instance;
-    }
-
-    public static NavigationFragment newInstance(int position) {
-        instance = new NavigationFragment();
+    public static NavigationFragment newInstance(int position, OnOffLoadDto onOffLoadDto) {
+        final NavigationFragment fragment = new NavigationFragment();
         final Bundle args = new Bundle();
+        args.putString(ON_OFF_LOAD.getValue(), new Gson().toJson(onOffLoadDto));
         args.putInt(POSITION.getValue(), position);
-        instance.setArguments(args);
-        return instance;
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            position = getArguments().getInt(POSITION.getValue());
+            final OnOffLoadDto onOffLoadDto = new Gson().fromJson(getArguments().getString(ON_OFF_LOAD.getValue()),
+                    OnOffLoadDto.class);
+            navigationVM = new NavigationViewModel(onOffLoadDto, getArguments().getInt(POSITION.getValue()));
         }
     }
 
@@ -63,73 +60,58 @@ public class NavigationFragment extends DialogFragment implements TextWatcher {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentNavigationBinding.inflate(inflater, container, false);
-        initialize();
+        binding.setNavigationVM(navigationVM);
         return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState != null) savedInstanceState.clear();
+        initialize();
+    }
+
     private void initialize() {
-        onOffLoadDto = readingData.onOffLoadDtos.get(position);
-        setTextViews();
         initializeImageViews();
-        setOnButtonNavigationClickListener();
-        setOnEditTextChangeListener();
+        binding.buttonNavigation.setOnClickListener(this);
+        binding.editTextAccount.addTextChangedListener(this);
+        binding.editTextPhone.addTextChangedListener(this);
+        binding.editTextMobile.addTextChangedListener(this);
+        binding.editTextSerialCounter.addTextChangedListener(this);
     }
 
-    private void setTextViews() {
-        binding.textViewEmpty.setText(getAhad(getActiveCompanyName()).concat(getString(R.string.empty)));
-        binding.editTextAccount.setFilters(new InputFilter[]{new InputFilter.LengthFilter(getEshterakMaxLength(getActiveCompanyName()))});
-
-        binding.editTextAccount.setText(onOffLoadDto.possibleEshterak);
-        if (onOffLoadDto.possibleEmpty > 0)
-            binding.editTextEmpty.setText(String.valueOf(onOffLoadDto.possibleEmpty));
-        binding.editTextSerialCounter.setText(onOffLoadDto.possibleCounterSerial);
-        binding.editTextPhone.setText(onOffLoadDto.possiblePhoneNumber);
-        binding.editTextAddress.setText(onOffLoadDto.possibleAddress);
-        binding.editTextMobile.setText(onOffLoadDto.possibleMobile);
+    private void submitNavigation() {
+        if (!navigationVM.getPossibleEshterak().isEmpty() &&
+                navigationVM.getPossibleEshterak().length() < getEshterakMinLength(getActiveCompanyName())) {
+            binding.editTextAccount.setError(getString(R.string.error_format));
+            binding.editTextAccount.requestFocus();
+            return;
+        } else if (!navigationVM.getPossiblePhoneNumber().isEmpty() &&
+                navigationVM.getPossiblePhoneNumber().length() < 8) {
+            binding.editTextPhone.setError(getString(R.string.error_format));
+            binding.editTextPhone.requestFocus();
+            return;
+        } else if (!navigationVM.getPossibleMobile().isEmpty() &&
+                (navigationVM.getPossibleMobile().length() < 11 ||
+                        !navigationVM.getPossibleMobile().substring(0, 2).contains("09"))) {
+            binding.editTextMobile.setError(getString(R.string.error_format));
+            binding.editTextMobile.requestFocus();
+            return;
+        } else if (!navigationVM.getPossibleCounterSerial().isEmpty() &&
+                navigationVM.getPossibleCounterSerial().length() < 3) {
+            binding.editTextSerialCounter.setError(getString(R.string.error_format));
+            binding.editTextSerialCounter.requestFocus();
+            return;
+        }
+        navigationVM.updateOnOffLoadDto();
+        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(navigationVM.getOnOffLoadDto().id,
+                navigationVM.getOnOffLoadDto().possibleEshterak, navigationVM.getOnOffLoadDto().possibleMobile,
+                navigationVM.getOnOffLoadDto().possibleEmpty, navigationVM.getOnOffLoadDto().possiblePhoneNumber,
+                navigationVM.getOnOffLoadDto().possibleCounterSerial, navigationVM.getOnOffLoadDto().possibleAddress);
+        dismiss();
+        readingActivity.setResult(navigationVM.getPosition(), navigationVM.getOnOffLoadDto().id);
     }
 
-    void setOnButtonNavigationClickListener() {
-        binding.buttonNavigation.setOnClickListener(v -> {
-            View view = null;
-            boolean cancel = false;
-            if (binding.editTextAccount.getText().toString().length() > 0 &&
-                    binding.editTextAccount.getText().toString().length() < DifferentCompanyManager.
-                            getEshterakMinLength(getActiveCompanyName())) {
-                binding.editTextAccount.setError(getString(R.string.error_format));
-                view = binding.editTextAccount;
-                cancel = true;
-            } else if (binding.editTextPhone.getText().toString().length() > 0 &&
-                    binding.editTextPhone.getText().toString().length() < 8) {
-                binding.editTextPhone.setError(getString(R.string.error_format));
-                view = binding.editTextPhone;
-                cancel = true;
-            } else if (binding.editTextMobile.getText().toString().length() > 0 &&
-                    (binding.editTextMobile.getText().toString().length() < 11 ||
-                            !binding.editTextMobile.getText().toString().substring(0, 2).contains("09"))) {
-                binding.editTextMobile.setError(getString(R.string.error_format));
-                view = binding.editTextMobile;
-                cancel = true;
-            } else if (binding.editTextSerialCounter.getText().toString().length() > 0 &&
-                    binding.editTextSerialCounter.getText().toString().length() < 3) {
-                binding.editTextSerialCounter.setError(getString(R.string.error_format));
-                view = binding.editTextSerialCounter;
-                cancel = true;
-            }
-            if (cancel) {
-                view.requestFocus();
-            } else {
-                final int possibleEmpty = binding.editTextEmpty.getText().length() > 0 ?
-                        Integer.parseInt(binding.editTextEmpty.getText().toString()) : 0;
-                dismiss();
-                new Navigating(position, onOffLoadDto.id, possibleEmpty,
-                        binding.editTextAccount.getText().toString(),
-                        binding.editTextMobile.getText().toString(),
-                        binding.editTextPhone.getText().toString(),
-                        binding.editTextSerialCounter.getText().toString(),
-                        binding.editTextAddress.getText().toString()).execute(requireActivity());
-            }
-        });
-    }
 
     private void initializeImageViews() {
         binding.imageViewAccount.setImageDrawable(AppCompatResources.getDrawable(requireContext(),
@@ -146,75 +128,6 @@ public class NavigationFragment extends DialogFragment implements TextWatcher {
                 R.drawable.img_home));
     }
 
-    private void setOnEditTextChangeListener() {
-        binding.editTextAccount.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.toString().length() == getEshterakMaxLength(getActiveCompanyName())) {
-                    final View view = binding.editTextPhone;
-                    view.requestFocus();
-                }
-            }
-        });
-        binding.editTextPhone.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.toString().length() == 8) {
-                    final View view = binding.editTextMobile;
-                    view.requestFocus();
-                }
-            }
-        });
-
-        binding.editTextMobile.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.toString().length() == 11 && s.toString().substring(0, 2).contains("09")) {
-                    binding.editTextSerialCounter.requestFocus();
-                } else binding.editTextMobile.setError(getString(R.string.error_format));
-            }
-        });
-        binding.editTextSerialCounter.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.toString().length() == 15) binding.editTextAddress.requestFocus();
-            }
-        });
-    }
-
-
     @Override
     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -227,8 +140,31 @@ public class NavigationFragment extends DialogFragment implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable editable) {
-
+        if (editable == binding.editTextAccount.getEditableText()) {
+            if (editable.toString().length() == navigationVM.getEshterakMaxLength())
+                binding.editTextPhone.requestFocus();
+        } else if (editable == binding.editTextMobile.getEditableText()) {
+            if (editable.toString().length() == 11 && editable.toString().substring(0, 2).contains("09")) {
+                binding.editTextSerialCounter.requestFocus();
+            } else binding.editTextMobile.setError(getString(R.string.error_format));
+        } else if (editable == binding.editTextPhone.getEditableText()) {
+            if (editable.toString().length() == 8) {
+                binding.editTextMobile.requestFocus();
+            }
+        } else if (editable == binding.editTextSerialCounter.getEditableText()) {
+            if (editable.toString().length() == 15) binding.editTextAddress.requestFocus();
+        }
     }
+
+
+    @Override
+    public void onClick(View view) {
+        final int id = view.getId();
+        if (id == R.id.button_navigation) {
+            submitNavigation();
+        }
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -248,6 +184,7 @@ public class NavigationFragment extends DialogFragment implements TextWatcher {
         }
         super.onResume();
     }
+
 
     public interface Callback {
         void setResult(int position, String uuid);

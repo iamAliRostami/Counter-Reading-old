@@ -112,7 +112,7 @@ public interface OnOffLoadDao {
     @Query("UPDATE OnOffLoadDto set possibleAddress = :address, possibleCounterSerial = :serialNumber," +
             " possibleMobile = :possibleMobile, possibleEshterak = :possibleEshterak," +
             " possiblePhoneNumber = :phoneNumber, possibleEmpty = :possibleEmpty WHERE id = :id")
-    void updateOnOffLoad(String id, String possibleEshterak, String possibleMobile, int possibleEmpty,
+    void updateOnOffLoad(String id, String possibleEshterak, String possibleMobile, Integer possibleEmpty,
                          String phoneNumber, String serialNumber, String address);
 
     @Query("UPDATE OnOffLoadDto set attemptCount = :attemptNumber WHERE id = :id")

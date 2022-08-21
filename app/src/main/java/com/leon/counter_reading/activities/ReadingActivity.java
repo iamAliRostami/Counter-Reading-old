@@ -9,6 +9,7 @@ import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.enums.BundleEnum.TYPE;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.DialogType.Yellow;
+import static com.leon.counter_reading.enums.FragmentTags.NAVIGATION;
 import static com.leon.counter_reading.enums.FragmentTags.POSSIBLE_DIALOG;
 import static com.leon.counter_reading.enums.FragmentTags.REPORT_FORBID;
 import static com.leon.counter_reading.enums.FragmentTags.SEARCH;
@@ -120,8 +121,8 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     private ActivityReadingBinding binding;
     private int readStatus = 0, highLow = 1;
     private boolean isShowing = false;
-    public boolean searchResult;
     private int[] imageSrc;
+    public boolean searchResult;
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -234,12 +235,12 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         readingData.onOffLoadDtos.get(position).possibleMobile = onOffLoadDto.possibleMobile;
         if (justMobile) return;
         readingData.onOffLoadDtos.get(position).possibleCounterSerial = onOffLoadDto.possibleCounterSerial;
-        readingData.onOffLoadDtos.get(position).description = onOffLoadDto.description;
         readingData.onOffLoadDtos.get(position).possibleKarbariCode = onOffLoadDto.possibleKarbariCode;
         readingData.onOffLoadDtos.get(position).possibleAhadTejariOrFari = onOffLoadDto.possibleAhadTejariOrFari;
         readingData.onOffLoadDtos.get(position).possibleAhadMaskooniOrAsli = onOffLoadDto.possibleAhadMaskooniOrAsli;
         readingData.onOffLoadDtos.get(position).possibleAhadSaierOrAbBaha = onOffLoadDto.possibleAhadSaierOrAbBaha;
         readingData.onOffLoadDtos.get(position).possibleEmpty = onOffLoadDto.possibleEmpty;
+        readingData.onOffLoadDtos.get(position).description = onOffLoadDto.description;
         readingData.onOffLoadDtos.get(position).possibleAddress = onOffLoadDto.possibleAddress;
         readingData.onOffLoadDtos.get(position).possibleEshterak = onOffLoadDto.possibleEshterak;
         attemptSend(position, false, true);
@@ -391,7 +392,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
 
     private void showPossible(int position) {
         ShowDialogOnce(this, POSSIBLE_DIALOG.getValue().concat(readingData.onOffLoadDtos.get(position).eshterak),
-                PossibleFragment.newInstance(false,position,readingData.onOffLoadDtos.get(position)));
+                PossibleFragment.newInstance(false, position, readingData.onOffLoadDtos.get(position)));
     }
 
     private void showNoEshterakFound() {
@@ -543,8 +544,11 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                ShowDialogOnce(this, FragmentTags.NAVIGATION.getValue(), NavigationFragment
-                        .newInstance(binding.viewPager.getCurrentItem()));
+
+//                ShowDialogOnce(this, FragmentTags.NAVIGATION.getValue(), NavigationFragment
+//                        .newInstance(binding.viewPager.getCurrentItem()));
+                ShowDialogOnce(this, NAVIGATION.getValue(), NavigationFragment
+                        .newInstance(binding.viewPager.getCurrentItem(), readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem())));
             }
         } else if (id == R.id.menu_report_forbid) {
             ShowDialogOnce(this, REPORT_FORBID.getValue(),

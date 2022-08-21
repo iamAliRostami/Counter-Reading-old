@@ -6,9 +6,7 @@ import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.DialogType.Green;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.NotificationType.OTHER;
-import static com.leon.counter_reading.enums.SharedReferenceKeys.KARBARI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.helpers.MyApplication.getDigits;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getEshterakMinLength;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
@@ -43,51 +41,33 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class PossibleFragment extends DialogFragment implements View.OnClickListener {
+public class PossibleFragment extends DialogFragment implements View.OnClickListener, TextWatcher {
     private FragmentPossibleBinding binding;
     private Callback readingActivity;
-    //    private static boolean justMobile = false;
-    private ArrayList<KarbariDto> karbariDtosTemp = new ArrayList<>();
     private PossibleViewModel possible;
+    private ArrayList<KarbariDto> karbariDtosTemp = new ArrayList<>();
 
-
-    public static PossibleFragment newInstance(boolean justMobile, int position, OnOffLoadDto onOffLoadDto) {
-//        PossibleFragment.justMobile = justMobile;
+    public static PossibleFragment newInstance(boolean justMobile, int position,
+                                               OnOffLoadDto onOffLoadDto) {
         final PossibleFragment fragment = new PossibleFragment();
-        fragment.setArguments(putBundle(justMobile, position, onOffLoadDto));
+        final Bundle args = new Bundle();
+        args.putString(ON_OFF_LOAD.getValue(), new Gson().toJson(onOffLoadDto));
+        args.putBoolean(JUST_MOBILE.getValue(), justMobile);
+        args.putInt(POSITION.getValue(), position);
+        fragment.setArguments(args);
         fragment.setCancelable(false);
         return fragment;
-    }
-
-    static Bundle putBundle(boolean justMobile, int position, OnOffLoadDto onOffLoadDto) {
-        final Bundle args = new Bundle();
-        final String json = new Gson().toJson(onOffLoadDto);
-        args.putString(ON_OFF_LOAD.getValue(), json);
-        args.putInt(POSITION.getValue(), position);
-        args.putBoolean(JUST_MOBILE.getValue(), justMobile);
-        return args;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getBundle();
-    }
-
-    private void getBundle() {
         if (getArguments() != null) {
             possible = new PossibleViewModel(getArguments().getBoolean(JUST_MOBILE.getValue()),
                     getArguments().getInt(POSITION.getValue()), new Gson().fromJson(getArguments()
                     .getString(ON_OFF_LOAD.getValue()), OnOffLoadDto.class));
             getArguments().clear();
         }
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (savedInstanceState != null) savedInstanceState.clear();
-        initialize();
     }
 
     @Override
@@ -98,42 +78,34 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState != null) savedInstanceState.clear();
+        initialize();
+    }
+
     private void initialize() {
         makeRing(requireContext(), OTHER);
-        onEditTextSearchChangeListener();
         initializeSpinner();
         binding.buttonSubmit.setOnClickListener(this);
         binding.textViewReport.setOnClickListener(this);
         binding.textViewMobile.setOnClickListener(this);
         binding.imageViewMobile.setOnClickListener(this);
+        binding.editTextSearch.addTextChangedListener(this);
     }
 
-    private void onEditTextSearchChangeListener() {
-        binding.editTextSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                final ArrayList<String> itemsTemp = new ArrayList<>();
-                itemsTemp.add(getString(R.string.select_one));
-                karbariDtosTemp.clear();
-                for (int j = 0; j < possible.getKarbari().size(); j++) {
-                    if (possible.getKarbari().get(j).title.contains(charSequence)) {
-                        karbariDtosTemp.add(possible.getKarbari().get(j));
-                        itemsTemp.add(possible.getKarbari().get(j).title);
-                    }
-                }
-                final String[] items = itemsTemp.toArray(new String[0]);
-                final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
-                binding.spinnerKarbari.setAdapter(adapter);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
+    private void initializeSpinner() {
+        karbariDtosTemp = new ArrayList<>(possible.getKarbari());
+        String[] items = new String[karbariDtosTemp.size() + 1];
+        for (int i = 0; i < karbariDtosTemp.size(); i++) {
+            items[i + 1] = karbariDtosTemp.get(i).title;
+        }
+        items[0] = getString(R.string.select_one);
+        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
+        binding.spinnerKarbari.setAdapter(adapter);
+        if (possible.getOnOffLoadDto().counterStatePosition != null)
+            binding.spinnerKarbari.setSelection(possible.getOnOffLoadDto().counterStatePosition + 1);
     }
 
     private void counterReport() {
@@ -154,10 +126,9 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         new LovelyChoiceDialog(requireContext()).setTopColorRes(R.color.green).setTopTitle(R.string.reports)
                 .setItemsMultiChoice(itemNames, selection, (positions, items) -> {
                     for (int i = 0; i < possible.getOffLoadReports().size(); i++)
-                        getApplicationComponent().MyDatabase().offLoadReportDao().
-                                deleteOffLoadReport(possible.getOffLoadReports().get(i).reportId,
+                        getApplicationComponent().MyDatabase().offLoadReportDao()
+                                .deleteOffLoadReport(possible.getOffLoadReports().get(i).reportId,
                                         possible.getOnOffLoadDto().trackNumber, possible.getOnOffLoadDto().id);
-
                     for (int i = 0; i < positions.size(); i++) {
                         OffLoadReport offLoadReport = new OffLoadReport(possible.getOnOffLoadDto().id,
                                 possible.getOnOffLoadDto().trackNumber, possible.getCounterReports().get(positions.get(i)).id);
@@ -173,77 +144,34 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
     }
 
     private void submitForm() {
-        boolean cancel = false;
-        View view = null;
-        if (getApplicationComponent().SharedPreferenceModel().getBoolData(KARBARI.getValue())) {
-            int position = binding.spinnerKarbari.getSelectedItemPosition() - 1;
-            if (position >= 0)
-                possible.getOnOffLoadDto().possibleKarbariCode = karbariDtosTemp.get(position).moshtarakinId;
-        }
-        if (binding.editTextMobile.getText().length() > 0) {
-            if (binding.editTextMobile.getText().length() < 11 ||
-                    !binding.editTextMobile.getText().toString().substring(0, 2).contains("09")) {
+        if (binding.spinnerKarbari.getSelectedItemPosition() - 1 > 0)
+            possible.getOnOffLoadDto().possibleKarbariCode =
+                    karbariDtosTemp.get(binding.spinnerKarbari.getSelectedItemPosition() - 1).moshtarakinId;
+        if (possible.getPossibleMobile() != null && possible.getPossibleMobile().length() > 0) {
+            if (possible.getPossibleMobile().length() < 11 || !possible.getPossibleMobile().substring(0, 2).contains("09")) {
                 binding.editTextMobile.setError(getString(R.string.error_format));
-                view = binding.editTextMobile;
-                cancel = true;
-            } else
-                possible.getOnOffLoadDto().possibleMobile = binding.editTextMobile.getText().toString();
+                binding.editTextMobile.requestFocus();
+                return;
+            }
         }
-        if (binding.editTextSerial.getText().length() > 0) {
-            if (binding.editTextSerial.getText().toString().length() < 3) {
+        if (possible.getPossibleCounterSerial() != null && possible.getPossibleCounterSerial().length() > 0) {
+            if (possible.getPossibleCounterSerial().length() < 3) {
                 binding.editTextSerial.setError(getString(R.string.error_format));
-                view = binding.editTextSerial;
-                cancel = true;
-            } else
-                possible.getOnOffLoadDto().possibleCounterSerial = binding.editTextSerial.getText().toString();
+                binding.editTextSerial.requestFocus();
+                return;
+            }
         }
-        if (binding.editTextAccount.getText().length() > 0) {
-            if (binding.editTextAccount.getText().toString().length() <
-                    getEshterakMinLength(getActiveCompanyName())) {
+        if (possible.getPossibleEshterak() != null && possible.getPossibleEshterak().length() > 0) {
+            if (possible.getPossibleEshterak().length() < getEshterakMinLength(getActiveCompanyName())) {
                 binding.editTextAccount.setError(getString(R.string.error_format));
-                view = binding.editTextAccount;
-                cancel = true;
-            } else
-                possible.getOnOffLoadDto().possibleEshterak = binding.editTextAccount.getText().toString();
+                binding.editTextAccount.requestFocus();
+                return;
+            }
         }
-        if (binding.editTextDescription.getText().length() > 0) {
-            possible.getOnOffLoadDto().description = binding.editTextDescription.getText().toString();
-        }
-        if (binding.editTextAddress.getText().length() > 0)
-            possible.getOnOffLoadDto().possibleAddress = binding.editTextAddress.getText().toString();
-
-        if (binding.editTextAhadTotal.getText().length() > 0)
-            possible.getOnOffLoadDto().possibleAhadSaierOrAbBaha = getDigits(binding.editTextAhadTotal.getText().toString());
-
-        if (binding.editTextAhad2.getText().length() > 0)
-            possible.getOnOffLoadDto().possibleAhadTejariOrFari = getDigits(binding.editTextAhad2.getText().toString());
-
-        if (binding.editTextAhad1.getText().length() > 0)
-            possible.getOnOffLoadDto().possibleAhadMaskooniOrAsli = getDigits(binding.editTextAhad1.getText().toString());
-
-        if (binding.editTextAhadEmpty.getText().length() > 0)
-            possible.getOnOffLoadDto().possibleEmpty = getDigits(binding.editTextAhadEmpty.getText().toString());
-
-        if (cancel)
-            view.requestFocus();
-        else {
-            dismiss();
-            readingActivity.updateOnOffLoadByNavigation(possible.isJustMobile()/*justMobile*/, possible.getPosition(),
-                    possible.getOnOffLoadDto());
-        }
-    }
-
-    private void initializeSpinner() {
-        karbariDtosTemp = new ArrayList<>(possible.getKarbari());
-        String[] items = new String[karbariDtosTemp.size() + 1];
-        for (int i = 0; i < karbariDtosTemp.size(); i++) {
-            items[i + 1] = karbariDtosTemp.get(i).title;
-        }
-        items[0] = getString(R.string.select_one);
-        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
-        binding.spinnerKarbari.setAdapter(adapter);
-        if (possible.getOnOffLoadDto().counterStatePosition != null)
-            binding.spinnerKarbari.setSelection(possible.getOnOffLoadDto().counterStatePosition + 1);
+        possible.updateOnOffLoadDto();
+        dismiss();
+        readingActivity.updateOnOffLoadByNavigation(possible.isJustMobile(), possible.getPosition(),
+                possible.getOnOffLoadDto());
     }
 
     @Override
@@ -259,10 +187,33 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
             counterReport();
         } else if (id == R.id.button_submit) {
             submitForm();
-        } else if (id == R.id.button_close) {
-            dismiss();
         }
     }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        final ArrayList<String> itemsTemp = new ArrayList<>();
+        itemsTemp.add(getString(R.string.select_one));
+        karbariDtosTemp.clear();
+        for (int j = 0; j < possible.getKarbari().size(); j++) {
+            if (possible.getKarbari().get(j).title.contains(charSequence)) {
+                karbariDtosTemp.add(possible.getKarbari().get(j));
+                itemsTemp.add(possible.getKarbari().get(j).title);
+            }
+        }
+        final String[] items = itemsTemp.toArray(new String[0]);
+        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
+        binding.spinnerKarbari.setAdapter(adapter);
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+    }
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -291,12 +242,6 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         super.onDestroyView();
         binding = null;
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
 
     public interface Callback {
         void updateOnOffLoadByNavigation(boolean justMobile, int position, OnOffLoadDto onOffLoadDto);

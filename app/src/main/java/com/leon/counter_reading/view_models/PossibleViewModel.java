@@ -15,6 +15,7 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.SHOW_AHAD_TITLE
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad1;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad2;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhadTotal;
@@ -115,13 +116,13 @@ public class PossibleViewModel extends BaseObservable {
             setDescription(getOnOffLoadDto().description);
     }
 
-    private void updateOnOffLoadDto() {
+    public void updateOnOffLoadDto() {
         if (getPossibleMobile() != null)
             getOnOffLoadDto().possibleMobile = getPossibleMobile();
         if (getPossibleAddress() != null)
-            getOnOffLoadDto().address = getPossibleAddress();
+            getOnOffLoadDto().possibleAddress = getPossibleAddress();
         if (getPossibleEshterak() != null)
-            getOnOffLoadDto().eshterak = getPossibleEshterak();
+            getOnOffLoadDto().possibleEshterak = getPossibleEshterak();
         if (getPossibleCounterSerial() != null)
             getOnOffLoadDto().possibleCounterSerial = getPossibleCounterSerial();
         if (getPossibleAhadMaskooniOrAsli() != null && !getPossibleAhadMaskooniOrAsli().isEmpty())
@@ -170,9 +171,8 @@ public class PossibleViewModel extends BaseObservable {
 
     @Bindable
     public String getAhadEmptyHint() {
-
-        return DifferentCompanyManager.getAhad(getActiveCompanyName()).replaceFirst("آحاد ", "")
-                .replaceFirst("واحد", "").concat(getContext().getString(R.string.empty));
+        return getAhad(getActiveCompanyName()).replaceFirst("آحاد ", "").replaceFirst("واحد", "")
+                .concat(getContext().getString(R.string.empty));
     }
 
     @Bindable
