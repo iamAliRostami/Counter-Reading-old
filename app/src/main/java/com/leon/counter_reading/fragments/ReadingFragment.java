@@ -12,6 +12,10 @@ import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowD
 import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.STORAGE_PERMISSIONS;
+import static com.leon.counter_reading.helpers.Constants.counterStateDtos;
+import static com.leon.counter_reading.helpers.Constants.karbariDtos;
+import static com.leon.counter_reading.helpers.Constants.onOffLoadDtos;
+import static com.leon.counter_reading.helpers.Constants.readingConfigDefaultDtos;
 import static com.leon.counter_reading.helpers.MyApplication.getDigits;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.DifferentCompanyManager.getLockNumber;
@@ -29,7 +33,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,10 +52,6 @@ import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingBinding;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
-import com.leon.counter_reading.tables.CounterStateDto;
-import com.leon.counter_reading.tables.KarbariDto;
-import com.leon.counter_reading.tables.OnOffLoadDto;
-import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.view_models.ReadingViewModel;
 
@@ -100,10 +99,14 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
 
     private void getBundle(final Bundle bundle) {
         try {
-            readingVM.setPosition(readingActivity.getPosition());
-            readingVM.setReadingConfigDefaultDto(readingActivity.getReadingConfigDefaultDto(readingVM.getPosition()));
-            readingVM.setKarbariDto(readingActivity.getKarbariDto(readingVM.getPosition()));
-            readingVM.setOnOffLoadDto(readingActivity.getOnOffLoad(readingVM.getPosition()));
+            readingVM.setPosition(bundle.getInt(POSITION.getValue()));
+            readingVM.setReadingConfigDefaultDto(readingConfigDefaultDtos.get(readingVM.getPosition()));
+            readingVM.setKarbariDto(karbariDtos.get(readingVM.getPosition()));
+            readingVM.setOnOffLoadDto(onOffLoadDtos.get(readingVM.getPosition()));
+//            readingVM.setPosition(readingActivity.getPosition());
+//            readingVM.setReadingConfigDefaultDto(readingActivity.getReadingConfigDefaultDto(readingVM.getPosition()));
+//            readingVM.setKarbariDto(readingActivity.getKarbariDto(readingVM.getPosition()));
+//            readingVM.setOnOffLoadDto(readingActivity.getOnOffLoad(readingVM.getPosition()));
         } catch (Exception e) {
             final Intent intent = requireActivity().getIntent();
             requireActivity().finish();
@@ -120,21 +123,37 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         setHasOptionsMenu(true);
     }
 
+    private ReadingFragment(int position) {
+//        this.onOffLoadDto = Constants.onOffLoadDtos.get(position);
+//        this.readingConfigDefaultDto = Constants.readingConfigDefaultDtos.get(position);
+//        this.karbariDto = Constants.karbariDtos.get(position);
+        readingVM.setPosition(position);
+//        Log.e("position", String.valueOf(position));
+//        readingVM.setReadingConfigDefaultDto(readingActivity.getReadingConfigDefaultDto(readingVM.getPosition()));
+//        readingVM.setKarbariDto(readingActivity.getKarbariDto(readingVM.getPosition()));
+//        readingVM.setOnOffLoadDto(readingActivity.getOnOffLoad(readingVM.getPosition()));
+        readingVM.setReadingConfigDefaultDto(readingConfigDefaultDtos.get(position));
+        readingVM.setKarbariDto(karbariDtos.get(position));
+        readingVM.setOnOffLoadDto(onOffLoadDtos.get(position));
+    }
+
+    public static ReadingFragment newInstance(int position) {
+        return new ReadingFragment(position);
+    }
+
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (savedInstanceState != null) savedInstanceState.clear();
         binding = FragmentReadingBinding.inflate(inflater, container, false);
-        readingVM.setPosition(readingActivity.getPosition());
-        readingVM.setReadingConfigDefaultDto(readingActivity.getReadingConfigDefaultDto(readingVM.getPosition()));
-        readingVM.setKarbariDto(readingActivity.getKarbariDto(readingVM.getPosition()));
-        readingVM.setOnOffLoadDto(readingActivity.getOnOffLoad(readingVM.getPosition()));
-
-        Log.e("position", String.valueOf(readingActivity.getPosition()));
-        Log.e("name", readingActivity.getOnOffLoad(readingActivity.getPosition()).firstName.concat(readingActivity.getOnOffLoad(readingActivity.getPosition()).sureName));
-        Log.e("position", String.valueOf(readingVM.getPosition()));
-        Log.e("name", readingVM.getOnOffLoadDto().firstName.concat(readingVM.getOnOffLoadDto().sureName));
-
+//        readingVM.setPosition(readingActivity.getPosition());
+//        readingVM.setReadingConfigDefaultDto(readingActivity.getReadingConfigDefaultDto(readingVM.getPosition()));
+//        readingVM.setKarbariDto(readingActivity.getKarbariDto(readingVM.getPosition()));
+//        readingVM.setOnOffLoadDto(readingActivity.getOnOffLoad(readingVM.getPosition()));
+//        Log.e("position", String.valueOf(readingActivity.getPosition()));
+//        Log.e("name", readingActivity.getOnOffLoad(readingActivity.getPosition()).firstName.concat(readingActivity.getOnOffLoad(readingActivity.getPosition()).sureName));
+//        Log.e("position", String.valueOf(readingVM.getPosition()));
+//        Log.e("name", readingVM.getOnOffLoadDto().firstName.concat(readingVM.getOnOffLoadDto().sureName));
         binding.setReadingVM(readingVM);
         return binding.getRoot();
     }
@@ -168,16 +187,29 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     }
 
     private void initializeSpinner() {
-        final String[] items = new String[readingActivity.getCounterStateDtos().size()];
-        for (int i = 0; i < readingActivity.getCounterStateDtos().size(); i++) {
-            items[i] = readingActivity.getCounterStateDtos().get(i).title;
+        //TODO
+//        final String[] items = new String[readingActivity.getCounterStateDtos().size()];
+//        for (int i = 0; i < readingActivity.getCounterStateDtos().size(); i++) {
+//            items[i] = readingActivity.getCounterStateDtos().get(i).title;
+//        }
+//        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
+//        binding.spinner.setAdapter(adapter);
+//        boolean found = false;
+//        int i;
+//        for (i = 0; i < readingActivity.getCounterStateDtos().size() && !found; i++)
+//            if (readingActivity.getCounterStateDtos().get(i).id == readingVM.getOnOffLoadDto().counterStateId) {
+//                found = true;
+//            }
+        final String[] items = new String[counterStateDtos.size()];
+        for (int i = 0; i < counterStateDtos.size(); i++) {
+            items[i] = counterStateDtos.get(i).title;
         }
         final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
         binding.spinner.setAdapter(adapter);
         boolean found = false;
         int i;
-        for (i = 0; i < readingActivity.getCounterStateDtos().size() && !found; i++)
-            if (readingActivity.getCounterStateDtos().get(i).id == readingVM.getOnOffLoadDto().counterStateId) {
+        for (i = 0; i < counterStateDtos.size() && !found; i++)
+            if (counterStateDtos.get(i).id == readingVM.getOnOffLoadDto().counterStateId) {
                 found = true;
             }
         binding.spinner.setSelection(found ? i - 1 : 0);
@@ -199,7 +231,9 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     }
 
     private void setCounterStateField(int i) {
-        readingVM.setCounterStateField(readingActivity.getCounterStateDtos().get(i), i);
+//      TODO
+//        readingVM.setCounterStateField(readingActivity.getCounterStateDtos().get(i), i);
+        readingVM.setCounterStateField(counterStateDtos.get(i), i);
         binding.imageButtonShowKeyboard.setVisibility(readingVM.isCanEnterNumber() ||
                 readingVM.isShouldEnterNumber() ? View.VISIBLE : View.GONE);
         changeKeyboardState();
@@ -452,13 +486,13 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     public interface Callback {
         int getPosition();
 
-        OnOffLoadDto getOnOffLoad(int position);
-
-        KarbariDto getKarbariDto(int position);
-
-        ReadingConfigDefaultDto getReadingConfigDefaultDto(int position);
-
-        ArrayList<CounterStateDto> getCounterStateDtos();
+//        OnOffLoadDto getOnOffLoad(int position);
+//
+//        KarbariDto getKarbariDto(int position);
+//
+//        ReadingConfigDefaultDto getReadingConfigDefaultDto(int position);
+//
+//        ArrayList<CounterStateDto> getCounterStateDtos();
 
         void updateOnOffLoadByPreNumber(int position);
 

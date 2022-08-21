@@ -5,6 +5,10 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 
+import com.leon.counter_reading.tables.CounterStateDto;
+import com.leon.counter_reading.tables.KarbariDto;
+import com.leon.counter_reading.tables.OnOffLoadDto;
+import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.tables.ReadingData;
 
 import java.io.File;
@@ -54,7 +58,6 @@ public class Constants {
     public final static File otgViewerCachePath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/OTGViewer/cache");
     public final static File otgViewerPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/OTGViewer");
 
-    public static final ReadingData readingData = new ReadingData(), readingDataTemp = new ReadingData();
 
     public static long CURRENT_IMAGE_SIZE;
 
@@ -66,4 +69,10 @@ public class Constants {
     public static String zipAddress;
     public static Uri PHOTO_URI;
 
+
+    public static final ReadingData readingData = new ReadingData(), readingDataTemp = new ReadingData();
+    public static final ArrayList<ReadingConfigDefaultDto> readingConfigDefaultDtos = new ArrayList<>();
+    public static final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
+    public static final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
+    public static final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
 }

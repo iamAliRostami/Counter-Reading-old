@@ -40,6 +40,7 @@ import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowD
 import static com.leon.counter_reading.helpers.Constants.CAMERA;
 import static com.leon.counter_reading.helpers.Constants.MAX_OFFLINE_ATTEMPT;
 import static com.leon.counter_reading.helpers.Constants.currentOfflineAttempts;
+import static com.leon.counter_reading.helpers.Constants.onOffLoadDtos;
 import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
@@ -166,7 +167,9 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 }
                 i++;
             }
-            adapter.getOnOffLoadDtos().set(position, readingData.onOffLoadDtos.get(position));
+            //TODO
+            onOffLoadDtos.set(position, readingData.onOffLoadDtos.get(position));
+//            adapter.getOnOffLoadDtos().set(position, readingData.onOffLoadDtos.get(position));
             runOnUiThread(() -> adapter.notifyDataSetChanged());
         } catch (Exception e) {
             runOnUiThread(() -> new CustomDialogModel(Red, this, e.getMessage(),
@@ -632,26 +635,26 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     public int getCounterStatePosition(int position) {
         return readingData.onOffLoadDtos.get(position).counterStatePosition;
     }
-
-    @Override
-    public OnOffLoadDto getOnOffLoad(int position) {
-        return adapter.getOnOffLoadDtos().get(position);
-    }
-
-    @Override
-    public KarbariDto getKarbariDto(int position) {
-        return adapter.getKarbariDtos().get(position);
-    }
-
-    @Override
-    public ReadingConfigDefaultDto getReadingConfigDefaultDto(int position) {
-        return adapter.getReadingConfigDefaultDtos().get(position);
-    }
-
-    @Override
-    public ArrayList<CounterStateDto> getCounterStateDtos() {
-        return adapter.getCounterStateDtos();
-    }
+////TODO
+//    @Override
+//    public OnOffLoadDto getOnOffLoad(int position) {
+//        return adapter.getOnOffLoadDtos().get(position);
+//    }
+//
+//    @Override
+//    public KarbariDto getKarbariDto(int position) {
+//        return adapter.getKarbariDtos().get(position);
+//    }
+//
+//    @Override
+//    public ReadingConfigDefaultDto getReadingConfigDefaultDto(int position) {
+//        return adapter.getReadingConfigDefaultDtos().get(position);
+//    }
+//
+//    @Override
+//    public ArrayList<CounterStateDto> getCounterStateDtos() {
+//        return adapter.getCounterStateDtos();
+//    }
 
     @Override
     protected void onStop() {
