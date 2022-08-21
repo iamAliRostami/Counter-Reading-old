@@ -124,10 +124,11 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     }
 
     private ReadingFragment(int position) {
+        readingVM.setPosition(position);
+//TODO
 //        this.onOffLoadDto = Constants.onOffLoadDtos.get(position);
 //        this.readingConfigDefaultDto = Constants.readingConfigDefaultDtos.get(position);
 //        this.karbariDto = Constants.karbariDtos.get(position);
-        readingVM.setPosition(position);
 //        Log.e("position", String.valueOf(position));
 //        readingVM.setReadingConfigDefaultDto(readingActivity.getReadingConfigDefaultDto(readingVM.getPosition()));
 //        readingVM.setKarbariDto(readingActivity.getKarbariDto(readingVM.getPosition()));
@@ -146,6 +147,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
                              Bundle savedInstanceState) {
         if (savedInstanceState != null) savedInstanceState.clear();
         binding = FragmentReadingBinding.inflate(inflater, container, false);
+//TODO
 //        readingVM.setPosition(readingActivity.getPosition());
 //        readingVM.setReadingConfigDefaultDto(readingActivity.getReadingConfigDefaultDto(readingVM.getPosition()));
 //        readingVM.setKarbariDto(readingActivity.getKarbariDto(readingVM.getPosition()));
@@ -187,7 +189,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     }
 
     private void initializeSpinner() {
-        //TODO
+//TODO
 //        final String[] items = new String[readingActivity.getCounterStateDtos().size()];
 //        for (int i = 0; i < readingActivity.getCounterStateDtos().size(); i++) {
 //            items[i] = readingActivity.getCounterStateDtos().get(i).title;

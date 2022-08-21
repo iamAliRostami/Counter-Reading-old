@@ -90,9 +90,7 @@ import com.leon.counter_reading.fragments.dialog.TakePhotoFragment;
 import com.leon.counter_reading.infrastructure.IFlashLightManager;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.tables.CounterStateDto;
-import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
-import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DepthPageTransformer2;
 import com.leon.counter_reading.utils.reading.ChangeSortType;
@@ -640,17 +638,17 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
 //    public OnOffLoadDto getOnOffLoad(int position) {
 //        return adapter.getOnOffLoadDtos().get(position);
 //    }
-//
+//TODO
 //    @Override
 //    public KarbariDto getKarbariDto(int position) {
 //        return adapter.getKarbariDtos().get(position);
 //    }
-//
+//todo
 //    @Override
 //    public ReadingConfigDefaultDto getReadingConfigDefaultDto(int position) {
 //        return adapter.getReadingConfigDefaultDtos().get(position);
 //    }
-//
+//todo
 //    @Override
 //    public ArrayList<CounterStateDto> getCounterStateDtos() {
 //        return adapter.getCounterStateDtos();
