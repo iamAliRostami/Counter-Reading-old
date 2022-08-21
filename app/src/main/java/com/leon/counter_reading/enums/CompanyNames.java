@@ -1,8 +1,5 @@
 package com.leon.counter_reading.enums;
 
-/**
- * Created by saeid on 2/16/2017.
- */
 public enum CompanyNames {
     ZONE1(1),
     ZONE2(2),
@@ -18,7 +15,6 @@ public enum CompanyNames {
     DEBUG(12),
     ESF_MAP(13),
     KSH(14);
-
     private final int value;
 
     CompanyNames(final int newValue) {
