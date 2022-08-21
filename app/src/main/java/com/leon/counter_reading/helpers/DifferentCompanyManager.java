@@ -276,38 +276,6 @@ public class DifferentCompanyManager {
         }
     }
 
-    public static String getMapUrl(CompanyNames companyNames) {
-        switch (companyNames) {
-            case ZONE1:
-                return "http://217.146.220.33:50011/";
-            case ZONE2:
-                return "http://212.16.75.194:8080/";
-            case ZONE3:
-                return "http://212.16.69.36:90/";
-            case ZONE4:
-                return "http://91.98.248.36:8081/";
-            case ZONE5:
-                return "http://80.69.252.151/";
-            case ZONE6:
-                return "http://85.133.190.220:4121/";
-            case TSW:
-                return "http://81.90.148.25/";
-            case TE:
-                return "http://185.120.137.254";
-            case TSE:
-                return "http://5.160.85.228:9098/";
-            case TW:
-                return "http://217.66.195.75/";
-            case ESF:
-                return "http://37.191.92.130/";
-            case DEBUG:
-                return "http://192.168.43.185:45458/";
-            default:
-                throw new UnsupportedOperationException();
-        }
-    }
-
-
     @SuppressLint("SimpleDateFormat")
     public static String getExpireDate(CompanyNames companyNames, Activity activity) {
         final Location location = getLocationTracker(activity).getCurrentLocation();
