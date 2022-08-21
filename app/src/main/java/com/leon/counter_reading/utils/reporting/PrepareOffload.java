@@ -5,8 +5,8 @@ import static com.leon.counter_reading.enums.ProgressType.SHOW;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.helpers.MyApplication.getErrorCounter;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getShowError;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getShowError;
 
 import android.app.Activity;
 import android.os.AsyncTask;

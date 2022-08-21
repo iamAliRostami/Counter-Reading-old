@@ -8,8 +8,8 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
 import static com.leon.counter_reading.helpers.Constants.RECORD_AUDIO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 import static com.leon.counter_reading.utils.PermissionManager.checkRecorderPermission;
 
 import android.annotation.SuppressLint;

@@ -4,8 +4,8 @@ import static com.leon.counter_reading.enums.DialogType.Green;
 import static com.leon.counter_reading.enums.DialogType.Yellow;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.Converters.replaceNonstandardDigits;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getExpireDate;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getExpireDate;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

@@ -11,8 +11,8 @@ import static com.leon.counter_reading.helpers.MyApplication.getApplicationCompo
 import static com.leon.counter_reading.helpers.MyApplication.getSerial;
 import static com.leon.counter_reading.helpers.MyApplication.setActivityComponent;
 import static com.leon.counter_reading.utils.CustomFile.loadImage;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 import static com.leon.counter_reading.utils.PermissionManager.enableGpsForResult;
 import static com.leon.counter_reading.utils.PermissionManager.forceClose;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;

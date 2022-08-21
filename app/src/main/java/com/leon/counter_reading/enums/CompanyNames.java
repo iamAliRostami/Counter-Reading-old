@@ -13,7 +13,7 @@ public enum CompanyNames {
     TSW(7),
     TE(8),
     TSE(9),
-    TOWNS_WEST(10),
+    TW(10),
     ESF(11),
     DEBUG(12),
     ESF_MAP(13),

@@ -4,8 +4,8 @@ import static com.leon.counter_reading.enums.UploadType.MULTIMEDIA;
 import static com.leon.counter_reading.helpers.Constants.ZIP_ROOT;
 import static com.leon.counter_reading.helpers.Constants.zipAddress;
 import static com.leon.counter_reading.utils.CustomFile.copyFile;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 
 import android.content.Intent;
 import android.graphics.Color;

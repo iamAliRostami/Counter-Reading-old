@@ -1,8 +1,8 @@
 package com.leon.counter_reading.view_models;
 
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -10,7 +10,7 @@ import androidx.databinding.Bindable;
 import com.leon.counter_reading.BR;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.tables.OnOffLoadDto;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
+import com.leon.counter_reading.helpers.DifferentCompanyManager;
 
 public class NavigationViewModel extends BaseObservable {
     private OnOffLoadDto onOffLoadDto;

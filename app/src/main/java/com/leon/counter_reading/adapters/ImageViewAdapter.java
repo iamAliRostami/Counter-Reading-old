@@ -4,8 +4,8 @@ import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowD
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.CustomFile.loadImage;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getImageNumber;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getImageNumber;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

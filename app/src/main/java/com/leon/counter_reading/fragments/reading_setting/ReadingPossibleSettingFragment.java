@@ -12,7 +12,7 @@ import com.leon.counter_reading.databinding.FragmentReadingPossibleSettingBindin
 import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
+import com.leon.counter_reading.helpers.DifferentCompanyManager;
 
 import org.jetbrains.annotations.NotNull;
 

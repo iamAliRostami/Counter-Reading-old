@@ -5,8 +5,8 @@ import static com.leon.counter_reading.enums.SearchTypeEnum.All;
 import static com.leon.counter_reading.enums.SearchTypeEnum.BARCODE;
 import static com.leon.counter_reading.enums.SearchTypeEnum.NAME;
 import static com.leon.counter_reading.enums.SearchTypeEnum.RADIF;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getSecondSearchItem;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getSecondSearchItem;
 
 import android.content.Intent;
 import android.os.Bundle;

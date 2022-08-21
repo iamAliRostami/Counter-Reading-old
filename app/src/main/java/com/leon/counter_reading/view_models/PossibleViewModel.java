@@ -14,11 +14,11 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.SERIAL;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SHOW_AHAD_TITLE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad1;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhad2;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getAhadTotal;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad1;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad2;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhadTotal;
 
 import android.view.View;
 
@@ -31,7 +31,7 @@ import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.tables.OnOffLoadDto;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
+import com.leon.counter_reading.helpers.DifferentCompanyManager;
 
 import java.util.ArrayList;
 

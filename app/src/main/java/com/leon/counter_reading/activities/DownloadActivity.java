@@ -4,8 +4,8 @@ import static com.leon.counter_reading.enums.DownloadType.RETRY;
 import static com.leon.counter_reading.enums.DownloadType.SPECIAL;
 import static com.leon.counter_reading.helpers.Constants.ALL_FILES_ACCESS_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.SETTING_REQUEST;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 
 import android.content.Intent;
 import android.graphics.Color;

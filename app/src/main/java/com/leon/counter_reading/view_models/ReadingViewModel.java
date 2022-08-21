@@ -5,7 +5,7 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_TEMPORARY;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.MakeNotification.ringNotification;
 
 import android.view.MotionEvent;
@@ -23,7 +23,7 @@ import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.utils.CustomToast;
-import com.leon.counter_reading.utils.DifferentCompanyManager;
+import com.leon.counter_reading.helpers.DifferentCompanyManager;
 
 public class ReadingViewModel extends BaseObservable {
     private KarbariDto karbariDto;

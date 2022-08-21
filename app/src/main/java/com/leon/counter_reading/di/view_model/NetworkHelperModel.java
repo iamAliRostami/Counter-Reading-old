@@ -1,9 +1,9 @@
 package com.leon.counter_reading.di.view_model;
 
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getActiveCompanyName;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getBaseUrl;
-import static com.leon.counter_reading.utils.DifferentCompanyManager.getLocalBaseUrl;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getBaseUrl;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getLocalBaseUrl;
 
 import android.content.Context;
 
