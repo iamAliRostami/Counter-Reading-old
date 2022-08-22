@@ -1,5 +1,6 @@
 package com.leon.counter_reading.fragments.report;
 
+import static com.leon.counter_reading.enums.BundleEnum.READ_STATUS;
 import static com.leon.counter_reading.enums.BundleEnum.TOTAL;
 import static com.leon.counter_reading.enums.BundleEnum.UNREAD;
 import static com.leon.counter_reading.helpers.Constants.POSITION;
@@ -10,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -48,8 +51,14 @@ public class ReportNotReadingFragment extends Fragment implements View.OnClickLi
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentReportNotReadingBinding.inflate(inflater, container, false);
-        initialize();
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState != null) savedInstanceState.clear();
+        initialize();
     }
 
     private void initialize() {
@@ -60,13 +69,12 @@ public class ReportNotReadingFragment extends Fragment implements View.OnClickLi
         binding.buttonContinue.setOnClickListener(this);
     }
 
-
     @Override
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.button_continue) {
             final Intent intent = new Intent(requireContext(), ReadingActivity.class);
-            intent.putExtra(BundleEnum.READ_STATUS.getValue(), ReadStatusEnum.UNREAD.getValue());
+            intent.putExtra(READ_STATUS.getValue(), ReadStatusEnum.UNREAD.getValue());
             POSITION = 1;
             startActivity(intent);
         }
