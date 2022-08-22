@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.databinding.FragmentReportForbidsBinding;
@@ -36,10 +37,15 @@ public class ReportForbidsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentReportForbidsBinding.inflate(inflater, container, false);
         binding.setReportForbid(reportForbid);
-        initialize();
         return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState != null) savedInstanceState.clear();
+        initialize();
+    }
     private void initialize() {
         binding.buttonSubmitForbidden.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;

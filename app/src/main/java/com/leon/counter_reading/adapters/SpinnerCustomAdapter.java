@@ -2,6 +2,7 @@ package com.leon.counter_reading.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,10 @@ public class SpinnerCustomAdapter extends BaseAdapter implements Serializable {
     private final String[] items;
     private final LayoutInflater inflater;
 
-    public SpinnerCustomAdapter(Activity activity, String[] items) {
+    public SpinnerCustomAdapter(Context context, String[] items) {
         super();
         this.items = items;
-        inflater = (LayoutInflater.from(activity));
+        inflater = (LayoutInflater.from(context));
     }
 
     @SuppressLint({"ViewHolder", "InflateParams"})

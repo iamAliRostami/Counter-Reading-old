@@ -26,7 +26,7 @@ import com.leon.counter_reading.utils.reporting.GetReportDBData;
 
 import java.util.ArrayList;
 
-public class ReportActivity extends BaseActivity {
+public class ReportActivity extends BaseActivity implements ReportTemporaryFragment.Callback {
     private ActivityReportBinding binding;
     private Activity activity;
     private int previousState;
@@ -195,6 +195,7 @@ public class ReportActivity extends BaseActivity {
         binding.viewPager.setPageTransformer(true, new DepthPageTransformer());
     }
 
+    @Override
     public ArrayList<CounterStateDto> getCounterStateDtos() {
         return counterStateDtos;
     }

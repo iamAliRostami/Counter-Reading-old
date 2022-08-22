@@ -1,6 +1,8 @@
 package com.leon.counter_reading.utils.performance;
 
 import static com.leon.counter_reading.di.view_model.HttpClientWrapper.callHttpAsync;
+import static com.leon.counter_reading.enums.ProgressType.SHOW;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.TOKEN;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -40,13 +42,12 @@ public class GetPerformance extends AsyncTask<Activity, Activity, Activity> {
     protected Activity doInBackground(Activity... activities) {
         final Retrofit retrofit = getApplicationComponent().NetworkHelperModel()
                 .getInstance(true, getApplicationComponent().SharedPreferenceModel()
-                        .getStringData(SharedReferenceKeys.TOKEN.getValue()), 10, 5, 5);
-
+                        .getStringData(TOKEN.getValue()), 10, 5, 5);
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
         final Call<PerformanceViewModel> call = iAbfaService.myPerformance(performanceVM);
         activities[0].runOnUiThread(() -> {
             customProgressModel.getDialog().dismiss();
-            callHttpAsync(call, ProgressType.SHOW.getValue(), activities[0],
+            callHttpAsync(call, SHOW.getValue(), activities[0],
                     new Performance(fragment), new PerformanceIncomplete(activities[0]),
                     new PerformanceError(activities[0]));
         });
@@ -92,6 +93,8 @@ class Performance implements ICallback<PerformanceViewModel> {
 
     @Override
     public void execute(Response<PerformanceViewModel> response) {
-        fragment.setTextViewTextSetter(response.body());
+        if (response.body() != null) {
+            fragment.setResponse(response.body());
+        }
     }
 }

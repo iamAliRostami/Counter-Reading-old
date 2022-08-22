@@ -18,9 +18,9 @@ import com.sardari.daterangepicker.customviews.DateRangeCalendarView;
 import com.sardari.daterangepicker.dialog.DatePickerDialog;
 
 public class ReportPerformanceFragment extends Fragment implements View.OnClickListener {
+    private final PerformanceViewModel performanceVM = new PerformanceViewModel();
     private FragmentReportPerformanceBinding binding;
     private long lastClickTime = 0;
-    private final PerformanceViewModel performanceVM = new PerformanceViewModel();
 
     public ReportPerformanceFragment() {
     }
@@ -56,7 +56,7 @@ public class ReportPerformanceFragment extends Fragment implements View.OnClickL
         binding.buttonSubmit.setOnClickListener(this);
     }
 
-    public void setTextViewTextSetter(PerformanceViewModel performanceVM) {
+    public void setResponse(PerformanceViewModel performanceVM) {
         this.performanceVM.setDetailVisibility(View.VISIBLE);
         this.performanceVM.setAdiCount(performanceVM.getAdiCount());
         this.performanceVM.setOveralCount(performanceVM.getOveralCount());

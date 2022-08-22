@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.databinding.FragmentReportInspectionBinding;
@@ -36,8 +37,14 @@ public class ReportInspectionFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentReportInspectionBinding.inflate(inflater, container, false);
         binding.setReportInspection(reportInspection);
-        initialize();
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState != null) savedInstanceState.clear();
+        initialize();
     }
 
     private void initialize() {

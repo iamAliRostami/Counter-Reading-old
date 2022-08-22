@@ -17,14 +17,12 @@ public class PerformanceViewModel extends BaseObservable {
     private int tavizCount;
     private int forbiddenCount;
     private int mediaCount;
-
     private int detailVisibility;
     private String fromDate;
     private String toDate;
-
-    private int status;
     private String message;
     private String generationDateTime;
+    private int status;
     private boolean isValid;
 
     public PerformanceViewModel() {
@@ -163,6 +161,7 @@ public class PerformanceViewModel extends BaseObservable {
         this.toDate = toDate;
         notifyPropertyChanged(BR.toDate);
     }
+
     @Bindable
     public String getGenerationDateTime() {
         return generationDateTime;
