@@ -1,6 +1,6 @@
 package com.leon.counter_reading.view_models;
 
-public class PerformanceViewModel {
+public class PerformanceVM {
 
     public int overalCount;
     public int adiCount;

@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.databinding.FragmentReportPerformanceBinding;
-import com.leon.counter_reading.view_models.PerformanceViewModel;
+import com.leon.counter_reading.view_models.PerformanceVM;
 import com.leon.counter_reading.utils.performance.GetPerformance;
 import com.sardari.daterangepicker.customviews.DateRangeCalendarView;
 import com.sardari.daterangepicker.dialog.DatePickerDialog;
@@ -99,7 +99,7 @@ public class ReportPerformanceFragment extends Fragment {
         });
     }
 
-    public void setTextViewTextSetter(PerformanceViewModel performanceVM) {
+    public void setTextViewTextSetter(PerformanceVM performanceVM) {
         activity.runOnUiThread(() -> {
             binding.relativeLayoutDetail.setVisibility(View.VISIBLE);
             binding.textViewAdiCount.setText(String.valueOf(performanceVM.adiCount));

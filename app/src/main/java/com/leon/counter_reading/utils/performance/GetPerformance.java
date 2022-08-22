@@ -16,7 +16,7 @@ import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
 import com.leon.counter_reading.infrastructure.ICallbackIncomplete;
 import com.leon.counter_reading.tables.PerformanceInfo;
-import com.leon.counter_reading.view_models.PerformanceViewModel;
+import com.leon.counter_reading.view_models.PerformanceVM;
 import com.leon.counter_reading.utils.CustomErrorHandling;
 import com.leon.counter_reading.utils.CustomToast;
 
@@ -51,7 +51,7 @@ public class GetPerformance extends AsyncTask<Activity, Activity, Activity> {
                         .getStringData(SharedReferenceKeys.TOKEN.getValue()), 10, 5, 5);
 
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-        final Call<PerformanceViewModel> call = iAbfaService.myPerformance(new PerformanceInfo(startDate, endDate));
+        final Call<PerformanceVM> call = iAbfaService.myPerformance(new PerformanceInfo(startDate, endDate));
         activities[0].runOnUiThread(() -> {
             customProgressModel.getDialog().dismiss();
             callHttpAsync(call, ProgressType.SHOW.getValue(), activities[0],
@@ -78,7 +78,7 @@ class PerformanceError implements ICallbackError {
     }
 }
 
-class PerformanceIncomplete implements ICallbackIncomplete<PerformanceViewModel> {
+class PerformanceIncomplete implements ICallbackIncomplete<PerformanceVM> {
     private final Activity activity;
 
     public PerformanceIncomplete(Activity activity) {
@@ -86,14 +86,14 @@ class PerformanceIncomplete implements ICallbackIncomplete<PerformanceViewModel>
     }
 
     @Override
-    public void executeIncomplete(Response<PerformanceViewModel> response) {
+    public void executeIncomplete(Response<PerformanceVM> response) {
         CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(activity);
         String error = customErrorHandlingNew.getErrorMessageDefault(response);
         new CustomToast().warning(error, Toast.LENGTH_LONG);
     }
 }
 
-class Performance implements ICallback<PerformanceViewModel> {
+class Performance implements ICallback<PerformanceVM> {
     private final ReportPerformanceFragment fragment;
 
     public Performance(ReportPerformanceFragment fragment) {
@@ -101,7 +101,7 @@ class Performance implements ICallback<PerformanceViewModel> {
     }
 
     @Override
-    public void execute(Response<PerformanceViewModel> response) {
+    public void execute(Response<PerformanceVM> response) {
         fragment.setTextViewTextSetter(response.body());
     }
 }

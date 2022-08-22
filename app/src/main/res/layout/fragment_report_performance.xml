@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name=""
-            type="com.leon.counter_reading.view_models.PerformanceViewModel" />
+            name="performanceVM"
+            type="com.leon.counter_reading.view_models.PerformanceVM" />
     </data>
 
     <ScrollView
