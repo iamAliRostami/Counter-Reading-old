@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.databinding.FragmentReportPerformanceBinding;
-import com.leon.counter_reading.tables.PerformanceResponse;
+import com.leon.counter_reading.view_models.PerformanceViewModel;
 import com.leon.counter_reading.utils.performance.GetPerformance;
 import com.sardari.daterangepicker.customviews.DateRangeCalendarView;
 import com.sardari.daterangepicker.dialog.DatePickerDialog;
@@ -49,7 +49,6 @@ public class ReportPerformanceFragment extends Fragment {
     private void setupTextViews() {
         binding.textViewFrom.setText(new PersianCalendar().getPersianShortDate());
         binding.textViewEnd.setText(new PersianCalendar().getPersianShortDate());
-//        setLinearLayoutVisibility(View.GONE);
         binding.relativeLayoutDetail.setVisibility(View.GONE);
         setOnTextViewFromOnClickListener();
         setOnTextViewEndOnClickListener();
@@ -100,17 +99,17 @@ public class ReportPerformanceFragment extends Fragment {
         });
     }
 
-    public void setTextViewTextSetter(PerformanceResponse performanceResponse) {
+    public void setTextViewTextSetter(PerformanceViewModel performanceVM) {
         activity.runOnUiThread(() -> {
             binding.relativeLayoutDetail.setVisibility(View.VISIBLE);
-            binding.textViewAdiCount.setText(String.valueOf(performanceResponse.adiCount));
-            binding.textViewTotal.setText(String.valueOf(performanceResponse.overalCount));
-            binding.textViewMedia.setText(String.valueOf(performanceResponse.mediaCount));
-            binding.textViewForbid.setText(String.valueOf(performanceResponse.forbiddenCount));
-            binding.textViewMane.setText(String.valueOf(performanceResponse.maneCount));
-            binding.textViewXarab.setText(String.valueOf(performanceResponse.xarabCount));
-            binding.textViewTaviz.setText(String.valueOf(performanceResponse.tavizCount));
-            binding.textViewFaqed.setText(String.valueOf(performanceResponse.faqedCount));
+            binding.textViewAdiCount.setText(String.valueOf(performanceVM.adiCount));
+            binding.textViewTotal.setText(String.valueOf(performanceVM.overalCount));
+            binding.textViewMedia.setText(String.valueOf(performanceVM.mediaCount));
+            binding.textViewForbid.setText(String.valueOf(performanceVM.forbiddenCount));
+            binding.textViewMane.setText(String.valueOf(performanceVM.maneCount));
+            binding.textViewXarab.setText(String.valueOf(performanceVM.xarabCount));
+            binding.textViewTaviz.setText(String.valueOf(performanceVM.tavizCount));
+            binding.textViewFaqed.setText(String.valueOf(performanceVM.faqedCount));
             setButtonState();
         });
     }

@@ -1,6 +1,6 @@
-package com.leon.counter_reading.tables;
+package com.leon.counter_reading.view_models;
 
-public class PerformanceResponse {
+public class PerformanceViewModel {
 
     public int overalCount;
     public int adiCount;

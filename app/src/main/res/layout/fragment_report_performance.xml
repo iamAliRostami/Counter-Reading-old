@@ -1,266 +1,276 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/border_gray_3"
-    android:padding="@dimen/medium_dp"
-    tools:context=".fragments.report.ReportPerformanceFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <data>
+
+        <variable
+            name=""
+            type="com.leon.counter_reading.view_models.PerformanceViewModel" />
+    </data>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="@drawable/border_gray_3"
+        android:padding="@dimen/medium_dp"
+        tools:context=".fragments.report.ReportPerformanceFragment">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/linear_layout_from"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    style="@style/text_bold"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/linear_layout_from"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/from"
-                    android:textSize="@dimen/text_size_medium" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/text_view_from"
-                    style="@style/InputPlace"
-                    android:layout_margin="@dimen/low_dp"
-                    android:maxLength="10"
-                    android:padding="@dimen/low_dp"
-                    android:textSize="@dimen/text_size_large" />
+                    <TextView
+                        style="@style/text_bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/from"
+                        android:textSize="@dimen/text_size_medium" />
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/text_view_from"
+                        style="@style/InputPlace"
+                        android:layout_margin="@dimen/low_dp"
+                        android:maxLength="10"
+                        android:padding="@dimen/low_dp"
+                        android:textSize="@dimen/text_size_large" />
 
-            <LinearLayout
-                android:id="@+id/linear_layout_end"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear_layout_from"
-                android:orientation="horizontal">
+                </LinearLayout>
 
-                <TextView
-                    style="@style/text_bold"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/linear_layout_end"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/end"
-                    android:textSize="@dimen/text_size_medium" />
+                    android:layout_below="@id/linear_layout_from"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/text_view_end"
-                    style="@style/InputPlace"
-                    android:layout_margin="@dimen/low_dp"
-                    android:maxLength="10"
-                    android:padding="@dimen/low_dp"
-                    android:textSize="@dimen/text_size_large" />
-            </LinearLayout>
+                    <TextView
+                        style="@style/text_bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/end"
+                        android:textSize="@dimen/text_size_medium" />
 
-            <Button
-                android:id="@+id/button_submit"
-                style="@style/ButtonSubmit.Fragment"
+                    <TextView
+                        android:id="@+id/text_view_end"
+                        style="@style/InputPlace"
+                        android:layout_margin="@dimen/low_dp"
+                        android:maxLength="10"
+                        android:padding="@dimen/low_dp"
+                        android:textSize="@dimen/text_size_large" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/button_submit"
+                    style="@style/ButtonSubmit.Fragment"
+                    android:layout_width="match_parent"
+                    android:layout_below="@id/linear_layout_end"
+                    android:background="@drawable/border_blue_1"
+                    android:text="@string/show" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relative_layout_detail"
                 android:layout_width="match_parent"
-                android:layout_below="@id/linear_layout_end"
-                android:background="@drawable/border_blue_1"
-                android:text="@string/show" />
+                android:layout_height="wrap_content">
 
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/relative_layout_detail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/linear_layout_1"
-                style="@style/ReadingSettingItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_blue_2">
-
-                <TextView
-                    style="@style/ReadingSettingItemWhite"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/total_number" />
-
-                <TextView
-                    android:id="@+id/text_view_total"
-                    style="@style/ReadingSettingItemWhiteBold"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_layout_2"
-                style="@style/ReadingSettingItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear_layout_1"
-                android:background="@drawable/border_blue_3">
-
-                <TextView
+                <LinearLayout
+                    android:id="@+id/linear_layout_1"
                     style="@style/ReadingSettingItem"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/multimedia" />
+                    android:background="@drawable/border_blue_2">
 
-                <TextView
-                    android:id="@+id/text_view_media"
-                    style="@style/ReadingSettingItemBlueBold"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </LinearLayout>
+                    <TextView
+                        style="@style/ReadingSettingItemWhite"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/total_number" />
 
-            <LinearLayout
-                android:id="@+id/linear_layout_3"
-                style="@style/ReadingSettingItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear_layout_2"
-                android:background="@drawable/border_blue_2">
+                    <TextView
+                        android:id="@+id/text_view_total"
+                        style="@style/ReadingSettingItemWhiteBold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
 
-                <TextView
-                    style="@style/ReadingSettingItemWhite"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/report_forbid" />
-
-                <TextView
-                    android:id="@+id/text_view_forbid"
-                    style="@style/ReadingSettingItemWhiteBold"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_layout_4"
-                style="@style/ReadingSettingItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear_layout_3"
-                android:background="@drawable/border_blue_3">
-
-                <TextView
+                <LinearLayout
+                    android:id="@+id/linear_layout_2"
                     style="@style/ReadingSettingItem"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/normal" />
+                    android:layout_below="@id/linear_layout_1"
+                    android:background="@drawable/border_blue_3">
 
-                <TextView
-                    android:id="@+id/text_view_adi_count"
-                    style="@style/ReadingSettingItemBlueBold"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </LinearLayout>
+                    <TextView
+                        style="@style/ReadingSettingItem"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/multimedia" />
 
-            <LinearLayout
-                android:id="@+id/linear_layout_5"
-                style="@style/ReadingSettingItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear_layout_4"
-                android:background="@drawable/border_blue_2">
+                    <TextView
+                        android:id="@+id/text_view_media"
+                        style="@style/ReadingSettingItemBlueBold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
 
-                <TextView
-                    style="@style/ReadingSettingItemWhite"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/xarab" />
-
-                <TextView
-                    android:id="@+id/text_view_xarab"
-                    style="@style/ReadingSettingItemWhiteBold"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_layout_6"
-                style="@style/ReadingSettingItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear_layout_5"
-                android:background="@drawable/border_blue_3">
-
-                <TextView
+                <LinearLayout
+                    android:id="@+id/linear_layout_3"
                     style="@style/ReadingSettingItem"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/taviz" />
+                    android:layout_below="@id/linear_layout_2"
+                    android:background="@drawable/border_blue_2">
 
-                <TextView
-                    android:id="@+id/text_view_taviz"
-                    style="@style/ReadingSettingItemBlueBold"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </LinearLayout>
+                    <TextView
+                        style="@style/ReadingSettingItemWhite"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/report_forbid" />
 
-            <LinearLayout
-                android:id="@+id/linear_layout_7"
-                style="@style/ReadingSettingItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear_layout_6"
-                android:background="@drawable/border_blue_2">
+                    <TextView
+                        android:id="@+id/text_view_forbid"
+                        style="@style/ReadingSettingItemWhiteBold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
 
-                <TextView
-                    style="@style/ReadingSettingItemWhite"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/faqed" />
-
-                <TextView
-                    android:id="@+id/text_view_faqed"
-                    style="@style/ReadingSettingItemWhiteBold"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_layout_8"
-                style="@style/ReadingSettingItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linear_layout_7"
-                android:background="@drawable/border_blue_3">
-
-                <TextView
+                <LinearLayout
+                    android:id="@+id/linear_layout_4"
                     style="@style/ReadingSettingItem"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/mane" />
+                    android:layout_below="@id/linear_layout_3"
+                    android:background="@drawable/border_blue_3">
 
-                <TextView
-                    android:id="@+id/text_view_mane"
-                    style="@style/ReadingSettingItemBlueBold"
-                    android:layout_width="0dp"
+                    <TextView
+                        style="@style/ReadingSettingItem"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/normal" />
+
+                    <TextView
+                        android:id="@+id/text_view_adi_count"
+                        style="@style/ReadingSettingItemBlueBold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_5"
+                    style="@style/ReadingSettingItem"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </LinearLayout>
-        </RelativeLayout>
-    </LinearLayout>
-</ScrollView>
+                    android:layout_below="@id/linear_layout_4"
+                    android:background="@drawable/border_blue_2">
+
+                    <TextView
+                        style="@style/ReadingSettingItemWhite"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/xarab" />
+
+                    <TextView
+                        android:id="@+id/text_view_xarab"
+                        style="@style/ReadingSettingItemWhiteBold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_6"
+                    style="@style/ReadingSettingItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/linear_layout_5"
+                    android:background="@drawable/border_blue_3">
+
+                    <TextView
+                        style="@style/ReadingSettingItem"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/taviz" />
+
+                    <TextView
+                        android:id="@+id/text_view_taviz"
+                        style="@style/ReadingSettingItemBlueBold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_7"
+                    style="@style/ReadingSettingItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/linear_layout_6"
+                    android:background="@drawable/border_blue_2">
+
+                    <TextView
+                        style="@style/ReadingSettingItemWhite"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/faqed" />
+
+                    <TextView
+                        android:id="@+id/text_view_faqed"
+                        style="@style/ReadingSettingItemWhiteBold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_8"
+                    style="@style/ReadingSettingItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/linear_layout_7"
+                    android:background="@drawable/border_blue_3">
+
+                    <TextView
+                        style="@style/ReadingSettingItem"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/mane" />
+
+                    <TextView
+                        android:id="@+id/text_view_mane"
+                        style="@style/ReadingSettingItemBlueBold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</layout>
