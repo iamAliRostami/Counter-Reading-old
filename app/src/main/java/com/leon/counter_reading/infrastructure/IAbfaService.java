@@ -6,11 +6,10 @@ import com.leon.counter_reading.tables.LastInfo;
 import com.leon.counter_reading.tables.MultimediaUploadResponse;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.tables.PasswordInfo;
-import com.leon.counter_reading.tables.PerformanceInfo;
-import com.leon.counter_reading.view_models.PerformanceVM;
 import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.tables.SimpleResponse;
 import com.leon.counter_reading.view_models.LoginViewModel;
+import com.leon.counter_reading.view_models.PerformanceViewModel;
 
 import java.util.ArrayList;
 
@@ -160,6 +159,6 @@ public interface IAbfaService {
     Call<ForbiddenDtoResponses> multipleForbidden(@Body ForbiddenDtoRequestMultiple forbiddenDto);
 
     @POST("KontoriNew/V1/List/Offloaded/MyKarkard")
-    Call<PerformanceVM> myPerformance(@Body PerformanceInfo performanceInfo);
+    Call<PerformanceViewModel> myPerformance(@Body PerformanceViewModel performanceVM);
 }
 

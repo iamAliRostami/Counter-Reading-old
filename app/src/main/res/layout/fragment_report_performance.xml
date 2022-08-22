@@ -6,7 +6,7 @@
 
         <variable
             name="performanceVM"
-            type="com.leon.counter_reading.view_models.PerformanceVM" />
+            type="com.leon.counter_reading.view_models.PerformanceViewModel" />
     </data>
 
     <ScrollView
@@ -45,6 +45,7 @@
                         android:layout_margin="@dimen/low_dp"
                         android:maxLength="10"
                         android:padding="@dimen/low_dp"
+                        android:text="@={performanceVM.fromDate}"
                         android:textSize="@dimen/text_size_large" />
 
                 </LinearLayout>
@@ -70,6 +71,7 @@
                         android:layout_margin="@dimen/low_dp"
                         android:maxLength="10"
                         android:padding="@dimen/low_dp"
+                        android:text="@={performanceVM.toDate}"
                         android:textSize="@dimen/text_size_large" />
                 </LinearLayout>
 
@@ -86,7 +88,8 @@
             <RelativeLayout
                 android:id="@+id/relative_layout_detail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="@{performanceVM.detailVisibility}">
 
                 <LinearLayout
                     android:id="@+id/linear_layout_1"
@@ -107,7 +110,8 @@
                         style="@style/ReadingSettingItemWhiteBold"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:text="@{performanceVM.overalCount}" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -130,7 +134,8 @@
                         style="@style/ReadingSettingItemBlueBold"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:text="@{performanceVM.mediaCount}" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -153,7 +158,8 @@
                         style="@style/ReadingSettingItemWhiteBold"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:text="@{performanceVM.forbiddenCount}" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -176,7 +182,8 @@
                         style="@style/ReadingSettingItemBlueBold"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:text="@{performanceVM.adiCount}" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -199,7 +206,8 @@
                         style="@style/ReadingSettingItemWhiteBold"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:text="@{performanceVM.xarabCount}" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -222,7 +230,8 @@
                         style="@style/ReadingSettingItemBlueBold"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:text="@{performanceVM.tavizCount}" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -245,7 +254,8 @@
                         style="@style/ReadingSettingItemWhiteBold"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:text="@{performanceVM.faqedCount}" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -268,7 +278,8 @@
                         style="@style/ReadingSettingItemBlueBold"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:text="@{performanceVM.maneCount}" />
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>

@@ -15,10 +15,9 @@ import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
 import com.leon.counter_reading.infrastructure.ICallbackIncomplete;
-import com.leon.counter_reading.tables.PerformanceInfo;
-import com.leon.counter_reading.view_models.PerformanceVM;
 import com.leon.counter_reading.utils.CustomErrorHandling;
 import com.leon.counter_reading.utils.CustomToast;
+import com.leon.counter_reading.view_models.PerformanceViewModel;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -26,22 +25,15 @@ import retrofit2.Retrofit;
 
 public class GetPerformance extends AsyncTask<Activity, Activity, Activity> {
     private final CustomProgressModel customProgressModel;
-    private final String startDate, endDate;
     private final ReportPerformanceFragment fragment;
+    private final PerformanceViewModel performanceVM;
 
-    public GetPerformance(Activity activity, ReportPerformanceFragment fragment, String startDate, String endDate) {
+    public GetPerformance(Activity activity, ReportPerformanceFragment fragment, PerformanceViewModel performanceVM) {
         super();
         customProgressModel = getApplicationComponent().CustomProgressModel();
         customProgressModel.show(activity, false);
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.performanceVM = performanceVM;
         this.fragment = fragment;
-    }
-
-    @Override
-    protected void onPostExecute(Activity activity) {
-        super.onPostExecute(activity);
-        fragment.setButtonState();
     }
 
     @Override
@@ -51,7 +43,7 @@ public class GetPerformance extends AsyncTask<Activity, Activity, Activity> {
                         .getStringData(SharedReferenceKeys.TOKEN.getValue()), 10, 5, 5);
 
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-        final Call<PerformanceVM> call = iAbfaService.myPerformance(new PerformanceInfo(startDate, endDate));
+        final Call<PerformanceViewModel> call = iAbfaService.myPerformance(performanceVM);
         activities[0].runOnUiThread(() -> {
             customProgressModel.getDialog().dismiss();
             callHttpAsync(call, ProgressType.SHOW.getValue(), activities[0],
@@ -72,13 +64,12 @@ class PerformanceError implements ICallbackError {
 
     @Override
     public void executeError(Throwable t) {
-        CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(activity);
-        String error = customErrorHandlingNew.getErrorMessageTotal(t);
-        new CustomToast().error(error, Toast.LENGTH_LONG);
+        final CustomErrorHandling errorHandling = new CustomErrorHandling(activity);
+        new CustomToast().error(errorHandling.getErrorMessageTotal(t), Toast.LENGTH_LONG);
     }
 }
 
-class PerformanceIncomplete implements ICallbackIncomplete<PerformanceVM> {
+class PerformanceIncomplete implements ICallbackIncomplete<PerformanceViewModel> {
     private final Activity activity;
 
     public PerformanceIncomplete(Activity activity) {
@@ -86,14 +77,13 @@ class PerformanceIncomplete implements ICallbackIncomplete<PerformanceVM> {
     }
 
     @Override
-    public void executeIncomplete(Response<PerformanceVM> response) {
-        CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(activity);
-        String error = customErrorHandlingNew.getErrorMessageDefault(response);
-        new CustomToast().warning(error, Toast.LENGTH_LONG);
+    public void executeIncomplete(Response<PerformanceViewModel> response) {
+        final CustomErrorHandling errorHandling = new CustomErrorHandling(activity);
+        new CustomToast().warning(errorHandling.getErrorMessageDefault(response), Toast.LENGTH_LONG);
     }
 }
 
-class Performance implements ICallback<PerformanceVM> {
+class Performance implements ICallback<PerformanceViewModel> {
     private final ReportPerformanceFragment fragment;
 
     public Performance(ReportPerformanceFragment fragment) {
@@ -101,7 +91,7 @@ class Performance implements ICallback<PerformanceVM> {
     }
 
     @Override
-    public void execute(Response<PerformanceVM> response) {
+    public void execute(Response<PerformanceViewModel> response) {
         fragment.setTextViewTextSetter(response.body());
     }
 }
