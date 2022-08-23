@@ -19,14 +19,14 @@ import androidx.fragment.app.Fragment;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.databinding.FragmentReportNotReadingBinding;
-import com.leon.counter_reading.enums.BundleEnum;
 import com.leon.counter_reading.enums.ReadStatusEnum;
+import com.leon.counter_reading.view_models.NotReadingViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
 public class ReportNotReadingFragment extends Fragment implements View.OnClickListener {
     private FragmentReportNotReadingBinding binding;
-    private int unread, total;
+    private NotReadingViewModel notReadingVM;
 
     public static ReportNotReadingFragment newInstance(int total, int unread) {
         final ReportNotReadingFragment fragment = new ReportNotReadingFragment();
@@ -41,8 +41,8 @@ public class ReportNotReadingFragment extends Fragment implements View.OnClickLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            total = getArguments().getInt(TOTAL.getValue());
-            unread = getArguments().getInt(UNREAD.getValue());
+            notReadingVM = new NotReadingViewModel(getArguments().getInt(UNREAD.getValue()),
+                    getArguments().getInt(TOTAL.getValue()));
             getArguments().clear();
         }
     }
@@ -51,6 +51,7 @@ public class ReportNotReadingFragment extends Fragment implements View.OnClickLi
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentReportNotReadingBinding.inflate(inflater, container, false);
+        binding.setNotReadingVM(notReadingVM);
         return binding.getRoot();
     }
 
@@ -62,8 +63,6 @@ public class ReportNotReadingFragment extends Fragment implements View.OnClickLi
     }
 
     private void initialize() {
-        binding.textViewNotRead.setText(String.valueOf(unread));
-        binding.textViewTotal.setText(String.valueOf(total));
         binding.imageViewNotRead.setImageDrawable(ContextCompat.getDrawable(requireContext(),
                 R.drawable.img_not_read));
         binding.buttonContinue.setOnClickListener(this);

@@ -25,13 +25,14 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.databinding.FragmentReportTotalBinding;
 import com.leon.counter_reading.enums.BundleEnum;
+import com.leon.counter_reading.view_models.TotalViewModel;
 
 import org.eazegraph.lib.models.PieModel;
 import org.jetbrains.annotations.NotNull;
 
 public class ReportTotalFragment extends Fragment implements View.OnClickListener {
     private FragmentReportTotalBinding binding;
-    private int zero, normal, high, low;
+    private TotalViewModel totalVM;
 
     public static ReportTotalFragment newInstance(int zero, int normal, int high, int low) {
         final ReportTotalFragment fragment = new ReportTotalFragment();
@@ -48,10 +49,10 @@ public class ReportTotalFragment extends Fragment implements View.OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            zero = getArguments().getInt(BundleEnum.ZERO.getValue());
-            low = getArguments().getInt(BundleEnum.LOW.getValue());
-            high = getArguments().getInt(BundleEnum.HIGH.getValue());
-            normal = getArguments().getInt(BundleEnum.NORMAL.getValue());
+            totalVM = new TotalViewModel(getArguments().getInt(BundleEnum.ZERO.getValue()),
+                    getArguments().getInt(BundleEnum.NORMAL.getValue()),
+                    getArguments().getInt(BundleEnum.HIGH.getValue()),
+                    getArguments().getInt(BundleEnum.LOW.getValue()));
             getArguments().clear();
         }
     }
@@ -60,6 +61,7 @@ public class ReportTotalFragment extends Fragment implements View.OnClickListene
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentReportTotalBinding.inflate(inflater, container, false);
+        binding.setTotalVM(totalVM);
         return binding.getRoot();
     }
 
@@ -72,7 +74,6 @@ public class ReportTotalFragment extends Fragment implements View.OnClickListene
 
     private void initialize() {
         setupChart();
-        initializeTextViews();
         binding.linearLayoutHigh.setOnClickListener(this);
         binding.linearLayoutLow.setOnClickListener(this);
         binding.linearLayoutZero.setOnClickListener(this);
@@ -81,19 +82,11 @@ public class ReportTotalFragment extends Fragment implements View.OnClickListene
     }
 
     private void setupChart() {
-        binding.pieChart.addPieSlice(new PieModel(getString(R.string.zero), zero, ContextCompat.getColor(requireContext(), R.color.blue)));
-        binding.pieChart.addPieSlice(new PieModel(getString(R.string.normal), normal, ContextCompat.getColor(requireContext(), R.color.green)));
-        binding.pieChart.addPieSlice(new PieModel(getString(R.string.down), low, ContextCompat.getColor(requireContext(), R.color.yellow)));
-        binding.pieChart.addPieSlice(new PieModel(getString(R.string.up), high, ContextCompat.getColor(requireContext(), R.color.red)));
+        binding.pieChart.addPieSlice(new PieModel(getString(R.string.zero), totalVM.getZero(), ContextCompat.getColor(requireContext(), R.color.blue)));
+        binding.pieChart.addPieSlice(new PieModel(getString(R.string.normal), totalVM.getNormal(), ContextCompat.getColor(requireContext(), R.color.green)));
+        binding.pieChart.addPieSlice(new PieModel(getString(R.string.down), totalVM.getLow(), ContextCompat.getColor(requireContext(), R.color.yellow)));
+        binding.pieChart.addPieSlice(new PieModel(getString(R.string.up), totalVM.getHigh(), ContextCompat.getColor(requireContext(), R.color.red)));
         binding.pieChart.startAnimation();
-    }
-
-    private void initializeTextViews() {
-        binding.textViewHigh.setText(String.valueOf(high));
-        binding.textViewLow.setText(String.valueOf(low));
-        binding.textViewZero.setText(String.valueOf(zero));
-        binding.textViewNormal.setText(String.valueOf(normal));
-        binding.textViewTotal.setText(String.valueOf(normal + low + high + zero));
     }
 
     @Override
@@ -116,10 +109,4 @@ public class ReportTotalFragment extends Fragment implements View.OnClickListene
         startActivity(intent);
         requireActivity().finish();
     }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
 }
