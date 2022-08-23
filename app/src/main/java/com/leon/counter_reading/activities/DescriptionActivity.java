@@ -6,10 +6,10 @@ import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
 import static com.leon.counter_reading.helpers.Constants.RECORD_AUDIO_PERMISSIONS;
-import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
 import static com.leon.counter_reading.utils.PermissionManager.checkRecorderPermission;
 
 import android.annotation.SuppressLint;
@@ -20,6 +20,7 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
@@ -44,14 +45,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class DescriptionActivity extends AppCompatActivity {
+public class DescriptionActivity extends AppCompatActivity implements View.OnClickListener,
+        View.OnTouchListener, SeekBar.OnSeekBarChangeListener {
     private ActivityDescriptionBinding binding;
     private Activity activity;
     private Voice voice;
     private MediaPlayer mediaPlayer;
     private MediaRecorder mediaRecorder;
     private String uuid, description;
+    private long lastClickTime = 0;
     private boolean play = false;
+    private int progressChangedValue;
     private int position, startTime = 0, finalTime = 0, trackNumber;
 
     @Override
@@ -81,65 +85,16 @@ public class DescriptionActivity extends AppCompatActivity {
         binding.imageViewRecord.setImageDrawable(AppCompatResources.getDrawable(activity,
                 R.drawable.img_record));
         checkMultimediaAndToggle();
-        setImageViewRecordClickListener();
-        setImageViewPausePlayClickListener();
-        setOnButtonSendClickListener();
-        setSeekBarChangeListener();
+        setListeners();
     }
 
     @SuppressLint({"ClickableViewAccessibility"})
-    private void setImageViewRecordClickListener() {
+    private void setListeners() {
         binding.imageViewRecord.setLongClickable(true);
-        binding.imageViewRecord.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                new CustomToast().info(getString(R.string.recording), Toast.LENGTH_LONG);
-                binding.imageViewPlay.setEnabled(false);
-                voice.address = CustomFile.createAudioFile(activity);
-                setupMediaRecorder();
-                try {
-                    mediaRecorder.prepare();
-                    mediaRecorder.start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    new CustomToast().warning(getString(R.string.error_in_record_voice));
-                    mediaRecorder.stop();
-                }
-            }
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                mediaRecorder.stop();
-                try {
-                    mediaPlayer = new MediaPlayer();
-                    voice.size = new File(getExternalFilesDir(null).getAbsolutePath() +
-                            getString(R.string.audio_folder) + voice.address).length();
-                    mediaPlayer.setDataSource(getExternalFilesDir(null).getAbsolutePath() +
-                            getString(R.string.audio_folder) + voice.address);
-                    mediaPlayer.prepare();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (mediaPlayer.getDuration() > 2000) {
-                    binding.imageViewPlay.setEnabled(true);
-                    binding.imageViewPlay.setImageResource(R.drawable.img_play);
-                } else {
-                    binding.imageViewPlay.setImageResource(R.drawable.img_play_pause);
-                    binding.imageViewPlay.setEnabled(false);
-                }
-                if (mediaPlayer != null) {
-                    try {
-                        mediaPlayer.stop();
-                        mediaPlayer.release();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return false;
-        });
+        binding.imageViewRecord.setOnTouchListener(this);
+        binding.imageViewPlay.setOnClickListener(this);
+        binding.buttonSend.setOnClickListener(this);
+        binding.seekBar.setOnSeekBarChangeListener(this);
     }
 
     private void stopPlaying() {
@@ -167,35 +122,65 @@ public class DescriptionActivity extends AppCompatActivity {
                 getString(R.string.audio_folder) + voice.address);
     }
 
-    private void setSeekBarChangeListener() {
-        binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progressChangedValue = 0;
+    private void checkMultimediaAndToggle() {
+        voice = getApplicationComponent().MyDatabase().voiceDao().getVoicesByOnOffLoadId(uuid);
+        if (voice == null) {
+            voice = new Voice();
+            binding.editTextMessage.setText(description);
+            binding.buttonSend.setEnabled(true);
+            binding.imageViewRecord.setEnabled(true);
+            binding.imageViewPlay.setEnabled(false);
+            binding.imageViewPlay.setImageResource(R.drawable.img_play_pause);
+        } else {
+            binding.buttonSend.setEnabled(!voice.isSent);
+            binding.editTextMessage.setEnabled(false);
+            binding.imageViewRecord.setEnabled(false);
+            binding.editTextMessage.setText(voice.Description);
+            binding.imageViewPlay.setEnabled(true);
+            binding.imageViewPlay.setImageResource(R.drawable.img_play);
+        }
+    }
 
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progressChangedValue = progress;
-                if (progressChangedValue / 100 == finalTime / 100) {
-                    stopPlaying();
-                }
-            }
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        progressChangedValue = i;
+        if (progressChangedValue / 100 == finalTime / 100) {
+            stopPlaying();
+        }
+    }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        progressChangedValue = 0;
+    }
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                if (play) {
-                    mediaPlayer.seekTo(progressChangedValue);
-                    startTime = progressChangedValue;
-                }
-            }
-        });
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        if (play) {
+            mediaPlayer.seekTo(progressChangedValue);
+            startTime = progressChangedValue;
+        }
     }
 
     @SuppressLint("DefaultLocale")
-    private void setImageViewPausePlayClickListener() {
-        binding.imageViewPlay.setOnClickListener(v -> {
+    @Override
+    public void onClick(View view) {
+        if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
+        lastClickTime = SystemClock.elapsedRealtime();
+        final int id = view.getId();
+        if (id == R.id.button_send) {
+            voice.OnOffLoadId = uuid;
+            voice.trackNumber = trackNumber;
+            String message = binding.editTextMessage.getText().toString();
+            if (voice.address != null && voice.address.length() > 0)
+                new PrepareMultimedia(activity, voice, binding.editTextMessage.getText().toString()
+                        , uuid, position).execute(activity);
+            else if (message.length() > 0) {
+                finishDescription(message);
+            } else {
+                new CustomToast().warning(getString(R.string.insert_message));
+            }
+        } else if (id == R.id.image_view_play) {
             if (!play) {
                 try {
                     binding.linearLayoutSeek.setVisibility(View.VISIBLE);
@@ -243,49 +228,65 @@ public class DescriptionActivity extends AppCompatActivity {
             } else {
                 stopPlaying();
             }
-        });
-    }
-
-    private void checkMultimediaAndToggle() {
-        voice = getApplicationComponent().MyDatabase().voiceDao().getVoicesByOnOffLoadId(uuid);
-        if (voice == null) {
-            voice = new Voice();
-            binding.editTextMessage.setText(description);
-            binding.buttonSend.setEnabled(true);
-            binding.imageViewRecord.setEnabled(true);
-            binding.imageViewPlay.setEnabled(false);
-            binding.imageViewPlay.setImageResource(R.drawable.img_play_pause);
-        } else {
-            binding.buttonSend.setEnabled(!voice.isSent);
-            binding.editTextMessage.setEnabled(false);
-            binding.imageViewRecord.setEnabled(false);
-            binding.editTextMessage.setText(voice.Description);
-            binding.imageViewPlay.setEnabled(true);
-            binding.imageViewPlay.setImageResource(R.drawable.img_play);
         }
     }
 
-    private void setOnButtonSendClickListener() {
-        binding.buttonSend.setOnClickListener(v -> {
-            binding.buttonSend.setEnabled(false);
-            voice.OnOffLoadId = uuid;
-            voice.trackNumber = trackNumber;
-            String message = binding.editTextMessage.getText().toString();
-            if (voice.address != null && voice.address.length() > 0)
-                new PrepareMultimedia(activity, voice, binding.editTextMessage.getText().toString()
-                        , uuid, position).execute(activity);
-            else if (message.length() > 0) {
-                finishDescription(message);
-            } else {
-                new CustomToast().warning(getString(R.string.insert_message));
-                binding.buttonSend.setEnabled(true);
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            new CustomToast().info(getString(R.string.recording), Toast.LENGTH_LONG);
+            binding.imageViewPlay.setEnabled(false);
+            voice.address = CustomFile.createAudioFile(activity);
+            setupMediaRecorder();
+            try {
+                mediaRecorder.prepare();
+                mediaRecorder.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+                new CustomToast().warning(getString(R.string.error_in_record_voice));
+                mediaRecorder.stop();
             }
-        });
+        }
+        if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            mediaRecorder.stop();
+            try {
+                mediaPlayer = new MediaPlayer();
+                voice.size = new File(getExternalFilesDir(null).getAbsolutePath() +
+                        getString(R.string.audio_folder) + voice.address).length();
+                mediaPlayer.setDataSource(getExternalFilesDir(null).getAbsolutePath() +
+                        getString(R.string.audio_folder) + voice.address);
+                mediaPlayer.prepare();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (mediaPlayer.getDuration() > 2000) {
+                binding.imageViewPlay.setEnabled(true);
+                binding.imageViewPlay.setImageResource(R.drawable.img_play);
+            } else {
+                binding.imageViewPlay.setImageResource(R.drawable.img_play_pause);
+                binding.imageViewPlay.setEnabled(false);
+            }
+            if (mediaPlayer != null) {
+                try {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return false;
     }
 
     private void finishDescription(String message) {
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoadDescription(uuid, message);
-        Intent intent = new Intent();
+        final Intent intent = new Intent();
         intent.putExtra(POSITION.getValue(), position);
         intent.putExtra(BILL_ID.getValue(), uuid);
         setResult(RESULT_OK, intent);
@@ -323,7 +324,9 @@ public class DescriptionActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
+        binding.imageViewPlay.setImageDrawable(null);
+        binding.imageViewRecord.setImageDrawable(null);
         Debug.getNativeHeapAllocatedSize();
         System.runFinalization();
         Runtime.getRuntime().totalMemory();
@@ -331,13 +334,6 @@ public class DescriptionActivity extends AppCompatActivity {
         Runtime.getRuntime().maxMemory();
         Runtime.getRuntime().gc();
         System.gc();
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        binding.imageViewPlay.setImageDrawable(null);
-        binding.imageViewRecord.setImageDrawable(null);
         super.onDestroy();
     }
 }
