@@ -31,9 +31,10 @@ import com.leon.counter_reading.fragments.download.DownloadFragment;
 import com.leon.counter_reading.fragments.download.DownloadOfflineFragment;
 import com.leon.counter_reading.utils.DepthPageTransformer;
 
-public class DownloadActivity extends BaseActivity {
+public class DownloadActivity extends BaseActivity implements View.OnClickListener,
+        ViewPager.OnPageChangeListener {
     private ActivityDownloadBinding binding;
-    private int previousState, currentState;
+    private int currentState;
 
     @Override
     protected void initialize() {
@@ -97,50 +98,35 @@ public class DownloadActivity extends BaseActivity {
     private void initializeTextViews() {
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
-        textViewDownloadNormal();
-        textViewDownloadSpecial();
-        textViewDownloadOff();
-        textViewDownloadRetry();
+
+        binding.textViewDownloadNormal.setOnClickListener(this);
+        binding.textViewDownloadOff.setOnClickListener(this);
+        binding.textViewDownloadSpecial.setOnClickListener(this);
+        binding.textViewDownloadRetry.setOnClickListener(this);
     }
 
-    private void textViewDownloadNormal() {
-        binding.textViewDownloadNormal.setOnClickListener(view -> {
-            setColor();
-            binding.textViewDownloadNormal.setBackground(ContextCompat.getDrawable(getApplicationContext(),
-                    R.drawable.border_white_2));
-            setPadding();
-            binding.viewPager.setCurrentItem(DownloadType.NORMAL.getValue());
-        });
-    }
-
-    private void textViewDownloadRetry() {
-        binding.textViewDownloadRetry.setOnClickListener(view -> {
-            setColor();
-            binding.textViewDownloadRetry.setBackground(ContextCompat.getDrawable(getApplicationContext(),
-                    R.drawable.border_white_2));
-            setPadding();
-            binding.viewPager.setCurrentItem(RETRY.getValue());
-        });
-    }
-
-    private void textViewDownloadOff() {
-        binding.textViewDownloadOff.setOnClickListener(view -> {
-            setColor();
-            binding.textViewDownloadOff.setBackground(ContextCompat.getDrawable(getApplicationContext(),
-                    R.drawable.border_white_2));
-            setPadding();
-            binding.viewPager.setCurrentItem(DownloadType.OFFLINE.getValue());
-        });
-    }
-
-    private void textViewDownloadSpecial() {
-        binding.textViewDownloadSpecial.setOnClickListener(view -> {
-            setColor();
+    @Override
+    public void onClick(View view) {
+        setColor();
+        final int id = view.getId();
+        if (id == R.id.text_view_download_special) {
             binding.textViewDownloadSpecial.setBackground(ContextCompat.getDrawable(getApplicationContext(),
                     R.drawable.border_white_2));
-            setPadding();
             binding.viewPager.setCurrentItem(SPECIAL.getValue());
-        });
+        } else if (id == R.id.text_view_download_off) {
+            binding.textViewDownloadOff.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+                    R.drawable.border_white_2));
+            binding.viewPager.setCurrentItem(DownloadType.OFFLINE.getValue());
+        } else if (id == R.id.text_view_download_retry) {
+            binding.textViewDownloadRetry.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+                    R.drawable.border_white_2));
+            binding.viewPager.setCurrentItem(RETRY.getValue());
+        } else if (id == R.id.text_view_download_normal) {
+            binding.textViewDownloadNormal.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+                    R.drawable.border_white_2));
+            binding.viewPager.setCurrentItem(DownloadType.NORMAL.getValue());
+        }
+        setPadding();
     }
 
     private void setColor() {
@@ -172,37 +158,38 @@ public class DownloadActivity extends BaseActivity {
         adapter.addFragment(DownloadOfflineFragment.newInstance());
         adapter.addFragment(DownloadFragment.newInstance(SPECIAL.getValue()));
         binding.viewPager.setAdapter(adapter);
-        binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 0) {
-                    binding.textViewDownloadNormal.callOnClick();
-                } else if (position == 1) {
-                    binding.textViewDownloadRetry.callOnClick();
-                } else if (position == 2) {
-                    binding.textViewDownloadOff.callOnClick();
-                } else if (position == 3) {
-                    binding.textViewDownloadSpecial.callOnClick();
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                int currentPage = binding.viewPager.getCurrentItem();
-                if (currentPage == 3 || currentPage == 0) {
-                    previousState = currentState;
-                    currentState = state;
-                    if (previousState == 1 && currentState == 0) {
-                        binding.viewPager.setCurrentItem(currentPage == 0 ? 3 : 0);
-                    }
-                }
-            }
-        });
+        binding.viewPager.addOnPageChangeListener(this);
         binding.viewPager.setPageTransformer(true, new DepthPageTransformer());
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (position == 0) {
+            binding.textViewDownloadNormal.callOnClick();
+        } else if (position == 1) {
+            binding.textViewDownloadRetry.callOnClick();
+        } else if (position == 2) {
+            binding.textViewDownloadOff.callOnClick();
+        } else if (position == 3) {
+            binding.textViewDownloadSpecial.callOnClick();
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        int currentPage = binding.viewPager.getCurrentItem();
+        if (currentPage == 3 || currentPage == 0) {
+            int previousState = currentState;
+            currentState = state;
+            if (previousState == 1 && currentState == 0) {
+                binding.viewPager.setCurrentItem(currentPage == 0 ? 3 : 0);
+            }
+        }
     }
 
     @Override
@@ -232,4 +219,5 @@ public class DownloadActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
     }
+
 }
