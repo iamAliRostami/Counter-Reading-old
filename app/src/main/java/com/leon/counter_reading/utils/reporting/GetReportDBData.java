@@ -32,9 +32,9 @@ public class GetReportDBData extends AsyncTask<Activity, Integer, Integer> {
 
     public GetReportDBData(Activity activity) {
         super();
-        myDatabase = getApplicationComponent().MyDatabase();
         progress = getApplicationComponent().CustomProgressModel();
         progress.show(activity, false);
+        myDatabase = getApplicationComponent().MyDatabase();
     }
 
     @Override
@@ -65,9 +65,8 @@ public class GetReportDBData extends AsyncTask<Activity, Integer, Integer> {
             counterStateDtos.addAll(myDatabase.counterStateDao().getCounterStateDtos(trackingDtos.get(0).zoneId));
         try {
             activities[0].runOnUiThread(() ->
-                    ((ReportActivity) (activities[0])).setupViewPager(counterStateDtos, trackingDtos,
-                            zero, normal, high, low, total, isMane, unread
-                    ));
+                    ((ReportActivity) (activities[0])).setupViewPager(counterStateDtos, zero, normal,
+                            high, low, total, isMane, unread));
         } catch (Exception e) {
             e.printStackTrace();
         }
