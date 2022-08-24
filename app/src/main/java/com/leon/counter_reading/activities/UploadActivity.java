@@ -50,7 +50,6 @@ public class UploadActivity extends BaseActivity implements ViewPager.OnPageChan
         parentLayout.addView(childLayout);
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
-
         new GetUploadDBData(this).execute(this);
     }
 
@@ -98,8 +97,8 @@ public class UploadActivity extends BaseActivity implements ViewPager.OnPageChan
         runOnUiThread(() -> {
             setupViewPager();
             binding.textViewUpload.setOnClickListener(this);
-            binding.textViewUploadMultimedia.setOnClickListener(this);
             binding.textViewUploadOff.setOnClickListener(this);
+            binding.textViewUploadMultimedia.setOnClickListener(this);
         });
     }
 
@@ -136,9 +135,10 @@ public class UploadActivity extends BaseActivity implements ViewPager.OnPageChan
     }
 
     private void setPadding() {
-        binding.textViewUpload.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewUploadOff.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
-        binding.textViewUploadMultimedia.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        final int medium = (int) getResources().getDimension(R.dimen.medium_dp);
+        binding.textViewUpload.setPadding(0, medium, 0, medium);
+        binding.textViewUploadOff.setPadding(0, medium, 0, medium);
+        binding.textViewUploadMultimedia.setPadding(0, medium, 0, medium);
     }
 
     @Override
@@ -151,14 +151,13 @@ public class UploadActivity extends BaseActivity implements ViewPager.OnPageChan
 
     @Override
     protected void onDestroy() {
-
         Debug.getNativeHeapAllocatedSize();
         System.runFinalization();
         Runtime.getRuntime().totalMemory();
         Runtime.getRuntime().freeMemory();
         Runtime.getRuntime().maxMemory();
         Runtime.getRuntime().gc();
-        System.gc();super.onDestroy();
+        System.gc();
+        super.onDestroy();
     }
-
 }

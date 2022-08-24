@@ -76,7 +76,6 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
         progress.getDialog().dismiss();
         uploadOffLoad(activity);
         if (forbiddenDtos.size() > 0) uploadForbid(activity);
-        fragment.setButtonState();
     }
 
     private void uploadForbid(Activity activity) {

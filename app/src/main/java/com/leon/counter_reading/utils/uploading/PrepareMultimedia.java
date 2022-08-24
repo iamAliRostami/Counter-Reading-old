@@ -112,7 +112,6 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
         uploadImages(activity);
         if (!justImages)
             uploadVoice(activity);
-        uploadFragment.setButtonState();
     }
 
     private void uploadVoice(Activity activity) {
@@ -163,12 +162,12 @@ class UploadImages implements ICallback<MultimediaUploadResponse> {
         if (response.body() != null && response.body().status == 200) {
             new CustomToast().success(response.body().message, Toast.LENGTH_LONG);
             updateImages();
-            uploadFragment.setMultimediaInfo(activity);
+            uploadFragment.setMultimediaInfo();
             new PrepareMultimedia(activity, uploadFragment, true).execute(activity);
         }
     }
 
-    void updateImages() {
+    private void updateImages() {
         for (int i = 0; i < images.size(); i++) {
             images.get(i).isSent = true;
             getApplicationComponent().MyDatabase().imageDao().updateImage(images.get(i));

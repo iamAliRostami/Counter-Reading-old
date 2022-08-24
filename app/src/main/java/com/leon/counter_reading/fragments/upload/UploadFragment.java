@@ -7,13 +7,15 @@ import static com.leon.counter_reading.enums.UploadType.NORMAL;
 import static com.leon.counter_reading.enums.UploadType.OFFLINE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.R;
@@ -33,18 +35,18 @@ import org.jetbrains.annotations.NotNull;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class UploadFragment extends Fragment {
+public class UploadFragment extends Fragment implements View.OnClickListener {
+    private int type;
+    private String[] items;
+    private long lastClickTime = 0;
+    private FragmentUploadBinding binding;
     private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
     private final int[] imageSrc = {R.drawable.img_upload_on, R.drawable.img_upload_off,
             R.drawable.img_multimedia};
-    private FragmentUploadBinding binding;
-    private Activity activity;
-    private int type;
-    private String[] items;
 
     public static UploadFragment newInstance(int type) {
-        UploadFragment fragment = new UploadFragment();
-        Bundle args = new Bundle();
+        final UploadFragment fragment = new UploadFragment();
+        final Bundle args = new Bundle();
         args.putInt(TYPE.getValue(), type);
         fragment.setArguments(args);
         return fragment;
@@ -53,32 +55,34 @@ public class UploadFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = getActivity();
-        getBundle();
-    }
-
-    private void getBundle() {
-        trackingDtos.clear();
-        trackingDtos.addAll(((UploadActivity) activity).getTrackingDtos());
         if (getArguments() != null) {
             type = getArguments().getInt(TYPE.getValue());
             getArguments().clear();
         }
+        trackingDtos.clear();
+        trackingDtos.addAll(((UploadActivity) requireActivity()).getTrackingDtos());
     }
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentUploadBinding.inflate(inflater, container, false);
-        initialize();
+
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState != null) savedInstanceState.clear();
+        initialize();
     }
 
     private void initialize() {
         if (type == MULTIMEDIA.getValue()) {
             binding.spinner.setVisibility(View.GONE);
             binding.textViewMultimedia.setVisibility(View.VISIBLE);
-            setMultimediaInfo(activity);
+            setMultimediaInfo();
         } else {
             items = TrackingDto.getTrackingDtoItems(trackingDtos, getString(R.string.select_one));
             setupSpinner();
@@ -86,25 +90,24 @@ public class UploadFragment extends Fragment {
         if (type != OFFLINE.getValue())
             binding.textViewOfflineWarning.setVisibility(View.GONE);
         binding.imageViewUpload.setImageResource(imageSrc[type > -1 ? type : 0]);
-        setOnButtonUploadClickListener();
+        binding.buttonUpload.setOnClickListener(this);
     }
 
-    public void setMultimediaInfo(Activity activity) {
+    public void setMultimediaInfo() {
         final int imagesCount = getApplicationComponent().MyDatabase().imageDao().getUnsentImageCount(false);
         final int voicesCount = getApplicationComponent().MyDatabase().voiceDao().getUnsentVoiceCount(false);
         final int imagesSize = getApplicationComponent().MyDatabase().imageDao().getUnsentImageSize(false);
         final int voicesSize = getApplicationComponent().MyDatabase().voiceDao().getUnsentVoiceSizes(false);
-
 //        String message = String.format(activity.getString(R.string.unuploaded_multimedia), imagesCount, voicesCount);
-        String message = "تعداد عکس: ".concat(String.valueOf(imagesCount))
+        final String message = "تعداد عکس: ".concat(String.valueOf(imagesCount))
                 .concat(" *** حجم: ").concat(String.valueOf(imagesSize)).concat(" KB").concat("\n")
                 .concat("تعداد صدا: ").concat(String.valueOf(voicesCount))
                 .concat(" *** حجم: ").concat(String.valueOf(voicesSize)).concat(" KB");
-        activity.runOnUiThread(() -> binding.textViewMultimedia.setText(message));
+        requireActivity().runOnUiThread(() -> binding.textViewMultimedia.setText(message));
     }
 
     private void setupSpinner() {
-        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(activity, items);
+        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireContext(), items);
         binding.spinner.setAdapter(adapter);
     }
 
@@ -140,45 +143,46 @@ public class UploadFragment extends Fragment {
             return false;
         } else if (type != OFFLINE.getValue() && (imagesCount > 0 || voicesCount > 0)) {
             String message = String.format(getString(R.string.unuploaded_multimedia),
-                    imagesCount, voicesCount).concat("\n")
+                            imagesCount, voicesCount).concat("\n")
                     .concat(getString(R.string.recommend_multimedia));
-            new CustomDialogModel(YellowRedirect, activity, message, getString(R.string.dear_user),
+            new CustomDialogModel(YellowRedirect, requireContext(), message, getString(R.string.dear_user),
                     getString(R.string.upload), getString(R.string.confirm), new Inline());
             return false;
         }
         return true;
     }
 
-    private void setOnButtonUploadClickListener() {
-        binding.buttonUpload.setOnClickListener(v -> {
+
+    @Override
+    public void onClick(View view) {
+        final int id = view.getId();
+        if (id == R.id.button_upload) {
             if (type == MULTIMEDIA.getValue()) {
-                binding.buttonUpload.setEnabled(true);
-                new PrepareMultimedia(activity, this, false).execute(activity);
+                if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
+                lastClickTime = SystemClock.elapsedRealtime();
+                new PrepareMultimedia(requireActivity(), this, false).execute(requireActivity());
             } else {
                 if (checkOnOffLoad()) {
                     sendOnOffLoad();
                 }
             }
-        });
+        }
     }
 
     private void sendOnOffLoad() {
         if (type == NORMAL.getValue()) {
-            binding.buttonUpload.setEnabled(true);
-            new PrepareOffLoad(activity,
+            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
+            lastClickTime = SystemClock.elapsedRealtime();
+            new PrepareOffLoad(requireActivity(),
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id, this)
-                    .execute(activity);
+                    .execute(requireActivity());
         } else if (type == OFFLINE.getValue()) {
-            new PrepareOffLoadOffline(activity,
+            new PrepareOffLoadOffline(requireActivity(),
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
-                    .execute(activity);
+                    .execute(requireActivity());
         }
-    }
-
-    public void setButtonState() {
-        binding.buttonUpload.setEnabled(true);
     }
 
     @Override
