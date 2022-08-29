@@ -26,7 +26,6 @@ import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
 import android.telephony.CellSignalStrengthWcdma;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
@@ -87,18 +86,18 @@ public class PermissionManager {
 
     public static boolean checkCameraPermission(Context context) {
         return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED ||
+                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ||
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(context,
                         Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     public static void checkCameraPermission(Activity activity) {
         if (ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(activity,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(activity,
                         Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             askCameraPermission(activity);

@@ -38,13 +38,6 @@ public class Download extends AsyncTask<Activity, Void, Void> {
                         new DownloadCompleted(activities[0]), new DownloadIncomplete(), new DownloadError()));
         return null;
     }
-
-    @Override
-    protected void onPostExecute(Void unused) {
-        super.onPostExecute(unused);
-//        throw new RuntimeException("Test Force Crash"); // Force a crash
-
-    }
 }
 
 class DownloadCompleted implements ICallback<ReadingData> {
