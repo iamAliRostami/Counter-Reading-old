@@ -16,9 +16,9 @@ import static com.leon.counter_reading.helpers.Constants.counterStateDtos;
 import static com.leon.counter_reading.helpers.Constants.karbariDtos;
 import static com.leon.counter_reading.helpers.Constants.onOffLoadDtos;
 import static com.leon.counter_reading.helpers.Constants.readingConfigDefaultDtos;
-import static com.leon.counter_reading.helpers.MyApplication.getDigits;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getLockNumber;
+import static com.leon.counter_reading.helpers.MyApplication.getDigits;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import static com.leon.counter_reading.utils.MakeNotification.ringNotification;
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
@@ -291,7 +291,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     }
 
     private void canNotBeEmpty() {
-        if (readingVM.getCounterNumber().isEmpty()) {
+        if (readingVM.getCounterNumber() == null || readingVM.getCounterNumber().isEmpty()) {
             makeRing(requireContext(), NOT_SAVE);
             String message = getString(R.string.counter_empty);
             binding.editTextNumber.setError(message);

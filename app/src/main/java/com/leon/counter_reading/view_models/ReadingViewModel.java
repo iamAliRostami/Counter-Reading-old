@@ -68,7 +68,7 @@ public class ReadingViewModel extends BaseObservable {
     }
 
     public boolean onTextViewLongClickListener() {
-        setCounterNumber(null);
+        setCounterNumber("");
         return false;
     }
 

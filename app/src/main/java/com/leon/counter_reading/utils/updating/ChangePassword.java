@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.base_items.BaseActivity;
+import com.leon.counter_reading.activities.StartActivity;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.DialogType;
@@ -49,7 +49,7 @@ class Change implements ICallback<SimpleResponse> {
     public void execute(Response<SimpleResponse> response) {
         if (response.body() != null)
             new CustomToast().success(response.body().message, Toast.LENGTH_LONG);
-        Intent intent = new Intent(activity, BaseActivity.class);
+        final Intent intent = new Intent(activity, StartActivity.class);
         activity.startActivity(intent);
         activity.finish();
     }
