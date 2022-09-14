@@ -112,14 +112,13 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
     }
 
     private boolean checkOnOffLoad() {
-        int total, mane = 0, unread, alalPercent, imagesCount, voicesCount, trackNumber;
-        String trackingId;
+        int mane = 0, unread, alalPercent, imagesCount, voicesCount;
         double alalMane;
-        MyDatabase myDatabase = getApplicationComponent().MyDatabase();
+        final MyDatabase myDatabase = getApplicationComponent().MyDatabase();
         if (binding.spinner.getSelectedItemPosition() != 0) {
-            trackingId = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id;
-            trackNumber = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber;
-            total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId);
+            final String trackingId = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id;
+            final int trackNumber = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber;
+            final int total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId);
             unread = myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackingId);
             final ArrayList<Integer> isManes = new ArrayList<>(myDatabase.counterStateDao().
                     getCounterStateDtosIsMane(true,
@@ -127,8 +126,9 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
             for (int i = 0; i < isManes.size(); i++) {
                 mane += myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(isManes.get(i), trackingId);
             }
-            alalPercent = myDatabase.trackingDao().getAlalHesabByZoneId(trackingDtos
-                    .get(binding.spinner.getSelectedItemPosition() - 1).zoneId);
+//            alalPercent = myDatabase.trackingDao().getAlalHesabByTrackNumber(trackingDtos
+//                    .get(binding.spinner.getSelectedItemPosition() - 1).trackNumber);
+            alalPercent = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).alalHesabPercent;
             alalMane = (double) mane / total * 100;
             imagesCount = myDatabase.imageDao().getUnsentImageCountByTrackNumber(trackNumber, false);
             voicesCount = myDatabase.voiceDao().getUnsentVoiceCountByTrackNumber(trackNumber, false);

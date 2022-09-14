@@ -17,8 +17,8 @@ android {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 88
-        versionName "1.01.05.31"
+        versionCode 89
+        versionName "1.01.06.16"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config
@@ -106,7 +106,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     testImplementation 'junit:junit:4.13.2'
@@ -147,7 +147,6 @@ dependencies {
     implementation 'com.auth0.android:jwtdecode:2.0.1'
     implementation 'gun0912.ted:tedpermission:1.0.3'
 
-//    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
     implementation 'com.github.bumptech.glide:glide:4.13.2'
     implementation 'com.github.ali-sardari:PersianRangeDatePicker:1.2.1'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
@@ -155,7 +154,6 @@ dependencies {
     implementation 'com.github.blackfizz:eazegraph:1.2.3@aar'
 
     implementation 'com.yandex.android:mobmetricalib:5.0.1'
-//    implementation 'com.yandex.android:mobmetricalib-ndk-crashes:2.0.0'
 
     implementation 'me.jahnen:libaums:0.9.0'
 }

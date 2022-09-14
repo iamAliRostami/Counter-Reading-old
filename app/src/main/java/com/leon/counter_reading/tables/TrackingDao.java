@@ -32,6 +32,9 @@ public interface TrackingDao {
     @Query("Select alalHesabPercent From TrackingDto Where zoneId = :zoneId")
     int getAlalHesabByZoneId(int zoneId);
 
+    @Query("Select alalHesabPercent From TrackingDto Where trackNumber = :trackNumber")
+    int getAlalHesabByTrackNumber(int trackNumber);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertTrackingDto(TrackingDto trackingDto);
 
