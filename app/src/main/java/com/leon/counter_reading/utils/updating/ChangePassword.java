@@ -1,5 +1,8 @@
 package com.leon.counter_reading.utils.updating;
 
+import static com.leon.counter_reading.enums.DialogType.Yellow;
+import static com.leon.counter_reading.enums.ProgressType.SHOW;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +13,6 @@ import com.leon.counter_reading.activities.StartActivity;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.enums.DialogType;
-import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
@@ -29,12 +31,12 @@ import retrofit2.Retrofit;
 
 public class ChangePassword {
     public ChangePassword(Activity activity, String oldPassword, String newPassword, String newPasswordConfirm) {
-        Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
-        IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-        PasswordInfo passwordInfo = new PasswordInfo(oldPassword, newPassword, newPasswordConfirm);
-        Call<SimpleResponse> call = iAbfaService.changePassword(passwordInfo);
-        HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW.getValue(), activity,
-                new Change(activity), new ChangeIncomplete(activity), new ChangeError(activity));
+        final Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
+        final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
+        final Call<SimpleResponse> call = iAbfaService.changePassword(new PasswordInfo(oldPassword,
+                newPassword, newPasswordConfirm));
+        HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activity, new Change(activity),
+                new ChangeIncomplete(activity), new ChangeError(activity));
     }
 }
 
@@ -64,8 +66,8 @@ class ChangeIncomplete implements ICallbackIncomplete<SimpleResponse> {
 
     @Override
     public void executeIncomplete(Response<SimpleResponse> response) {
-        CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(context);
-        String error = customErrorHandlingNew.getErrorMessageDefault(response);
+        final CustomErrorHandling errorHandling = new CustomErrorHandling(context);
+        String error = errorHandling.getErrorMessageDefault(response);
         if (response.code() == 400 && response.errorBody() != null) {
             try {
                 JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -75,7 +77,7 @@ class ChangeIncomplete implements ICallbackIncomplete<SimpleResponse> {
                 e.printStackTrace();
             }
         } else
-            new CustomDialogModel(DialogType.Yellow, context, error,
+            new CustomDialogModel(Yellow, context, error,
                     context.getString(R.string.dear_user),
                     context.getString(R.string.change_password),
                     context.getString(R.string.accepted));
@@ -93,7 +95,7 @@ class ChangeError implements ICallbackError {
     public void executeError(Throwable t) {
         CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(context);
         String error = customErrorHandlingNew.getErrorMessageTotal(t);
-        new CustomDialogModel(DialogType.Yellow, context, error,
+        new CustomDialogModel(Yellow, context, error,
                 context.getString(R.string.dear_user),
                 context.getString(R.string.change_password),
                 context.getString(R.string.accepted));

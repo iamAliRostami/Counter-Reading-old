@@ -28,8 +28,8 @@ public class DownloadFragment extends Fragment {
     private int type;
 
     public static DownloadFragment newInstance(int type) {
-        DownloadFragment fragment = new DownloadFragment();
-        Bundle args = new Bundle();
+        final DownloadFragment fragment = new DownloadFragment();
+        final Bundle args = new Bundle();
         args.putInt(TYPE.getValue(), type);
         fragment.setArguments(args);
         return fragment;
@@ -51,13 +51,12 @@ public class DownloadFragment extends Fragment {
         return binding.getRoot();
     }
 
-    void initialize() {
-
+    private void initialize() {
         binding.imageViewDownload.setImageResource(imageSrc[type]);
         setOnButtonDownloadClickListener();
     }
 
-    void setOnButtonDownloadClickListener() {
+    private void setOnButtonDownloadClickListener() {
         binding.buttonDownload.setOnClickListener(v -> {
             if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
             lastClickTime = SystemClock.elapsedRealtime();

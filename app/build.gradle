@@ -17,8 +17,8 @@ android {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 89
-        versionName "1.01.06.16"
+        versionCode 90
+        versionName "1.01.07.24"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config
@@ -71,6 +71,14 @@ android {
             buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
                     "com.leon.counter_reading.enums.CompanyNames.ZONE4"
         }
+//        zone_6 {
+////            debuggable true
+//            minifyEnabled false
+//            signingConfig signingConfigs.config
+//            applicationIdSuffix ".zone6"
+//            buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
+//                    "com.leon.counter_reading.enums.CompanyNames.ZONE6"
+//        }
         tse {
 //            debuggable true
             minifyEnabled false

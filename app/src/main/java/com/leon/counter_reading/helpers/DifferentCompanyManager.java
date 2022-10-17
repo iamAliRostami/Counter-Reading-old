@@ -1,17 +1,6 @@
 package com.leon.counter_reading.helpers;
 
 
-import static com.leon.counter_reading.enums.CompanyNames.ESF;
-import static com.leon.counter_reading.enums.CompanyNames.TE;
-import static com.leon.counter_reading.enums.CompanyNames.TW;
-import static com.leon.counter_reading.enums.CompanyNames.TSE;
-import static com.leon.counter_reading.enums.CompanyNames.TSW;
-import static com.leon.counter_reading.enums.CompanyNames.ZONE1;
-import static com.leon.counter_reading.enums.CompanyNames.ZONE2;
-import static com.leon.counter_reading.enums.CompanyNames.ZONE3;
-import static com.leon.counter_reading.enums.CompanyNames.ZONE4;
-import static com.leon.counter_reading.enums.CompanyNames.ZONE5;
-import static com.leon.counter_reading.enums.CompanyNames.ZONE6;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PROXY;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
@@ -44,8 +33,8 @@ public class DifferentCompanyManager {
         }
         switch (companyNames) {
             case ESF:
-                return "https://37.191.92.157/";//Internet
-//            return "http://172.18.12.36/";
+//                return "https://37.191.92.157/";//Internet
+                return "http://172.18.12.36/";
             case ZONE1:
                 return "http://217.146.220.33:50011/";
             case ZONE2:
@@ -57,7 +46,7 @@ public class DifferentCompanyManager {
             case ZONE5:
                 return "http://80.69.252.151/";
             case ZONE6:
-                return "http://85.133.190.220:4121/";
+                return "http://85.133.190.221:4121/";
             case TSW:
                 return "http://81.90.148.25/";
             case TE:

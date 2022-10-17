@@ -3,9 +3,9 @@ package com.leon.counter_reading.view_models;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KEYBOARD_TYPE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_TEMPORARY;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.MakeNotification.ringNotification;
 
 import android.view.MotionEvent;
@@ -18,12 +18,12 @@ import androidx.databinding.Bindable;
 
 import com.leon.counter_reading.BR;
 import com.leon.counter_reading.R;
+import com.leon.counter_reading.helpers.DifferentCompanyManager;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.utils.CustomToast;
-import com.leon.counter_reading.helpers.DifferentCompanyManager;
 
 public class ReadingViewModel extends BaseObservable {
     private KarbariDto karbariDto;
@@ -87,7 +87,7 @@ public class ReadingViewModel extends BaseObservable {
     private void keyboardEvent(View view) {
         ringNotification();
         if (view.getId() == R.id.button_keyboard_backspace) {
-            if (getCounterNumber().length() > 0)
+            if (getCounterNumber() != null && getCounterNumber().length() > 0)
                 setCounterNumber(getCounterNumber().substring(0, getCounterNumber().length() - 1));
         } else if (getCounterNumber() != null && getCounterNumber().length() < 9) {
             setCounterNumber((getCounterNumber() != null ? getCounterNumber() : "")
