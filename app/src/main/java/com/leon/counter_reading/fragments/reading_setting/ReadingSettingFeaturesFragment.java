@@ -1,5 +1,9 @@
 package com.leon.counter_reading.fragments.reading_setting;
 
+import static com.leon.counter_reading.enums.ImageQuality.HIGH;
+import static com.leon.counter_reading.enums.ImageQuality.LOW;
+import static com.leon.counter_reading.enums.ImageQuality.MEDIUM;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.IMAGE_QUALITY;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KEYBOARD_TYPE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_TEMPORARY;
@@ -9,33 +13,23 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.ReadingSettingAdapter;
-import com.leon.counter_reading.databinding.FragmentReadingSettingBinding;
-import com.leon.counter_reading.tables.TrackingDto;
+import com.leon.counter_reading.databinding.FragmentReadingSettingFeaturesBinding;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+public class ReadingSettingFeaturesFragment extends Fragment {
+    private FragmentReadingSettingFeaturesBinding binding;
 
-public class ReadingSettingFragment extends Fragment {
-    private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
-    private FragmentReadingSettingBinding binding;
-
-    public ReadingSettingFragment(ArrayList<TrackingDto> trackingDtos) {
-        this.trackingDtos.addAll(trackingDtos);
+    public ReadingSettingFeaturesFragment() {
     }
 
-    public ReadingSettingFragment() {
-    }
-
-    public static ReadingSettingFragment newInstance(ArrayList<TrackingDto> trackingDtos) {
-        return new ReadingSettingFragment(trackingDtos);
+    public static ReadingSettingFeaturesFragment newInstance() {
+        return new ReadingSettingFeaturesFragment();
     }
 
     @Override
@@ -46,13 +40,12 @@ public class ReadingSettingFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentReadingSettingBinding.inflate(inflater, container, false);
+        binding = FragmentReadingSettingFeaturesBinding.inflate(inflater, container, false);
         initialize();
         return binding.getRoot();
     }
 
     private void initialize() {
-        setupListView();
         initializeCheckbox();
         initializeRadioGroup();
         initializeImageViewReverse();
@@ -71,18 +64,6 @@ public class ReadingSettingFragment extends Fragment {
         });
     }
 
-    private void setupListView() {
-        if (trackingDtos.size() > 0) {
-            final ReadingSettingAdapter adapter =
-                    new ReadingSettingAdapter(requireContext(), trackingDtos);
-            binding.listViewRead.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-            binding.listViewRead.setAdapter(adapter);
-        } else {
-            binding.listViewRead.setVisibility(View.GONE);
-            binding.textViewNotFound.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void initializeCheckbox() {
         binding.checkBoxPagingRotation.setChecked(getApplicationComponent().SharedPreferenceModel()
                 .getBoolData(RTL_PAGING.getValue()));
@@ -98,17 +79,29 @@ public class ReadingSettingFragment extends Fragment {
                 .getBoolData(KEYBOARD_TYPE.getValue()));
         binding.radioButtonSensitive.setOnCheckedChangeListener((compoundButton, b) ->
                 getApplicationComponent().SharedPreferenceModel().putData(KEYBOARD_TYPE.getValue(), b));
+
+        final int quality = getApplicationComponent().SharedPreferenceModel().getIntData(IMAGE_QUALITY.getValue());
+        if (quality == HIGH.getValue()) {
+            binding.radioButtonHigh.setChecked(true);
+        } else if (quality == MEDIUM.getValue()) {
+            binding.radioButtonMedium.setChecked(true);
+        } else if (quality == LOW.getValue()) {
+            binding.radioButtonLow.setChecked(true);
+        }
+        binding.radioGroupQuality.setOnCheckedChangeListener((radioGroup, i) -> {
+            if (i == R.id.radio_button_high) {
+                getApplicationComponent().SharedPreferenceModel().putData(IMAGE_QUALITY.getValue(), HIGH.getValue());
+            } else if (i == R.id.radio_button_medium) {
+                getApplicationComponent().SharedPreferenceModel().putData(IMAGE_QUALITY.getValue(), MEDIUM.getValue());
+            } else if (i == R.id.radio_button_low) {
+                getApplicationComponent().SharedPreferenceModel().putData(IMAGE_QUALITY.getValue(), LOW.getValue());
+            }
+        });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        trackingDtos.clear();
     }
 }

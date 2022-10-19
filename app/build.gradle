@@ -4,7 +4,7 @@ plugins {
 }
 android {
     compileSdkVersion 33
-    buildToolsVersion '31.0.0'
+    buildToolsVersion '33.0.0'
     signingConfigs {
         config {
             keyAlias 'ali_angel'
@@ -17,8 +17,8 @@ android {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 90
-        versionName "1.01.07.24"
+        versionCode 91
+        versionName "1.01.07.26"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config
@@ -64,21 +64,21 @@ android {
                     "com.leon.counter_reading.enums.CompanyNames.KSH"
         }
         zone_4 {
-//            debuggable true
+            debuggable true
             minifyEnabled false
             signingConfig signingConfigs.config
             applicationIdSuffix ".zone4"
             buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
                     "com.leon.counter_reading.enums.CompanyNames.ZONE4"
         }
-//        zone_6 {
-////            debuggable true
-//            minifyEnabled false
-//            signingConfig signingConfigs.config
-//            applicationIdSuffix ".zone6"
-//            buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
-//                    "com.leon.counter_reading.enums.CompanyNames.ZONE6"
-//        }
+        zone_6 {
+            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.config
+            applicationIdSuffix ".zone6"
+            buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
+                    "com.leon.counter_reading.enums.CompanyNames.ZONE6"
+        }
         tse {
 //            debuggable true
             minifyEnabled false

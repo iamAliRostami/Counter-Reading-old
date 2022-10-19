@@ -3,7 +3,6 @@ package com.leon.counter_reading.activities;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Debug;
 import android.view.Menu;
@@ -30,7 +29,6 @@ import com.leon.counter_reading.utils.backup_restore.Restore;
 
 public class SettingActivity extends BaseActivity {
     private ActivitySettingBinding binding;
-    private Activity activity;
     private int previousState, currentState;
 
     @Override
@@ -39,7 +37,6 @@ public class SettingActivity extends BaseActivity {
         final View childLayout = binding.getRoot();
         final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
-        activity = this;
         setupViewPager();
         initializeTextViews();
     }
@@ -47,7 +44,6 @@ public class SettingActivity extends BaseActivity {
     private void initializeTextViews() {
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
-
         textViewChangeTheme();
         textViewChangePassword();
         textViewUpdate();
@@ -57,8 +53,7 @@ public class SettingActivity extends BaseActivity {
     private void textViewChangeTheme() {
         binding.textViewChangeTheme.setOnClickListener(view -> {
             setColor();
-            binding.textViewChangeTheme.setBackground(ContextCompat.getDrawable(activity,
-                    R.drawable.border_white_2));
+            binding.textViewChangeTheme.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(0);
         });
@@ -67,8 +62,7 @@ public class SettingActivity extends BaseActivity {
     private void textViewChangePassword() {
         binding.textViewChangePassword.setOnClickListener(view -> {
             setColor();
-            binding.textViewChangePassword.setBackground(ContextCompat.getDrawable(activity,
-                    R.drawable.border_white_2));
+            binding.textViewChangePassword.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(1);
         });
@@ -77,8 +71,7 @@ public class SettingActivity extends BaseActivity {
     private void textViewUpdate() {
         binding.textViewUpdate.setOnClickListener(view -> {
             setColor();
-            binding.textViewUpdate.setBackground(ContextCompat.getDrawable(activity,
-                    R.drawable.border_white_2));
+            binding.textViewUpdate.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(2);
         });
@@ -87,8 +80,7 @@ public class SettingActivity extends BaseActivity {
     private void textViewAvatar() {
         binding.textViewChangeAvatar.setOnClickListener(view -> {
             setColor();
-            binding.textViewChangeAvatar.setBackground(ContextCompat.getDrawable(activity,
-                    R.drawable.border_white_2));
+            binding.textViewChangeAvatar.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(3);
         });
@@ -96,13 +88,13 @@ public class SettingActivity extends BaseActivity {
 
     private void setColor() {
         binding.textViewUpdate.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewUpdate.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
+        binding.textViewUpdate.setTextColor(ContextCompat.getColor(this, R.color.text_color_light));
         binding.textViewChangeTheme.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewChangeTheme.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
+        binding.textViewChangeTheme.setTextColor(ContextCompat.getColor(this, R.color.text_color_light));
         binding.textViewChangePassword.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewChangePassword.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
+        binding.textViewChangePassword.setTextColor(ContextCompat.getColor(this, R.color.text_color_light));
         binding.textViewChangeAvatar.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewChangeAvatar.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
+        binding.textViewChangeAvatar.setTextColor(ContextCompat.getColor(this, R.color.text_color_light));
     }
 
     private void setPadding() {
@@ -153,7 +145,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.setting_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -162,10 +154,9 @@ public class SettingActivity extends BaseActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_backup) {
-            new BackUp(activity).execute(activity);
+            new BackUp(this).execute(this);
         } else if (id == R.id.menu_restore) {
-            new Restore(activity).execute(activity);
-//            new CustomToast().success("این بخش به زودی تکمیل خواهد شد.");
+            new Restore(this).execute(this);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -180,10 +171,5 @@ public class SettingActivity extends BaseActivity {
         Runtime.getRuntime().gc();
         System.gc();
         super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 }

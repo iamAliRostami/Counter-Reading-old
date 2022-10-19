@@ -103,6 +103,7 @@ public class DifferentCompanyManager {
             case ESF:
                 return "واحد";
             case ZONE4:
+            case ZONE6:
             case TSE:
             case TW:
             case KSH:
@@ -118,6 +119,7 @@ public class DifferentCompanyManager {
                 return "واحد مسکونی";
             case KSH:
             case ZONE4:
+            case ZONE6:
             case TW:
             case TSE:
                 return "آحاد اصلی";
@@ -132,6 +134,7 @@ public class DifferentCompanyManager {
                 return "واحد تجاری";
             case KSH:
             case ZONE4:
+            case ZONE6:
             case TW:
             case TSE:
                 return "آحاد فرعی";
@@ -145,6 +148,7 @@ public class DifferentCompanyManager {
             case ESF:
                 return "واحد کل";
             case ZONE4:
+            case ZONE6:
             case KSH:
             case TW:
             case TSE:
@@ -158,6 +162,7 @@ public class DifferentCompanyManager {
         switch (companyNames) {
             case ESF:
             case ZONE4:
+            case ZONE6:
             case TSE:
             case TW:
             case KSH:
@@ -171,6 +176,7 @@ public class DifferentCompanyManager {
         switch (companyNames) {
             case ESF:
             case ZONE4:
+            case ZONE6:
             case TSE:
             case TW:
             case KSH:
@@ -184,6 +190,7 @@ public class DifferentCompanyManager {
         switch (companyNames) {
             case ESF:
             case ZONE4:
+            case ZONE6:
             case TSE:
             case TW:
             case KSH:
@@ -198,6 +205,7 @@ public class DifferentCompanyManager {
             case ESF:
             case KSH:
             case ZONE4:
+            case ZONE6:
             case TW:
             case TSE:
                 return 5;
@@ -211,6 +219,7 @@ public class DifferentCompanyManager {
             case ESF:
             case KSH:
             case ZONE4:
+            case ZONE6:
                 return 15;
             case TSE:
             case TW:
@@ -225,6 +234,7 @@ public class DifferentCompanyManager {
             case ESF:
                 return "ردیف";
             case ZONE4:
+            case ZONE6:
             case TSE:
             case TW:
             case KSH:

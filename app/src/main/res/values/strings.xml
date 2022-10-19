@@ -112,7 +112,7 @@
     <string name="new_possibilities">امکانات جدید</string>
     <string name="apk_size">حجم فایل</string>
     <string name="receive_file">دریافت فایل</string>
-    <string name="sending_setting">تنظیمات ارسال</string>
+    <string name="sending_setting">ویژگی های قرائت</string>
     <string name="delete_data">حذف داده ها</string>
     <string name="temporary">علی الحساب</string>
     <string name="not_read">قرائت نشده</string>
@@ -303,4 +303,8 @@
     <string name="forbidden">غیرمجاز</string>
     <string name="refresh_page">صفحه را رفرش کنید.</string>
     <string name="cant_fine_location">به علت عدم دسترسی به مکان یابی، امکان ثبت وجود ندارد.</string>
+
+    <string name="low_quality">کیفیت پایین</string>
+    <string name="medium_quality">کیفیت معمولی</string>
+    <string name="high_quality">کیفیت بالا</string>
 </resources>

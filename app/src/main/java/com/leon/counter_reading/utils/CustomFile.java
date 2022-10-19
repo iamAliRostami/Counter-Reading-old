@@ -1,7 +1,7 @@
 package com.leon.counter_reading.utils;
 
 import static com.leon.counter_reading.helpers.Constants.CURRENT_IMAGE_SIZE;
-import static com.leon.counter_reading.helpers.Constants.MAX_IMAGE_SIZE;
+import static com.leon.counter_reading.helpers.MyApplication.getImageQuality;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -31,7 +31,6 @@ import com.leon.counter_reading.tables.Voice;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -272,14 +271,14 @@ public class CustomFile {
             Bitmap original = BitmapFactory.decodeFile(path);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
+            if (stream.toByteArray().length > getImageQuality()) {
                 final int width, height;
                 if (original.getHeight() > original.getWidth()) {
                     //TODO
-                    height = Math.min(1000, original.getHeight());
+                    height = Math.min(getImageQuality() / 100, original.getHeight());
                     width = original.getWidth() / (original.getHeight() / height);
                 } else {
-                    width = Math.min(1000, original.getWidth());
+                    width = Math.min(getImageQuality() / 100, original.getWidth());
                     height = original.getHeight() / (original.getWidth() / width);
                 }
                 original = Bitmap.createScaledBitmap(original, width, height, false);
@@ -299,14 +298,14 @@ public class CustomFile {
         try {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
+            if (stream.toByteArray().length > getImageQuality()) {
                 final int width, height;
                 //TODO
                 if (original.getHeight() > original.getWidth()) {
-                    height = Math.min(1000, original.getHeight());
+                    height = Math.min(getImageQuality() / 100, original.getHeight());
                     width = original.getWidth() / (original.getHeight() / height);
                 } else {
-                    width = Math.min(1000, original.getWidth());
+                    width = Math.min(getImageQuality() / 100, original.getWidth());
                     height = original.getHeight() / (original.getWidth() / width);
                 }
                 original = Bitmap.createScaledBitmap(original, width, height, false);
@@ -325,14 +324,14 @@ public class CustomFile {
         try {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
+            if (stream.toByteArray().length > getImageQuality()) {
                 final int width, height;
                 if (original.getHeight() > original.getWidth()) {
                     //TODO
-                    height = Math.min(1000, original.getHeight());
+                    height = Math.min(getImageQuality() / 100, original.getHeight());
                     width = original.getWidth() / (original.getHeight() / height);
                 } else {
-                    width = Math.min(1000, original.getWidth());
+                    width = Math.min(getImageQuality() / 100, original.getWidth());
                     height = original.getHeight() / (original.getWidth() / width);
                 }
                 original = Bitmap.createScaledBitmap(original, width, height, false);
@@ -351,21 +350,6 @@ public class CustomFile {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         return stream.toByteArray();
-    }
-
-    public static ByteArrayInputStream compressBitmapToInputStream(Bitmap original) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        if (stream.toByteArray().length > MAX_IMAGE_SIZE) {
-            int qualityPercent = Math.max((int) ((double)
-                    stream.toByteArray().length / MAX_IMAGE_SIZE), 20);
-            original = Bitmap.createScaledBitmap(original
-                    , (int) ((double) original.getWidth() * qualityPercent / 100)
-                    , (int) ((double) original.getHeight() * qualityPercent / 100), false);
-            stream = new ByteArrayOutputStream();
-            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        }
-        return new ByteArrayInputStream(stream.toByteArray());
     }
 
     public static Bitmap rotateImage(Bitmap source, float angle) {

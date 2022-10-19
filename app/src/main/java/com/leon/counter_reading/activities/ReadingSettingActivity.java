@@ -1,10 +1,9 @@
 package com.leon.counter_reading.activities;
 
-import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Debug;
 import android.view.View;
@@ -19,8 +18,9 @@ import com.leon.counter_reading.adapters.ViewPagerAdapterTab;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReadingSettingBinding;
 import com.leon.counter_reading.fragments.reading_setting.ReadingPossibleSettingFragment;
+import com.leon.counter_reading.fragments.reading_setting.ReadingSettingActiveFragment;
 import com.leon.counter_reading.fragments.reading_setting.ReadingSettingDeleteFragment;
-import com.leon.counter_reading.fragments.reading_setting.ReadingSettingFragment;
+import com.leon.counter_reading.fragments.reading_setting.ReadingSettingFeaturesFragment;
 import com.leon.counter_reading.tables.TrackingDto;
 import com.leon.counter_reading.utils.DepthPageTransformer;
 
@@ -30,7 +30,6 @@ public class ReadingSettingActivity extends BaseActivity {
     private ActivityReadingSettingBinding binding;
     private int previousState, currentState;
     private ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
-    private Activity activity;
 
     @Override
     protected void initialize() {
@@ -39,11 +38,6 @@ public class ReadingSettingActivity extends BaseActivity {
         final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
 
-        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
-
-        activity = this;
-
         trackingDtos.addAll(getApplicationComponent().MyDatabase().trackingDao()
                 .getTrackingDtoNotArchive(false));
         setupViewPager();
@@ -51,59 +45,72 @@ public class ReadingSettingActivity extends BaseActivity {
     }
 
     void initializeTextViews() {
+        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
         textViewRead();
+        textViewFeatures();
         textViewDelete();
         textViewNavigation();
     }
 
-    void textViewRead() {
+    private void textViewRead() {
         binding.textViewRead.setOnClickListener(view -> {
             setColor();
-            binding.textViewRead.setBackground(
-                    ContextCompat.getDrawable(activity, R.drawable.border_white_2));
+            binding.textViewRead.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(0);
         });
     }
 
-    void textViewNavigation() {
-        binding.textViewNavigation.setOnClickListener(view -> {
+    private void textViewFeatures() {
+        binding.textViewFeatures.setOnClickListener(view -> {
             setColor();
-            binding.textViewNavigation.setBackground(ContextCompat.getDrawable(activity,
-                    R.drawable.border_white_2));
+            binding.textViewFeatures.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(1);
         });
     }
 
-    void textViewDelete() {
-        binding.textViewDelete.setOnClickListener(view -> {
+    private void textViewNavigation() {
+        binding.textViewNavigation.setOnClickListener(view -> {
             setColor();
-            binding.textViewDelete.setBackground(ContextCompat.getDrawable(activity,
-                    R.drawable.border_white_2));
+            binding.textViewNavigation.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
             setPadding();
             binding.viewPager.setCurrentItem(2);
         });
     }
 
+    private void textViewDelete() {
+        binding.textViewDelete.setOnClickListener(view -> {
+            setColor();
+            binding.textViewDelete.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
+            setPadding();
+            binding.viewPager.setCurrentItem(3);
+        });
+    }
+
     private void setColor() {
         binding.textViewRead.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewRead.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
+        binding.textViewRead.setTextColor(ContextCompat.getColor(this, R.color.text_color_light));
+        binding.textViewFeatures.setBackgroundColor(Color.TRANSPARENT);
+        binding.textViewFeatures.setTextColor(ContextCompat.getColor(this, R.color.text_color_light));
         binding.textViewDelete.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewDelete.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
+        binding.textViewDelete.setTextColor(ContextCompat.getColor(this, R.color.text_color_light));
         binding.textViewNavigation.setBackgroundColor(Color.TRANSPARENT);
-        binding.textViewNavigation.setTextColor(ContextCompat.getColor(activity, R.color.text_color_light));
+        binding.textViewNavigation.setTextColor(ContextCompat.getColor(this, R.color.text_color_light));
     }
 
     private void setPadding() {
         binding.textViewRead.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
+        binding.textViewFeatures.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
         binding.textViewDelete.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
         binding.textViewNavigation.setPadding(0, (int) getResources().getDimension(R.dimen.medium_dp), 0, (int) getResources().getDimension(R.dimen.medium_dp));
     }
 
     private void setupViewPager() {
         final ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
-        adapter.addFragment(ReadingSettingFragment.newInstance(trackingDtos));
+        adapter.addFragment(ReadingSettingActiveFragment.newInstance(trackingDtos));
+        adapter.addFragment(ReadingSettingFeaturesFragment.newInstance());
         adapter.addFragment(new ReadingPossibleSettingFragment());
         adapter.addFragment(ReadingSettingDeleteFragment.newInstance(trackingDtos));
 
@@ -118,8 +125,10 @@ public class ReadingSettingActivity extends BaseActivity {
                 if (position == 0) {
                     binding.textViewRead.callOnClick();
                 } else if (position == 1) {
-                    binding.textViewNavigation.callOnClick();
+                    binding.textViewFeatures.callOnClick();
                 } else if (position == 2) {
+                    binding.textViewNavigation.callOnClick();
+                } else if (position == 3) {
                     binding.textViewDelete.callOnClick();
                 }
             }
@@ -127,11 +136,11 @@ public class ReadingSettingActivity extends BaseActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
                 final int currentPage = binding.viewPager.getCurrentItem();
-                if (currentPage == 2 || currentPage == 0) {
+                if (currentPage == 3 || currentPage == 0) {
                     previousState = currentState;
                     currentState = state;
                     if (previousState == 1 && currentState == 0) {
-                        binding.viewPager.setCurrentItem(currentPage == 0 ? 2 : 0);
+                        binding.viewPager.setCurrentItem(currentPage == 0 ? 3 : 0);
                     }
                 }
             }

@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/linear_layout_header"
         style="@style/ViewPagerMenu"
-        android:weightSum="3">
+        android:weightSum="4">
 
         <TextView
             android:id="@+id/text_view_read"
@@ -18,10 +18,9 @@
             android:text="@string/reading_setting" />
 
         <TextView
-            android:id="@+id/text_view_sending_setting"
+            android:id="@+id/text_view_features"
             style="@style/ViewPagerItems"
-            android:text="@string/sending_setting"
-            android:visibility="gone" />
+            android:text="@string/sending_setting" />
 
         <TextView
             android:id="@+id/text_view_navigation"

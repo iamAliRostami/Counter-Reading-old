@@ -35,7 +35,7 @@ public class Constants {
     public static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
     public static final long MIN_TIME_BW_UPDATES = 10000;
     public static final long FASTEST_INTERVAL = 10000;
-    public static final int MAX_IMAGE_SIZE = 100000;
+//    public static final int MAX_IMAGE_SIZE = 100000;
 
     public static final ArrayList<Integer> IS_MANE = new ArrayList<>();
     public static final String[] STORAGE_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE,

@@ -35,6 +35,7 @@ public enum SharedReferenceKeys {
     PROXY("proxy"),
     RTL_PAGING("paging_rtl"),
     KEYBOARD_TYPE("keyboard_type"),
+    IMAGE_QUALITY("image_quality"),
     THEME_TEMPORARY("theme_temporary"),
 
     SORT_FILTER_PREF("SORT_FILTER_PREF"),

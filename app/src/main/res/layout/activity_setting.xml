@@ -8,61 +8,29 @@
 
     <LinearLayout
         android:id="@+id/linear_layout_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimaryDark"
-        android:orientation="horizontal"
-        android:padding="@dimen/small_dp">
+        style="@style/ViewPagerMenu">
 
         <TextView
             android:id="@+id/text_view_change_theme"
-            style="@style/text_bold"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/ViewPagerItems"
             android:background="@drawable/border_white_2"
-            android:gravity="center"
-            android:paddingTop="@dimen/medium_dp"
-            android:paddingBottom="@dimen/medium_dp"
-            android:text="@string/change_theme"
-            android:textColor="@color/text_color_light" />
+            android:text="@string/change_theme" />
 
         <TextView
             android:id="@+id/text_view_change_password"
-            style="@style/text_bold"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:paddingTop="@dimen/medium_dp"
-            android:paddingBottom="@dimen/medium_dp"
-            android:text="@string/change_password"
-            android:textColor="@color/text_color_light" />
+            style="@style/ViewPagerItems"
+            android:text="@string/change_password" />
 
 
         <TextView
             android:id="@+id/text_view_update"
-            style="@style/text_bold"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:paddingTop="@dimen/medium_dp"
-            android:paddingBottom="@dimen/medium_dp"
-            android:text="@string/update"
-            android:textColor="@color/text_color_light" />
+            style="@style/ViewPagerItems"
+            android:text="@string/update" />
 
         <TextView
             android:id="@+id/text_view_change_avatar"
-            style="@style/text_bold"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:paddingTop="@dimen/medium_dp"
-            android:paddingBottom="@dimen/medium_dp"
-            android:text="@string/change_avatar"
-            android:textColor="@color/text_color_light" />
+            style="@style/ViewPagerItems"
+            android:text="@string/change_avatar" />
     </LinearLayout>
 
     <androidx.viewpager.widget.ViewPager
@@ -72,7 +40,6 @@
         android:layout_above="@id/linear_layout_footer"
         android:layout_below="@id/linear_layout_header"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
 
     <include layout="@layout/footer" />
 </RelativeLayout>

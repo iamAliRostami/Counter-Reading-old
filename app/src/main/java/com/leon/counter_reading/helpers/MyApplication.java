@@ -1,6 +1,10 @@
 package com.leon.counter_reading.helpers;
 
 import static android.os.Build.UNKNOWN;
+import static com.leon.counter_reading.enums.ImageQuality.HIGH;
+import static com.leon.counter_reading.enums.ImageQuality.LOW;
+import static com.leon.counter_reading.enums.ImageQuality.MEDIUM;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.IMAGE_QUALITY;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
 import static com.leon.counter_reading.enums.SharedReferenceNames.ACCOUNT;
 import static com.leon.counter_reading.helpers.Constants.FONT_NAME;
@@ -169,5 +173,16 @@ public class MyApplication extends Application {
         } else {
             return 0;
         }
+    }
+    public static int getImageQuality() {
+        final int quality = getApplicationComponent().SharedPreferenceModel().getIntData(IMAGE_QUALITY.getValue());
+        if (quality == HIGH.getValue()) {
+           return 100000;
+        } else if (quality == MEDIUM.getValue()) {
+            return 75000;
+        } else if (quality == LOW.getValue()) {
+            return 50000;
+        }
+        return 100000;
     }
 }

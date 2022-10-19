@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.leon.counter_reading.fragments.reading_setting.ReadingSettingActiveFragment">
+
+    <CheckBox
+        android:id="@+id/check_box_paging_rotation"
+        style="@style/CheckBox.Possible"
+        android:paddingEnd="@dimen/large_dp"
+        android:paddingStart="@dimen/large_dp"
+        android:layout_width="wrap_content"
+        android:text="@string/paging_rtl" />
+
+    <ImageView
+        android:id="@+id/image_view_reverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="@dimen/low_dp"
+        android:layout_marginTop="@dimen/medium_dp"
+        android:layout_marginEnd="@dimen/low_dp"
+        android:padding="@dimen/low_dp"
+        android:src="@drawable/mode_light" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_keyboard"
+        style="@style/CheckBox.Possible"
+        android:paddingEnd="@dimen/large_dp"
+        android:paddingStart="@dimen/large_dp"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/check_box_paging_rotation">
+
+        <RadioButton
+            android:id="@+id/radio_button_standard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:buttonTint="@color/gray"
+            android:text="@string/standard_keyboard"
+            android:textColor="@color/text_color_dark"
+            android:textSize="@dimen/text_size_medium" />
+
+        <RadioButton
+            android:id="@+id/radio_button_sensitive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:buttonTint="@color/gray"
+            android:text="@string/sensitive_keyboard"
+            android:textColor="@color/text_color_dark"
+            android:textSize="@dimen/text_size_medium" />
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/radio_group_quality"
+        style="@style/CheckBox.Possible"
+        android:paddingEnd="@dimen/large_dp"
+        android:paddingStart="@dimen/large_dp"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/radio_group_keyboard">
+
+        <RadioButton
+            android:id="@+id/radio_button_high"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:buttonTint="@color/gray"
+            android:text="@string/high_quality"
+            android:textColor="@color/text_color_dark"
+            android:textSize="@dimen/text_size_medium" />
+
+        <RadioButton
+            android:id="@+id/radio_button_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:buttonTint="@color/gray"
+            android:text="@string/medium_quality"
+            android:textColor="@color/text_color_dark"
+            android:textSize="@dimen/text_size_medium" />
+
+        <RadioButton
+            android:id="@+id/radio_button_low"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:buttonTint="@color/gray"
+            android:text="@string/low_quality"
+            android:textColor="@color/text_color_dark"
+            android:textSize="@dimen/text_size_medium" />
+    </RadioGroup>
+</RelativeLayout>
