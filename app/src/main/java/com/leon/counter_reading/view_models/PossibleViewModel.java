@@ -40,6 +40,9 @@ public class PossibleViewModel extends BaseObservable {
     private ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
     private ArrayList<KarbariDto> karbari = new ArrayList<>();
     private OnOffLoadDto onOffLoadDto;
+    private String name;
+
+
     private String balance;
     private String oldRadif;
     private String oldEshterak;
@@ -79,6 +82,7 @@ public class PossibleViewModel extends BaseObservable {
     }
 
     private void setOnOffLoad() {
+        setName(String.format("%s %s", getOnOffLoadDto().firstName, getOnOffLoadDto().sureName));
         setBalance(String.valueOf(getOnOffLoadDto().balance));
         setOldRadif(getOnOffLoadDto().oldRadif != null ? getOnOffLoadDto().oldRadif : "-");
         setOldEshterak(getOnOffLoadDto().oldEshterak != null ? getOnOffLoadDto().oldEshterak : "-");
@@ -200,6 +204,13 @@ public class PossibleViewModel extends BaseObservable {
         notifyPropertyChanged(BR.offLoadReports);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
     @Bindable
     public ArrayList<KarbariDto> getKarbari() {
         return karbari;

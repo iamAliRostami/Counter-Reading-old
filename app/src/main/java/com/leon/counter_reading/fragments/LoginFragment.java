@@ -1,18 +1,19 @@
 package com.leon.counter_reading.fragments;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CALL_PHONE;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static com.leon.counter_reading.enums.DialogType.Green;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AVATAR;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getSerial;
 import static com.leon.counter_reading.helpers.MyApplication.setActivityComponent;
 import static com.leon.counter_reading.utils.CustomFile.loadImage;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 import static com.leon.counter_reading.utils.PermissionManager.enableGpsForResult;
 import static com.leon.counter_reading.utils.PermissionManager.forceClose;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
@@ -216,18 +217,11 @@ public class LoginFragment extends Fragment {
 
     private void checkReadPhoneStatePermission() {
         if (ActivityCompat.checkSelfPermission(requireContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(requireContext(), CALL_PHONE) != PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(requireContext(), READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             askReadPhoneStatusPermission();
         } else if (enableGpsForResult(requireActivity())) {
             initialize();
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == PackageManager.PERMISSION_GRANTED) {
-            if (requestCode == GPS_CODE) checkReadPhoneStatePermission();
         }
     }
 
@@ -251,7 +245,15 @@ public class LoginFragment extends Fragment {
                 .setDeniedMessage(getString(R.string.if_reject_permission))
                 .setDeniedCloseButtonText(getString(R.string.close))
                 .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(READ_PHONE_STATE, ACCESS_FINE_LOCATION)
+                .setPermissions(READ_PHONE_STATE, CALL_PHONE, ACCESS_FINE_LOCATION)
                 .check();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == PackageManager.PERMISSION_GRANTED) {
+            if (requestCode == GPS_CODE) checkReadPhoneStatePermission();
+        }
     }
 }

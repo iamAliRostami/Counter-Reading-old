@@ -5,10 +5,11 @@ import static com.leon.counter_reading.enums.BundleEnum.ON_OFF_LOAD;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.DialogType.Green;
 import static com.leon.counter_reading.enums.DialogType.Red;
+import static com.leon.counter_reading.enums.FragmentTags.CALL_USER;
 import static com.leon.counter_reading.enums.NotificationType.OTHER;
-import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getEshterakMinLength;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.app.Activity;
@@ -30,6 +31,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentPossibleBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
+import com.leon.counter_reading.fragments.ContactUserFragment;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.tables.OnOffLoadDto;
@@ -41,7 +43,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class PossibleFragment extends DialogFragment implements View.OnClickListener, TextWatcher {
+public class PossibleFragment extends DialogFragment implements View.OnClickListener,
+        View.OnLongClickListener, TextWatcher {
     private FragmentPossibleBinding binding;
     private Callback readingActivity;
     private PossibleViewModel possible;
@@ -92,6 +95,8 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         binding.textViewReport.setOnClickListener(this);
         binding.textViewMobile.setOnClickListener(this);
         binding.imageViewMobile.setOnClickListener(this);
+        binding.imageViewMobile.setOnLongClickListener(this);
+        binding.textViewMobile.setOnLongClickListener(this);
         binding.editTextSearch.addTextChangedListener(this);
     }
 
@@ -172,6 +177,16 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         dismiss();
         readingActivity.updateOnOffLoadByNavigation(possible.isJustMobile(), possible.getPosition(),
                 possible.getOnOffLoadDto());
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        final int id = view.getId();
+        if (id == R.id.text_view_mobile || id == R.id.image_view_mobile) {
+            ShowFragmentDialog.ShowDialogOnce(requireContext(), CALL_USER.getValue(),
+                    ContactUserFragment.newInstance(possible.getName(), possible.getMobile()));
+        }
+        return false;
     }
 
     @Override

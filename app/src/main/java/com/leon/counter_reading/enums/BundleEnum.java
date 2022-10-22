@@ -11,6 +11,7 @@ public enum BundleEnum {
     TRACKING("tracking"),
     POSITION("position"),
     NUMBER("number"),
+    NAME("name"),
     UNREAD("total"),
     TOTAL("unread"),
     ZERO("zero"),
