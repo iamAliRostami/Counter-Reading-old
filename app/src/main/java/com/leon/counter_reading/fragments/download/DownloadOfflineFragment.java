@@ -75,10 +75,15 @@ public class DownloadOfflineFragment extends Fragment implements HomeFragment.Ho
         return binding.getRoot();
     }
 
-    @SuppressLint("UnspecifiedImmutableFlag")
-    void initialize() {
-        permissionIntent = PendingIntent.getBroadcast(requireContext(), 0,
-                new Intent(ACTION_USB_PERMISSION), 0);
+//    @SuppressLint("UnspecifiedImmutableFlag")
+    private void initialize() {
+        try {
+            permissionIntent = PendingIntent.getBroadcast(requireContext(), 0,
+                    new Intent(ACTION_USB_PERMISSION), 0);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         binding.imageViewDownload.setImageResource(R.drawable.img_download_off);
     }
 

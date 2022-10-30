@@ -52,7 +52,8 @@ public class DifferentCompanyManager {
             case TE:
                 return "http://185.120.137.254";
             case TSE:
-                return "http://46.209.181.2:9098/";
+                return "http://172.28.5.40/";
+//            return "http://46.209.181.2:9098/";
 //                return "http://5.160.85.228:9098/";
             case TW:
                 return "http://217.66.195.75/";
