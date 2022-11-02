@@ -1,5 +1,8 @@
 package com.leon.counter_reading.di.view_model;
 
+import static com.leon.counter_reading.enums.ProgressType.SHOW;
+import static com.leon.counter_reading.enums.ProgressType.SHOW_CANCELABLE;
+import static com.leon.counter_reading.enums.ProgressType.SHOW_CANCELABLE_REDIRECT;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
 
@@ -10,7 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
 import com.leon.counter_reading.infrastructure.ICallbackIncomplete;
@@ -26,18 +28,17 @@ public class HttpClientWrapper {
     public static CustomProgressModel progress;
 
     public static <T> void callHttpAsync(Call<T> call, final int progressType, final Context context,
-                                         final ICallback<T> callback,
-                                         final ICallbackIncomplete<T> callbackIncomplete,
-                                         final ICallbackError callbackError) {
+                                         final ICallback<T> callback, final ICallbackIncomplete<T> incomplete,
+                                         final ICallbackError error) {
         cancel = false;
-        CustomProgressModel progressBar = getApplicationComponent().CustomProgressModel();
+        final CustomProgressModel progress = getApplicationComponent().CustomProgressModel();
         try {
-            if (progressType == ProgressType.SHOW.getValue()) {
-                progressBar.show(context, context.getString(R.string.waiting));
-            } else if (progressType == ProgressType.SHOW_CANCELABLE.getValue()) {
-                progressBar.show(context, context.getString(R.string.waiting), true);
-            } else if (progressType == ProgressType.SHOW_CANCELABLE_REDIRECT.getValue()) {
-                progressBar.show(context, context.getString(R.string.waiting), true);
+            if (progressType == SHOW.getValue()) {
+                progress.show(context, context.getString(R.string.waiting));
+            } else if (progressType == SHOW_CANCELABLE.getValue()) {
+                progress.show(context, context.getString(R.string.waiting), true);
+            } else if (progressType == SHOW_CANCELABLE_REDIRECT.getValue()) {
+                progress.show(context, context.getString(R.string.waiting), true);
             }
         } catch (Exception e) {
             new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
@@ -48,16 +49,16 @@ public class HttpClientWrapper {
                 @Override
                 public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
                     if (!cancel) {
-                        if (progressBar.getDialog() != null)
+                        if (progress.getDialog() != null)
                             try {
-                                progressBar.getDialog().dismiss();
+                                progress.getDialog().dismiss();
                             } catch (Exception e) {
                                 new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
                             }
                         if (response.isSuccessful()) {
                             callback.execute(response);
                         } else {
-                            ((Activity) context).runOnUiThread(() -> callbackIncomplete.executeIncomplete(response));
+                            ((Activity) context).runOnUiThread(() -> incomplete.executeIncomplete(response));
                         }
                     }
                 }
@@ -65,10 +66,10 @@ public class HttpClientWrapper {
                 @Override
                 public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
 
-                    ((Activity) context).runOnUiThread(() -> callbackError.executeError(t));
-                    if (progressBar.getDialog() != null)
+                    ((Activity) context).runOnUiThread(() -> error.executeError(t));
+                    if (progress.getDialog() != null)
                         try {
-                            progressBar.getDialog().dismiss();
+                            progress.getDialog().dismiss();
                         } catch (Exception e) {
                             new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
                         }
@@ -76,9 +77,9 @@ public class HttpClientWrapper {
             });
             HttpClientWrapper.call = call;
         } else {
-            if (progressBar.getDialog() != null)
+            if (progress.getDialog() != null)
                 try {
-                    progressBar.getDialog().dismiss();
+                    progress.getDialog().dismiss();
                 } catch (Exception e) {
                     new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
                 }
@@ -93,18 +94,18 @@ public class HttpClientWrapper {
                                                         final ICallbackError callbackError) {
         progress = getApplicationComponent().CustomProgressModel();
         try {
-            if (progressType == ProgressType.SHOW.getValue()) {
+            if (progressType == SHOW.getValue()) {
                 progress.show(context, context.getString(R.string.waiting));
-            } else if (progressType == ProgressType.SHOW_CANCELABLE.getValue()) {
+            } else if (progressType == SHOW_CANCELABLE.getValue()) {
                 progress.show(context, context.getString(R.string.waiting), true);
-            } else if (progressType == ProgressType.SHOW_CANCELABLE_REDIRECT.getValue()) {
+            } else if (progressType == SHOW_CANCELABLE_REDIRECT.getValue()) {
                 progress.show(context, context.getString(R.string.waiting), true);
             }
         } catch (Exception e) {
             new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
         }
         if (isNetworkAvailable(context)) {
-            call.enqueue(new Callback<T>() {
+            call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
                     if (progress.getDialog() != null)

@@ -307,4 +307,6 @@
     <string name="low_quality">کیفیت پایین</string>
     <string name="medium_quality">کیفیت معمولی</string>
     <string name="high_quality">کیفیت بالا</string>
+
+    <string name="directions">مسیرها</string>
 </resources>
