@@ -134,8 +134,8 @@ public class ReadingViewModel extends BaseObservable {
         setCounterNumber(getOnOffLoadDto().counterNumber != null ? String.valueOf(getOnOffLoadDto().counterNumber) : "");
         setName(String.format("%s %s", getOnOffLoadDto().firstName, getOnOffLoadDto().sureName));
         setAhadTotal(String.valueOf(getOnOffLoadDto().ahadSaierOrAbBaha));
-        setAhad1(String.valueOf(getOnOffLoadDto().ahadMaskooniOrAsli));
-        setAhad2(String.valueOf(getOnOffLoadDto().ahadTejariOrFari));
+        setAhad1(String.valueOf(getOnOffLoadDto().ahadTejariOrFari));
+        setAhad2(String.valueOf(getOnOffLoadDto().ahadMaskooniOrAsli));
         setDebtNumber(String.valueOf(getOnOffLoadDto().balance));
         setSerial(getOnOffLoadDto().counterSerial);
         setPreDate(getOnOffLoadDto().preDate);
