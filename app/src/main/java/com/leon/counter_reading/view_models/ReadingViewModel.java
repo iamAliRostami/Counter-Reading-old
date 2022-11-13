@@ -2,7 +2,6 @@ package com.leon.counter_reading.view_models;
 
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KEYBOARD_TYPE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
-import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_TEMPORARY;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
@@ -104,7 +103,7 @@ public class ReadingViewModel extends BaseObservable {
             if (getOnOffLoadDto().hasPreNumber) {
                 setDebtOrNumber(!isDebtOrNumber());
                 setDebtNumber(String.valueOf(getOnOffLoadDto().preNumber));
-                setCounterNumberColor(ContextCompat.getColor(getContext(),R.color.yellow));
+                setCounterNumberColor(ContextCompat.getColor(getContext(), R.color.yellow));
 
 //                setCounterNumberColor(ContextCompat.getColor(getContext(), getApplicationComponent()
 //                        .SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
