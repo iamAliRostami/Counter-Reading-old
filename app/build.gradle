@@ -17,8 +17,8 @@ android {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 93
-        versionName "1.01.08.08"
+        versionCode 94
+        versionName "1.01.09.05"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config
