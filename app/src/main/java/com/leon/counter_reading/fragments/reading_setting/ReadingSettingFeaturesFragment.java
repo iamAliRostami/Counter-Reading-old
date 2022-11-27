@@ -38,8 +38,7 @@ public class ReadingSettingFeaturesFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentReadingSettingFeaturesBinding.inflate(inflater, container, false);
         initialize();
         return binding.getRoot();
@@ -65,18 +64,16 @@ public class ReadingSettingFeaturesFragment extends Fragment {
     }
 
     private void initializeCheckbox() {
-        binding.checkBoxPagingRotation.setChecked(getApplicationComponent().SharedPreferenceModel()
-                .getBoolData(RTL_PAGING.getValue()));
+        binding.checkBoxPagingRotation.setChecked(getApplicationComponent().SharedPreferenceModel().getBoolData(RTL_PAGING.getValue()));
         binding.checkBoxPagingRotation.setOnClickListener(v ->
-                getApplicationComponent().SharedPreferenceModel().putData(RTL_PAGING.getValue(),
-                        binding.checkBoxPagingRotation.isChecked()));
+                getApplicationComponent().SharedPreferenceModel().putData(RTL_PAGING.getValue(), binding.checkBoxPagingRotation.isChecked()));
     }
 
     private void initializeRadioGroup() {
-        binding.radioButtonStandard.setChecked(!getApplicationComponent().SharedPreferenceModel()
-                .getBoolData(KEYBOARD_TYPE.getValue()));
-        binding.radioButtonSensitive.setChecked(getApplicationComponent().SharedPreferenceModel()
-                .getBoolData(KEYBOARD_TYPE.getValue()));
+        if (getApplicationComponent().SharedPreferenceModel().getBoolData(KEYBOARD_TYPE.getValue()))
+            binding.radioButtonSensitive.setChecked(true);
+        else
+            binding.radioButtonStandard.setChecked(true);
         binding.radioButtonSensitive.setOnCheckedChangeListener((compoundButton, b) ->
                 getApplicationComponent().SharedPreferenceModel().putData(KEYBOARD_TYPE.getValue(), b));
 

@@ -72,12 +72,12 @@ public class ReadingViewModel extends BaseObservable {
     }
 
     public final void onKeyboardClickListener(View view) {
-        if (getApplicationComponent().SharedPreferenceModel().getBoolData(KEYBOARD_TYPE.getValue()))
+        if (!getApplicationComponent().SharedPreferenceModel().getBoolData(KEYBOARD_TYPE.getValue()))
             keyboardEvent(view);
     }
 
     public boolean onKeyboardTouchListener(View view, MotionEvent motionEvent) {
-        if (!getApplicationComponent().SharedPreferenceModel().getBoolData(KEYBOARD_TYPE.getValue()))
+        if (getApplicationComponent().SharedPreferenceModel().getBoolData(KEYBOARD_TYPE.getValue()))
             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
                 keyboardEvent(view);
         return false;
