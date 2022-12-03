@@ -348,6 +348,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     private void notEmpty(int currentNumber) {
         Integer type = null;
         if (currentNumber == readingVM.getOnOffLoadDto().preNumber) {
+            //TODO esf
             type = ZERO.getValue();
         } else {
             final int status = checkHighLow(readingVM.getOnOffLoadDto(), readingVM.getKarbariDto(),
