@@ -1,6 +1,6 @@
 plugins {
     id 'com.android.application'
-    id 'com.google.gms.google-services'
+//    id 'com.google.gms.google-services'
 }
 android {
     compileSdkVersion 33
@@ -62,6 +62,14 @@ android {
             applicationIdSuffix ".ksh"
             buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
                     "com.leon.counter_reading.enums.CompanyNames.KSH"
+        }
+        zone_3 {
+            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.config
+            applicationIdSuffix ".zone3"
+            buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
+                    "com.leon.counter_reading.enums.CompanyNames.ZONE3"
         }
         zone_4 {
             debuggable true

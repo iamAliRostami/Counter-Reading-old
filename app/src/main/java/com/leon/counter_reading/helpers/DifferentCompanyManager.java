@@ -40,7 +40,7 @@ public class DifferentCompanyManager {
             case ZONE2:
                 return "http://212.16.75.194:8080/";
             case ZONE3:
-                return "http://212.16.69.36:90/";
+                return "http://46.209.219.36:90/";
             case ZONE4:
                 return "http://81.12.106.167:8081/";
             case ZONE5:
@@ -103,6 +103,7 @@ public class DifferentCompanyManager {
         switch (companyNames) {
             case ESF:
                 return "واحد";
+            case ZONE3:
             case ZONE4:
             case ZONE6:
             case TSE:
@@ -119,6 +120,7 @@ public class DifferentCompanyManager {
             case ESF:
                 return "واحد مسکونی";
             case KSH:
+            case ZONE3:
             case ZONE4:
             case ZONE6:
             case TW:
@@ -134,6 +136,7 @@ public class DifferentCompanyManager {
             case ESF:
                 return "واحد تجاری";
             case KSH:
+            case ZONE3:
             case ZONE4:
             case ZONE6:
             case TW:
@@ -148,6 +151,7 @@ public class DifferentCompanyManager {
         switch (companyNames) {
             case ESF:
                 return "واحد کل";
+            case ZONE3:
             case ZONE4:
             case ZONE6:
             case KSH:
@@ -162,6 +166,7 @@ public class DifferentCompanyManager {
     public static int getImageNumber(CompanyNames companyNames) {
         switch (companyNames) {
             case ESF:
+            case ZONE3:
             case ZONE4:
             case ZONE6:
             case TSE:
@@ -176,6 +181,7 @@ public class DifferentCompanyManager {
     public static int getShowError(CompanyNames companyNames) {
         switch (companyNames) {
             case ESF:
+            case ZONE3:
             case ZONE4:
             case ZONE6:
             case TSE:
@@ -190,6 +196,7 @@ public class DifferentCompanyManager {
     public static int getLockNumber(CompanyNames companyNames) {
         switch (companyNames) {
             case ESF:
+            case ZONE3:
             case ZONE4:
             case ZONE6:
             case TSE:
@@ -205,6 +212,7 @@ public class DifferentCompanyManager {
         switch (companyNames) {
             case ESF:
             case KSH:
+            case ZONE3:
             case ZONE4:
             case ZONE6:
             case TW:
@@ -219,6 +227,7 @@ public class DifferentCompanyManager {
         switch (companyNames) {
             case ESF:
             case KSH:
+            case ZONE3:
             case ZONE4:
             case ZONE6:
                 return 15;
@@ -234,6 +243,7 @@ public class DifferentCompanyManager {
         switch (companyNames) {
             case ESF:
                 return "ردیف";
+            case ZONE3:
             case ZONE4:
             case ZONE6:
             case TSE:
