@@ -113,6 +113,7 @@
                 <EditText
                     android:id="@+id/edit_text_personal_code"
                     style="@style/InputBasic"
+                    android:maxLength="9"
                     android:inputType="text" />
 
                 <Button

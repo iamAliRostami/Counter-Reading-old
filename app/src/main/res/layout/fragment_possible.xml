@@ -153,6 +153,7 @@
                         android:id="@+id/edit_text_address"
                         style="@style/InputPossible"
                         android:hint="@string/address"
+                        android:inputType="text"
                         android:text="@={possible.possibleAddress}"
                         android:visibility="@{possible.addressVisibility}" />
 
@@ -291,6 +292,7 @@
                         android:id="@+id/edit_text_description"
                         style="@style/InputPossible"
                         android:hint="@string/description"
+                        android:inputType="text"
                         android:text="@={possible.description}"
                         android:visibility="@{possible.descriptionVisibility}" />
 
