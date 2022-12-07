@@ -1,6 +1,5 @@
 package com.leon.counter_reading.activities;
 
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
@@ -46,7 +45,7 @@ public class ReadingSettingActivity extends BaseActivity {
 
     void initializeTextViews() {
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        textViewCompanyName.setText(getCompanyName());
         textViewRead();
         textViewFeatures();
         textViewDelete();

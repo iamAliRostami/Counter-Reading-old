@@ -5,7 +5,6 @@ import static com.leon.counter_reading.enums.SearchTypeEnum.All;
 import static com.leon.counter_reading.enums.SearchTypeEnum.BARCODE;
 import static com.leon.counter_reading.enums.SearchTypeEnum.NAME;
 import static com.leon.counter_reading.enums.SearchTypeEnum.RADIF;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getSecondSearchItem;
 
 import android.content.Intent;
@@ -73,7 +72,7 @@ public class SearchFragment extends DialogFragment {
 
     private void initializeSpinner() {
         final String[] items = getResources().getStringArray(R.array.search_option);
-        items[1] = getSecondSearchItem(getActiveCompanyName());
+        items[1] = getSecondSearchItem();
         final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(getActivity(), items);
         binding.spinnerSearch.setAdapter(adapter);
         binding.spinnerSearch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

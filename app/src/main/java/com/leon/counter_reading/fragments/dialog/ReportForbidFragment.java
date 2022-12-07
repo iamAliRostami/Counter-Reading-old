@@ -8,7 +8,6 @@ import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.Converters.bitmapToFile;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getEshterakMaxLength;
 
@@ -102,11 +101,11 @@ public class ReportForbidFragment extends DialogFragment {
     }
 
     private void initialize() {
-        binding.textViewHome.setText(getString(R.string.number).concat(getAhad(getActiveCompanyName())));
+        binding.textViewHome.setText(getString(R.string.number).concat(getAhad()));
         binding.editTextNextAccount.setFilters(new InputFilter[]{
-                new InputFilter.LengthFilter(getEshterakMaxLength(getActiveCompanyName()))});
+                new InputFilter.LengthFilter(getEshterakMaxLength())});
         binding.editTextPreAccount.setFilters(new InputFilter[]{
-                new InputFilter.LengthFilter(getEshterakMaxLength(getActiveCompanyName()))});
+                new InputFilter.LengthFilter(getEshterakMaxLength())});
         forbiddenDto.File = new ArrayList<>();
         forbiddenDto.bitmaps = new ArrayList<>();
         setOnButtonPhotoClickListener();
@@ -128,7 +127,7 @@ public class ReportForbidFragment extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().length() == getEshterakMaxLength(getActiveCompanyName())) {
+                if (s.toString().length() == getEshterakMaxLength()) {
                     final View view = binding.editTextNextAccount;
                     view.requestFocus();
                 }
@@ -145,7 +144,7 @@ public class ReportForbidFragment extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().length() == getEshterakMaxLength(getActiveCompanyName())) {
+                if (s.toString().length() == getEshterakMaxLength()) {
                     final View view = binding.editTextPostalCode;
                     view.requestFocus();
                 }

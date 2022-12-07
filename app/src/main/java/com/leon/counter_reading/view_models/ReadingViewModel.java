@@ -2,7 +2,6 @@ package com.leon.counter_reading.view_models;
 
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KEYBOARD_TYPE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.MakeNotification.ringNotification;
@@ -378,17 +377,17 @@ public class ReadingViewModel extends BaseObservable {
 
     @Bindable
     public String getAhad1Title() {
-        return String.format("%s : ", DifferentCompanyManager.getAhad2(getActiveCompanyName()));
+        return String.format("%s : ", DifferentCompanyManager.getAhad2());
     }
 
     @Bindable
     public String getAhad2Title() {
-        return String.format("%s : ", DifferentCompanyManager.getAhad1(getActiveCompanyName()));
+        return String.format("%s : ", DifferentCompanyManager.getAhad1());
     }
 
     @Bindable
     public String getAhadTotalTitle() {
-        return String.format("%s : ", DifferentCompanyManager.getAhadTotal(getActiveCompanyName()));
+        return String.format("%s : ", DifferentCompanyManager.getAhadTotal());
     }
 
     @Bindable

@@ -3,7 +3,6 @@ package com.leon.counter_reading.fragments.dialog;
 import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
 import static com.leon.counter_reading.enums.NotificationType.OTHER;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad1;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad2;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
@@ -54,8 +53,8 @@ public class AhadFragment extends DialogFragment {
     private void initialize() {
         makeRing(requireContext(), OTHER);
         setOnButtonClickListener();
-        binding.editTextAhad1.setHint(getAhad1(getActiveCompanyName()));
-        binding.editTextAhad2.setHint(getAhad2(getActiveCompanyName()));
+        binding.editTextAhad1.setHint(getAhad1());
+        binding.editTextAhad2.setHint(getAhad2());
     }
 
     private void setOnButtonClickListener() {

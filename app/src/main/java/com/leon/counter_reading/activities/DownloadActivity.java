@@ -4,7 +4,6 @@ import static com.leon.counter_reading.enums.DownloadType.RETRY;
 import static com.leon.counter_reading.enums.DownloadType.SPECIAL;
 import static com.leon.counter_reading.helpers.Constants.ALL_FILES_ACCESS_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.SETTING_REQUEST;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 
 import android.content.Intent;
@@ -97,7 +96,7 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
 
     private void initializeTextViews() {
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        textViewCompanyName.setText(getCompanyName());
 
         binding.textViewDownloadNormal.setOnClickListener(this);
         binding.textViewDownloadOff.setOnClickListener(this);

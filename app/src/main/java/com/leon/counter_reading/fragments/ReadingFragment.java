@@ -16,7 +16,6 @@ import static com.leon.counter_reading.helpers.Constants.counterStateDtos;
 import static com.leon.counter_reading.helpers.Constants.karbariDtos;
 import static com.leon.counter_reading.helpers.Constants.onOffLoadDtos;
 import static com.leon.counter_reading.helpers.Constants.readingConfigDefaultDtos;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getLockNumber;
 import static com.leon.counter_reading.helpers.MyApplication.getDigits;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
@@ -252,12 +251,12 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     private boolean lockProcess(final boolean canContinue) {
         readingVM.getOnOffLoadDto().attemptCount++;
         readingActivity.updateOnOffLoadByAttempt(readingVM.getPosition());
-        if (!readingVM.getOnOffLoadDto().isLocked && readingVM.getOnOffLoadDto().attemptCount + 1 == getLockNumber(getActiveCompanyName()))
+        if (!readingVM.getOnOffLoadDto().isLocked && readingVM.getOnOffLoadDto().attemptCount + 1 == getLockNumber())
             new CustomToast().error(getString(R.string.mistakes_error), Toast.LENGTH_LONG);
-        if (!readingVM.getOnOffLoadDto().isLocked && readingVM.getOnOffLoadDto().attemptCount == getLockNumber(getActiveCompanyName()))
+        if (!readingVM.getOnOffLoadDto().isLocked && readingVM.getOnOffLoadDto().attemptCount == getLockNumber())
             new CustomToast().error(getString(R.string.by_mistakes).
                     concat(readingVM.getOnOffLoadDto().eshterak).concat(getString(R.string.is_locked)), Toast.LENGTH_SHORT);
-        if (!readingVM.getOnOffLoadDto().isLocked && readingVM.getOnOffLoadDto().attemptCount >= getLockNumber(getActiveCompanyName())) {
+        if (!readingVM.getOnOffLoadDto().isLocked && readingVM.getOnOffLoadDto().attemptCount >= getLockNumber()) {
             readingVM.getOnOffLoadDto().isLocked = true;
             readingVM.setCounterNumber("");
             readingActivity.updateOnOffLoadByLock(readingVM.getPosition());

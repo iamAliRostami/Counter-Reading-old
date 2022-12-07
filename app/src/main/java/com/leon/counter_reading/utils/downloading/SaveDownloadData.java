@@ -4,7 +4,6 @@ import static com.leon.counter_reading.enums.DialogType.Green;
 import static com.leon.counter_reading.enums.DialogType.Yellow;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.Converters.replaceNonstandardDigits;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getExpireDate;
 
 import android.annotation.SuppressLint;
@@ -156,7 +155,7 @@ public class SaveDownloadData {
 
     private void deleteExpiredData(Activity activity) {
         final List<Integer> trackNumbers = getApplicationComponent().MyDatabase().trackingDao()
-                .getTrackingDtosExpired(true, getExpireDate(getActiveCompanyName(), activity));
+                .getTrackingDtosExpired(true, getExpireDate(activity));
         getApplicationComponent().MyDatabase().trackingDao().deleteTrackingDtos(trackNumbers);
         getApplicationComponent().MyDatabase().onOffLoadDao().deleteOnOffLoads(trackNumbers);
     }

@@ -7,7 +7,6 @@ import static com.leon.counter_reading.helpers.MyApplication.getApplicationCompo
 import static com.leon.counter_reading.helpers.MyApplication.getDigits;
 import static com.leon.counter_reading.helpers.MyApplication.getSerial;
 import static com.leon.counter_reading.helpers.MyApplication.validate;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 
 import android.os.Bundle;
@@ -50,7 +49,7 @@ public class BasicFragment extends Fragment {
 
 
     private void initialize() {
-        binding.textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        binding.textViewCompanyName.setText(getCompanyName());
         initializeTextView();
         setOnclickListeners();
     }

@@ -1,7 +1,6 @@
 package com.leon.counter_reading.activities;
 
 import static com.leon.counter_reading.helpers.Constants.POSITION;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 
 import android.content.Intent;
@@ -65,7 +64,7 @@ public class HomeActivity extends BaseActivity {
         parentLayout.addView(childLayout);
 
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        textViewCompanyName.setText(getCompanyName());
 
         initializeImageViews();
         setOnImageViewClickListener();

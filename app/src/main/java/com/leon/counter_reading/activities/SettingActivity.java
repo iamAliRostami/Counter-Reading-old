@@ -1,6 +1,5 @@
 package com.leon.counter_reading.activities;
 
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 
 import android.graphics.Color;
@@ -43,7 +42,7 @@ public class SettingActivity extends BaseActivity {
 
     private void initializeTextViews() {
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        textViewCompanyName.setText(getCompanyName());
         textViewChangeTheme();
         textViewChangePassword();
         textViewUpdate();

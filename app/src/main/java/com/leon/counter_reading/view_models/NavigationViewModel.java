@@ -1,7 +1,6 @@
 package com.leon.counter_reading.view_models;
 
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad;
 
 import androidx.databinding.BaseObservable;
@@ -134,11 +133,11 @@ public class NavigationViewModel extends BaseObservable {
 
     @Bindable
     public int getEshterakMaxLength() {
-        return DifferentCompanyManager.getEshterakMaxLength(getActiveCompanyName());
+        return DifferentCompanyManager.getEshterakMaxLength();
     }
 
     @Bindable
     public String getAhadEmptyTitle() {
-        return getAhad(getActiveCompanyName()).concat(getContext().getString(R.string.empty));
+        return getAhad().concat(getContext().getString(R.string.empty));
     }
 }

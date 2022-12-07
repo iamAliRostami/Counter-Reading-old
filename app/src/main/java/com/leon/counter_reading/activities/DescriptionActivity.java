@@ -6,7 +6,6 @@ import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
 import static com.leon.counter_reading.helpers.Constants.RECORD_AUDIO_PERMISSIONS;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
@@ -67,7 +66,7 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
         binding = ActivityDescriptionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        textViewCompanyName.setText(getCompanyName());
         activity = this;
         if (checkRecorderPermission(getApplicationContext()))
             initialize();

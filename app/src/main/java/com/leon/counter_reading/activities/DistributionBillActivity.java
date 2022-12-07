@@ -3,7 +3,6 @@ package com.leon.counter_reading.activities;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 
 import android.os.Bundle;
@@ -33,7 +32,7 @@ public class DistributionBillActivity extends AppCompatActivity {
 
     void initialize() {
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        textViewCompanyName.setText(getCompanyName());
         binding.imageViewBill.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                 R.drawable.img_temporary));
         startAnimationOnTextViewCounter();

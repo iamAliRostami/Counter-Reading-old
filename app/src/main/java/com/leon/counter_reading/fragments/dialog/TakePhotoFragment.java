@@ -5,9 +5,9 @@ import static com.leon.counter_reading.enums.BundleEnum.IMAGE;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.SENT;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
-import static com.leon.counter_reading.enums.CompanyNames.TSE;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.helpers.Constants.CURRENT_IMAGE_SIZE;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.gallerySelector;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 import static com.leon.counter_reading.utils.CustomFile.saveTempBitmap;
@@ -35,6 +35,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ImageViewAdapter;
 import com.leon.counter_reading.databinding.FragmentTakePhotoBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
+import com.leon.counter_reading.helpers.DifferentCompanyManager;
 import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.photo.PrepareMultimedia;
@@ -111,7 +112,8 @@ public class TakePhotoFragment extends DialogFragment {
                     View.GONE : View.VISIBLE);
             getArguments().clear();
         }
-        if (BuildConfig.COMPANY_NAME != TSE)
+//        if (BuildConfig.COMPANY_NAME != TSE)
+        if (gallerySelector())
             binding.checkBoxGallery.setVisibility(View.GONE);
         imageSetup();
         setOnButtonSendClickListener();

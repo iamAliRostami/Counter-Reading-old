@@ -4,7 +4,6 @@ import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowD
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.CustomFile.loadImage;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getImageNumber;
 
 import android.annotation.SuppressLint;
@@ -16,7 +15,6 @@ import android.widget.BaseAdapter;
 
 import androidx.appcompat.content.res.AppCompatResources;
 
-import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.holder.ImageViewHolder;
 import com.leon.counter_reading.fragments.dialog.HighQualityFragment;
@@ -37,7 +35,7 @@ public class ImageViewAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return getImageNumber(getActiveCompanyName());
+        return getImageNumber();
     }
 
     @Override
@@ -84,7 +82,7 @@ public class ImageViewAdapter extends BaseAdapter {
     }
 
     public int setReplace(int position) {
-        if (getImageNumber(BuildConfig.COMPANY_NAME) == images.size()) {
+        if (getImageNumber() == images.size()) {
             boolean unsent = false;
             int i = 0;
             while (i < images.size() && !unsent) {

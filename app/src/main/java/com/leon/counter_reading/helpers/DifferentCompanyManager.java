@@ -23,7 +23,7 @@ public class DifferentCompanyManager {
         return BuildConfig.COMPANY_NAME;
     }
 
-    public static String getBaseUrl(CompanyNames companyNames) {
+    public static String getBaseUrl() {
         if (getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(PROXY.getValue())) {
             final String proxy = getApplicationComponent().SharedPreferenceModel().getStringData(PROXY.getValue());
             if (proxy.startsWith("http://") && proxy.length() > 7)
@@ -31,7 +31,7 @@ public class DifferentCompanyManager {
             if (proxy.startsWith("https://") && proxy.length() > 8)
                 return proxy;
         }
-        switch (companyNames) {
+        switch (getActiveCompanyName()) {
             case ESF:
 //                return "https://37.191.92.157/";//Internet
                 return "http://172.18.12.36/";
@@ -66,8 +66,8 @@ public class DifferentCompanyManager {
         }
     }
 
-    public static String getLocalBaseUrl(CompanyNames companyNames) {
-        switch (companyNames) {
+    public static String getLocalBaseUrl() {
+        switch (getActiveCompanyName()) {
             case ESF:
                 return "http://172.18.12.14:100";
             case ESF_MAP:
@@ -99,8 +99,8 @@ public class DifferentCompanyManager {
         }
     }
 
-    public static String getAhad(CompanyNames companyNames) {
-        switch (companyNames) {
+    public static String getAhad() {
+        switch (getActiveCompanyName()) {
             case ESF:
                 return "واحد";
             case ZONE3:
@@ -115,8 +115,8 @@ public class DifferentCompanyManager {
         }
     }
 
-    public static String getAhad1(CompanyNames companyNames) {
-        switch (companyNames) {
+    public static String getAhad1() {
+        switch (getActiveCompanyName()) {
             case ESF:
                 return "واحد مسکونی";
             case KSH:
@@ -131,8 +131,8 @@ public class DifferentCompanyManager {
         }
     }
 
-    public static String getAhad2(CompanyNames companyNames) {
-        switch (companyNames) {
+    public static String getAhad2() {
+        switch (getActiveCompanyName()) {
             case ESF:
                 return "واحد تجاری";
             case KSH:
@@ -147,8 +147,8 @@ public class DifferentCompanyManager {
         }
     }
 
-    public static String getAhadTotal(CompanyNames companyNames) {
-        switch (companyNames) {
+    public static String getAhadTotal() {
+        switch (getActiveCompanyName()) {
             case ESF:
                 return "واحد کل";
             case ZONE3:
@@ -163,8 +163,8 @@ public class DifferentCompanyManager {
         }
     }
 
-    public static int getImageNumber(CompanyNames companyNames) {
-        switch (companyNames) {
+    public static int getImageNumber() {
+        switch (getActiveCompanyName()) {
             case ESF:
             case ZONE3:
             case ZONE4:
@@ -178,8 +178,8 @@ public class DifferentCompanyManager {
         }
     }
 
-    public static int getShowError(CompanyNames companyNames) {
-        switch (companyNames) {
+    public static int getShowError() {
+        switch (getActiveCompanyName()) {
             case ESF:
             case ZONE3:
             case ZONE4:
@@ -193,8 +193,8 @@ public class DifferentCompanyManager {
         }
     }
 
-    public static int getLockNumber(CompanyNames companyNames) {
-        switch (companyNames) {
+    public static int getLockNumber() {
+        switch (getActiveCompanyName()) {
             case ESF:
             case ZONE3:
             case ZONE4:
@@ -208,8 +208,8 @@ public class DifferentCompanyManager {
         }
     }
 
-    public static int getEshterakMinLength(CompanyNames companyNames) {
-        switch (companyNames) {
+    public static int getEshterakMinLength() {
+        switch (getActiveCompanyName()) {
             case ESF:
             case KSH:
             case ZONE3:
@@ -223,8 +223,8 @@ public class DifferentCompanyManager {
         }
     }
 
-    public static int getEshterakMaxLength(CompanyNames companyNames) {
-        switch (companyNames) {
+    public static int getEshterakMaxLength() {
+        switch (getActiveCompanyName()) {
             case ESF:
             case KSH:
             case ZONE3:
@@ -239,8 +239,8 @@ public class DifferentCompanyManager {
         }
     }
 
-    public static String getSecondSearchItem(CompanyNames companyNames) {
-        switch (companyNames) {
+    public static String getSecondSearchItem() {
+        switch (getActiveCompanyName()) {
             case ESF:
                 return "ردیف";
             case ZONE3:
@@ -255,8 +255,8 @@ public class DifferentCompanyManager {
         }
     }
 
-    public static String getCompanyName(CompanyNames companyName) {
-        switch (companyName) {
+    public static String getCompanyName() {
+        switch (getActiveCompanyName()) {
             case ZONE1:
                 return "آبقا منطقه یک";
             case ZONE2:
@@ -287,13 +287,13 @@ public class DifferentCompanyManager {
     }
 
     @SuppressLint("SimpleDateFormat")
-    public static String getExpireDate(CompanyNames companyNames, Activity activity) {
+    public static String getExpireDate(Activity activity) {
         final Location location = getLocationTracker(activity).getCurrentLocation();
         Date date = new Date(location != null ? location.getTime() :
                 Calendar.getInstance().getTimeInMillis());
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        switch (companyNames) {
+        switch (getActiveCompanyName()) {
             case ZONE1:
             case ZONE2:
             case ZONE3:
@@ -310,5 +310,23 @@ public class DifferentCompanyManager {
         date = new Date(calendar.getTimeInMillis());
         final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         return replaceNonstandardDigits(dateFormatter.format(date));
+    }
+
+    public static boolean gallerySelector() {
+        switch (getActiveCompanyName()) {
+            case ZONE1:
+            case ZONE2:
+//            case ZONE3:
+            case ZONE4:
+            case ZONE5:
+            case ZONE6:
+            case TSW:
+            case TE:
+            case TW:
+            case ESF:
+//            case TSE:
+                return true;
+        }
+        return false;
     }
 }

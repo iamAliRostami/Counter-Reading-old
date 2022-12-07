@@ -9,7 +9,6 @@ import static com.leon.counter_reading.helpers.MyApplication.getApplicationCompo
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.helpers.MyApplication.getErrorCounter;
 import static com.leon.counter_reading.helpers.MyApplication.setErrorCounter;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getShowError;
 
 import android.app.Activity;
@@ -105,7 +104,7 @@ class offLoadError implements ICallbackError {
 
     @Override
     public void executeError(Throwable t) {
-        if (getErrorCounter() < getShowError(getActiveCompanyName())) {
+        if (getErrorCounter() < getShowError()) {
             try {
                 final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
                 final String error = errorHandling.getErrorMessageTotal(t);

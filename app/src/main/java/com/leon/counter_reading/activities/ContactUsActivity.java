@@ -5,7 +5,6 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME_TEMP;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 
 import android.os.Bundle;
@@ -36,7 +35,7 @@ public class ContactUsActivity extends AppCompatActivity {
 
     void initialize() {
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        textViewCompanyName.setText(getCompanyName());
         if (sharedPreferenceManager.checkIsNotEmpty(USERNAME_TEMP.getValue()))
             binding.textViewDate.setText(sharedPreferenceManager.getStringData(DATE.getValue()));
         binding.textViewVersion.setText(BuildConfig.VERSION_NAME);

@@ -4,7 +4,6 @@ import static com.leon.counter_reading.enums.BundleEnum.ON_OFF_LOAD;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getEshterakMinLength;
 
 import android.app.Activity;
@@ -82,7 +81,7 @@ public class NavigationFragment extends DialogFragment implements View.OnClickLi
 
     private void submitNavigation() {
         if (!navigationVM.getPossibleEshterak().isEmpty() &&
-                navigationVM.getPossibleEshterak().length() < getEshterakMinLength(getActiveCompanyName())) {
+                navigationVM.getPossibleEshterak().length() < getEshterakMinLength()) {
             binding.editTextAccount.setError(getString(R.string.error_format));
             binding.editTextAccount.requestFocus();
             return;

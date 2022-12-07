@@ -1,7 +1,6 @@
 package com.leon.counter_reading.di.view_model;
 
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getBaseUrl;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getLocalBaseUrl;
 
@@ -61,7 +60,7 @@ public final class NetworkHelperModel {
                 .cache(cache).build();
         return new Retrofit.Builder()
                 .baseUrl(getBaseUrl(
-                        getActiveCompanyName()))
+                ))
                 .client(client).addConverterFactory(GsonConverterFactory
                         .create(new GsonBuilder().setLenient().create())).build();
     }
@@ -126,8 +125,8 @@ public final class NetworkHelperModel {
     @Inject
     public Retrofit getInstance(boolean b, int denominator, String... s) {
         String baseUrl = b ?
-                getBaseUrl(getActiveCompanyName()) :
-                getLocalBaseUrl(getActiveCompanyName());
+                getBaseUrl() :
+                getLocalBaseUrl();
         if (s.length == 0)
             return new Retrofit.Builder()
                     .baseUrl(baseUrl)
@@ -164,8 +163,8 @@ public final class NetworkHelperModel {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.level(HttpLoggingInterceptor.Level.BODY);
         String baseUrl = b ?
-                getBaseUrl(getActiveCompanyName()) :
-                getLocalBaseUrl(getActiveCompanyName());
+                getBaseUrl() :
+                getLocalBaseUrl();
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(new OkHttpClient.Builder()

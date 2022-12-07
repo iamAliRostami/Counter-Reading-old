@@ -5,7 +5,6 @@ import static com.leon.counter_reading.enums.UploadType.NORMAL;
 import static com.leon.counter_reading.enums.UploadType.OFFLINE;
 import static com.leon.counter_reading.helpers.Constants.ZIP_ROOT;
 import static com.leon.counter_reading.helpers.Constants.zipAddress;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 import static com.leon.counter_reading.utils.CustomFile.copyFile;
 
@@ -49,7 +48,7 @@ public class UploadActivity extends BaseActivity implements ViewPager.OnPageChan
         final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        textViewCompanyName.setText(getCompanyName());
         new GetUploadDBData(this).execute(this);
     }
 

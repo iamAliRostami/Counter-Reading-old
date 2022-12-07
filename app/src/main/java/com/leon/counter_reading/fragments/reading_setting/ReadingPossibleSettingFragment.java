@@ -45,17 +45,17 @@ public class ReadingPossibleSettingFragment extends Fragment {
     void initializeCheckBoxes() {
         binding.checkBoxAhadEmpty.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.AHAD_EMPTY.getValue()));
         binding.checkBoxAhadEmpty.setText(DifferentCompanyManager.getAhad(
-                DifferentCompanyManager.getActiveCompanyName()).concat(getString(R.string.empty)));
+        ).concat(getString(R.string.empty)));
 
         binding.checkBoxAhad1.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.AHAD_1.getValue()));
-        binding.checkBoxAhad1.setText(DifferentCompanyManager.getAhad1(DifferentCompanyManager.getActiveCompanyName()));
+        binding.checkBoxAhad1.setText(DifferentCompanyManager.getAhad1());
         binding.checkBoxAhad2.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.AHAD_2.getValue()));
-        binding.checkBoxAhad2.setText(DifferentCompanyManager.getAhad2(DifferentCompanyManager.getActiveCompanyName()));
+        binding.checkBoxAhad2.setText(DifferentCompanyManager.getAhad2());
         binding.checkBoxAhadShowTitle.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.SHOW_AHAD_TITLE.getValue()));
         binding.checkBoxAhadShowTitle.setText(getString(R.string.show).concat(DifferentCompanyManager.getAhad(
-                DifferentCompanyManager.getActiveCompanyName())));
+        )));
         binding.checkBoxAhadTotal.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.AHAD_TOTAL.getValue()));
-        binding.checkBoxAhadTotal.setText(DifferentCompanyManager.getAhadTotal(DifferentCompanyManager.getActiveCompanyName()));
+        binding.checkBoxAhadTotal.setText(DifferentCompanyManager.getAhadTotal());
         binding.checkBoxAccount.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.ACCOUNT.getValue()));
         binding.checkBoxAddress.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.ADDRESS.getValue()));
         binding.checkBoxMobile.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.MOBILE.getValue()));

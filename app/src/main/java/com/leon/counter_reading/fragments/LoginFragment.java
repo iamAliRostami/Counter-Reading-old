@@ -8,7 +8,6 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.AVATAR;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getSerial;
@@ -99,7 +98,7 @@ public class LoginFragment extends Fragment {
 
     private void initializeTextViewCompanyName() {
         final TextView textViewCompanyName = requireActivity().findViewById(R.id.text_view_company_name);
-        textViewCompanyName.setText(getCompanyName(getActiveCompanyName()));
+        textViewCompanyName.setText(getCompanyName());
         textViewCompanyName.setOnClickListener(v -> insertProxy(requireContext()));
     }
 

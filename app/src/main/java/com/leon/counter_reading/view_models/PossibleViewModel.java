@@ -14,7 +14,6 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.SERIAL;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SHOW_AHAD_TITLE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad1;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad2;
@@ -143,45 +142,45 @@ public class PossibleViewModel extends BaseObservable {
 
     @Bindable
     public String getAhad1Title() {
-        return String.format("%s:", getAhad1(getActiveCompanyName()));
+        return String.format("%s:", getAhad1());
     }
 
     @Bindable
     public String getAhad2Title() {
-        return String.format("%s:", getAhad2(getActiveCompanyName()).replaceFirst("آحاد ", "")
+        return String.format("%s:", getAhad2().replaceFirst("آحاد ", "")
                 .replaceFirst("واحد", ""));
     }
 
     @Bindable
     public String getAhadTotalTitle() {
-        return String.format("%s:", getAhadTotal(getActiveCompanyName()).replaceFirst("آحاد ", "")
+        return String.format("%s:", getAhadTotal().replaceFirst("آحاد ", "")
                 .replaceFirst("واحد", ""));
     }
 
     @Bindable
     public String getAhad1Hint() {
-        return getAhad1(getActiveCompanyName());
+        return getAhad1();
     }
 
     @Bindable
     public String getAhad2Hint() {
-        return getAhad2(getActiveCompanyName());
+        return getAhad2();
     }
 
     @Bindable
     public String getAhadTotalHint() {
-        return getAhadTotal(getActiveCompanyName());
+        return getAhadTotal();
     }
 
     @Bindable
     public String getAhadEmptyHint() {
-        return getAhad(getActiveCompanyName()).replaceFirst("آحاد ", "").replaceFirst("واحد", "")
+        return getAhad().replaceFirst("آحاد ", "").replaceFirst("واحد", "")
                 .concat(getContext().getString(R.string.empty));
     }
 
     @Bindable
     public int getEshterakMaxLength() {
-        return DifferentCompanyManager.getEshterakMaxLength(getActiveCompanyName());
+        return DifferentCompanyManager.getEshterakMaxLength();
     }
 
     @Bindable

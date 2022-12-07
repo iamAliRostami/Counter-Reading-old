@@ -7,7 +7,6 @@ import static com.leon.counter_reading.enums.DialogType.Green;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.FragmentTags.CALL_USER;
 import static com.leon.counter_reading.enums.NotificationType.OTHER;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getEshterakMinLength;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
@@ -167,7 +166,7 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
             }
         }
         if (possible.getPossibleEshterak() != null && possible.getPossibleEshterak().length() > 0) {
-            if (possible.getPossibleEshterak().length() < getEshterakMinLength(getActiveCompanyName())) {
+            if (possible.getPossibleEshterak().length() < getEshterakMinLength()) {
                 binding.editTextAccount.setError(getString(R.string.error_format));
                 binding.editTextAccount.requestFocus();
                 return;
