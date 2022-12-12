@@ -7,6 +7,7 @@ import static com.leon.counter_reading.enums.UploadType.NORMAL;
 import static com.leon.counter_reading.enums.UploadType.OFFLINE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
@@ -183,6 +184,11 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
                     .execute(requireActivity());
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

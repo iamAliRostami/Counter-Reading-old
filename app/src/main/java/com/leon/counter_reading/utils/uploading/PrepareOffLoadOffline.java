@@ -6,6 +6,7 @@ import static com.leon.counter_reading.helpers.Constants.ZIP_ROOT;
 import static com.leon.counter_reading.helpers.Constants.zipAddress;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.CalendarTool.getDate;
+import static com.leon.counter_reading.utils.CustomFile.copyImages;
 import static com.leon.counter_reading.utils.OfflineUtils.writeOnSdCard;
 import static com.leon.counter_reading.utils.OfflineUtils.zipFileAtPath;
 
@@ -15,7 +16,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import androidx.core.content.FileProvider;
+
 import com.google.gson.Gson;
+import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.tables.ForbiddenDto;
@@ -62,11 +66,6 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
             uploadImages(activities[0]);
             uploadVoices(activities[0]);
             if (zipFileAtPath(trackNumber)) {
-                final Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                intent.setType("application/zip");
-                final File file = new File(zipAddress);
-                intent.putExtra(Intent.EXTRA_TITLE, file.getName());
-                activities[0].startActivityForResult(intent, ZIP_ROOT);
                 //TODO after zip and sent
                 for (int i = 0; i < onOffLoadDtos.size(); i++)
                     onOffLoadDtos.get(i).offLoadStateId = SENT.getValue();
@@ -79,9 +78,29 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
                     final String message = String.format("تعداد %d اشتراک با موفقیت بارگذاری شد.", onOffLoadDtos.size());
                     new CustomToast().success(message, Toast.LENGTH_LONG);
                 });
+                selectOutput(activities[0]);
+                shareFile(activities[0]);
             }
         }
         return activities[0];
+    }
+
+    private void selectOutput(Activity activity) {
+        final Intent intentOutput = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intentOutput.setType("application/zip");
+        final File file = new File(zipAddress);
+        intentOutput.putExtra(Intent.EXTRA_TITLE, file.getName());
+        activity.startActivityForResult(intentOutput, ZIP_ROOT);
+    }
+
+    private void shareFile(Activity activity) {
+        final Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        File zipFile = new File(zipAddress);
+        sendIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(activity,
+                BuildConfig.APPLICATION_ID.concat(".provider"), zipFile));
+        sendIntent.setType("application/zip");
+        activity.startActivity(sendIntent);
     }
 
     @Override
@@ -96,7 +115,7 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
         if (images.size() > 0) {
             final String onOffLoadDtoString = new Gson().toJson(images);
             writeOnSdCard(onOffLoadDtoString, "images", trackNumber);
-            if (CustomFile.copyImages(images, trackNumber, activity)) {
+            if (copyImages(images, trackNumber, activity)) {
                 for (int i = 0; i < images.size(); i++) {
                     images.get(i).isSent = true;
                 }
@@ -132,7 +151,7 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
                 if (forbiddenDto.address != null) {
                     final Image image = new Image();
                     image.address = forbiddenDto.address;
-                    CustomFile.copyImages(image, trackNumber, activity);
+                    copyImages(image, trackNumber, activity);
                 }
             }
         }
