@@ -43,17 +43,15 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
     private final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
     private final ArrayList<ForbiddenDto> forbiddenDtos = new ArrayList<>();
     private final CustomProgressModel progress;
-    private final UploadFragment fragment;
     private final int trackNumber;
     private final String id;
 
-    public PrepareOffLoad(Activity activity, int trackNumber, String id, UploadFragment fragment) {
+    public PrepareOffLoad(Activity activity, int trackNumber, String id) {
         super();
         progress = getApplicationComponent().CustomProgressModel();
         progress.show(activity, false);
         this.trackNumber = trackNumber;
         this.id = id;
-        this.fragment = fragment;
     }
 
     @Override

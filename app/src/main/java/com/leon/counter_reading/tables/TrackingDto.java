@@ -35,6 +35,7 @@ public class TrackingDto {
     public boolean isArchive;
     public boolean isLocked;
     public boolean isDeleted;
+    public boolean isRepeat;
 
     public String x;
     public String y;

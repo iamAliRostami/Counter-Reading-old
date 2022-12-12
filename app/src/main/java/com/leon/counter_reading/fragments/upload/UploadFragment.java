@@ -142,7 +142,8 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
             String message = String.format(getString(R.string.darsad_alal_1), alalPercent, new DecimalFormat("###.##").format(alalMane), mane);
             new CustomToast().info(message, Toast.LENGTH_LONG);
             return false;
-        } else if (type != OFFLINE.getValue() && (imagesCount > 0 || voicesCount > 0)) {
+        } else if (!trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).isRepeat &&
+                (type != OFFLINE.getValue() && (imagesCount > 0 || voicesCount > 0))) {
             String message = String.format(getString(R.string.unuploaded_multimedia),
                             imagesCount, voicesCount).concat("\n")
                     .concat(getString(R.string.recommend_multimedia));
@@ -176,7 +177,7 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
             lastClickTime = SystemClock.elapsedRealtime();
             new PrepareOffLoad(requireActivity(),
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id, this)
+                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
                     .execute(requireActivity());
         } else if (type == OFFLINE.getValue()) {
             new PrepareOffLoadOffline(requireActivity(),
