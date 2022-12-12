@@ -67,6 +67,12 @@ public interface TrackingDao {
     @Query("DELETE FROM TrackingDto WHERE trackNumber in(:trackNumbers)")
     void deleteTrackingDtos(List<Integer> trackNumbers);
 
+    @Query("DELETE FROM TrackingDto WHERE id = :id")
+    void deleteTrackingDtosCompletely(String id);
+
+    @Query("DELETE FROM TrackingDto")
+    void deleteTrackingDtosCompletely();
+
     @Query("DELETE FROM TrackingDto WHERE trackNumber = :trackNumber AND isArchive = :isArchive")
     void deleteTrackingDto(int trackNumber, boolean isArchive);
 

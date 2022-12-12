@@ -139,7 +139,8 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
             new CustomToast().info(message, Toast.LENGTH_LONG);
             return false;
         } else if (mane > 0 && alalMane > (double) alalPercent) {
-            String message = String.format(getString(R.string.darsad_alal_1), alalPercent, new DecimalFormat("###.##").format(alalMane), mane);
+            String message = String.format(getString(R.string.darsad_alal_1),
+                    alalPercent, new DecimalFormat("###.##").format(alalMane), mane);
             new CustomToast().info(message, Toast.LENGTH_LONG);
             return false;
         } else if (!trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).isRepeat &&

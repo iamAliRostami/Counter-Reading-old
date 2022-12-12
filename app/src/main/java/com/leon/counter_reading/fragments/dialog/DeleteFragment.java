@@ -1,6 +1,7 @@
 package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
+import static com.leon.counter_reading.enums.BundleEnum.COMPLETELY_DELETE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD_TEMP;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME_TEMP;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
@@ -29,16 +30,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class DeleteFragment extends DialogFragment {
     private String id;
+    private boolean completelyDelete;
     private FragmentDeleteBinding binding;
     private Activity activity;
 
     public DeleteFragment() {
     }
 
-    public static DeleteFragment newInstance(String id) {
+    public static DeleteFragment newInstance(String id, boolean completelyDelete) {
         final DeleteFragment fragment = new DeleteFragment();
         final Bundle args = new Bundle();
         args.putString(BILL_ID.getValue(), id);
+        args.putBoolean(COMPLETELY_DELETE.getValue(), completelyDelete);
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,6 +51,7 @@ public class DeleteFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             id = getArguments().getString(BILL_ID.getValue());
+            completelyDelete = getArguments().getBoolean(COMPLETELY_DELETE.getValue());
             getArguments().clear();
         }
     }
@@ -85,9 +89,14 @@ public class DeleteFragment extends DialogFragment {
                                 .getStringData(PASSWORD_TEMP.getValue())).contains(password)
                 ) {
                     if (id.isEmpty()) {
-                        getApplicationComponent().MyDatabase().trackingDao()
-                                .updateTrackingDtoByArchive(true, false, true, getDate(requireActivity()));
-                    } else
+                        if (completelyDelete)
+                            getApplicationComponent().MyDatabase().trackingDao().deleteTrackingDtosCompletely();
+                        else
+                            getApplicationComponent().MyDatabase().trackingDao()
+                                    .updateTrackingDtoByArchive(true, false, true, getDate(requireActivity()));
+                    } else if (completelyDelete)
+                        getApplicationComponent().MyDatabase().trackingDao().deleteTrackingDtosCompletely(id);
+                    else
                         getApplicationComponent().MyDatabase().trackingDao()
                                 .updateTrackingDtoByArchive(id, true, false, true, getDate(requireActivity()));
                     final Intent intent = activity.getIntent();

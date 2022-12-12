@@ -57,10 +57,10 @@ public class ReadingSettingDeleteFragment extends Fragment {
     void setOnButtonDeleteClickListener() {
         binding.buttonDelete.setOnClickListener(v -> {
             if (binding.spinner.getSelectedItemPosition() == 0) {
-                ShowDialogOnce(requireContext(), "DELETE_DIALOG", DeleteFragment.newInstance(""));
+                ShowDialogOnce(requireContext(), "DELETE_DIALOG", DeleteFragment.newInstance("", binding.checkBoxDelete.isChecked()));
             } else {
                 ShowDialogOnce(requireContext(), "DELETE_DIALOG", DeleteFragment
-                        .newInstance(trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id));
+                        .newInstance(trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id, binding.checkBoxDelete.isChecked()));
             }
         });
     }

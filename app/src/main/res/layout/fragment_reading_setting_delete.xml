@@ -10,15 +10,15 @@
         android:id="@+id/image_view_delete"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/linear_layout_1"
+        android:layout_above="@id/relative_layout_1"
         android:src="@drawable/img_delete"
         tools:ignore="ContentDescription" />
 
     <RelativeLayout
-        android:id="@+id/linear_layout_1"
+        android:id="@+id/relative_layout_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/button_delete"
+        android:layout_above="@id/check_box_delete"
         android:layout_marginTop="@dimen/low_dp"
         android:layout_marginBottom="@dimen/low_dp"
         android:background="@drawable/border_gray_1"
@@ -31,8 +31,20 @@
 
     </RelativeLayout>
 
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/check_box_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color_light"
+        style="@style/CheckBox.Possible"
+        android:layout_margin="0dp"
+        android:background="@drawable/border_blue_1"
+        android:layout_above="@id/button_delete"
+        android:text="@string/completely_delete" />
+
     <Button
         android:id="@+id/button_delete"
+        android:layout_marginTop="@dimen/low_dp"
         style="@style/ButtonWarning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
