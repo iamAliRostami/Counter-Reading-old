@@ -643,12 +643,12 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
 //    public KarbariDto getKarbariDto(int position) {
 //        return adapter.getKarbariDtos().get(position);
 //    }
-//todo
+//TODO
 //    @Override
 //    public ReadingConfigDefaultDto getReadingConfigDefaultDto(int position) {
 //        return adapter.getReadingConfigDefaultDtos().get(position);
 //    }
-//todo
+//TODO
 //    @Override
 //    public ArrayList<CounterStateDto> getCounterStateDtos() {
 //        return adapter.getCounterStateDtos();

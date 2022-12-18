@@ -452,7 +452,7 @@ public class CustomFile {
         final File toInstall = new File(storageDir, fileName);
         Intent intent;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Uri apkUri = FileProvider.getUriForFile(activity, BuildConfig.APPLICATION_ID +
+            final Uri apkUri = FileProvider.getUriForFile(activity, BuildConfig.APPLICATION_ID +
                     ".provider", toInstall);
             intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
             intent.setData(apkUri);

@@ -112,7 +112,6 @@ public class TakePhotoFragment extends DialogFragment {
                     View.GONE : View.VISIBLE);
             getArguments().clear();
         }
-//        if (BuildConfig.COMPANY_NAME != TSE)
         if (gallerySelector())
             binding.checkBoxGallery.setVisibility(View.GONE);
         imageSetup();
