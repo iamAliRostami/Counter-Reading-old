@@ -269,7 +269,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
 
     private void canBeEmpty() {
         if (readingVM.getCounterNumber().isEmpty() || readingVM.isMane()) {
-            readingActivity.updateOnOffLoadWithoutCounterNumber(readingVM.getPosition(),
+            readingActivity.updateOnOffLoadWithoutNumber(readingVM.getPosition(),
                     readingVM.getCounterStateCode(), readingVM.getCounterStatePosition());
         } else {
             final int currentNumber = getDigits(readingVM.getCounterNumber());
@@ -500,8 +500,8 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
 
         void updateOnOffLoadByLock(int position);
 
-        void updateOnOffLoadWithoutCounterNumber(int position, int counterStateCode,
-                                                 int counterStatePosition);
+        void updateOnOffLoadWithoutNumber(int position, int counterStateCode,
+                                          int counterStatePosition);
 
         void updateOnOffLoadByAttempt(int position, boolean... booleans);
 

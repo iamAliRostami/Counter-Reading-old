@@ -88,6 +88,7 @@ public class LoginFragment extends Fragment {
         if (getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(AVATAR.getValue()))
             binding.imageViewPerson.setImageBitmap(loadImage(requireContext(), getApplicationComponent()
                     .SharedPreferenceModel().getStringData(AVATAR.getValue())));
+//        binding.imageViewPerson.setShapeAppearanceModel(ShapeAppearanceModel.builder().setAllCornerSizes(ShapeAppearanceModel.PILL).build());
         setOnButtonLoginClickListener();
         setOnButtonLongCLickListener();
         setOnImageViewPasswordClickListener();

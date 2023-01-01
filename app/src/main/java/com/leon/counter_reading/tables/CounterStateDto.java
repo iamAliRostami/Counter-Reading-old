@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
 
-@Entity(tableName = "CounterStateDto", indices = @Index(value = {"customId"/*,"id","moshtarakinId"*/}, unique = true))
+@Entity(tableName = "CounterStateDto", indices = @Index(value = {"customId"}, unique = true))
 public class CounterStateDto {
     @PrimaryKey(autoGenerate = true)
     public int customId;
@@ -22,6 +22,7 @@ public class CounterStateDto {
     public boolean shouldEnterNumber;
     public boolean isXarab;
     public boolean isFaqed;
+    public boolean hasImage;
 
     public static ArrayList<String> getCounterStateItems(ArrayList<CounterStateDto> counterStateDtos) {
         ArrayList<String> items = new ArrayList<>();
@@ -38,7 +39,6 @@ public class CounterStateDto {
         for (int i = 0; i < counterStateDtos.size(); i++) {
             items[i + 1] = counterStateDtos.get(i).title;
         }
-//        items[items.length - 1] = last;
         items[items.length - 2] = customItems[1];
         items[items.length - 1] = customItems[2];
         return items;

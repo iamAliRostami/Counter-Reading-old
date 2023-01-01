@@ -45,14 +45,12 @@ import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
-import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import static com.leon.counter_reading.utils.login.TwoStepVerification.showPersonalCode;
 import static com.leon.counter_reading.utils.reading.ReadingUtils.setAboveIcons;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Debug;
 import android.view.Menu;
@@ -200,8 +198,8 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    public void updateOnOffLoadWithoutCounterNumber(int position, int counterStateCode,
-                                                    int counterStatePosition) {
+    public void updateOnOffLoadWithoutNumber(int position, int counterStateCode,
+                                             int counterStatePosition) {
         readingData.onOffLoadDtos.get(position).counterNumber = null;
         updateOnOffLoad(position, counterStateCode, counterStatePosition);
         attemptSend(position, true, true);
@@ -339,17 +337,17 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-    private void showImage(int position) {
+    private void showImage(int position, boolean hasImage) {
         ShowDialogOnce(this, TAKE_PHOTO.getValue().concat(readingData.onOffLoadDtos
                 .get(binding.viewPager.getCurrentItem()).id), TakePhotoFragment
                 .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber,
-                        position, true));
+                        position, true, hasImage));
     }
 
-    private void attemptSend(int position, boolean isForm, boolean isImage) {
-        if (isForm && (sharedPreferenceManager.getBoolData(SERIAL.getValue())
+    private boolean shouldShowPossible() {
+        return sharedPreferenceManager.getBoolData(SERIAL.getValue())
                 || sharedPreferenceManager.getBoolData(AHAD_2.getValue())
                 || sharedPreferenceManager.getBoolData(AHAD_1.getValue())
                 || sharedPreferenceManager.getBoolData(AHAD_TOTAL.getValue())
@@ -358,31 +356,29 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 || sharedPreferenceManager.getBoolData(ADDRESS.getValue())
                 || sharedPreferenceManager.getBoolData(ACCOUNT.getValue())
                 || sharedPreferenceManager.getBoolData(READING_REPORT.getValue())
-                || sharedPreferenceManager.getBoolData(MOBILE.getValue()))) {
+                || sharedPreferenceManager.getBoolData(MOBILE.getValue());
+    }
+
+    private void attemptSend(int position, boolean isForm, boolean isImage) {
+        final CounterStateDto counterState = readingData.counterStateDtos.get(readingData
+                .onOffLoadDtos.get(position).counterStatePosition);
+        if (isForm && shouldShowPossible()) {
             showPossible(position);
-        } else if (isImage && sharedPreferenceManager.getBoolData(IMAGE.getValue())) {
-            showImage(position);
+        } else if (isImage && (sharedPreferenceManager.getBoolData(IMAGE.getValue()) || counterState.hasImage)) {
+            showImage(position, counterState.hasImage);
         } else {
             if (!isShowing) {
-                final CounterStateDto counterStateDto = readingData.counterStateDtos.get(readingData
-                        .onOffLoadDtos.get(position).counterStatePosition);
-                if ((counterStateDto.isTavizi || counterStateDto.isXarab) &&
-                        counterStateDto.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {
+                if ((counterState.isTavizi || counterState.isXarab) &&
+                        counterState.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {
                     ShowDialogOnce(this, SERIAL_DIALOG.getValue().concat(readingData.onOffLoadDtos.get(position).eshterak),
                             SerialFragment.newInstance(position));
                 } else isShowing = true;
             }
             if (isShowing) {
+                makeRing(this, SAVE);
                 updateAdapter(position);
                 isShowing = false;
-                makeRing(this, SAVE);
-                Location location = null;
-                try {
-                    location = getLocationTracker(this).getCurrentLocation();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                new Update(readingData.onOffLoadDtos.get(position), location).execute(this);
+                new Update(readingData.onOffLoadDtos.get(position)).execute(this);
                 if (currentOfflineAttempts < MAX_OFFLINE_ATTEMPT)
                     new PrepareToSend(sharedPreferenceManager.getStringData(TOKEN.getValue()))
                             .execute(this);

@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.application'
-//    id 'com.google.gms.google-services'
 }
 android {
     compileSdkVersion 33
@@ -41,7 +40,7 @@ android {
                     "com.leon.counter_reading.enums.CompanyNames.DEBUG"
         }
         release {
-//            debuggable true
+            debuggable true
             signingConfig signingConfigs.config
             buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
                     "com.leon.counter_reading.enums.CompanyNames.ESF"
@@ -78,6 +77,14 @@ android {
             applicationIdSuffix ".zone4"
             buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
                     "com.leon.counter_reading.enums.CompanyNames.ZONE4"
+        }
+        zone_5 {
+            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.config
+            applicationIdSuffix ".zone5"
+            buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
+                    "com.leon.counter_reading.enums.CompanyNames.ZONE5"
         }
         zone_6 {
             debuggable true

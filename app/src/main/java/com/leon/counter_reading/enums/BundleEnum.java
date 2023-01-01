@@ -4,6 +4,7 @@ public enum BundleEnum {
     BILL_ID("bill_Id"),
     COMPLETELY_DELETE("completely_delete"),
     IMAGE("image"),
+    HAS_IMAGE("has_image"),
     THEME("theme"),
     ON_OFF_LOAD("on_off_load"),
     JUST_MOBILE("just_mobile"),

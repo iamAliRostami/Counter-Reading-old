@@ -1,6 +1,7 @@
 package com.leon.counter_reading.utils.reading;
 
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -15,11 +16,9 @@ import java.util.Date;
 
 public class Update extends AsyncTask<Activity, Void, Void> {
     private final OnOffLoadDto onOffLoadDto;
-    private final Location location;
 
-    public Update(OnOffLoadDto onOffLoadDto, Location location) {
+    public Update(OnOffLoadDto onOffLoadDto) {
         super();
-        this.location = location;
         this.onOffLoadDto = onOffLoadDto;
     }
 
@@ -28,11 +27,16 @@ public class Update extends AsyncTask<Activity, Void, Void> {
     protected Void doInBackground(Activity... activities) {
         final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss:SSS");
 
-        if (location != null) {
-            onOffLoadDto.x = location.getLongitude();
-            onOffLoadDto.y = location.getLatitude();
-            onOffLoadDto.gisAccuracy = location.getAccuracy();
-            onOffLoadDto.locationDateTime = dateFormatter.format(new Date(location.getTime()));
+        try {
+            final Location location = getLocationTracker(activities[0]).getCurrentLocation();
+            if (location != null) {
+                onOffLoadDto.x = location.getLongitude();
+                onOffLoadDto.y = location.getLatitude();
+                onOffLoadDto.gisAccuracy = location.getAccuracy();
+                onOffLoadDto.locationDateTime = dateFormatter.format(new Date(location.getTime()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         onOffLoadDto.phoneDateTime = dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis()));
 //        date = new Date(Calendar.getInstance().getTimeInMillis());

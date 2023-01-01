@@ -44,7 +44,8 @@ public class DifferentCompanyManager {
             case ZONE4:
                 return "http://81.12.106.167:8081/";
             case ZONE5:
-                return "http://80.69.252.151/";
+//                return "http://80.69.252.151/";
+            return "http://188.75.65.83/";
             case ZONE6:
                 return "http://85.133.190.221:4121/";
             case TSW:

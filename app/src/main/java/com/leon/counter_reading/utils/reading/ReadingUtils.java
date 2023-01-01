@@ -1,7 +1,5 @@
 package com.leon.counter_reading.utils.reading;
 
-//import static com.leon.counter_reading.helpers.Constants.readingData;
-
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.tables.ReadingData;
 
