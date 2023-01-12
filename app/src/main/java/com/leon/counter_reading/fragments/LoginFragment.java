@@ -42,6 +42,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.HomeActivity;
 import com.leon.counter_reading.databinding.FragmentLoginBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
+import com.leon.counter_reading.utils.Crypto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.login.AttemptLogin;
 import com.leon.counter_reading.utils.login.AttemptRegister;
@@ -178,7 +179,8 @@ public class LoginFragment extends Fragment {
         if (isNetworkAvailable(requireActivity())) {
             if (isLogin) {
                 counter++;
-                if (counter < 4)
+                //TODO
+                if (counter < 1/*4*/)
                     new AttemptLogin(login).execute(requireActivity());
                 else
                     offlineLogin();

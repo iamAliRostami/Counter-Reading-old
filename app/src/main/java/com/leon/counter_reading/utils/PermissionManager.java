@@ -83,7 +83,7 @@ public class PermissionManager {
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
     }
-
+//TODO
     public static boolean checkCameraPermission(Context context) {
         return ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
@@ -128,7 +128,7 @@ public class PermissionManager {
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
     }
-
+//TODO
     public static boolean checkStoragePermission(Context context) {
         return ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ||

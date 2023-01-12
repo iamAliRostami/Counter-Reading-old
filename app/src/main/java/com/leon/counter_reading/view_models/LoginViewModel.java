@@ -40,6 +40,7 @@ public class LoginViewModel extends BaseObservable {
 
     public LoginViewModel(String deviceSerial) {
         setAppVersion(BuildConfig.VERSION_NAME);
+        setSaved(true);
         setDeviceSerial(deviceSerial);
         setVersion(String.format("%s *** %s", getAndroidVersion(), BuildConfig.VERSION_NAME));
         final ISharedPreferenceManager sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();

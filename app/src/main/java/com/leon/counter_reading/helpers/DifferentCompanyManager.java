@@ -36,7 +36,7 @@ public class DifferentCompanyManager {
 //                return "https://37.191.92.157/";//Internet
                 return "http://172.18.12.36/";
             case ZONE1:
-                return "http://217.146.220.33:50011/";
+                return "http://217.146.220.33:50012/";
             case ZONE2:
                 return "http://212.16.75.194:8080/";
             case ZONE3:
@@ -104,8 +104,10 @@ public class DifferentCompanyManager {
         switch (getActiveCompanyName()) {
             case ESF:
                 return "واحد";
+            case ZONE1:
             case ZONE3:
             case ZONE4:
+            case ZONE5:
             case ZONE6:
             case TSE:
             case TW:
@@ -121,8 +123,10 @@ public class DifferentCompanyManager {
             case ESF:
                 return "واحد مسکونی";
             case KSH:
+            case ZONE1:
             case ZONE3:
             case ZONE4:
+            case ZONE5:
             case ZONE6:
             case TW:
             case TSE:
@@ -137,8 +141,10 @@ public class DifferentCompanyManager {
             case ESF:
                 return "واحد تجاری";
             case KSH:
+            case ZONE1:
             case ZONE3:
             case ZONE4:
+            case ZONE5:
             case ZONE6:
             case TW:
             case TSE:
@@ -152,8 +158,10 @@ public class DifferentCompanyManager {
         switch (getActiveCompanyName()) {
             case ESF:
                 return "واحد کل";
+            case ZONE1:
             case ZONE3:
             case ZONE4:
+            case ZONE5:
             case ZONE6:
             case KSH:
             case TW:
@@ -167,8 +175,10 @@ public class DifferentCompanyManager {
     public static int getImageNumber() {
         switch (getActiveCompanyName()) {
             case ESF:
+            case ZONE1:
             case ZONE3:
             case ZONE4:
+            case ZONE5:
             case ZONE6:
             case TSE:
             case TW:
@@ -182,8 +192,10 @@ public class DifferentCompanyManager {
     public static int getShowError() {
         switch (getActiveCompanyName()) {
             case ESF:
+            case ZONE1:
             case ZONE3:
             case ZONE4:
+            case ZONE5:
             case ZONE6:
             case TSE:
             case TW:
@@ -197,8 +209,10 @@ public class DifferentCompanyManager {
     public static int getLockNumber() {
         switch (getActiveCompanyName()) {
             case ESF:
+            case ZONE1:
             case ZONE3:
             case ZONE4:
+            case ZONE5:
             case ZONE6:
             case TSE:
             case TW:
@@ -213,8 +227,10 @@ public class DifferentCompanyManager {
         switch (getActiveCompanyName()) {
             case ESF:
             case KSH:
+            case ZONE1:
             case ZONE3:
             case ZONE4:
+            case ZONE5:
             case ZONE6:
             case TW:
             case TSE:
@@ -228,8 +244,10 @@ public class DifferentCompanyManager {
         switch (getActiveCompanyName()) {
             case ESF:
             case KSH:
+            case ZONE1:
             case ZONE3:
             case ZONE4:
+            case ZONE5:
             case ZONE6:
                 return 15;
             case TSE:
@@ -244,8 +262,10 @@ public class DifferentCompanyManager {
         switch (getActiveCompanyName()) {
             case ESF:
                 return "ردیف";
+            case ZONE1:
             case ZONE3:
             case ZONE4:
+            case ZONE5:
             case ZONE6:
             case TSE:
             case TW:

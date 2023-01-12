@@ -4,16 +4,16 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.leon.counter_reading.tse",
-  "variantName": "tse",
+  "applicationId": "com.leon.counter_reading.zone1",
+  "variantName": "zone_1",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 97,
-      "versionName": "1.01.10.18",
-      "outputFile": "app-tse.apk"
+      "versionCode": 98,
+      "versionName": "1.01.10.21",
+      "outputFile": "app-zone_1.apk"
     }
   ],
   "elementType": "File"
