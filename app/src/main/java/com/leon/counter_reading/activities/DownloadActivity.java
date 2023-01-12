@@ -79,7 +79,7 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
     private void askAllFilePermission() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
             final Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-            Uri uri = Uri.fromParts("package", getPackageName(), null);
+            final Uri uri = Uri.fromParts("package", getPackageName(), null);
             intent.setData(uri);
             startActivityForResult(intent, ALL_FILES_ACCESS_REQUEST);
         }

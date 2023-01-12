@@ -42,6 +42,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.HomeActivity;
 import com.leon.counter_reading.databinding.FragmentLoginBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
+import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.utils.Crypto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.login.AttemptLogin;
@@ -177,6 +178,10 @@ public class LoginFragment extends Fragment {
         login.setOldPassword(login.getPassword());
         login.setOldUsername(login.getUsername());
         if (isNetworkAvailable(requireActivity())) {
+            //TODO
+            final ISharedPreferenceManager sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
+            sharedPreferenceManager.putData(USERNAME.getValue(), login.getUsername());
+            sharedPreferenceManager.putData(PASSWORD.getValue(), Crypto.encrypt(login.getPassword()));
             if (isLogin) {
                 counter++;
                 //TODO

@@ -3,6 +3,7 @@ package com.leon.counter_reading.utils;
 import static android.content.Context.TELEPHONY_SERVICE;
 import static com.leon.counter_reading.helpers.Constants.CARRIER_PRIVILEGE_STATUS;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
+import static com.leon.counter_reading.helpers.Constants.PHOTO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_WIFI_CODE;
 
@@ -15,6 +16,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.provider.Settings;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
@@ -34,6 +38,7 @@ import androidx.core.location.LocationManagerCompat;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 
 import java.util.ArrayList;
@@ -83,8 +88,14 @@ public class PermissionManager {
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
     }
-//TODO
+
     public static boolean checkCameraPermission(Context context) {
+        //TODO
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager() && Settings.System.canWrite(context) &&
+                    ActivityCompat.checkSelfPermission(context,
+                            Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+        }
         return ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(context,
@@ -94,6 +105,14 @@ public class PermissionManager {
     }
 
     public static void checkCameraPermission(Activity activity) {
+        //TODO
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!(Environment.isExternalStorageManager() && Settings.System.canWrite(activity) &&
+                    ActivityCompat.checkSelfPermission(activity,
+                            Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)) {
+                askCameraPermission(activity);
+            }
+        }
         if (ActivityCompat.checkSelfPermission(activity,
                 Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(activity,
@@ -117,18 +136,23 @@ public class PermissionManager {
                 forceClose(activity);
             }
         };
-        new TedPermission(activity)
-                .setPermissionListener(permissionlistener)
-                .setRationaleMessage(activity.getString(R.string.confirm_permission))
-                .setRationaleConfirmText(activity.getString(R.string.allow_permission))
-                .setDeniedMessage(activity.getString(R.string.if_reject_permission))
-                .setDeniedCloseButtonText(activity.getString(R.string.close))
-                .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(Manifest.permission.CAMERA,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
+        //TODO
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            final Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
+            activity.startActivity(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
+        } else {
+            new TedPermission(activity)
+                    .setPermissionListener(permissionlistener)
+                    .setRationaleMessage(activity.getString(R.string.confirm_permission))
+                    .setRationaleConfirmText(activity.getString(R.string.allow_permission))
+                    .setDeniedMessage(activity.getString(R.string.if_reject_permission))
+                    .setDeniedCloseButtonText(activity.getString(R.string.close))
+                    .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
+                    .setPermissions(PHOTO_PERMISSIONS).check();
+        }
     }
-//TODO
+
+    //TODO
     public static boolean checkStoragePermission(Context context) {
         return ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ||
@@ -136,6 +160,7 @@ public class PermissionManager {
                         Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
+    //TODO
     public static void checkStoragePermission(Activity activity) {
         if (ActivityCompat.checkSelfPermission(activity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||

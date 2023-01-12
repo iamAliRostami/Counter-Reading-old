@@ -4,7 +4,6 @@ import static com.leon.counter_reading.di.view_model.MyDatabaseClientModel.migra
 import static com.leon.counter_reading.enums.BundleEnum.THEME;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.DISPLAY_NAME;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
-import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_TEMPORARY;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USER_CODE;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
@@ -23,23 +22,31 @@ import static com.leon.counter_reading.utils.PermissionManager.enableMobileWifi;
 import static com.leon.counter_reading.utils.PermissionManager.enableNetwork;
 import static com.leon.counter_reading.utils.PermissionManager.isNetworkAvailable;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
+import android.os.Environment;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -129,15 +136,57 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 PermissionManager.forceClose(activity);
             }
         };
-        new TedPermission(this)
-                .setPermissionListener(permissionlistener)
-                .setRationaleMessage(getString(R.string.confirm_permission))
-                .setRationaleConfirmText(getString(R.string.allow_permission))
-                .setDeniedMessage(getString(R.string.if_reject_permission))
-                .setDeniedCloseButtonText(getString(R.string.close))
-                .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(PHOTO_PERMISSIONS).check();
+        //TODO
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                final Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
+//                startActivityForResult(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri), SETTING_REQUEST);
+                allFileResultLauncher.launch(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
+            } else if (!Settings.System.canWrite(activity)) {
+//                startActivityForResult(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, uri), SETTING_REQUEST);
+//                startActivity(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, uri));
+//                final Uri uri = Uri.parse("package" + BuildConfig.APPLICATION_ID);
+
+                final Uri uri = Uri.fromParts("package", getPackageName(), null);
+                settingResultLauncher.launch(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, uri));
+
+//                final Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+//                Uri uri = Uri.fromParts("package", getPackageName(), null);
+//                intent.setData(uri);
+//                startActivityForResult(intent, SETTING_REQUEST);
+            } else if (ActivityCompat.checkSelfPermission(activity,
+                    Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                new TedPermission(this)
+                        .setPermissionListener(permissionlistener)
+                        .setRationaleMessage(getString(R.string.confirm_permission))
+                        .setRationaleConfirmText(getString(R.string.allow_permission))
+                        .setDeniedMessage(getString(R.string.if_reject_permission))
+                        .setDeniedCloseButtonText(getString(R.string.close))
+                        .setGotoSettingButtonText(getString(R.string.allow_permission))
+                        .setPermissions(Manifest.permission.CAMERA).check();
+            }
+
+        } else
+            new TedPermission(this)
+                    .setPermissionListener(permissionlistener)
+                    .setRationaleMessage(getString(R.string.confirm_permission))
+                    .setRationaleConfirmText(getString(R.string.allow_permission))
+                    .setDeniedMessage(getString(R.string.if_reject_permission))
+                    .setDeniedCloseButtonText(getString(R.string.close))
+                    .setGotoSettingButtonText(getString(R.string.allow_permission))
+                    .setPermissions(PHOTO_PERMISSIONS).check();
     }
+
+    private final ActivityResultLauncher<Intent> allFileResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                /*if (result.getResultCode() == Activity.RESULT_OK)*/
+                checkPermissions();
+            });
+    private final ActivityResultLauncher<Intent> settingResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+//                if (result.getResultCode() == Activity.RESULT_OK) ;
+                checkPermissions();
+            });
 
     private void askLocationPermission() {
         final PermissionListener permissionlistener = new PermissionListener() {
@@ -184,7 +233,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
         binding.imageViewHeader.setOnClickListener(v -> {
             if (POSITION != -1) {
                 POSITION = -1;
-//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 final Intent intent = new Intent(getContext(), HomeActivity.class);
                 startActivity(intent);
                 finish();
@@ -223,13 +271,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
                             }
                             startActivity(intent);
                             finish();
-//                            if (position != 1)
-//                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-//                            else
-//                                AppCompatDelegate.setDefaultNightMode(getApplicationComponent().
-//                                        SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
-//                                        AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-
                         }
                     }
 
@@ -300,6 +341,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 else enableNetwork(this);
             }
         }
+        Log.e("here", resultCode + " , " + requestCode);
     }
 
     @Override
