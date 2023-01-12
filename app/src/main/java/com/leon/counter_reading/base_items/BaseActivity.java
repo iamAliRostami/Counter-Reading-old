@@ -34,7 +34,6 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.os.Environment;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -85,6 +84,10 @@ public abstract class BaseActivity extends AppCompatActivity implements
     private ActivityBaseBinding binding;
     private ISharedPreferenceManager sharedPreferenceManager;
     private boolean exit = false;
+    private final ActivityResultLauncher<Intent> allFileResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> checkPermissions());
+    private final ActivityResultLauncher<Intent> settingResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> checkPermissions());
 
     protected abstract void initialize();
 
@@ -140,20 +143,10 @@ public abstract class BaseActivity extends AppCompatActivity implements
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()) {
                 final Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
-//                startActivityForResult(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri), SETTING_REQUEST);
                 allFileResultLauncher.launch(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
             } else if (!Settings.System.canWrite(activity)) {
-//                startActivityForResult(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, uri), SETTING_REQUEST);
-//                startActivity(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, uri));
-//                final Uri uri = Uri.parse("package" + BuildConfig.APPLICATION_ID);
-
                 final Uri uri = Uri.fromParts("package", getPackageName(), null);
                 settingResultLauncher.launch(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, uri));
-
-//                final Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-//                Uri uri = Uri.fromParts("package", getPackageName(), null);
-//                intent.setData(uri);
-//                startActivityForResult(intent, SETTING_REQUEST);
             } else if (ActivityCompat.checkSelfPermission(activity,
                     Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 new TedPermission(this)
@@ -165,7 +158,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
                         .setGotoSettingButtonText(getString(R.string.allow_permission))
                         .setPermissions(Manifest.permission.CAMERA).check();
             }
-
         } else
             new TedPermission(this)
                     .setPermissionListener(permissionlistener)
@@ -177,16 +169,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
                     .setPermissions(PHOTO_PERMISSIONS).check();
     }
 
-    private final ActivityResultLauncher<Intent> allFileResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-                /*if (result.getResultCode() == Activity.RESULT_OK)*/
-                checkPermissions();
-            });
-    private final ActivityResultLauncher<Intent> settingResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-//                if (result.getResultCode() == Activity.RESULT_OK) ;
-                checkPermissions();
-            });
 
     private void askLocationPermission() {
         final PermissionListener permissionlistener = new PermissionListener() {
@@ -341,7 +323,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 else enableNetwork(this);
             }
         }
-        Log.e("here", resultCode + " , " + requestCode);
     }
 
     @Override

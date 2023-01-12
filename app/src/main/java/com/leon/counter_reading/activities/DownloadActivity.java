@@ -16,11 +16,14 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ViewPagerAdapterTab;
 import com.leon.counter_reading.base_items.BaseActivity;
@@ -34,6 +37,10 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
         ViewPager.OnPageChangeListener {
     private ActivityDownloadBinding binding;
     private int currentState;
+    private final ActivityResultLauncher<Intent> allFileResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> checkAllFilePermission());
+    private final ActivityResultLauncher<Intent> settingResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> checkAllFilePermission());
 
     @Override
     protected void initialize() {
@@ -78,26 +85,21 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
 
     private void askAllFilePermission() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            final Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-            final Uri uri = Uri.fromParts("package", getPackageName(), null);
-            intent.setData(uri);
-            startActivityForResult(intent, ALL_FILES_ACCESS_REQUEST);
+            final Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
+            allFileResultLauncher.launch(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
         }
     }
 
     private void askSettingPermission() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            final Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-            Uri uri = Uri.fromParts("package", getPackageName(), null);
-            intent.setData(uri);
-            startActivityForResult(intent, SETTING_REQUEST);
+            final Uri uri = Uri.fromParts("package", getPackageName(), null);
+            settingResultLauncher.launch(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, uri));
         }
     }
 
     private void initializeTextViews() {
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(getCompanyName());
-
         binding.textViewDownloadNormal.setOnClickListener(this);
         binding.textViewDownloadOff.setOnClickListener(this);
         binding.textViewDownloadSpecial.setOnClickListener(this);

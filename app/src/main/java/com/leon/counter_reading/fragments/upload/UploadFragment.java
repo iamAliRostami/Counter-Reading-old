@@ -7,7 +7,6 @@ import static com.leon.counter_reading.enums.UploadType.NORMAL;
 import static com.leon.counter_reading.enums.UploadType.OFFLINE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
@@ -68,7 +67,6 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentUploadBinding.inflate(inflater, container, false);
-
         return binding.getRoot();
     }
 
@@ -99,7 +97,6 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         final int voicesCount = getApplicationComponent().MyDatabase().voiceDao().getUnsentVoiceCount(false);
         final int imagesSize = getApplicationComponent().MyDatabase().imageDao().getUnsentImageSize(false);
         final int voicesSize = getApplicationComponent().MyDatabase().voiceDao().getUnsentVoiceSizes(false);
-//        String message = String.format(activity.getString(R.string.unuploaded_multimedia), imagesCount, voicesCount);
         final String message = "تعداد عکس: ".concat(String.valueOf(imagesCount))
                 .concat(" *** حجم: ").concat(String.valueOf(imagesSize)).concat(" KB").concat("\n")
                 .concat("تعداد صدا: ").concat(String.valueOf(voicesCount))
@@ -127,8 +124,6 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
             for (int i = 0; i < isManes.size(); i++) {
                 mane += myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(isManes.get(i), trackingId);
             }
-//            alalPercent = myDatabase.trackingDao().getAlalHesabByTrackNumber(trackingDtos
-//                    .get(binding.spinner.getSelectedItemPosition() - 1).trackNumber);
             alalPercent = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).alalHesabPercent;
             alalMane = (double) mane / total * 100;
             imagesCount = myDatabase.imageDao().getUnsentImageCountByTrackNumber(trackNumber, false);
@@ -154,7 +149,6 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         }
         return true;
     }
-
 
     @Override
     public void onClick(View view) {
@@ -186,11 +180,6 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
                     .execute(requireActivity());
         }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

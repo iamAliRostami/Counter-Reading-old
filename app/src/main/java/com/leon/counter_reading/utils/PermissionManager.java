@@ -3,7 +3,6 @@ package com.leon.counter_reading.utils;
 import static android.content.Context.TELEPHONY_SERVICE;
 import static com.leon.counter_reading.helpers.Constants.CARRIER_PRIVILEGE_STATUS;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
-import static com.leon.counter_reading.helpers.Constants.PHOTO_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_NETWORK_CODE;
 import static com.leon.counter_reading.helpers.Constants.REQUEST_WIFI_CODE;
 
@@ -16,7 +15,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
@@ -38,160 +36,33 @@ import androidx.core.location.LocationManagerCompat;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 
 import java.util.ArrayList;
 
 public class PermissionManager {
     public static boolean checkRecorderPermission(Context context) {
+        //TODO
         return ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public static void checkRecorderPermission(Activity activity) {
-        if (ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(activity,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(activity,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            askRecorderPermission(activity);
-        }
-    }
-
-    public static void askRecorderPermission(Activity activity) {
-        final PermissionListener permissionlistener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                new CustomToast().info(activity.getString(R.string.access_granted));
-                checkRecorderPermission(activity);
-            }
-
-            @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                forceClose(activity);
-            }
-        };
-        new TedPermission(activity)
-                .setPermissionListener(permissionlistener)
-                .setRationaleMessage(activity.getString(R.string.confirm_permission))
-                .setRationaleConfirmText(activity.getString(R.string.allow_permission))
-                .setDeniedMessage(activity.getString(R.string.if_reject_permission))
-                .setDeniedCloseButtonText(activity.getString(R.string.close))
-                .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
+                checkStoragePermission(context);
     }
 
     public static boolean checkCameraPermission(Context context) {
         //TODO
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            return Environment.isExternalStorageManager() && Settings.System.canWrite(context) &&
-                    ActivityCompat.checkSelfPermission(context,
-                            Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
-        }
-        return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+        return checkStoragePermission(context) &&
                 ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public static void checkCameraPermission(Activity activity) {
-        //TODO
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!(Environment.isExternalStorageManager() && Settings.System.canWrite(activity) &&
-                    ActivityCompat.checkSelfPermission(activity,
-                            Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)) {
-                askCameraPermission(activity);
-            }
-        }
-        if (ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(activity,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(activity,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            askCameraPermission(activity);
-        }
-    }
-
-    public static void askCameraPermission(Activity activity) {
-        final PermissionListener permissionlistener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                new CustomToast().info(activity.getString(R.string.access_granted));
-                checkCameraPermission(activity);
-            }
-
-            @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                forceClose(activity);
-            }
-        };
-        //TODO
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            final Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
-            activity.startActivity(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
-        } else {
-            new TedPermission(activity)
-                    .setPermissionListener(permissionlistener)
-                    .setRationaleMessage(activity.getString(R.string.confirm_permission))
-                    .setRationaleConfirmText(activity.getString(R.string.allow_permission))
-                    .setDeniedMessage(activity.getString(R.string.if_reject_permission))
-                    .setDeniedCloseButtonText(activity.getString(R.string.close))
-                    .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                    .setPermissions(PHOTO_PERMISSIONS).check();
-        }
+                        Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
     }
 
     //TODO
     public static boolean checkStoragePermission(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            return Environment.isExternalStorageManager() && Settings.System.canWrite(context);
         return ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(context,
                         Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    //TODO
-    public static void checkStoragePermission(Activity activity) {
-        if (ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(activity,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            askStoragePermission(activity);
-        }
-    }
-
-    public static void askStoragePermission(Activity activity) {
-        final PermissionListener permissionlistener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                new CustomToast().info(activity.getString(R.string.access_granted));
-                checkStoragePermission(activity);
-            }
-
-            @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                forceClose(activity);
-            }
-        };
-        new TedPermission(activity)
-                .setPermissionListener(permissionlistener)
-                .setRationaleMessage(activity.getString(R.string.confirm_permission))
-                .setRationaleConfirmText(activity.getString(R.string.allow_permission))
-                .setDeniedMessage(activity.getString(R.string.if_reject_permission))
-                .setDeniedCloseButtonText(activity.getString(R.string.close))
-                .setGotoSettingButtonText(activity.getString(R.string.allow_permission))
-                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
     }
 
     public static boolean checkLocationPermission(Context context) {
@@ -295,25 +166,20 @@ public class PermissionManager {
                 if (info instanceof CellInfoGsm) {
                     final CellSignalStrengthGsm cell = ((CellInfoGsm) info).getCellSignalStrength();
                     outOfService = cell.getDbm() <= -110;
-//                    Log.e("signal 1", String.valueOf(cell.getDbm()));
                 } else if (info instanceof CellInfoCdma) {
                     final CellSignalStrengthCdma cell = ((CellInfoCdma) info).getCellSignalStrength();
                     outOfService = cell.getDbm() <= -110;
-//                    Log.e("signal 2", String.valueOf(cell.getDbm()));
                 } else if (info instanceof CellInfoLte) {
                     final CellSignalStrengthLte cell = ((CellInfoLte) info).getCellSignalStrength();
                     outOfService = cell.getDbm() <= -110;
-//                    Log.e("signal 3", String.valueOf(cell.getDbm()));
                 } else if (info instanceof CellInfoWcdma) {
                     final CellSignalStrengthWcdma cell = ((CellInfoWcdma) info).getCellSignalStrength();
                     outOfService = cell.getDbm() <= -110;
-//                    Log.e("signal 4", String.valueOf(cell.getDbm()));
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        return true;
         return outOfService;
     }
 

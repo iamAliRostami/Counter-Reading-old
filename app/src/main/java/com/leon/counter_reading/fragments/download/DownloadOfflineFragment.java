@@ -34,7 +34,8 @@ import java.util.List;
 
 import me.jahnen.libaums.UsbMassStorageDevice;
 
-public class DownloadOfflineFragment extends Fragment implements HomeFragment.HomeCallback, ExplorerFragment.ExplorerCallback {
+public class DownloadOfflineFragment extends Fragment implements HomeFragment.HomeCallback,
+        ExplorerFragment.ExplorerCallback {
     private final List<UsbDevice> detectedDevices = new ArrayList<>();
     private FragmentOfflineDownloadBinding binding;
     private PendingIntent permissionIntent;
@@ -75,12 +76,12 @@ public class DownloadOfflineFragment extends Fragment implements HomeFragment.Ho
         return binding.getRoot();
     }
 
-//    @SuppressLint("UnspecifiedImmutableFlag")
+    @SuppressLint("UnspecifiedImmutableFlag")
     private void initialize() {
         try {
             permissionIntent = PendingIntent.getBroadcast(requireContext(), 0,
                     new Intent(ACTION_USB_PERMISSION), 0);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
