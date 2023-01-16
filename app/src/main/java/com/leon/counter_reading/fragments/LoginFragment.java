@@ -42,8 +42,6 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.HomeActivity;
 import com.leon.counter_reading.databinding.FragmentLoginBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
-import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
-import com.leon.counter_reading.utils.Crypto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.login.AttemptLogin;
 import com.leon.counter_reading.utils.login.AttemptRegister;
@@ -111,7 +109,7 @@ public class LoginFragment extends Fragment {
             if (b) {
                 binding.linearLayoutUsername.setBackground(ContextCompat
                         .getDrawable(requireContext(), R.drawable.border_black_2));
-                binding.editTextPassword.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
+                binding.editTextPassword.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black));
             } else {
                 binding.linearLayoutUsername.setBackground(ContextCompat
                         .getDrawable(requireContext(), R.drawable.border_gray_2));
@@ -127,7 +125,7 @@ public class LoginFragment extends Fragment {
                 binding.linearLayoutPassword.setBackground(ContextCompat
                         .getDrawable(requireContext(), R.drawable.border_black_2));
                 binding.editTextPassword.setTextColor(ContextCompat.getColor(requireContext(),
-                        R.color.black));
+                        android.R.color.black));
             } else {
                 binding.linearLayoutPassword.setBackground(ContextCompat.getDrawable(requireContext(),
                         R.drawable.border_gray_2));
@@ -179,13 +177,13 @@ public class LoginFragment extends Fragment {
         login.setOldUsername(login.getUsername());
         if (isNetworkAvailable(requireActivity())) {
             //TODO
-            final ISharedPreferenceManager sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
-            sharedPreferenceManager.putData(USERNAME.getValue(), login.getUsername());
-            sharedPreferenceManager.putData(PASSWORD.getValue(), Crypto.encrypt(login.getPassword()));
+//            final ISharedPreferenceManager sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
+//            sharedPreferenceManager.putData(USERNAME.getValue(), login.getUsername());
+//            sharedPreferenceManager.putData(PASSWORD.getValue(), Crypto.encrypt(login.getPassword()));
             if (isLogin) {
                 counter++;
                 //TODO
-                if (counter < 1/*4*/)
+                if (counter < /*1*/4)
                     new AttemptLogin(login).execute(requireActivity());
                 else
                     offlineLogin();

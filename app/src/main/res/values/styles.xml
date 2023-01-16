@@ -201,7 +201,7 @@
         <item name="android:textColorHint">@color/smoked</item>
         <item name="android:padding">@dimen/medium_dp</item>
         <item name="android:layout_margin">@dimen/low_dp</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
         <item name="maxLines">1</item>

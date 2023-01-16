@@ -46,7 +46,7 @@ public class LovelyStandardDialog extends AbsLovelyDialog<LovelyStandardDialog> 
     public LovelyStandardDialog setPositiveButton(String text, @Nullable View.OnClickListener listener) {
         positiveButton.setVisibility(VISIBLE);
         positiveButton.setText(text);
-        positiveButton.setTextColor(ContextCompat.getColor(context, R.color.white));
+        positiveButton.setTextColor(ContextCompat.getColor(context, android.R.color.white));
 //        positiveButton.setTextSize(context.getResources().getDimension(R.dimen.textSizeMedium));
         positiveButton.setOnClickListener(new ClickListenerDecorator(listener, true));
         return this;

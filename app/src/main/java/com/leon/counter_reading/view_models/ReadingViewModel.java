@@ -2,6 +2,7 @@ package com.leon.counter_reading.view_models;
 
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KEYBOARD_TYPE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_TEMPORARY;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.MakeNotification.ringNotification;
@@ -102,26 +103,10 @@ public class ReadingViewModel extends BaseObservable {
             if (getOnOffLoadDto().hasPreNumber) {
                 setDebtOrNumber(!isDebtOrNumber());
                 setDebtNumber(String.valueOf(getOnOffLoadDto().preNumber));
-                setCounterNumberColor(ContextCompat.getColor(getContext(), R.color.yellow));
 
-//                setCounterNumberColor(ContextCompat.getColor(getContext(), getApplicationComponent()
-//                        .SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
-//                        android.R.color.primary_text_dark : android.R.color.primary_text_light));
-
-//                setCounterNumberColor(ContextCompat.getColor(getContext(), getApplicationComponent()
-//                        .SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
-//                        android.R.color.primary_text_dark : android.R.color.primary_text_light));
-
-//                setCounterNumberColor(ContextCompat.getColor(getContext(), getApplicationComponent()
-//                        .SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
-//                        R.color.text_color_light : R.color.text_color_dark));
-
-//                final TypedValue typedValue = new TypedValue();
-//                final Resources.Theme theme = getContext().getTheme();
-//                theme.resolveAttribute(getApplicationComponent()
-//                        .SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
-//                        android.R.attr.background : android.R.attr.colorPrimary, typedValue, true);
-//                setCounterNumberColor(typedValue.data);
+                setCounterNumberColor(ContextCompat.getColor(getContext(),
+                        getApplicationComponent().SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
+                                android.R.color.white : android.R.color.black));
                 return true;
             } else new CustomToast().warning(getContext().getString(R.string.can_not_show_pre));
         }

@@ -21,7 +21,7 @@ public class SetProxy {
     public static void insertProxy(Context context) {
         LovelyTextInputDialog lovelyTextInputDialog = new LovelyTextInputDialog(context);
         lovelyTextInputDialog.setTopColorRes(R.color.yellow)
-                .setTopTitleColorRes(R.color.white)
+                .setTopTitleColorRes(android.R.color.white)
                 .setTopTitle(R.string.proxy)
                 .setTitle(R.string.dear_user)
                 .setMessage(context.getString(R.string.enter_proxy))

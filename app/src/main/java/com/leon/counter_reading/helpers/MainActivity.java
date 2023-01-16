@@ -5,9 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.activities.StartActivity;
-import com.leon.counter_reading.base_items.BaseActivity;
 
 public class MainActivity extends AppCompatActivity {
 

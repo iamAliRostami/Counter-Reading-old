@@ -21,7 +21,7 @@ public class TwoStepVerification {
     public static void insertPersonalCode(Context context) {
         final LovelyTextInputDialog lovelyTextInputDialog = new LovelyTextInputDialog(context);
         lovelyTextInputDialog.getEditTextNumber().setFilters(new InputFilter[]{new InputFilter.LengthFilter(9)});
-        lovelyTextInputDialog.setTopColorRes(R.color.yellow).setTopTitleColorRes(R.color.white)
+        lovelyTextInputDialog.setTopColorRes(R.color.yellow).setTopTitleColorRes(android.R.color.white)
                 .setTopTitle(R.string.verification_code).setTitle(R.string.dear_user).setMessage(context.getString(R.string.enter_personal_code))
                 .setCancelable(false).setInputFilter(R.string.error_empty, text ->
                         lovelyTextInputDialog.getEditTextNumber().getText().toString().isEmpty()).setConfirmButton(R.string.confirm, text -> {

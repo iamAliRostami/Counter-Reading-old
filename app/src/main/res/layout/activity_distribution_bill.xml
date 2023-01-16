@@ -33,7 +33,7 @@
             android:layout_marginRight="@dimen/large_dp"
             android:background="@drawable/border_yellow_1"
             android:text="@string/start"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_large" />
     </LinearLayout>
 
