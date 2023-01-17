@@ -327,6 +327,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/text_view_karbari"
+                    android:background="@{readingVM.addressBackground}"
                     android:text="@{readingVM.address}"
                     android:textSize="@dimen/text_size_large" />
 

@@ -7,6 +7,7 @@ import static com.leon.counter_reading.helpers.MyApplication.getApplicationCompo
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.MakeNotification.ringNotification;
 
+import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +36,7 @@ public class ReadingViewModel extends BaseObservable {
     private int textViewId;
     private int buttonId;
     private int counterNumberColor;
+    private Drawable addressBackground;
 
     private String debtNumber;
     private String ahadTotal;
@@ -122,6 +124,10 @@ public class ReadingViewModel extends BaseObservable {
         setDebtNumber(String.valueOf(getOnOffLoadDto().balance));
         setSerial(getOnOffLoadDto().counterSerial);
         setPreDate(getOnOffLoadDto().preDate);
+
+        setAddressBackground(ContextCompat.getDrawable(getContext(), getOnOffLoadDto().mobile != null ?
+                R.drawable.border_gray_3 : R.drawable.border_red_2));
+
         setAddress(getOnOffLoadDto().address);
         if (getKarbariDto().title == null)
             new CustomToast().warning(String.format("کاربری اشتراک %s به درستی بارگیری نشده است.", getOnOffLoadDto().eshterak));
@@ -237,6 +243,16 @@ public class ReadingViewModel extends BaseObservable {
     public void setCounterNumberColor(int counterNumberColor) {
         this.counterNumberColor = counterNumberColor;
         notifyPropertyChanged(BR.counterNumberColor);
+    }
+
+    @Bindable
+    public Drawable getAddressBackground() {
+        return addressBackground;
+    }
+
+    public void setAddressBackground(Drawable addressBackground) {
+        this.addressBackground = addressBackground;
+        notifyPropertyChanged(BR.addressBackground);
     }
 
     @Bindable

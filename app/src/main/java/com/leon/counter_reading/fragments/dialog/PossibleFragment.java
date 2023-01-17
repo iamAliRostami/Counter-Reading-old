@@ -144,7 +144,6 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
                     possible.setOffLoadReports(new ArrayList<>(getApplicationComponent().MyDatabase().offLoadReportDao()
                             .getAllOffLoadReportById(possible.getOnOffLoadDto().id, possible.getOnOffLoadDto().trackNumber)));
                 }).setConfirmButtonText(getString(R.string.ok).concat(" ").concat(getString(R.string.reports))).show();
-
     }
 
     private void submitForm() {
