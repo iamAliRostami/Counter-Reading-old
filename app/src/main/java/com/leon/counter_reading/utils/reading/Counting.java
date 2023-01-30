@@ -53,7 +53,8 @@ public class Counting {
             /*
              * محاسبه فقط تجاری ساده با ظرفیت
              */
-            average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate/*, onOffLoadDto.ahadTejariOrFari*/);
+//            average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate/*, onOffLoadDto.ahadTejariOrFari*/);
+            average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate, onOffLoadDto.ahadTejariOrFari);
             double lowBoundRate = onOffLoadDto.zarfiat -
                     ((double) readingConfigDefaultDto.lowPercentZarfiatBound / 100) * onOffLoadDto.zarfiat;
 
