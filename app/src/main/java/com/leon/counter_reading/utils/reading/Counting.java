@@ -1,8 +1,10 @@
 package com.leon.counter_reading.utils.reading;
 
+import static com.leon.counter_reading.enums.CompanyNames.ESF;
 import static com.leon.counter_reading.enums.HighLowStateEnum.HIGH;
 import static com.leon.counter_reading.enums.HighLowStateEnum.LOW;
 import static com.leon.counter_reading.enums.HighLowStateEnum.NORMAL;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.CalendarTool.findDifferentDays;
 
 import com.leon.counter_reading.tables.KarbariDto;
@@ -20,7 +22,7 @@ public class Counting {
     }
 
     public static double monthlyAverage(int preNumber, int currentNumber, String preDate, int zarib) {
-        return dailyAverage(preNumber, currentNumber, preDate) * 30 / zarib;
+        return dailyAverage(preNumber, currentNumber, preDate) * 30 / zarib != 0 ? zarib : 1;
     }
 
     public static int checkHighLow(OnOffLoadDto onOffLoadDto, KarbariDto karbariDto,
@@ -54,7 +56,8 @@ public class Counting {
              * محاسبه فقط تجاری ساده با ظرفیت
              */
 //            average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate/*, onOffLoadDto.ahadTejariOrFari*/);
-            average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate, onOffLoadDto.ahadTejariOrFari);
+            average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate,
+                    getActiveCompanyName() == ESF ? onOffLoadDto.ahadTejariOrFari : onOffLoadDto.ahadMaskooniOrAsli);
             double lowBoundRate = onOffLoadDto.zarfiat -
                     ((double) readingConfigDefaultDto.lowPercentZarfiatBound / 100) * onOffLoadDto.zarfiat;
 
