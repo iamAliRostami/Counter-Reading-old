@@ -50,7 +50,7 @@ public class Sent extends AsyncTask<Activity, Integer, Integer> {
                 }
             }
         } catch (Exception e) {
-            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+            activities[0].runOnUiThread(() -> new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG));
         }
         return null;
     }

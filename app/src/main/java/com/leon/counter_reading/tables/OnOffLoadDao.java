@@ -51,6 +51,22 @@ public interface OnOffLoadDao {
             "WHERE OnOffLoadDto.offLoadStateId = :offLoadStateId AND TrackingDto.isActive = :isActive")
     List<OnOffLoadDto.OffLoad> getAllOnOffLoadInsert(int offLoadStateId, boolean isActive);
 
+    //TODO set limit
+    @Query("select OnOffLoadDto.id, OnOffLoadDto.counterNumber, OnOffLoadDto.counterStateId, " +
+            "OnOffLoadDto.possibleAddress, OnOffLoadDto.possibleCounterSerial, " +
+            "OnOffLoadDto.possibleEshterak, OnOffLoadDto.possibleMobile, " +
+            "OnOffLoadDto.possiblePhoneNumber, OnOffLoadDto.possibleAhadMaskooniOrAsli, " +
+            "OnOffLoadDto.possibleAhadTejariOrFari, OnOffLoadDto.possibleAhadSaierOrAbBaha, " +
+            "OnOffLoadDto.possibleEmpty, OnOffLoadDto.possibleKarbariCode, " +
+            "OnOffLoadDto.description, OnOffLoadDto.counterNumberShown, OnOffLoadDto.attemptCount, " +
+            "OnOffLoadDto.isLocked, OnOffLoadDto.gisAccuracy, OnOffLoadDto.phoneDateTime, " +
+            "OnOffLoadDto.locationDateTime, OnOffLoadDto.x , OnOffLoadDto.y, " +
+            "OnOffLoadDto.d1, OnOffLoadDto.d2 From OnOffLoadDto " +
+            "Inner JOIN TrackingDto on OnOffLoadDto.trackingId = TrackingDto.id " +
+            "WHERE OnOffLoadDto.offLoadStateId = :offLoadStateId AND TrackingDto.isActive = :isActive " +
+            "LIMIT 500")
+    List<OnOffLoadDto.OffLoad> getAllOnOffLoadTopInserted(int offLoadStateId, boolean isActive);
+
     @Query("select * From OnOffLoadDto WHERE counterStateId in (:counterStateId) AND hazf = 0 AND " +
             "trackingId = :trackingId  ORDER BY eshterak")
     List<OnOffLoadDto> getOnOffLoadReadByIsMane(List<Integer> counterStateId, String trackingId);
