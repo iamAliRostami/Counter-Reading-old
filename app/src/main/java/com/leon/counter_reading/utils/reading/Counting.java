@@ -30,7 +30,7 @@ public class Counting {
                                    int currentNumber) {
         double average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate);
         double preAverage = onOffLoadDto.preAverage;
-        int difference = currentNumber - onOffLoadDto.preNumber;
+        int difference = (currentNumber - onOffLoadDto.preNumber);
         /*
           if (karbariDto.isMaskooni && karbariDto.isTejari) {
          // فرمول میانگین گیری عجیب احتمالا
@@ -39,6 +39,8 @@ public class Counting {
             /*
               ضرایب
              */
+            difference = difference / onOffLoadDto.ahadMaskooniOrAsli > 0 ?
+                    onOffLoadDto.ahadMaskooniOrAsli : onOffLoadDto.ahadTejariOrFari;
             average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate, onOffLoadDto.ahadMaskooniOrAsli);
 
             if (readingConfigDefaultDto.highConstBoundMaskooni < difference)
@@ -56,6 +58,8 @@ public class Counting {
              * محاسبه فقط تجاری ساده با ظرفیت
              */
 //            average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate/*, onOffLoadDto.ahadTejariOrFari*/);
+            difference = difference / onOffLoadDto.ahadMaskooniOrAsli > 0 ?
+                    onOffLoadDto.ahadMaskooniOrAsli : onOffLoadDto.ahadTejariOrFari;
             average = monthlyAverage(onOffLoadDto.preNumber, currentNumber, onOffLoadDto.preDate,
                     getActiveCompanyName() == ESF ? onOffLoadDto.ahadTejariOrFari : onOffLoadDto.ahadMaskooniOrAsli);
             double lowBoundRate = onOffLoadDto.zarfiat -
