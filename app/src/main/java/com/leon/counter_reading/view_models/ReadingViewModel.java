@@ -7,6 +7,7 @@ import static com.leon.counter_reading.helpers.MyApplication.getApplicationCompo
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.MakeNotification.ringNotification;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
@@ -96,10 +97,13 @@ public class ReadingViewModel extends BaseObservable {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     public boolean switchDebtNumber() {
         if (isDebtOrNumber()) {
             setDebtOrNumber(!isDebtOrNumber());
-            setDebtNumber(String.valueOf(getOnOffLoadDto().balance));
+            //TODO
+//            setDebtNumber(getOnOffLoadDto().balance + " ریال");
+            setDebtNumber(String.format("%,d",getOnOffLoadDto().balance) + " ریال");
             setCounterNumberColor(ContextCompat.getColor(getContext(), R.color.red));
         } else {
             if (getOnOffLoadDto().hasPreNumber) {
@@ -115,13 +119,18 @@ public class ReadingViewModel extends BaseObservable {
         return false;
     }
 
+    @SuppressLint("DefaultLocale")
     private void setOnOffLoad() {
         setCounterNumber(getOnOffLoadDto().counterNumber != null ? String.valueOf(getOnOffLoadDto().counterNumber) : "");
         setName(String.format("%s %s", getOnOffLoadDto().firstName, getOnOffLoadDto().sureName));
         setAhadTotal(String.valueOf(getOnOffLoadDto().ahadSaierOrAbBaha));
         setAhad1(String.valueOf(getOnOffLoadDto().ahadTejariOrFari));
         setAhad2(String.valueOf(getOnOffLoadDto().ahadMaskooniOrAsli));
-        setDebtNumber(String.valueOf(getOnOffLoadDto().balance));
+        //TODO
+//        setDebtNumber(String.valueOf(getOnOffLoadDto().balance));
+//        setDebtNumber("5558889990 ریال");
+//        setDebtNumber(getOnOffLoadDto().balance + " ریال");
+        setDebtNumber(String.format("%,d",getOnOffLoadDto().balance) + " ریال");
         setSerial(getOnOffLoadDto().counterSerial);
         setPreDate(getOnOffLoadDto().preDate);
 
