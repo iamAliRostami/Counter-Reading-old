@@ -176,7 +176,6 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         binding.editTextNumber.setOnClickListener(this);
         binding.buttonSubmit.setOnClickListener(this);
     }
-
     private void changeKeyboardState() {
         if (readingVM.getOnOffLoadDto().isLocked) {
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);

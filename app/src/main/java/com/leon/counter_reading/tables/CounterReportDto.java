@@ -17,6 +17,7 @@ public class CounterReportDto {
     public boolean isKarbari;
     public boolean canNumberBeLessThanPre;
     public boolean isTavizi;
+    public boolean hasImage;
     public int clientOrder;
 
     @Ignore

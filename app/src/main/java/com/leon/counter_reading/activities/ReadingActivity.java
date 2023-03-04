@@ -112,10 +112,10 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         ReadingReportFragment.Callback, CounterPlaceFragment.Callback, NavigationFragment.Callback,
         ReadingFragment.Callback, TakePhotoFragment.Callback, SerialFragment.Callback,
         AreYouSureFragment.Callback, PossibleFragment.Callback {
+    private ActivityReadingBinding binding;
     private ISharedPreferenceManager sharedPreferenceManager;
     private ViewPagerStateAdapter2 adapter;
     private IFlashLightManager flashLightManager;
-    private ActivityReadingBinding binding;
     private int readStatus = 0, highLow = 1;
     private boolean isShowing = false;
     private int[] imageSrc;
@@ -362,9 +362,18 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     private void attemptSend(int position, boolean isForm, boolean isImage) {
         final CounterStateDto counterState = readingData.counterStateDtos.get(readingData
                 .onOffLoadDtos.get(position).counterStatePosition);
+        boolean hasImage = false;
+        if (isImage){
+//            (readingData.counterReportDtos.get(position).hasImage)
+            if (sharedPreferenceManager.getBoolData(IMAGE.getValue()))
+                hasImage = true;
+            else if (counterState.hasImage)
+                hasImage = true;
+        }
         if (isForm && shouldShowPossible()) {
             showPossible(position);
-        } else if (isImage && (sharedPreferenceManager.getBoolData(IMAGE.getValue()) || counterState.hasImage)) {
+            //TODO
+        } else if (isImage && hasImage) {
             showImage(position, counterState.hasImage);
         } else {
             if (!isShowing) {
