@@ -1,5 +1,8 @@
 package com.leon.counter_reading.adapters;
 
+import static com.leon.counter_reading.enums.FragmentTags.AHAD;
+import static com.leon.counter_reading.enums.FragmentTags.KARBARI;
+import static com.leon.counter_reading.enums.FragmentTags.TAVIZ;
 import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
@@ -12,6 +15,7 @@ import android.widget.BaseAdapter;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.holder.ReadingReportCheckBoxViewHolder;
+import com.leon.counter_reading.enums.FragmentTags;
 import com.leon.counter_reading.fragments.dialog.AhadFragment;
 import com.leon.counter_reading.fragments.dialog.KarbariFragment;
 import com.leon.counter_reading.fragments.dialog.TaviziFragment;
@@ -53,18 +57,18 @@ public class ReadingReportAdapter extends BaseAdapter {
             holder.checkBox.setChecked(!holder.checkBox.isChecked());
             if (holder.checkBox.isChecked()) {
                 final OffLoadReport offLoadReport = new OffLoadReport(uuid, tracking,
-                        counterReportDtos.get(position).id);
+                        counterReportDtos.get(position).id,counterReportDtos.get(position).hasImage);
                 getApplicationComponent().MyDatabase().offLoadReportDao()
                         .insertOffLoadReport(offLoadReport);
                 offLoadReports.add(offLoadReport);
                 if (counterReportDtos.get(position).isAhad) {
-                    ShowDialogOnce(context, "AHAD_DIALOG", AhadFragment.newInstance(uuid));
+                    ShowDialogOnce(context, AHAD.getValue(), AhadFragment.newInstance(uuid));
                 }
                 if (counterReportDtos.get(position).isTavizi) {
-                    ShowDialogOnce(context, "TAVIZ_DIALOG", TaviziFragment.newInstance(uuid));
+                    ShowDialogOnce(context, TAVIZ.getValue(), TaviziFragment.newInstance(uuid));
                 }
                 if (counterReportDtos.get(position).isKarbari) {
-                    ShowDialogOnce(context, "KARBARI_DIALOG", KarbariFragment.newInstance(uuid));
+                    ShowDialogOnce(context, KARBARI.getValue(), KarbariFragment.newInstance(uuid));
                 }
             } else {
                 for (int i = 0; i < offLoadReports.size(); i++) {

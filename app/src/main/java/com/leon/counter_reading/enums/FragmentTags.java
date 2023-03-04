@@ -2,6 +2,9 @@ package com.leon.counter_reading.enums;
 
 public enum FragmentTags {
 
+    KARBARI("KARBARI"),
+    TAVIZ("TAVIZ"),
+    AHAD("AHAD"),
     SEARCH("SEARCH"),
     NAVIGATION("NAVIGATION"),
     TAKE_PHOTO("TAKE_PHOTO_"),

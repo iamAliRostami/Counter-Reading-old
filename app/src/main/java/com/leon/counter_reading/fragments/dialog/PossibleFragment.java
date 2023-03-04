@@ -134,10 +134,11 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
                                 .deleteOffLoadReport(possible.getOffLoadReports().get(i).reportId,
                                         possible.getOnOffLoadDto().trackNumber, possible.getOnOffLoadDto().id);
                     for (int i = 0; i < positions.size(); i++) {
-                        OffLoadReport offLoadReport = new OffLoadReport(possible.getOnOffLoadDto().id,
-                                possible.getOnOffLoadDto().trackNumber, possible.getCounterReports().get(positions.get(i)).id);
                         getApplicationComponent().MyDatabase().offLoadReportDao()
-                                .insertOffLoadReport(offLoadReport);
+                                .insertOffLoadReport(new OffLoadReport(possible.getOnOffLoadDto().id,
+                                        possible.getOnOffLoadDto().trackNumber,
+                                        possible.getCounterReports().get(positions.get(i)).id,
+                                        possible.getCounterReports().get(positions.get(i)).hasImage));
                     }
                     possible.setCounterReports(new ArrayList<>(getApplicationComponent().MyDatabase()
                             .counterReportDao().getAllCounterReportByZone(possible.getOnOffLoadDto().zoneId)));

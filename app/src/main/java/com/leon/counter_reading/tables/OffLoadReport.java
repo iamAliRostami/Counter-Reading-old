@@ -12,13 +12,15 @@ public class OffLoadReport {
     public int reportId;
     public boolean isSent;
     public int trackNumber;
+    public boolean hasImage;
 
     public OffLoadReport() {
     }
 
-    public OffLoadReport(String onOffLoadId, int trackNumber, int reportId) {
+    public OffLoadReport(String onOffLoadId, int trackNumber, int reportId, boolean hasImage) {
         this.onOffLoadId = onOffLoadId;
         this.reportId = reportId;
         this.trackNumber = trackNumber;
+        this.hasImage = hasImage;
     }
 }

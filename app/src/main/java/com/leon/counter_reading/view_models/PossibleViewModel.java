@@ -40,8 +40,6 @@ public class PossibleViewModel extends BaseObservable {
     private ArrayList<KarbariDto> karbari = new ArrayList<>();
     private OnOffLoadDto onOffLoadDto;
     private String name;
-
-
     private String balance;
     private String oldRadif;
     private String oldEshterak;

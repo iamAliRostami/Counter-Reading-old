@@ -88,6 +88,7 @@ import com.leon.counter_reading.fragments.dialog.TakePhotoFragment;
 import com.leon.counter_reading.infrastructure.IFlashLightManager;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.tables.CounterStateDto;
+import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DepthPageTransformer2;
@@ -163,9 +164,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 }
                 i++;
             }
-            //TODO
             onOffLoadDtos.set(position, readingData.onOffLoadDtos.get(position));
-//            adapter.getOnOffLoadDtos().set(position, readingData.onOffLoadDtos.get(position));
             runOnUiThread(() -> adapter.notifyDataSetChanged());
         } catch (Exception e) {
             runOnUiThread(() -> new CustomDialogModel(Red, this, e.getMessage(),
@@ -337,13 +336,13 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-    private void showImage(int position, boolean hasImage) {
+    private void showImage(int position, boolean counterHasImage, boolean reportHasImage) {
         ShowDialogOnce(this, TAKE_PHOTO.getValue().concat(readingData.onOffLoadDtos
                 .get(binding.viewPager.getCurrentItem()).id), TakePhotoFragment
                 .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber,
-                        position, true, hasImage));
+                        position, true, counterHasImage, reportHasImage));
     }
 
     private boolean shouldShowPossible() {
@@ -363,8 +362,17 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         final CounterStateDto counterState = readingData.counterStateDtos.get(readingData
                 .onOffLoadDtos.get(position).counterStatePosition);
         boolean hasImage = false;
-        if (isImage){
-//            (readingData.counterReportDtos.get(position).hasImage)
+        boolean reportHasImage = false;
+        if (isImage) {
+            //TODO
+            final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>(getApplicationComponent()
+                    .MyDatabase().offLoadReportDao().getAllOffLoadReportById(
+                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
+                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber));
+            while (!hasImage && !offLoadReports.isEmpty()) {
+                reportHasImage = hasImage = offLoadReports.get(0).hasImage;
+                offLoadReports.remove(0);
+            }
             if (sharedPreferenceManager.getBoolData(IMAGE.getValue()))
                 hasImage = true;
             else if (counterState.hasImage)
@@ -373,8 +381,8 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         if (isForm && shouldShowPossible()) {
             showPossible(position);
             //TODO
-        } else if (isImage && hasImage) {
-            showImage(position, counterState.hasImage);
+        } else if (hasImage) {
+            showImage(position, counterState.hasImage, reportHasImage);
         } else {
             if (!isShowing) {
                 if ((counterState.isTavizi || counterState.isXarab) &&
@@ -638,26 +646,6 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     public int getCounterStatePosition(int position) {
         return readingData.onOffLoadDtos.get(position).counterStatePosition;
     }
-////TODO
-//    @Override
-//    public OnOffLoadDto getOnOffLoad(int position) {
-//        return adapter.getOnOffLoadDtos().get(position);
-//    }
-//TODO
-//    @Override
-//    public KarbariDto getKarbariDto(int position) {
-//        return adapter.getKarbariDtos().get(position);
-//    }
-//TODO
-//    @Override
-//    public ReadingConfigDefaultDto getReadingConfigDefaultDto(int position) {
-//        return adapter.getReadingConfigDefaultDtos().get(position);
-//    }
-//TODO
-//    @Override
-//    public ArrayList<CounterStateDto> getCounterStateDtos() {
-//        return adapter.getCounterStateDtos();
-//    }
 
     @Override
     protected void onStop() {
