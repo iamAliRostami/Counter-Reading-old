@@ -1,5 +1,8 @@
 package com.leon.counter_reading.utils.reading;
 
+import static com.leon.counter_reading.enums.CompanyNames.ZONE6;
+
+import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.tables.ReadingData;
 
@@ -33,7 +36,7 @@ public class ReadingUtils {
                 if (readingData.counterStateDtos.get(i).isXarab &&
                         readingData.counterStateDtos.get(i).moshtarakinId ==
                                 readingData.onOffLoadDtos.get(position).preCounterStateCode) {
-                    return 14;
+                    return BuildConfig.COMPANY_NAME == ZONE6 ? -1 : 14;
                 }
             }
 

@@ -380,8 +380,8 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         }
         if (isForm && shouldShowPossible()) {
             showPossible(position);
-            //TODO
         } else if (hasImage) {
+            //TODO
             showImage(position, counterState.hasImage, reportHasImage);
         } else {
             if (!isShowing) {
@@ -425,7 +425,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void setExceptionImage(int position) {
-        int src = ReadingUtils.setExceptionImage(readingData, position);
+        final int src = ReadingUtils.setExceptionImage(readingData, position);
         try {
             binding.imageViewExceptionState.setVisibility(View.GONE);
             if (src > -1) {
