@@ -36,6 +36,7 @@ public class ReadingUtils {
                 if (readingData.counterStateDtos.get(i).isXarab &&
                         readingData.counterStateDtos.get(i).moshtarakinId ==
                                 readingData.onOffLoadDtos.get(position).preCounterStateCode) {
+                    //TODO remove is xarab in zone 6
                     return BuildConfig.COMPANY_NAME == ZONE6 ? -1 : 14;
                 }
             }
