@@ -100,6 +100,7 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         binding.imageViewMobile.setOnLongClickListener(this);
         binding.textViewMobile.setOnLongClickListener(this);
         binding.editTextSearchKarbari.addTextChangedListener(this);
+        binding.editTextSearchGuild.addTextChangedListener(this);
     }
 
     private void initializeGuildsSpinner() {
@@ -238,26 +239,37 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        final ArrayList<String> itemsTemp = new ArrayList<>();
-        itemsTemp.add(getString(R.string.select_one));
-        karbariDtosTemp.clear();
-        for (int j = 0; j < possible.getKarbari().size(); j++) {
-            if (possible.getKarbari().get(j).title.contains(charSequence)) {
-                karbariDtosTemp.add(possible.getKarbari().get(j));
-                itemsTemp.add(possible.getKarbari().get(j).title);
-            }
-        }
-        final String[] items = itemsTemp.toArray(new String[0]);
-        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
-        binding.spinnerKarbari.setAdapter(adapter);
+
     }
 
     @Override
     public void afterTextChanged(Editable editable) {
         if (binding.editTextSearchKarbari.getEditableText() == editable) {
-
-        } else if (binding.editTextSearchKarbari.getEditableText() == editable) {
-
+            final ArrayList<String> itemsTemp = new ArrayList<>();
+            itemsTemp.add(getString(R.string.select_one));
+            karbariDtosTemp.clear();
+            for (int j = 0; j < possible.getKarbari().size(); j++) {
+                if (possible.getKarbari().get(j).title.contains(editable)) {
+                    karbariDtosTemp.add(possible.getKarbari().get(j));
+                    itemsTemp.add(possible.getKarbari().get(j).title);
+                }
+            }
+            final String[] items = itemsTemp.toArray(new String[0]);
+            final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
+            binding.spinnerKarbari.setAdapter(adapter);
+        } else if (binding.editTextSearchGuild.getEditableText() == editable) {
+            final ArrayList<String> itemsTemp = new ArrayList<>();
+            itemsTemp.add(getString(R.string.select_one));
+            guildsTemp.clear();
+            for (int j = 0; j < possible.getGuilds().size(); j++) {
+                if (possible.getGuilds().get(j).title.contains(editable)) {
+                    guildsTemp.add(possible.getGuilds().get(j));
+                    itemsTemp.add(possible.getGuilds().get(j).title);
+                }
+            }
+            final String[] items = itemsTemp.toArray(new String[0]);
+            final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
+            binding.spinnerGuild.setAdapter(adapter);
         }
     }
 
