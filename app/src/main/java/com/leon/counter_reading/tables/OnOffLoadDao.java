@@ -42,7 +42,7 @@ public interface OnOffLoadDao {
             "OnOffLoadDto.possibleEshterak, OnOffLoadDto.possibleMobile, " +
             "OnOffLoadDto.possiblePhoneNumber, OnOffLoadDto.possibleAhadMaskooniOrAsli, " +
             "OnOffLoadDto.possibleAhadTejariOrFari, OnOffLoadDto.possibleAhadSaierOrAbBaha, " +
-            "OnOffLoadDto.possibleEmpty, OnOffLoadDto.possibleKarbariCode, " +
+            "OnOffLoadDto.possibleEmpty, OnOffLoadDto.possibleKarbariCode, OnOffLoadDto.guildId," +
             "OnOffLoadDto.description, OnOffLoadDto.counterNumberShown, OnOffLoadDto.attemptCount, " +
             "OnOffLoadDto.isLocked, OnOffLoadDto.gisAccuracy, OnOffLoadDto.phoneDateTime, " +
             "OnOffLoadDto.locationDateTime, OnOffLoadDto.x , OnOffLoadDto.y, " +

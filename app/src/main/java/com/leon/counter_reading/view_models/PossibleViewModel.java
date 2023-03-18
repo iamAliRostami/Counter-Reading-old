@@ -7,17 +7,18 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_2;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_EMPTY;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_TOTAL;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.DESCRIPTION;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.GUILD;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KARBARI;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.MOBILE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.READING_REPORT;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SERIAL;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SHOW_AHAD_TITLE;
-import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad1;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad2;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhadTotal;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
 import android.view.View;
 
@@ -26,11 +27,12 @@ import androidx.databinding.Bindable;
 
 import com.leon.counter_reading.BR;
 import com.leon.counter_reading.R;
+import com.leon.counter_reading.helpers.DifferentCompanyManager;
 import com.leon.counter_reading.tables.CounterReportDto;
+import com.leon.counter_reading.tables.Guilds;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.tables.OnOffLoadDto;
-import com.leon.counter_reading.helpers.DifferentCompanyManager;
 
 import java.util.ArrayList;
 
@@ -38,6 +40,7 @@ public class PossibleViewModel extends BaseObservable {
     private ArrayList<CounterReportDto> counterReports = new ArrayList<>();
     private ArrayList<OffLoadReport> offLoadReports = new ArrayList<>();
     private ArrayList<KarbariDto> karbari = new ArrayList<>();
+    private ArrayList<Guilds> guilds = new ArrayList<>();
     private OnOffLoadDto onOffLoadDto;
     private String name;
     private String balance;
@@ -45,7 +48,6 @@ public class PossibleViewModel extends BaseObservable {
     private String oldEshterak;
     private String fatherName;
     private String description;
-
     private String possibleAddress;
     private String possibleEshterak;
     private String possibleCounterSerial;
@@ -54,14 +56,11 @@ public class PossibleViewModel extends BaseObservable {
     private String possibleAhadTejariOrFari;
     private String possibleEmpty;
     private String possibleMobile;
-
     private String ahadMaskooniOrAsli;
     private String ahadTejariOrFari;
     private String ahadSaierOrAbBaha;
-
     private String mobiles;
     private String mobile;
-
     private boolean justMobile;
     private int position;
 
@@ -76,6 +75,8 @@ public class PossibleViewModel extends BaseObservable {
                 .getAllOffLoadReportById(getOnOffLoadDto().id, getOnOffLoadDto().trackNumber)));
         setKarbari(new ArrayList<>(getApplicationComponent().MyDatabase().karbariDao()
                 .getAllKarbariDto()));
+        setGuilds(new ArrayList<>(getApplicationComponent().MyDatabase().guildDao()
+                .getAllGuilds()));
     }
 
     private void setOnOffLoad() {
@@ -134,7 +135,9 @@ public class PossibleViewModel extends BaseObservable {
             getOnOffLoadDto().possibleAhadSaierOrAbBaha = Integer.valueOf(getPossibleAhadSaierOrAbBaha());
         if (getDescription() != null)
             getOnOffLoadDto().description = getDescription();
-
+        //TODO
+//        if (getGuilds() != null)
+//            getOnOffLoadDto().guildId = getDescription();
         notifyPropertyChanged(BR.onOffLoadDto);
     }
 
@@ -208,6 +211,7 @@ public class PossibleViewModel extends BaseObservable {
     public void setName(String name) {
         this.name = name;
     }
+
     @Bindable
     public ArrayList<KarbariDto> getKarbari() {
         return karbari;
@@ -514,5 +518,21 @@ public class PossibleViewModel extends BaseObservable {
     public int getKarbariVisibility() {
         return isJustMobile() ? View.GONE : getApplicationComponent().SharedPreferenceModel()
                 .getBoolData(KARBARI.getValue()) ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getGuildVisibility() {
+        return isJustMobile() ? View.GONE : getApplicationComponent().SharedPreferenceModel()
+                .getBoolData(GUILD.getValue()) ? View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public ArrayList<Guilds> getGuilds() {
+        return guilds;
+    }
+
+    public void setGuilds(ArrayList<Guilds> guilds) {
+        this.guilds = guilds;
+        notifyPropertyChanged(BR.guilds);
     }
 }

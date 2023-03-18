@@ -2,9 +2,9 @@ package com.leon.counter_reading.utils.downloading;
 
 import static com.leon.counter_reading.enums.DialogType.Green;
 import static com.leon.counter_reading.enums.DialogType.Yellow;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getExpireDate;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.Converters.replaceNonstandardDigits;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getExpireDate;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -103,6 +103,12 @@ public class SaveDownloadData {
         if (readingData.counterReportDtos.size() > 0) {
             myDatabase.counterReportDao().insertAllCounterStateReport(readingData.counterReportDtos);
         }
+
+        myDatabase.guildDao().deleteGuildCompletely();
+        if (readingData.guilds.size() > 0) {
+            myDatabase.guildDao().insertGuild(readingData.guilds);
+        }
+
         final String message = String.format(MyApplication.getContext().getString(R.string.download_message),
                 readingData.trackingDtos.size(), readingData.onOffLoadDtos.size());
         showMessage(activity, message, Green);

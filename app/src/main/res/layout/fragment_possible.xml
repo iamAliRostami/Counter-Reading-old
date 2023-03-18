@@ -158,7 +158,7 @@
                         android:visibility="@{possible.addressVisibility}" />
 
                     <EditText
-                        android:id="@+id/edit_text_search"
+                        android:id="@+id/edit_text_search_karbari"
                         style="@style/InputPossible"
                         android:hint="@string/karbari_search"
                         android:visibility="@{possible.karbariVisibility}"
@@ -175,7 +175,24 @@
                             style="@style/Spinner"
                             tools:listitem="@layout/item_dropdown_menu" />
                     </LinearLayout>
+                    <EditText
+                        android:id="@+id/edit_text_search_guild"
+                        style="@style/InputPossible"
+                        android:hint="@string/guild_search"
+                        android:visibility="@{possible.guildVisibility}"
+                        tools:ignore="Autofill,TextFields" />
 
+                    <LinearLayout
+                        android:id="@+id/linear_layout_guild"
+                        style="@style/ItemLinePossible"
+                        android:padding="@dimen/small_dp"
+                        android:visibility="@{possible.guildVisibility}">
+
+                        <Spinner
+                            android:id="@+id/spinner_guild"
+                            style="@style/Spinner"
+                            tools:listitem="@layout/item_dropdown_menu" />
+                    </LinearLayout>
                     <EditText
                         android:id="@+id/edit_text_account"
                         style="@style/InputPossible"

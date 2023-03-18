@@ -15,19 +15,18 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.READING_REPORT;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SERIAL;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.SHOW_AHAD_TITLE;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentReadingPossibleSettingBinding;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
+import com.leon.counter_reading.helpers.DifferentCompanyManager;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
-import com.leon.counter_reading.helpers.DifferentCompanyManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -59,8 +58,8 @@ public class ReadingPossibleSettingFragment extends Fragment {
 
     void initializeCheckBoxes() {
         binding.checkBoxAhadEmpty.setChecked(sharedPreferenceManager.getBoolData(AHAD_EMPTY.getValue()));
-        binding.checkBoxAhadEmpty.setText(DifferentCompanyManager.getAhad(
-        ).concat(getString(R.string.empty)));
+        binding.checkBoxAhadEmpty.setText(DifferentCompanyManager.getAhad()
+                .concat(getString(R.string.empty)));
 
         binding.checkBoxAhad1.setChecked(sharedPreferenceManager.getBoolData(AHAD_1.getValue()));
         binding.checkBoxAhad1.setText(DifferentCompanyManager.getAhad1());
@@ -79,6 +78,7 @@ public class ReadingPossibleSettingFragment extends Fragment {
         binding.checkBoxImage.setChecked(sharedPreferenceManager.getBoolData(IMAGE.getValue()));
         binding.checkBoxDescription.setChecked(sharedPreferenceManager.getBoolData(DESCRIPTION.getValue()));
         binding.checkBoxReadingReport.setChecked(sharedPreferenceManager.getBoolData(READING_REPORT.getValue()));
+        binding.checkBoxGuild.setChecked(sharedPreferenceManager.getBoolData(GUILD.getValue()));
         setCheckBoxClickListener();
     }
 

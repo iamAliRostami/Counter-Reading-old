@@ -133,6 +133,7 @@ android {
         preDexLibraries true
         dexInProcess = true
     }
+    namespace 'com.leon.counter_reading'
 }
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])

@@ -232,6 +232,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     public void updateOnOffLoadByNavigation(boolean justMobile, int position, OnOffLoadDto onOffLoadDto) {
         readingData.onOffLoadDtos.get(position).possibleMobile = onOffLoadDto.possibleMobile;
         if (justMobile) return;
+        readingData.onOffLoadDtos.get(position).guildId = onOffLoadDto.guildId;
         readingData.onOffLoadDtos.get(position).possibleCounterSerial = onOffLoadDto.possibleCounterSerial;
         readingData.onOffLoadDtos.get(position).possibleKarbariCode = onOffLoadDto.possibleKarbariCode;
         readingData.onOffLoadDtos.get(position).possibleAhadTejariOrFari = onOffLoadDto.possibleAhadTejariOrFari;

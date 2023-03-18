@@ -4,8 +4,8 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "Guild", indices = @Index(value = {"customId"}, unique = true))
-public class Guild {
+@Entity(tableName = "Guilds", indices = @Index(value = {"customId"}, unique = true))
+public class Guilds {
     @PrimaryKey(autoGenerate = true)
     public int customId;
     public int id;

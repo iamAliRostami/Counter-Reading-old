@@ -10,6 +10,7 @@ public class ReadingData {
     public final ArrayList<QotrDictionary> qotrDictionary;
     public final ArrayList<CounterStateDto> counterStateDtos;
     public final ArrayList<CounterReportDto> counterReportDtos;
+    public final ArrayList<Guilds> guilds;
     public int status;
     public String message;
 
@@ -21,5 +22,6 @@ public class ReadingData {
         qotrDictionary = new ArrayList<>();
         counterStateDtos = new ArrayList<>();
         counterReportDtos = new ArrayList<>();
+        guilds = new ArrayList<>();
     }
 }

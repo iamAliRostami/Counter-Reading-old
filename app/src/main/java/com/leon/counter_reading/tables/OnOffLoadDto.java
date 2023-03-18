@@ -104,6 +104,7 @@ public class OnOffLoadDto {
         public Integer possibleAhadTejariOrFari;
         public Integer possibleAhadSaierOrAbBaha;
         public Integer possibleEmpty;
+        public Integer guildId;
         public int possibleKarbariCode;
         public String description;
         public boolean counterNumberShown;
@@ -136,6 +137,7 @@ public class OnOffLoadDto {
             possibleKarbariCode = onOffLoadDto.possibleKarbariCode;
             description = onOffLoadDto.description;
             counterNumberShown = onOffLoadDto.counterNumberShown;
+            guildId = onOffLoadDto.guildId;
             x = onOffLoadDto.x;
             y = onOffLoadDto.y;
             d1 = onOffLoadDto.d1;

@@ -31,6 +31,7 @@ import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
 import com.leon.counter_reading.databinding.FragmentPossibleBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.fragments.ContactUserFragment;
+import com.leon.counter_reading.tables.Guilds;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.tables.OnOffLoadDto;
@@ -48,6 +49,7 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
     private Callback readingActivity;
     private PossibleViewModel possible;
     private ArrayList<KarbariDto> karbariDtosTemp = new ArrayList<>();
+    private ArrayList<Guilds> guildsTemp = new ArrayList<>();
 
     public static PossibleFragment newInstance(boolean justMobile, int position,
                                                OnOffLoadDto onOffLoadDto) {
@@ -89,27 +91,47 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
 
     private void initialize() {
         makeRing(requireContext(), OTHER);
-        initializeSpinner();
+        initializeKarbariSpinner();
+        initializeGuildsSpinner();
         binding.buttonSubmit.setOnClickListener(this);
         binding.textViewReport.setOnClickListener(this);
         binding.textViewMobile.setOnClickListener(this);
         binding.imageViewMobile.setOnClickListener(this);
         binding.imageViewMobile.setOnLongClickListener(this);
         binding.textViewMobile.setOnLongClickListener(this);
-        binding.editTextSearch.addTextChangedListener(this);
+        binding.editTextSearchKarbari.addTextChangedListener(this);
     }
 
-    private void initializeSpinner() {
+    private void initializeGuildsSpinner() {
+        //TODO
+        guildsTemp = new ArrayList<>(possible.getGuilds());
+        final String[] items = new String[guildsTemp.size() + 1];
+        for (int i = 0; i < guildsTemp.size(); i++) {
+            items[i + 1] = guildsTemp.get(i).title;
+        }
+        items[0] = getString(R.string.select_one);
+        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
+        binding.spinnerGuild.setAdapter(adapter);
+        if (possible.getOnOffLoadDto().guildId != null) {
+            for (int i = 0; i < guildsTemp.size(); i++) {
+                if (guildsTemp.get(i).id == possible.getOnOffLoadDto().guildId)
+                    binding.spinnerGuild.setSelection(i);
+            }
+        }
+    }
+
+
+    private void initializeKarbariSpinner() {
         karbariDtosTemp = new ArrayList<>(possible.getKarbari());
-        String[] items = new String[karbariDtosTemp.size() + 1];
+        final String[] items = new String[karbariDtosTemp.size() + 1];
         for (int i = 0; i < karbariDtosTemp.size(); i++) {
             items[i + 1] = karbariDtosTemp.get(i).title;
         }
         items[0] = getString(R.string.select_one);
         final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
         binding.spinnerKarbari.setAdapter(adapter);
-        if (possible.getOnOffLoadDto().counterStatePosition != null)
-            binding.spinnerKarbari.setSelection(possible.getOnOffLoadDto().counterStatePosition + 1);
+//        if (possible.getOnOffLoadDto().possibleKarbariCode != null)
+//            binding.spinnerKarbari.setSelection(possible.getOnOffLoadDto().possibleKarbariCode + 1);
     }
 
     private void counterReport() {
@@ -148,9 +170,15 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
     }
 
     private void submitForm() {
-        if (binding.spinnerKarbari.getSelectedItemPosition() - 1 > 0)
+        if (binding.spinnerKarbari.getSelectedItemPosition() > 0)
             possible.getOnOffLoadDto().possibleKarbariCode =
                     karbariDtosTemp.get(binding.spinnerKarbari.getSelectedItemPosition() - 1).moshtarakinId;
+//TODO
+        if (binding.spinnerGuild.getSelectedItemPosition() > 0)
+            possible.getOnOffLoadDto().guildId =
+                    guildsTemp.get(binding.spinnerGuild.getSelectedItemPosition() - 1).id;
+
+
         if (possible.getPossibleMobile() != null && possible.getPossibleMobile().length() > 0) {
             if (possible.getPossibleMobile().length() < 11 || !possible.getPossibleMobile().substring(0, 2).contains("09")) {
                 binding.editTextMobile.setError(getString(R.string.error_format));
@@ -226,6 +254,11 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
 
     @Override
     public void afterTextChanged(Editable editable) {
+        if (binding.editTextSearchKarbari.getEditableText() == editable) {
+
+        } else if (binding.editTextSearchKarbari.getEditableText() == editable) {
+
+        }
     }
 
 
