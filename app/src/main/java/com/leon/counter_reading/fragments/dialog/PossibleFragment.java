@@ -121,7 +121,6 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         }
     }
 
-
     private void initializeKarbariSpinner() {
         karbariDtosTemp = new ArrayList<>(possible.getKarbari());
         final String[] items = new String[karbariDtosTemp.size() + 1];

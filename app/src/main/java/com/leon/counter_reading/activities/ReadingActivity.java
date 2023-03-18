@@ -27,6 +27,7 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_1;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_2;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_EMPTY;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_TOTAL;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.GUILD;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.IMAGE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KARBARI;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.MOBILE;
@@ -85,6 +86,7 @@ import com.leon.counter_reading.fragments.dialog.ReportForbidFragment;
 import com.leon.counter_reading.fragments.dialog.SearchFragment;
 import com.leon.counter_reading.fragments.dialog.SerialFragment;
 import com.leon.counter_reading.fragments.dialog.TakePhotoFragment;
+import com.leon.counter_reading.helpers.Constants;
 import com.leon.counter_reading.infrastructure.IFlashLightManager;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.tables.CounterStateDto;
@@ -356,6 +358,9 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 || sharedPreferenceManager.getBoolData(ADDRESS.getValue())
                 || sharedPreferenceManager.getBoolData(ACCOUNT.getValue())
                 || sharedPreferenceManager.getBoolData(READING_REPORT.getValue())
+                || (sharedPreferenceManager.getBoolData(GUILD.getValue()) &&
+                //TODO
+                Constants.karbariDtos.get(binding.viewPager.getCurrentItem()).isTejari)
                 || sharedPreferenceManager.getBoolData(MOBILE.getValue());
     }
 

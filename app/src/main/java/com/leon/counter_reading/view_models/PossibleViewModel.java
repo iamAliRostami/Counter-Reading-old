@@ -522,7 +522,13 @@ public class PossibleViewModel extends BaseObservable {
 
     @Bindable
     public int getGuildVisibility() {
-        return isJustMobile() ? View.GONE : getApplicationComponent().SharedPreferenceModel()
+        if (isJustMobile()) return View.GONE;
+        for (int i = 0; i < getKarbari().size(); i++) {
+            if (onOffLoadDto.karbariCode == getKarbari().get(i).moshtarakinId)
+                if (!getKarbari().get(i).isTejari)
+                    return View.GONE;
+        }
+        return getApplicationComponent().SharedPreferenceModel()
                 .getBoolData(GUILD.getValue()) ? View.VISIBLE : View.GONE;
     }
 
