@@ -37,10 +37,10 @@ public enum SharedReferenceKeys {
     KEYBOARD_TYPE("keyboard_type"),
     IMAGE_QUALITY("image_quality"),
     THEME_TEMPORARY("theme_temporary"),
-
     SORT_FILTER_PREF("SORT_FILTER_PREF"),
     SORT_ASC_KEY("SORT_ASC_KEY"),
-    SORT_FILTER_KEY("SORT_FILTER_KEY");
+    SORT_FILTER_KEY("SORT_FILTER_KEY"),
+    GUILD("GUILD");
 
     private final String value;
 

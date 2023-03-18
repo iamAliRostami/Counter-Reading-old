@@ -86,5 +86,11 @@
             style="@style/CheckBox.Possible"
             android:layout_below="@id/check_box_description"
             android:text="@string/reading_report" />
+
+        <CheckBox
+            android:id="@+id/check_box_guild"
+            style="@style/CheckBox.Possible"
+            android:layout_below="@id/check_box_reading_report"
+            android:text="@string/guild_navigation" />
     </RelativeLayout>
 </ScrollView>

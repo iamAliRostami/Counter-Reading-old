@@ -1,11 +1,26 @@
 package com.leon.counter_reading.fragments.reading_setting;
 
+import static com.leon.counter_reading.enums.SharedReferenceKeys.ACCOUNT;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.ADDRESS;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_1;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_2;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_EMPTY;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_TOTAL;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.DESCRIPTION;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.GUILD;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.IMAGE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.KARBARI;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.MOBILE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.READING_REPORT;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.SERIAL;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.SHOW_AHAD_TITLE;
+
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentReadingPossibleSettingBinding;
@@ -43,58 +58,60 @@ public class ReadingPossibleSettingFragment extends Fragment {
     }
 
     void initializeCheckBoxes() {
-        binding.checkBoxAhadEmpty.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.AHAD_EMPTY.getValue()));
+        binding.checkBoxAhadEmpty.setChecked(sharedPreferenceManager.getBoolData(AHAD_EMPTY.getValue()));
         binding.checkBoxAhadEmpty.setText(DifferentCompanyManager.getAhad(
         ).concat(getString(R.string.empty)));
 
-        binding.checkBoxAhad1.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.AHAD_1.getValue()));
+        binding.checkBoxAhad1.setChecked(sharedPreferenceManager.getBoolData(AHAD_1.getValue()));
         binding.checkBoxAhad1.setText(DifferentCompanyManager.getAhad1());
-        binding.checkBoxAhad2.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.AHAD_2.getValue()));
+        binding.checkBoxAhad2.setChecked(sharedPreferenceManager.getBoolData(AHAD_2.getValue()));
         binding.checkBoxAhad2.setText(DifferentCompanyManager.getAhad2());
-        binding.checkBoxAhadShowTitle.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.SHOW_AHAD_TITLE.getValue()));
+        binding.checkBoxAhadShowTitle.setChecked(sharedPreferenceManager.getBoolData(SHOW_AHAD_TITLE.getValue()));
         binding.checkBoxAhadShowTitle.setText(getString(R.string.show).concat(DifferentCompanyManager.getAhad(
         )));
-        binding.checkBoxAhadTotal.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.AHAD_TOTAL.getValue()));
+        binding.checkBoxAhadTotal.setChecked(sharedPreferenceManager.getBoolData(AHAD_TOTAL.getValue()));
         binding.checkBoxAhadTotal.setText(DifferentCompanyManager.getAhadTotal());
-        binding.checkBoxAccount.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.ACCOUNT.getValue()));
-        binding.checkBoxAddress.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.ADDRESS.getValue()));
-        binding.checkBoxMobile.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.MOBILE.getValue()));
-        binding.checkBoxKarbari.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.KARBARI.getValue()));
-        binding.checkBoxSerial.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.SERIAL.getValue()));
-        binding.checkBoxImage.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.IMAGE.getValue()));
-        binding.checkBoxDescription.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.DESCRIPTION.getValue()));
-        binding.checkBoxReadingReport.setChecked(sharedPreferenceManager.getBoolData(SharedReferenceKeys.READING_REPORT.getValue()));
+        binding.checkBoxAccount.setChecked(sharedPreferenceManager.getBoolData(ACCOUNT.getValue()));
+        binding.checkBoxAddress.setChecked(sharedPreferenceManager.getBoolData(ADDRESS.getValue()));
+        binding.checkBoxMobile.setChecked(sharedPreferenceManager.getBoolData(MOBILE.getValue()));
+        binding.checkBoxKarbari.setChecked(sharedPreferenceManager.getBoolData(KARBARI.getValue()));
+        binding.checkBoxSerial.setChecked(sharedPreferenceManager.getBoolData(SERIAL.getValue()));
+        binding.checkBoxImage.setChecked(sharedPreferenceManager.getBoolData(IMAGE.getValue()));
+        binding.checkBoxDescription.setChecked(sharedPreferenceManager.getBoolData(DESCRIPTION.getValue()));
+        binding.checkBoxReadingReport.setChecked(sharedPreferenceManager.getBoolData(READING_REPORT.getValue()));
         setCheckBoxClickListener();
     }
 
     void setCheckBoxClickListener() {
         binding.checkBoxSerial.setOnClickListener(v -> sharedPreferenceManager.putData(
-                SharedReferenceKeys.SERIAL.getValue(), binding.checkBoxSerial.isChecked()));
+                SERIAL.getValue(), binding.checkBoxSerial.isChecked()));
         binding.checkBoxAhadEmpty.setOnClickListener(v -> sharedPreferenceManager.putData(
-                SharedReferenceKeys.AHAD_EMPTY.getValue(), binding.checkBoxAhadEmpty.isChecked()));
+                AHAD_EMPTY.getValue(), binding.checkBoxAhadEmpty.isChecked()));
         binding.checkBoxAddress.setOnClickListener(v -> sharedPreferenceManager.putData(
-                SharedReferenceKeys.ADDRESS.getValue(), binding.checkBoxAddress.isChecked()));
+                ADDRESS.getValue(), binding.checkBoxAddress.isChecked()));
         binding.checkBoxAccount.setOnClickListener(v -> sharedPreferenceManager.putData(
-                SharedReferenceKeys.ACCOUNT.getValue(), binding.checkBoxAccount.isChecked()));
+                ACCOUNT.getValue(), binding.checkBoxAccount.isChecked()));
         binding.checkBoxAhad2.setOnClickListener(v -> sharedPreferenceManager.putData(
-                SharedReferenceKeys.AHAD_2.getValue(), binding.checkBoxAhad2.isChecked()));
+                AHAD_2.getValue(), binding.checkBoxAhad2.isChecked()));
         binding.checkBoxAhad1.setOnClickListener(v -> sharedPreferenceManager.putData(
-                SharedReferenceKeys.AHAD_1.getValue(), binding.checkBoxAhad1.isChecked()));
+                AHAD_1.getValue(), binding.checkBoxAhad1.isChecked()));
         binding.checkBoxAhadTotal.setOnClickListener(v -> sharedPreferenceManager.putData(
-                SharedReferenceKeys.AHAD_TOTAL.getValue(), binding.checkBoxAhadTotal.isChecked()));
+                AHAD_TOTAL.getValue(), binding.checkBoxAhadTotal.isChecked()));
         binding.checkBoxAhadShowTitle.setOnClickListener(v -> sharedPreferenceManager.putData(
-                SharedReferenceKeys.SHOW_AHAD_TITLE.getValue(), binding.checkBoxAhadShowTitle.isChecked()));
+                SHOW_AHAD_TITLE.getValue(), binding.checkBoxAhadShowTitle.isChecked()));
         binding.checkBoxMobile.setOnClickListener(v -> sharedPreferenceManager.putData(
-                SharedReferenceKeys.MOBILE.getValue(), binding.checkBoxMobile.isChecked()));
+                MOBILE.getValue(), binding.checkBoxMobile.isChecked()));
         binding.checkBoxKarbari.setOnClickListener(v -> sharedPreferenceManager.putData(
-                SharedReferenceKeys.KARBARI.getValue(), binding.checkBoxKarbari.isChecked()));
+                KARBARI.getValue(), binding.checkBoxKarbari.isChecked()));
         binding.checkBoxImage.setOnClickListener(v -> sharedPreferenceManager.putData(
-                SharedReferenceKeys.IMAGE.getValue(), binding.checkBoxImage.isChecked()));
+                IMAGE.getValue(), binding.checkBoxImage.isChecked()));
         binding.checkBoxDescription.setOnClickListener(v -> sharedPreferenceManager.putData(
-                SharedReferenceKeys.DESCRIPTION.getValue(), binding.checkBoxDescription.isChecked()));
-
+                DESCRIPTION.getValue(), binding.checkBoxDescription.isChecked()));
         binding.checkBoxReadingReport.setOnClickListener(v -> sharedPreferenceManager.putData(
-                SharedReferenceKeys.READING_REPORT.getValue(), binding.checkBoxReadingReport.isChecked()));
+                READING_REPORT.getValue(), binding.checkBoxReadingReport.isChecked()));
+
+        binding.checkBoxGuild.setOnClickListener(v -> sharedPreferenceManager.putData(
+                GUILD.getValue(), binding.checkBoxGuild.isChecked()));
     }
 
     @Override

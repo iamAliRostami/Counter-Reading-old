@@ -6,7 +6,6 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
-
 @Entity(tableName = "OnOffLoadDto", indices = @Index(value = {"customId"}, unique = true))
 public class OnOffLoadDto {
     @PrimaryKey(autoGenerate = true)
@@ -78,7 +77,7 @@ public class OnOffLoadDto {
     public int highLowStateId;
     public boolean isBazdid;
     public Integer counterStatePosition;
-
+    public Integer guildId;
     public long balance;
 
     @Ignore
