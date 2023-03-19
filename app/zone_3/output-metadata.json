@@ -4,8 +4,8 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.leon.counter_reading.zone1",
-  "variantName": "zone_1",
+  "applicationId": "com.leon.counter_reading.zone3",
+  "variantName": "zone_3",
   "elements": [
     {
       "type": "SINGLE",
@@ -13,7 +13,7 @@
       "attributes": [],
       "versionCode": 108,
       "versionName": "1.01.12.28",
-      "outputFile": "app-zone_1.apk"
+      "outputFile": "app-zone_3.apk"
     }
   ],
   "elementType": "File"

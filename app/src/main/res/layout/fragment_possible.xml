@@ -175,6 +175,7 @@
                             style="@style/Spinner"
                             tools:listitem="@layout/item_dropdown_menu" />
                     </LinearLayout>
+
                     <EditText
                         android:id="@+id/edit_text_search_guild"
                         style="@style/InputPossible"
@@ -193,6 +194,7 @@
                             style="@style/Spinner"
                             tools:listitem="@layout/item_dropdown_menu" />
                     </LinearLayout>
+
                     <EditText
                         android:id="@+id/edit_text_account"
                         style="@style/InputPossible"
