@@ -89,6 +89,7 @@ public class LoginFragment extends Fragment {
             binding.imageViewPerson.setImageBitmap(loadImage(requireContext(), getApplicationComponent()
                     .SharedPreferenceModel().getStringData(AVATAR.getValue())));
 //        binding.imageViewPerson.setShapeAppearanceModel(ShapeAppearanceModel.builder().setAllCornerSizes(ShapeAppearanceModel.PILL).build());
+//        binding.imageViewCaptcha.setImageBitmap(login.getDrawableCaptcha());
         setOnButtonLoginClickListener();
         setOnButtonLongCLickListener();
         setOnImageViewPasswordClickListener();

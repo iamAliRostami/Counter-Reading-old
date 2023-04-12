@@ -4,18 +4,22 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
 import static com.leon.counter_reading.helpers.MyApplication.getAndroidVersion;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.Crypto.decrypt;
 
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 
+import androidx.core.content.ContextCompat;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.google.gson.annotations.SerializedName;
 import com.leon.counter_reading.BR;
 import com.leon.counter_reading.BuildConfig;
+import com.leon.counter_reading.R;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 
 public class LoginViewModel extends BaseObservable {
@@ -37,8 +41,17 @@ public class LoginViewModel extends BaseObservable {
     private String XSRFToken;
     private String message;
     private boolean isValid;
+    private String dntCaptchaImgUrl;
+    private String dntCaptchaId;
+    private String dntCaptchaTextValue;
+    private String dntCaptchaTokenValue;
+    private String dntCaptchaInputText;
+    private Drawable drawableCaptcha;
 
     public LoginViewModel(String deviceSerial) {
+        setDrawableCaptcha(ContextCompat.getDrawable(getContext(), R.drawable.not_found));
+//        Drawable mDrawable = new BitmapDrawable(getResources(), bitmap);
+//        setBitmapCaptcha(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.not_found));
         setAppVersion(BuildConfig.VERSION_NAME);
         setSaved(true);
         setDeviceSerial(deviceSerial);
@@ -263,5 +276,57 @@ public class LoginViewModel extends BaseObservable {
                 validation();
             }
         };
+    }
+
+    @Bindable
+    public Drawable getDrawableCaptcha() {
+        return drawableCaptcha;
+    }
+
+    public void setDrawableCaptcha(Drawable drawableCaptcha) {
+        this.drawableCaptcha = drawableCaptcha;
+        notifyPropertyChanged(BR.drawableCaptcha);
+    }
+
+    @Bindable
+    public String getDntCaptchaInputText() {
+        return dntCaptchaInputText;
+    }
+
+    public void setDntCaptchaInputText(String dntCaptchaInputText) {
+        this.dntCaptchaInputText = dntCaptchaInputText;
+        notifyPropertyChanged(BR.dntCaptchaInputText);
+    }
+
+    public String getDntCaptchaImgUrl() {
+        return dntCaptchaImgUrl;
+    }
+
+    public void setDntCaptchaImgUrl(String dntCaptchaImgUrl) {
+        this.dntCaptchaImgUrl = dntCaptchaImgUrl;
+    }
+
+    public String getDntCaptchaId() {
+        return dntCaptchaId;
+    }
+
+    public void setDntCaptchaId(String dntCaptchaId) {
+        this.dntCaptchaId = dntCaptchaId;
+    }
+
+    public String getDntCaptchaTextValue() {
+        return dntCaptchaTextValue;
+    }
+
+    public void setDntCaptchaTextValue(String dntCaptchaTextValue) {
+        this.dntCaptchaTextValue = dntCaptchaTextValue;
+    }
+
+    public String getDntCaptchaTokenValue() {
+        return dntCaptchaTokenValue;
+    }
+
+    public void setDntCaptchaTokenValue(String dntCaptchaTokenValue) {
+        this.dntCaptchaTokenValue = dntCaptchaTokenValue;
     }
 }

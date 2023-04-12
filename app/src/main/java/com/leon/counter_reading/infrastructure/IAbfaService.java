@@ -1,5 +1,7 @@
 package com.leon.counter_reading.infrastructure;
 
+import android.graphics.Bitmap;
+
 import com.leon.counter_reading.tables.ForbiddenDtoRequestMultiple;
 import com.leon.counter_reading.tables.ForbiddenDtoResponses;
 import com.leon.counter_reading.tables.LastInfo;
@@ -160,5 +162,11 @@ public interface IAbfaService {
 
     @POST("KontoriNew/V1/List/Offloaded/MyKarkard")
     Call<PerformanceViewModel> myPerformance(@Body PerformanceViewModel performanceVM);
+
+    @GET("KontoriNew/V1/Account/CreateDNTCaptchaParams")
+    Call<LoginViewModel> createDNTCaptchaParams();
+
+    @GET("KontoriNew/DNTCaptchaImage/Show?")
+    Call<Bitmap> showDNTCaptchaImage(@Query("data") String data);
 }
 
