@@ -117,11 +117,68 @@
             android:checked="@={login.saved}"
             android:text="@string/save" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout_captcha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/check_box_save"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/_50sdp"
+            android:layout_marginRight="@dimen/_50sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image_view_captcha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/not_found"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image_view_recaptcha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/recaptcha"
+                app:layout_constraintBottom_toBottomOf="@id/image_view_captcha"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_layout_captcha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/constraint_layout_captcha"
+            android:layout_marginLeft="@dimen/_50sdp"
+            android:layout_marginTop="@dimen/low_dp"
+            android:layout_marginRight="@dimen/_50sdp"
+            android:layout_marginBottom="@dimen/low_dp"
+            android:background="@drawable/border_gray_2"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/image_view_recaptcha_1"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/recaptcha"
+                tools:ignore="ContentDescription" />
+
+            <EditText
+                android:id="@+id/edit_text_captcha"
+                style="@style/InputGray"
+                android:hint="@string/captcha"
+                android:inputType="textPassword"
+                android:text="@={login.password}"
+                tools:ignore="Autofill" />
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/button_login"
             style="@style/ButtonInfo"
-            android:layout_below="@id/check_box_save"
+            android:layout_below="@id/linear_layout_captcha"
             android:layout_marginLeft="@dimen/_50sdp"
+            android:layout_marginTop="@dimen/low_dp"
             android:layout_marginRight="@dimen/_50sdp"
             android:background="@drawable/border_blue_1"
             android:text="@string/login" />
