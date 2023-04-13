@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,8 +57,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private FragmentLoginBinding binding;
     private LoginViewModel login;
     private int counter = 0;
+
     public LoginFragment() {
     }
+
     public static LoginFragment newInstance() {
         return new LoginFragment();
     }
@@ -86,20 +89,25 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
 
     private void initialize() {
-        binding.imageViewRecaptcha.setOnClickListener(this);
-        createDNTCaptcha();
+//        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.imageViewCaptcha.getLayoutParams();
+//        params.height = binding.linearLayoutUsername.getHeight();
+//        binding.imageViewCaptcha.setLayoutParams(params);
+
         if (getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(AVATAR.getValue()))
             binding.imageViewPerson.setImageBitmap(loadImage(requireContext(), getApplicationComponent()
                     .SharedPreferenceModel().getStringData(AVATAR.getValue())));
         binding.buttonLogin.setOnClickListener(this);
         binding.imageViewPerson.setOnClickListener(this);
         binding.imageViewPassword.setOnClickListener(this);
+        binding.imageViewRecaptcha.setOnClickListener(this);
 
         setOnButtonLongCLickListener();
-        setOnImageViewPerson();
+        setOnImageViewPersonLongClickListener();
 
         setEditTextUsernameOnFocusChangeListener();
         setEditTextPasswordOnFocusChangeListener();
+
+        createDNTCaptcha();
     }
 
     private void initializeTextViewCompanyName() {
@@ -107,6 +115,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         textViewCompanyName.setText(getCompanyName());
         textViewCompanyName.setOnClickListener(v -> insertProxy(requireContext()));
     }
+
     private void setEditTextUsernameOnFocusChangeListener() {
         binding.editTextUsername.setOnFocusChangeListener((view, b) -> {
             binding.editTextUsername.setHint("");
@@ -139,7 +148,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    private void setOnImageViewPerson() {
+    private void setOnImageViewPersonLongClickListener() {
         binding.imageViewPerson.setOnLongClickListener(view -> {
             insertPersonalCode(requireContext());
             return false;
@@ -171,11 +180,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 //                if (login.getDntCaptchaInputText() != null && !login.getDntCaptchaInputText().isEmpty())
 //                    login.setDntCaptchaInputText(login.getDntCaptchaInputText());
                 if (counter < /*1*/4)
-                    new AttemptLogin(login).execute(requireActivity());
+                    new AttemptLogin(this).execute(requireActivity());
                 else
                     offlineLogin();
             } else {
-                new AttemptRegister(login).execute(requireActivity());
+                new AttemptRegister(this).execute(requireActivity());
             }
         } else {
             new CustomToast().warning(getString(R.string.turn_internet_on));
@@ -189,6 +198,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             return true;
         }
         return false;
+    }
+
+    public void resetAttempt() {
+        createDNTCaptcha();
+        counter = 0;
     }
 
     private void offlineLogin() {
@@ -215,14 +229,19 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void showDNTCaptchaImage(LoginViewModel login) {
         this.login.setDntCaptchaText(login.getDntCaptchaTextValue());
         this.login.setDntCaptchaToken(login.getDntCaptchaTokenValue());
-
         this.login.setData(login.getDntCaptchaImgUrl().substring(login.getDntCaptchaImgUrl().lastIndexOf("data=") + 5));
-
         new ShowDNTCaptchaImage(this, this.login).execute(requireActivity());
     }
 
     public void setCaptchaResult(Bitmap captchaResult) {
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.imageViewCaptcha.getLayoutParams();
+        params.height = binding.linearLayoutUsername.getHeight();
+        binding.imageViewCaptcha.setLayoutParams(params);
         binding.imageViewCaptcha.setImageBitmap(captchaResult);
+    }
+
+    public LoginViewModel getLogin() {
+        return login;
     }
 
     private void checkReadPhoneStatePermission() {
@@ -266,6 +285,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             if (requestCode == GPS_CODE) checkReadPhoneStatePermission();
         }
     }
+
     @Override
     public void onClick(View v) {
         final int id = v.getId();

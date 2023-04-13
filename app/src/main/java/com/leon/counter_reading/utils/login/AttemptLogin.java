@@ -21,6 +21,7 @@ import com.auth0.android.jwt.JWT;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.HomeActivity;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
+import com.leon.counter_reading.fragments.LoginFragment;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
@@ -35,26 +36,21 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class AttemptLogin extends AsyncTask<Activity, Activity, Void> {
-    private final LoginViewModel login;
+    private final LoginFragment fragment;
 
-    public AttemptLogin(LoginViewModel login) {
+    public AttemptLogin(LoginFragment fragment) {
         super();
-        this.login = login;
-        this.login.setData(null);
-//        this.login.setDntCaptchaTokenValue(null);
-//        this.login.setDntCaptchaTextValue(null);
-//        this.login.setDntCaptchaImgUrl(null);
-//        this.login.setDntCaptchaId(null);
+        this.fragment = fragment;
     }
 
     @Override
     protected Void doInBackground(Activity... activities) {
         final Retrofit retrofit = getApplicationComponent().NetworkHelperModel().getInstance();
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-        final Call<LoginViewModel> call = iAbfaService.login(login);
+        final Call<LoginViewModel> call = iAbfaService.login(fragment.getLogin());
         activities[0].runOnUiThread(() ->
                 HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activities[0],
-                        new LoginCompleted(activities[0], login), new Incomplete(activities[0]),
+                        new LoginCompleted(activities[0], fragment.getLogin()), new Incomplete(fragment),
                         new Error(activities[0])));
         return null;
     }
