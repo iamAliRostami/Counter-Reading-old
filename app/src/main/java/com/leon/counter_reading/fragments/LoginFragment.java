@@ -56,10 +56,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private FragmentLoginBinding binding;
     private LoginViewModel login;
     private int counter = 0;
-
     public LoginFragment() {
     }
-
     public static LoginFragment newInstance() {
         return new LoginFragment();
     }
@@ -93,12 +91,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         if (getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(AVATAR.getValue()))
             binding.imageViewPerson.setImageBitmap(loadImage(requireContext(), getApplicationComponent()
                     .SharedPreferenceModel().getStringData(AVATAR.getValue())));
-//        binding.imageViewPerson.setShapeAppearanceModel(ShapeAppearanceModel.builder().setAllCornerSizes(ShapeAppearanceModel.PILL).build());
-//        binding.imageViewCaptcha.setImageBitmap(login.getDrawableCaptcha());
-        setOnButtonLoginClickListener();
+        binding.buttonLogin.setOnClickListener(this);
+        binding.imageViewPerson.setOnClickListener(this);
+        binding.imageViewPassword.setOnClickListener(this);
+
         setOnButtonLongCLickListener();
-        setOnImageViewPasswordClickListener();
         setOnImageViewPerson();
+
         setEditTextUsernameOnFocusChangeListener();
         setEditTextPasswordOnFocusChangeListener();
     }
@@ -108,7 +107,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         textViewCompanyName.setText(getCompanyName());
         textViewCompanyName.setOnClickListener(v -> insertProxy(requireContext()));
     }
-
     private void setEditTextUsernameOnFocusChangeListener() {
         binding.editTextUsername.setOnFocusChangeListener((view, b) -> {
             binding.editTextUsername.setHint("");
@@ -141,22 +139,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    private void setOnImageViewPasswordClickListener() {
-        binding.imageViewPassword.setOnClickListener(view -> {
-            if (binding.editTextPassword.getInputType() != InputType.TYPE_CLASS_TEXT) {
-                binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT);
-            } else
-                binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT |
-                        InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        });
-    }
-
     private void setOnImageViewPerson() {
-        binding.imageViewPerson.setOnClickListener(view ->
-                new CustomDialogModel(Green, requireContext(), getSerial(requireActivity()),
-                        requireContext().getString(R.string.serial),
-                        requireContext().getString(R.string.dear_user),
-                        requireContext().getString(R.string.accepted)));
         binding.imageViewPerson.setOnLongClickListener(view -> {
             insertPersonalCode(requireContext());
             return false;
@@ -168,10 +151,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             attempt(false);
             return false;
         });
-    }
-
-    private void setOnButtonLoginClickListener() {
-        binding.buttonLogin.setOnClickListener(v -> attempt(true));
     }
 
     private void attempt(boolean isLogin) {
@@ -234,11 +213,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     public void showDNTCaptchaImage(LoginViewModel login) {
-//        this.login.setDntCaptchaId(login.getDntCaptchaId());
-//        this.login.setDntCaptchaImgUrl(login.getDntCaptchaImgUrl());
-//        this.login.setDntCaptchaTextValue(login.getDntCaptchaTextValue());
-//        this.login.setDntCaptchaTokenValue(login.getDntCaptchaTokenValue());
-
         this.login.setDntCaptchaText(login.getDntCaptchaTextValue());
         this.login.setDntCaptchaToken(login.getDntCaptchaTokenValue());
 
@@ -292,13 +266,24 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             if (requestCode == GPS_CODE) checkReadPhoneStatePermission();
         }
     }
-
     @Override
     public void onClick(View v) {
         final int id = v.getId();
         if (id == R.id.image_view_recaptcha) {
             createDNTCaptcha();
         } else if (id == R.id.button_login) {
+            attempt(true);
+        } else if (id == R.id.image_view_person) {
+            new CustomDialogModel(Green, requireContext(), getSerial(requireActivity()),
+                    requireContext().getString(R.string.serial),
+                    requireContext().getString(R.string.dear_user),
+                    requireContext().getString(R.string.accepted));
+        } else if (id == R.id.image_view_password) {
+            if (binding.editTextPassword.getInputType() != InputType.TYPE_CLASS_TEXT) {
+                binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+            } else
+                binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
     }
 }

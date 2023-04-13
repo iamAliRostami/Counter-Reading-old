@@ -45,7 +45,7 @@ public class DifferentCompanyManager {
                 return "http://81.12.106.167:8081/";
             case ZONE5:
 //                return "http://80.69.252.151/";
-            return "http://188.75.65.83/";
+                return "http://188.75.65.83/";
             case ZONE6:
                 return "http://85.133.190.221:4121/";
             case TSW:
@@ -60,7 +60,7 @@ public class DifferentCompanyManager {
                 return "http://46.225.241.211:25123/";
             case DEBUG:
             default:
-                return "http://192.168.100.8:44321";
+                return "http://192.168.100.8:7529";
         }
     }
 
@@ -93,7 +93,7 @@ public class DifferentCompanyManager {
             case KSH:
                 return "http://46.209.219.36:90";
             default:
-                return "http://192.168.100.8:44321";
+                return "https://192.168.100.8:44321";
         }
     }
 

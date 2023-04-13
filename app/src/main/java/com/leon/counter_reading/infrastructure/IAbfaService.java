@@ -28,80 +28,80 @@ import retrofit2.http.Query;
 
 public interface IAbfaService {
 
-    @POST("kontoriNew/V1/Account/Login")
+    @POST("V1/Account/Login")
     Call<LoginViewModel> login(@Body LoginViewModel loginViewModel);
 
-    @POST("kontoriNew/V1/User/RegisterDevice")
+    @POST("V1/User/RegisterDevice")
     Call<LoginViewModel> register(@Body LoginViewModel loginViewModel);
 
-    @POST("kontoriNew/V1/Account/ChangePassword")
+    @POST("V1/Account/ChangePassword")
     Call<SimpleResponse> changePassword(@Body PasswordInfo passwordInfo);
 
-    @POST("KontoriNew/V1/Load/Data")
+    @POST("V1/Load/Data")
     Call<ReadingData> loadData(
             @Query("appVersionCode") int appVersionCode);
 
     @Multipart
-    @POST("KontoriNew/V1/Upload/Single")
+    @POST("V1/Upload/Single")
     Call<Integer> fileUploadSingle(
             @Part MultipartBody.Part voice,
             @Part("OnOffLoadId") String OnOffLoadId,
             @Part("Description") String Description);
 
     @Multipart
-    @POST("KontoriNew/V1/Upload/Grouped")
+    @POST("V1/Upload/Grouped")
     Call<MultimediaUploadResponse> fileUploadGrouped(
             @Part ArrayList<MultipartBody.Part> imageFiles,
             @Part("OnOffLoadId") RequestBody OnOffLoadId,
             @Part("Description") RequestBody Description);
 
     @Multipart
-    @POST("KontoriNew/V1/Upload/Grouped")
+    @POST("V1/Upload/Grouped")
     Call<MultimediaUploadResponse> fileUploadGrouped(
             @Part("OnOffLoadId") RequestBody OnOffLoadId,
             @Part("Description") RequestBody Description);
 
     @Multipart
-    @POST("KontoriNew/V1/Upload/Grouped")
+    @POST("V1/Upload/Grouped")
     Call<MultimediaUploadResponse> fileUploadGrouped(
             @Part ArrayList<MultipartBody.Part> imageFiles,
             @Part("OnOffLoadId") RequestBody OnOffLoadId);
 
     @Multipart
-    @POST("KontoriNew/V1/Upload/Multiple")
+    @POST("V1/Upload/Multiple")
     Call<MultimediaUploadResponse> fileUploadMultiple(
             @Part ArrayList<MultipartBody.Part> imageFiles,
             @Part("OnOffLoadId") ArrayList<RequestBody> OnOffLoadId,
             @Part("Description") ArrayList<RequestBody> Description);
 
     @Multipart
-    @POST("KontoriNew/V1/Upload/Multiple")
+    @POST("V1/Upload/Multiple")
     Call<MultimediaUploadResponse> voiceUploadMultiple(
             @Part ArrayList<MultipartBody.Part> imageFiles,
             @Part("OnOffLoadId") ArrayList<RequestBody> OnOffLoadId,
             @Part("Description") ArrayList<RequestBody> Description);
 
-    @POST("KontoriNew/V1/OffLoad/Data")
+    @POST("V1/OffLoad/Data")
     Call<OnOffLoadDto.OffLoadResponses> OffLoadData(
             @Part("isFinal") RequestBody isFinal,
             @Part("offLoads") RequestBody offLoads,
             @Part("offLoadReports") RequestBody offLoadReports);
 
 
-    @POST("KontoriNew/V1/OffLoad/Data")
+    @POST("V1/OffLoad/Data")
     Call<OnOffLoadDto.OffLoadResponses> OffLoadData(@Body OnOffLoadDto.OffLoadData offLoads);
 
-    @POST("KontoriNew/V1/OffLoad/ReportOnly")
+    @POST("V1/OffLoad/ReportOnly")
     Call<OnOffLoadDto.OffLoadResponses> ReportOnly(@Body OnOffLoadDto.OffLoadData offLoads);
 
-    @GET("KontoriNew/V1/Apk/Last")
+    @GET("V1/Apk/Last")
     Call<ResponseBody> getLastApk();
 
-    @GET("KontoriNew/V1/Apk/LastInfo")
+    @GET("V1/Apk/LastInfo")
     Call<LastInfo> getLastInfo();
 
     @Multipart
-    @POST("KontoriNew/V1/Forbidden/Single")
+    @POST("V1/Forbidden/Single")
     Call<ForbiddenDtoResponses> singleForbidden(
             @Part ArrayList<MultipartBody.Part> files,
             @Part("zoneId") RequestBody zoneId,
@@ -116,7 +116,7 @@ public interface IAbfaService {
             @Part("GisAccuracy") RequestBody gisAccuracy);
 
     @Multipart
-    @POST("KontoriNew/V1/Forbidden/Single")
+    @POST("V1/Forbidden/Single")
     Call<ForbiddenDtoResponses> singleForbidden(
             @Part("zoneId") RequestBody zoneId,
             @Part("Description") RequestBody Description,
@@ -130,7 +130,7 @@ public interface IAbfaService {
             @Part("GisAccuracy") RequestBody gisAccuracy);
 
     @Multipart
-    @POST("KontoriNew/V1/Forbidden/Single")
+    @POST("V1/Forbidden/Single")
     Call<ForbiddenDtoResponses> singleForbidden(
             @Part ArrayList<MultipartBody.Part> files,
             @Part("Description") RequestBody Description,
@@ -144,7 +144,7 @@ public interface IAbfaService {
             @Part("GisAccuracy") RequestBody gisAccuracy);
 
     @Multipart
-    @POST("KontoriNew/V1/Forbidden/Single")
+    @POST("V1/Forbidden/Single")
     Call<ForbiddenDtoResponses> singleForbidden(
             @Part("Description") RequestBody Description,
             @Part("PreEshterak") RequestBody preEshterak,
@@ -157,16 +157,16 @@ public interface IAbfaService {
             @Part("GisAccuracy") RequestBody gisAccuracy);
 
     //    @Multipart
-    @POST("KontoriNew/V1/Forbidden/Multiple")
+    @POST("V1/Forbidden/Multiple")
     Call<ForbiddenDtoResponses> multipleForbidden(@Body ForbiddenDtoRequestMultiple forbiddenDto);
 
-    @POST("KontoriNew/V1/List/Offloaded/MyKarkard")
+    @POST("V1/List/Offloaded/MyKarkard")
     Call<PerformanceViewModel> myPerformance(@Body PerformanceViewModel performanceVM);
 
-    @GET("KontoriNew/V1/Account/CreateDNTCaptchaParams")
+    @GET("V1/Account/CreateDNTCaptchaParams")
     Call<LoginViewModel> createDNTCaptchaParams();
 
-    @GET("KontoriNew/DNTCaptchaImage/Show?")
+    @GET("DNTCaptchaImage/Show?")
     Call<ResponseBody> showDNTCaptchaImage(@Query("data") String data, @Query("fileExtension") String fileExtension);
 }
 
