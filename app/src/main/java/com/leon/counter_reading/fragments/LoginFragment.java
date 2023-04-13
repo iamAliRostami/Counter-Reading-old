@@ -21,6 +21,7 @@ import static com.leon.counter_reading.utils.login.TwoStepVerification.insertPer
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -45,11 +46,13 @@ import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.login.AttemptLogin;
 import com.leon.counter_reading.utils.login.AttemptRegister;
+import com.leon.counter_reading.utils.login.CreateDNTCaptcha;
+import com.leon.counter_reading.utils.login.ShowDNTCaptchaImage;
 import com.leon.counter_reading.view_models.LoginViewModel;
 
 import java.util.ArrayList;
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements View.OnClickListener {
     private FragmentLoginBinding binding;
     private LoginViewModel login;
     private int counter = 0;
@@ -85,6 +88,8 @@ public class LoginFragment extends Fragment {
 
 
     private void initialize() {
+        binding.imageViewRecaptcha.setOnClickListener(this);
+        createDNTCaptcha();
         if (getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(AVATAR.getValue()))
             binding.imageViewPerson.setImageBitmap(loadImage(requireContext(), getApplicationComponent()
                     .SharedPreferenceModel().getStringData(AVATAR.getValue())));
@@ -184,6 +189,8 @@ public class LoginFragment extends Fragment {
             if (isLogin) {
                 counter++;
                 //TODO
+//                if (login.getDntCaptchaInputText() != null && !login.getDntCaptchaInputText().isEmpty())
+//                    login.setDntCaptchaInputText(login.getDntCaptchaInputText());
                 if (counter < /*1*/4)
                     new AttemptLogin(login).execute(requireActivity());
                 else
@@ -219,6 +226,29 @@ public class LoginFragment extends Fragment {
             new CustomToast().warning(getString(R.string.error_is_not_match), Toast.LENGTH_LONG);
         }
         counter = 0;
+    }
+
+    private void createDNTCaptcha() {
+        binding.imageViewCaptcha.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.not_found));
+        new CreateDNTCaptcha(this).execute(requireActivity());
+    }
+
+    public void showDNTCaptchaImage(LoginViewModel login) {
+//        this.login.setDntCaptchaId(login.getDntCaptchaId());
+//        this.login.setDntCaptchaImgUrl(login.getDntCaptchaImgUrl());
+//        this.login.setDntCaptchaTextValue(login.getDntCaptchaTextValue());
+//        this.login.setDntCaptchaTokenValue(login.getDntCaptchaTokenValue());
+
+        this.login.setDntCaptchaText(login.getDntCaptchaTextValue());
+        this.login.setDntCaptchaToken(login.getDntCaptchaTokenValue());
+
+        this.login.setData(login.getDntCaptchaImgUrl().substring(login.getDntCaptchaImgUrl().lastIndexOf("data=") + 5));
+
+        new ShowDNTCaptchaImage(this, this.login).execute(requireActivity());
+    }
+
+    public void setCaptchaResult(Bitmap captchaResult) {
+        binding.imageViewCaptcha.setImageBitmap(captchaResult);
     }
 
     private void checkReadPhoneStatePermission() {
@@ -260,6 +290,15 @@ public class LoginFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == PackageManager.PERMISSION_GRANTED) {
             if (requestCode == GPS_CODE) checkReadPhoneStatePermission();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        final int id = v.getId();
+        if (id == R.id.image_view_recaptcha) {
+            createDNTCaptcha();
+        } else if (id == R.id.button_login) {
         }
     }
 }

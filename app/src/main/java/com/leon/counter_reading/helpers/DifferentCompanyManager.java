@@ -59,9 +59,8 @@ public class DifferentCompanyManager {
             case KSH:
                 return "http://46.225.241.211:25123/";
             case DEBUG:
-                return "http://192.168.43.185:45458/";
             default:
-                throw new UnsupportedOperationException();
+                return "http://192.168.100.8:44321";
         }
     }
 
@@ -94,7 +93,7 @@ public class DifferentCompanyManager {
             case KSH:
                 return "http://46.209.219.36:90";
             default:
-                throw new UnsupportedOperationException();
+                return "http://192.168.100.8:44321";
         }
     }
 
@@ -112,7 +111,7 @@ public class DifferentCompanyManager {
             case KSH:
                 return "آحاد";
             default:
-                throw new UnsupportedOperationException();
+                return "آحاد";
         }
     }
 
@@ -130,7 +129,7 @@ public class DifferentCompanyManager {
             case TSE:
                 return "آحاد اصلی";
             default:
-                throw new UnsupportedOperationException();
+                return "آحاد اصلی";
         }
     }
 
@@ -148,7 +147,7 @@ public class DifferentCompanyManager {
             case TSE:
                 return "آحاد فرعی";
             default:
-                throw new UnsupportedOperationException();
+                return "آحاد فرعی";
         }
     }
 
@@ -166,7 +165,7 @@ public class DifferentCompanyManager {
             case TSE:
                 return "آحاد مصرف";
             default:
-                throw new UnsupportedOperationException();
+                return "آحاد مصرف";
         }
     }
 
@@ -301,7 +300,7 @@ public class DifferentCompanyManager {
             case KSH:
                 return "آبفا استان کرمانشاه";
             default:
-                throw new UnsupportedOperationException();
+                return "آبفا استان اصفهان";
         }
     }
 

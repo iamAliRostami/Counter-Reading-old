@@ -167,6 +167,6 @@ public interface IAbfaService {
     Call<LoginViewModel> createDNTCaptchaParams();
 
     @GET("KontoriNew/DNTCaptchaImage/Show?")
-    Call<Bitmap> showDNTCaptchaImage(@Query("data") String data);
+    Call<ResponseBody> showDNTCaptchaImage(@Query("data") String data, @Query("fileExtension") String fileExtension);
 }
 

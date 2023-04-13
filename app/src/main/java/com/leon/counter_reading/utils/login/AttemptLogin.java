@@ -40,6 +40,11 @@ public class AttemptLogin extends AsyncTask<Activity, Activity, Void> {
     public AttemptLogin(LoginViewModel login) {
         super();
         this.login = login;
+        this.login.setData(null);
+//        this.login.setDntCaptchaTokenValue(null);
+//        this.login.setDntCaptchaTextValue(null);
+//        this.login.setDntCaptchaImgUrl(null);
+//        this.login.setDntCaptchaId(null);
     }
 
     @Override
@@ -49,8 +54,8 @@ public class AttemptLogin extends AsyncTask<Activity, Activity, Void> {
         final Call<LoginViewModel> call = iAbfaService.login(login);
         activities[0].runOnUiThread(() ->
                 HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activities[0],
-                        new LoginCompleted(activities[0], login),
-                        new Incomplete(activities[0]), new Error(activities[0])));
+                        new LoginCompleted(activities[0], login), new Incomplete(activities[0]),
+                        new Error(activities[0])));
         return null;
     }
 }

@@ -16,8 +16,8 @@ class Error implements ICallbackError {
 
     @Override
     public void executeError(Throwable t) {
-        CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(activity);
-        String error = customErrorHandlingNew.getErrorMessageTotal(t);
+        final CustomErrorHandling errorHandling = new CustomErrorHandling(activity);
+        final String error = errorHandling.getErrorMessageTotal(t);
         new CustomToast().error(error, Toast.LENGTH_LONG);
     }
 }

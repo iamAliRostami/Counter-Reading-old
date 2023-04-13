@@ -4,22 +4,18 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
 import static com.leon.counter_reading.helpers.MyApplication.getAndroidVersion;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.Crypto.decrypt;
 
-import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 
-import androidx.core.content.ContextCompat;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.google.gson.annotations.SerializedName;
 import com.leon.counter_reading.BR;
 import com.leon.counter_reading.BuildConfig;
-import com.leon.counter_reading.R;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 
 public class LoginViewModel extends BaseObservable {
@@ -41,17 +37,16 @@ public class LoginViewModel extends BaseObservable {
     private String XSRFToken;
     private String message;
     private boolean isValid;
+    private String data;
     private String dntCaptchaImgUrl;
     private String dntCaptchaId;
     private String dntCaptchaTextValue;
     private String dntCaptchaTokenValue;
+    private String dntCaptchaText;
+    private String dntCaptchaToken;
     private String dntCaptchaInputText;
-    private Drawable drawableCaptcha;
 
     public LoginViewModel(String deviceSerial) {
-        setDrawableCaptcha(ContextCompat.getDrawable(getContext(), R.drawable.not_found));
-//        Drawable mDrawable = new BitmapDrawable(getResources(), bitmap);
-//        setBitmapCaptcha(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.not_found));
         setAppVersion(BuildConfig.VERSION_NAME);
         setSaved(true);
         setDeviceSerial(deviceSerial);
@@ -279,16 +274,6 @@ public class LoginViewModel extends BaseObservable {
     }
 
     @Bindable
-    public Drawable getDrawableCaptcha() {
-        return drawableCaptcha;
-    }
-
-    public void setDrawableCaptcha(Drawable drawableCaptcha) {
-        this.drawableCaptcha = drawableCaptcha;
-        notifyPropertyChanged(BR.drawableCaptcha);
-    }
-
-    @Bindable
     public String getDntCaptchaInputText() {
         return dntCaptchaInputText;
     }
@@ -328,5 +313,29 @@ public class LoginViewModel extends BaseObservable {
 
     public void setDntCaptchaTokenValue(String dntCaptchaTokenValue) {
         this.dntCaptchaTokenValue = dntCaptchaTokenValue;
+    }
+
+    public String getDntCaptchaText() {
+        return dntCaptchaText;
+    }
+
+    public void setDntCaptchaText(String dntCaptchaText) {
+        this.dntCaptchaText = dntCaptchaText;
+    }
+
+    public String getDntCaptchaToken() {
+        return dntCaptchaToken;
+    }
+
+    public void setDntCaptchaToken(String dntCaptchaToken) {
+        this.dntCaptchaToken = dntCaptchaToken;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 }
