@@ -1,6 +1,11 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.CompanyNames.ESF;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.GUILD;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.GUILD_FIRST;
 import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -42,6 +47,12 @@ public class StartActivity extends AppCompatActivity implements SplashFragment.C
 
     @SuppressLint("ClickableViewAccessibility")
     private void initialize() {
+        if (getActiveCompanyName() == ESF) {
+            if (!getApplicationComponent().SharedPreferenceModel().getBoolData(GUILD_FIRST.getValue())) {
+                getApplicationComponent().SharedPreferenceModel().putData(GUILD_FIRST.getValue(), true);
+                getApplicationComponent().SharedPreferenceModel().putData(GUILD.getValue(), true);
+            }
+        }
         displayView(SPLASH_FRAGMENT);
         binding.containerBody.setOnTouchListener(new OnSwipeTouchListener(StartActivity.this) {
             @Override
