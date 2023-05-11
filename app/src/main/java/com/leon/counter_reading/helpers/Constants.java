@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 public class Constants {
     public static final Pattern IP_PATTERN = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)");
     public static final String FONT_NAME = "font/font_1.ttf";
-    public final static String DBName = "MyDatabase_30";
+    public final static String DBName = "MyDatabase_31";
     public static final int TOAST_TEXT_SIZE = 20;
 
     public static final int GPS_CODE = 1231;
