@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 //import com.github.mjdev.libaums.fs.UsbFile;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.holder.USBViewHolder;
-import com.leon.counter_reading.adapters.recyclerview.RecyclerItemClickListener;
+import com.leon.counter_reading.adapters.recycler_view.RecyclerUsbItemClickListener;
 import com.leon.counter_reading.fragments.ExplorerFragment;
 import com.leon.counter_reading.utils.USBUtils;
 
@@ -35,11 +35,11 @@ import me.jahnen.libaums.fs.UsbFile;
 
 public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final List<UsbFile> usbFiles = new ArrayList<>();
-    private final RecyclerItemClickListener itemClickListener;
+    private final RecyclerUsbItemClickListener itemClickListener;
     private final Context context;
     private UsbFile currentDir;
 
-    public UsbFilesAdapter(Context context, UsbFile usbFile, RecyclerItemClickListener itemClickListener) throws IOException {
+    public UsbFilesAdapter(Context context, UsbFile usbFile, RecyclerUsbItemClickListener itemClickListener) throws IOException {
         this.context = context;
         this.itemClickListener = itemClickListener;
         currentDir = usbFile;

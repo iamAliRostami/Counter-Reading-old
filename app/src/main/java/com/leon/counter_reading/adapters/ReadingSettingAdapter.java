@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.holder.ReadingSettingCheckBoxViewHolder;
+import com.leon.counter_reading.adapters.holder.ReadingSettingViewHolder;
 import com.leon.counter_reading.fragments.dialog.RoadMapFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.TrackingDto;
@@ -43,7 +43,7 @@ public class ReadingSettingAdapter extends BaseAdapter {
                 convertView = inflater.inflate(R.layout.item_reading_setting_2, null);
         }
         final TrackingDto trackingDto = trackingDtos.get(position);
-        final ReadingSettingCheckBoxViewHolder holder = new ReadingSettingCheckBoxViewHolder(convertView);
+        final ReadingSettingViewHolder holder = new ReadingSettingViewHolder(convertView);
         holder.textViewTrackNumber.setText(String.valueOf(trackingDto.trackNumber));
         holder.textViewZoneTitle.setText(trackingDto.zoneTitle);
         holder.textViewStartEshterak.setText(trackingDto.fromEshterak);

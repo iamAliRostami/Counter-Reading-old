@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.ViewPagerAdapterTab;
+import com.leon.counter_reading.adapters.ViewPagerTabAdapter;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReadingSettingBinding;
 import com.leon.counter_reading.fragments.reading_setting.ReadingPossibleSettingFragment;
@@ -107,7 +107,7 @@ public class ReadingSettingActivity extends BaseActivity {
     }
 
     private void setupViewPager() {
-        final ViewPagerAdapterTab adapter = new ViewPagerAdapterTab(getSupportFragmentManager());
+        final ViewPagerTabAdapter adapter = new ViewPagerTabAdapter(getSupportFragmentManager());
         adapter.addFragment(ReadingSettingActiveFragment.newInstance(trackingDtos));
         adapter.addFragment(ReadingSettingFeaturesFragment.newInstance());
         adapter.addFragment(new ReadingPossibleSettingFragment());

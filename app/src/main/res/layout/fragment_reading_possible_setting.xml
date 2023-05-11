@@ -1,96 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/medium_dp"
-    tools:context=".fragments.reading_setting.ReadingPossibleSettingFragment"
-    tools:ignore="ScrollViewCount">
+    tools:context=".fragments.reading_setting.ReadingPossibleSettingFragment">
 
-    <RelativeLayout
-        android:id="@+id/relative_layout_check_box"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_possible"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <CheckBox
-            android:id="@+id/check_box_mobile"
-            style="@style/CheckBox.Possible"
-            android:text="@string/mobile_number" />
-
-        <CheckBox
-            android:id="@+id/check_box_address"
-            style="@style/CheckBox.Possible"
-            android:layout_below="@id/check_box_mobile"
-            android:text="@string/address" />
-
-        <CheckBox
-            android:id="@+id/check_box_karbari"
-            style="@style/CheckBox.Possible"
-            android:layout_below="@id/check_box_address"
-
-            android:text="@string/karbari" />
-
-        <CheckBox
-            android:id="@+id/check_box_account"
-            style="@style/CheckBox.Possible"
-            android:layout_below="@id/check_box_karbari"
-
-            android:text="@string/account" />
-
-        <CheckBox
-            android:id="@+id/check_box_serial"
-            style="@style/CheckBox.Possible"
-            android:layout_below="@id/check_box_account"
-            android:text="@string/counter_serial" />
-
-        <CheckBox
-            android:id="@+id/check_box_ahad_empty"
-            style="@style/CheckBox.Possible"
-            android:layout_below="@id/check_box_serial"
-            android:layout_margin="@dimen/low_dp" />
-
-        <CheckBox
-            android:id="@+id/check_box_ahad1"
-            style="@style/CheckBox.Possible"
-            android:layout_below="@id/check_box_ahad_empty" />
-
-        <CheckBox
-            android:id="@+id/check_box_ahad2"
-            style="@style/CheckBox.Possible"
-            android:layout_below="@id/check_box_ahad1" />
-
-        <CheckBox
-            android:id="@+id/check_box_ahad_total"
-            style="@style/CheckBox.Possible"
-            android:layout_below="@id/check_box_ahad2" />
-
-        <CheckBox
-            android:id="@+id/check_box_ahad_show_title"
-            style="@style/CheckBox.Possible"
-            android:layout_below="@id/check_box_ahad_total" />
-
-        <CheckBox
-            android:id="@+id/check_box_image"
-            style="@style/CheckBox.Possible"
-            android:layout_below="@id/check_box_ahad_show_title"
-            android:text="@string/attach_image" />
-
-        <CheckBox
-            android:id="@+id/check_box_description"
-            style="@style/CheckBox.Possible"
-            android:layout_below="@id/check_box_image"
-            android:text="@string/description" />
-
-        <CheckBox
-            android:id="@+id/check_box_reading_report"
-            style="@style/CheckBox.Possible"
-            android:layout_below="@id/check_box_description"
-            android:text="@string/reading_report" />
-
-        <CheckBox
-            android:id="@+id/check_box_guild"
-            style="@style/CheckBox.Possible"
-            android:layout_below="@id/check_box_reading_report"
-            android:text="@string/guild_navigation" />
-    </RelativeLayout>
-</ScrollView>
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/item_possible" />
+</RelativeLayout>

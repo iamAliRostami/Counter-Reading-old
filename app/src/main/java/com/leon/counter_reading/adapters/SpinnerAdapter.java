@@ -12,11 +12,11 @@ import com.leon.counter_reading.R;
 
 import java.io.Serializable;
 
-public class SpinnerCustomAdapter extends BaseAdapter implements Serializable {
+public class SpinnerAdapter extends BaseAdapter implements Serializable {
     private final String[] items;
     private final LayoutInflater inflater;
 
-    public SpinnerCustomAdapter(Context context, String[] items) {
+    public SpinnerAdapter(Context context, String[] items) {
         super();
         this.items = items;
         inflater = (LayoutInflater.from(context));

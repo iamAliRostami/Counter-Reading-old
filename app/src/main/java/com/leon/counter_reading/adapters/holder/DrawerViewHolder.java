@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.leon.counter_reading.R;
 
-public class DrawerItemHolder extends RecyclerView.ViewHolder {
+public class DrawerViewHolder extends RecyclerView.ViewHolder {
     public final TextView textViewTitle;
     public final ImageView imageViewIcon;
     public final LinearLayout linearLayout;
 
-    public DrawerItemHolder(View viewItem) {
+    public DrawerViewHolder(View viewItem) {
         super(viewItem);
         this.textViewTitle = viewItem.findViewById(R.id.text_view_title);
         this.imageViewIcon = viewItem.findViewById(R.id.image_view_icon);

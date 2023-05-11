@@ -20,7 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.UploadActivity;
-import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
+import com.leon.counter_reading.adapters.SpinnerAdapter;
 import com.leon.counter_reading.databinding.FragmentUploadBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.tables.TrackingDto;
@@ -105,7 +105,7 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setupSpinner() {
-        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireContext(), items);
+        final SpinnerAdapter adapter = new SpinnerAdapter(requireContext(), items);
         binding.spinner.setAdapter(adapter);
     }
 

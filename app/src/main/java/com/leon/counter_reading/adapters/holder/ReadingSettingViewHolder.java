@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.leon.counter_reading.R;
 
-public class ReadingSettingCheckBoxViewHolder {
+public class ReadingSettingViewHolder {
     public final CheckedTextView checkBox;
     public final LinearLayout linearLayout;
     public final TextView textViewTrackNumber;
@@ -21,7 +21,7 @@ public class ReadingSettingCheckBoxViewHolder {
     public final ImageView imageViewMap1;
     public final ImageView imageViewMap2;
 
-    public ReadingSettingCheckBoxViewHolder(View view) {
+    public ReadingSettingViewHolder(View view) {
         checkBox = view.findViewById(android.R.id.text1);
         linearLayout = view.findViewById(R.id.linear_layout);
         textViewEndDate = view.findViewById(R.id.text_view_end_date);

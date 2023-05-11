@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.UsbFilesAdapter;
-import com.leon.counter_reading.adapters.recyclerview.RecyclerItemClickListener;
+import com.leon.counter_reading.adapters.recycler_view.RecyclerUsbItemClickListener;
 import com.leon.counter_reading.databinding.FragmentExplorerBinding;
 import com.leon.counter_reading.fragments.download.DownloadOfflineFragment;
 import com.leon.counter_reading.utils.CustomToast;
@@ -47,7 +47,7 @@ public class ExplorerFragment extends Fragment {
     private final Deque<UsbFile> dirs = new ArrayDeque<>();
     private FragmentExplorerBinding binding;
     private UsbFilesAdapter adapter;
-    private RecyclerItemClickListener listener;
+    private RecyclerUsbItemClickListener listener;
 
     public ExplorerFragment(DownloadOfflineFragment downloadOfflineFragment) {
         this.downloadOfflineFragment = downloadOfflineFragment;
@@ -108,8 +108,8 @@ public class ExplorerFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        listener = new RecyclerItemClickListener(
-                getActivity(), binding.recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+        listener = new RecyclerUsbItemClickListener(
+                getActivity(), binding.recyclerView, new RecyclerUsbItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 onListItemClick(position);

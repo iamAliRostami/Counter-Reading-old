@@ -1,4 +1,4 @@
-package com.leon.counter_reading.adapters.recyclerview;
+package com.leon.counter_reading.adapters.recycler_view;
 
 import static com.leon.counter_reading.utils.USBUtils.isConfirmButton;
 
@@ -11,12 +11,11 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+public class RecyclerUsbItemClickListener implements RecyclerView.OnItemTouchListener {
     private final OnItemClickListener listener;
     private final RecyclerView recyclerView;
     private final GestureDetector gestureDetector;
-
-    public RecyclerItemClickListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener) {
+    public RecyclerUsbItemClickListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener) {
         this.listener = listener;
         this.recyclerView = recyclerView;
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
@@ -27,9 +26,9 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
             @Override
             public void onLongPress(MotionEvent e) {
-                final View child = RecyclerItemClickListener.this.recyclerView.findChildViewUnder(e.getX(), e.getY());
-                if (child != null && RecyclerItemClickListener.this.listener != null) {
-                    RecyclerItemClickListener.this.listener.onLongItemClick(child, RecyclerItemClickListener.this.recyclerView.getChildAdapterPosition(child));
+                final View child = RecyclerUsbItemClickListener.this.recyclerView.findChildViewUnder(e.getX(), e.getY());
+                if (child != null && RecyclerUsbItemClickListener.this.listener != null) {
+                    RecyclerUsbItemClickListener.this.listener.onLongItemClick(child, RecyclerUsbItemClickListener.this.recyclerView.getChildAdapterPosition(child));
                 }
             }
         });

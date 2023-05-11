@@ -27,7 +27,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.gson.Gson;
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
+import com.leon.counter_reading.adapters.SpinnerAdapter;
 import com.leon.counter_reading.databinding.FragmentPossibleBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.fragments.ContactUserFragment;
@@ -111,7 +111,7 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
             items[i + 1] = guildsTemp.get(i).title;
         }
         items[0] = getString(R.string.select_one);
-        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
+        final SpinnerAdapter adapter = new SpinnerAdapter(requireActivity(), items);
         binding.spinnerGuild.setAdapter(adapter);
         if (possible.getOnOffLoadDto().guildId != null) {
             for (int i = 0; i < guildsTemp.size(); i++) {
@@ -128,7 +128,7 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
             items[i + 1] = karbariDtosTemp.get(i).title;
         }
         items[0] = getString(R.string.select_one);
-        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
+        final SpinnerAdapter adapter = new SpinnerAdapter(requireActivity(), items);
         binding.spinnerKarbari.setAdapter(adapter);
 //        if (possible.getOnOffLoadDto().possibleKarbariCode != null)
 //            binding.spinnerKarbari.setSelection(possible.getOnOffLoadDto().possibleKarbariCode + 1);
@@ -254,7 +254,7 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
                 }
             }
             final String[] items = itemsTemp.toArray(new String[0]);
-            final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
+            final SpinnerAdapter adapter = new SpinnerAdapter(requireActivity(), items);
             binding.spinnerKarbari.setAdapter(adapter);
         } else if (binding.editTextSearchGuild.getEditableText() == editable) {
             final ArrayList<String> itemsTemp = new ArrayList<>();
@@ -267,7 +267,7 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
                 }
             }
             final String[] items = itemsTemp.toArray(new String[0]);
-            final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
+            final SpinnerAdapter adapter = new SpinnerAdapter(requireActivity(), items);
             binding.spinnerGuild.setAdapter(adapter);
         }
     }

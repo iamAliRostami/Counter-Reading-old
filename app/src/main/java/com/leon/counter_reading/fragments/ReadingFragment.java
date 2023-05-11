@@ -47,7 +47,7 @@ import androidx.fragment.app.FragmentManager;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
+import com.leon.counter_reading.adapters.SpinnerAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingBinding;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
@@ -204,7 +204,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         for (int i = 0; i < counterStateDtos.size(); i++) {
             items[i] = counterStateDtos.get(i).title;
         }
-        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
+        final SpinnerAdapter adapter = new SpinnerAdapter(requireActivity(), items);
         binding.spinner.setAdapter(adapter);
         boolean found = false;
         int i;

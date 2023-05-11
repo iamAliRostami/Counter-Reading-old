@@ -40,8 +40,8 @@ public enum SharedReferenceKeys {
     SORT_FILTER_PREF("SORT_FILTER_PREF"),
     SORT_ASC_KEY("SORT_ASC_KEY"),
     SORT_FILTER_KEY("SORT_FILTER_KEY"),
-    GUILD("GUILD"),
-    GUILD_FIRST("GUILD_FIRST");
+    GUILD("guild"),
+    GUILD_FIRST("guild_first");
 
     private final String value;
 

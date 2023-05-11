@@ -10,10 +10,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewPagerAdapterTab extends FragmentPagerAdapter {
+public class ViewPagerTabAdapter extends FragmentPagerAdapter {
     private final List<Fragment> fragments = new ArrayList<>();
 
-    public ViewPagerAdapterTab(@NonNull FragmentManager fm) {
+    public ViewPagerTabAdapter(@NonNull FragmentManager fm) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
     }
 

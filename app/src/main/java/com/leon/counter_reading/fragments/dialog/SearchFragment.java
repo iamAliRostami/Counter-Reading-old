@@ -22,7 +22,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
-import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
+import com.leon.counter_reading.adapters.SpinnerAdapter;
 import com.leon.counter_reading.databinding.FragmentSearchBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.utils.CustomToast;
@@ -73,7 +73,7 @@ public class SearchFragment extends DialogFragment {
     private void initializeSpinner() {
         final String[] items = getResources().getStringArray(R.array.search_option);
         items[1] = getSecondSearchItem();
-        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(getActivity(), items);
+        final SpinnerAdapter adapter = new SpinnerAdapter(getActivity(), items);
         binding.spinnerSearch.setAdapter(adapter);
         binding.spinnerSearch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

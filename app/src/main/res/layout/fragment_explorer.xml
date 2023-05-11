@@ -54,7 +54,7 @@
             android:layout_height="@dimen/small_dp"
             android:background="@color/gray" />
 
-        <com.leon.counter_reading.adapters.recyclerview.EmptyRecyclerView
+        <com.leon.counter_reading.adapters.recycler_view.EmptyRecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
             app:fastScrollVerticalTrackDrawable="@drawable/line_drawable">
 
             <requestFocus />
-        </com.leon.counter_reading.adapters.recyclerview.EmptyRecyclerView>
+        </com.leon.counter_reading.adapters.recycler_view.EmptyRecyclerView>
     </LinearLayout>
 
     <LinearLayout

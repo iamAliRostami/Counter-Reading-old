@@ -6,14 +6,14 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.leon.counter_reading.adapters.recyclerview.RecyclerItemClickListener;
+import com.leon.counter_reading.adapters.recycler_view.RecyclerUsbItemClickListener;
 
 public class USBViewHolder extends RecyclerView.ViewHolder {
     public final View globalView;
     public final TextView title, summary;
     public final ImageView type;
 
-    public USBViewHolder(View view, RecyclerItemClickListener itemClickListener) {
+    public USBViewHolder(View view, RecyclerUsbItemClickListener itemClickListener) {
         super(view);
         globalView = view;
         title = view.findViewById(android.R.id.title);

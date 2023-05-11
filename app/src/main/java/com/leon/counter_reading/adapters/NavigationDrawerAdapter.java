@@ -14,12 +14,12 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.holder.DrawerItemHolder;
+import com.leon.counter_reading.adapters.holder.DrawerViewHolder;
 import com.leon.counter_reading.adapters.items.DrawerItem;
 
 import java.util.List;
 
-public class NavigationDrawerAdapter extends RecyclerView.Adapter<DrawerItemHolder> {
+public class NavigationDrawerAdapter extends RecyclerView.Adapter<DrawerViewHolder> {
     private final List<DrawerItem> drawerItemList;
     private final Context context;
 
@@ -30,15 +30,15 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<DrawerItemHold
 
     @NonNull
     @Override
-    public DrawerItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public DrawerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final Context context = parent.getContext();
         final LayoutInflater inflater = LayoutInflater.from(context);
         final View drawerView = inflater.inflate(R.layout.item_navigation_drawer, parent, false);
-        return new DrawerItemHolder(drawerView);
+        return new DrawerViewHolder(drawerView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DrawerItemHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DrawerViewHolder holder, int position) {
         final DrawerItem drawerItem = drawerItemList.get(position);
         if (position == 8) {
             holder.textViewTitle.setTextColor(ContextCompat.getColor(context, R.color.red));

@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.UploadActivity;
-import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
+import com.leon.counter_reading.adapters.SpinnerAdapter;
 import com.leon.counter_reading.databinding.FragmentUploadBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.tables.TrackingDto;
@@ -62,8 +62,8 @@ public class UploadOfflineFragment extends Fragment {
     }
 
     private void setupSpinner() {
-        SpinnerCustomAdapter spinnerCustomAdapter = new SpinnerCustomAdapter(activity, items);
-        binding.spinner.setAdapter(spinnerCustomAdapter);
+        SpinnerAdapter adapter = new SpinnerAdapter(activity, items);
+        binding.spinner.setAdapter(adapter);
     }
 
     private boolean checkOnOffLoad() {

@@ -24,7 +24,7 @@ import com.google.gson.Gson;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.activities.ReportActivity;
-import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
+import com.leon.counter_reading.adapters.SpinnerAdapter;
 import com.leon.counter_reading.databinding.FragmentReportTemporaryBinding;
 import com.leon.counter_reading.tables.CounterStateDto;
 import com.leon.counter_reading.view_models.TemporaryViewModel;
@@ -82,7 +82,7 @@ public class ReportTemporaryFragment extends Fragment {
         temporaryVM.setItems(CounterStateDto.getCounterStateItems(reportActivity.getCounterStateDtos(),
                 new String[]{getString(R.string.select_one), getString(R.string.all_mane),
                         getString(R.string.all_mane_unread)}));
-        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireContext(), temporaryVM.getItems());
+        final SpinnerAdapter adapter = new SpinnerAdapter(requireContext(), temporaryVM.getItems());
         binding.spinner.setAdapter(adapter);
 
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

@@ -14,8 +14,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.holder.ReadingReportCheckBoxViewHolder;
-import com.leon.counter_reading.enums.FragmentTags;
+import com.leon.counter_reading.adapters.holder.ReadingReportViewHolder;
 import com.leon.counter_reading.fragments.dialog.AhadFragment;
 import com.leon.counter_reading.fragments.dialog.KarbariFragment;
 import com.leon.counter_reading.fragments.dialog.TaviziFragment;
@@ -46,12 +45,12 @@ public class ReadingReportAdapter extends BaseAdapter {
     @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final ReadingReportCheckBoxViewHolder holder;
+        final ReadingReportViewHolder holder;
         View view = convertView;
         if (view == null) {
             view = inflater.inflate(R.layout.item_public, null);
         }
-        holder = new ReadingReportCheckBoxViewHolder(view);
+        holder = new ReadingReportViewHolder(view);
         holder.checkBox.setText(counterReportDtos.get(position).title);
         holder.checkBox.setOnClickListener(view1 -> {
             holder.checkBox.setChecked(!holder.checkBox.isChecked());

@@ -65,7 +65,7 @@ import com.leon.counter_reading.activities.ReportActivity;
 import com.leon.counter_reading.activities.SettingActivity;
 import com.leon.counter_reading.activities.UploadActivity;
 import com.leon.counter_reading.adapters.NavigationDrawerAdapter;
-import com.leon.counter_reading.adapters.RecyclerItemClickListener;
+import com.leon.counter_reading.adapters.recycler_view.RecyclerItemClickListener;
 import com.leon.counter_reading.adapters.items.DrawerItem;
 import com.leon.counter_reading.databinding.ActivityBaseBinding;
 import com.leon.counter_reading.di.view_model.GoogleLocationTracking;

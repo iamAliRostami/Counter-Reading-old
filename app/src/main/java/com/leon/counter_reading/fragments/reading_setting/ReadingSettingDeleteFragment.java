@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.SpinnerCustomAdapter;
+import com.leon.counter_reading.adapters.SpinnerAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingSettingDeleteBinding;
 import com.leon.counter_reading.fragments.dialog.DeleteFragment;
 import com.leon.counter_reading.tables.TrackingDto;
@@ -73,7 +73,7 @@ public class ReadingSettingDeleteFragment extends Fragment {
             }
         }
         items[0] = getString(R.string.all_items);
-        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
+        final SpinnerAdapter adapter = new SpinnerAdapter(requireActivity(), items);
         binding.spinner.setAdapter(adapter);
     }
 

@@ -10,11 +10,11 @@ import android.widget.CheckedTextView;
 
 import com.leon.counter_reading.R;
 
-public class SpinnerCustomAdapterMultiple extends BaseAdapter {
+public class SpinnerMultipleAdapter extends BaseAdapter {
     private final String[] items;
     private final LayoutInflater inflater;
 
-    public SpinnerCustomAdapterMultiple(Activity activity, String[] items) {
+    public SpinnerMultipleAdapter(Activity activity, String[] items) {
         super();
         this.items = items;
         inflater = (LayoutInflater.from(activity));

@@ -1,4 +1,4 @@
-package com.leon.counter_reading.adapters.recyclerview;
+package com.leon.counter_reading.adapters.recycler_view;
 
 import android.content.Context;
 import android.util.AttributeSet;
