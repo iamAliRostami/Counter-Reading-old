@@ -9,6 +9,8 @@ import com.leon.counter_reading.tables.CounterReportDao;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.CounterStateDao;
 import com.leon.counter_reading.tables.CounterStateDto;
+import com.leon.counter_reading.tables.DynamicTraverse;
+import com.leon.counter_reading.tables.DynamicTraverseDao;
 import com.leon.counter_reading.tables.ForbiddenDao;
 import com.leon.counter_reading.tables.ForbiddenDto;
 import com.leon.counter_reading.tables.Guilds;
@@ -35,7 +37,7 @@ import com.leon.counter_reading.tables.VoiceDao;
 @Database(entities = {SavedLocation.class, KarbariDto.class, OnOffLoadDto.class,
         QotrDictionary.class, ReadingConfigDefaultDto.class, TrackingDto.class, Voice.class,
         CounterStateDto.class, Image.class, CounterReportDto.class, OffLoadReport.class,
-        ForbiddenDto.class, Guilds.class},
+        ForbiddenDto.class, Guilds.class, DynamicTraverse.class},
         version = 20, exportSchema = false)
 public abstract class MyDatabase extends RoomDatabase {
     public static final Migration MIGRATION_4_5 = new Migration(16, 17) {
@@ -247,4 +249,6 @@ public abstract class MyDatabase extends RoomDatabase {
     public abstract VoiceDao voiceDao();
 
     public abstract GuildsDao guildDao();
+
+    public abstract DynamicTraverseDao dynamicTraverseDao();
 }

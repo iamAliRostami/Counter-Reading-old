@@ -11,6 +11,7 @@ public class ReadingData {
     public final ArrayList<CounterStateDto> counterStateDtos;
     public final ArrayList<CounterReportDto> counterReportDtos;
     public final ArrayList<Guilds> guilds;
+    public final ArrayList<DynamicTraverse> dynamicTraverses;
     public int status;
     public String message;
 
@@ -23,5 +24,6 @@ public class ReadingData {
         counterStateDtos = new ArrayList<>();
         counterReportDtos = new ArrayList<>();
         guilds = new ArrayList<>();
+        dynamicTraverses = new ArrayList<>();
     }
 }

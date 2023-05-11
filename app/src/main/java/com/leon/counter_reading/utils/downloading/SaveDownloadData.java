@@ -15,6 +15,7 @@ import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.tables.CounterStateDto;
+import com.leon.counter_reading.tables.DynamicTraverse;
 import com.leon.counter_reading.tables.QotrDictionary;
 import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
 import com.leon.counter_reading.tables.ReadingData;
@@ -107,6 +108,13 @@ public class SaveDownloadData {
         myDatabase.guildDao().deleteGuildCompletely();
         if (readingData.guilds.size() > 0) {
             myDatabase.guildDao().insertGuild(readingData.guilds);
+        }
+
+        //TODO
+        myDatabase.dynamicTraverseDao().deleteDynamicTraverse();
+        myDatabase.dynamicTraverseDao().insertDynamicTraverse(readingData.dynamicTraverses);
+        for (DynamicTraverse dynamicTraverse : readingData.dynamicTraverses) {
+            getApplicationComponent().SharedPreferenceModel().putData(dynamicTraverse.storageTitle, dynamicTraverse.defaultValue);
         }
 
         final String message = String.format(MyApplication.getContext().getString(R.string.download_message),
