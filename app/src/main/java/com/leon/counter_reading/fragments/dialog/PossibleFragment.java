@@ -17,6 +17,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -178,11 +179,13 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         if (binding.spinnerGuild.getSelectedItemPosition() > 0)
             possible.getOnOffLoadDto().guildId =
                     guildsTemp.get(binding.spinnerGuild.getSelectedItemPosition() - 1).id;
-        else if (binding.spinnerGuild.getVisibility() == View.VISIBLE) {
+        else if (possible.getGuildVisibility() == View.VISIBLE) {
+            Log.e("here 1", String.valueOf(binding.spinnerGuild.getVisibility()));
+            Log.e("here 2", String.valueOf(View.VISIBLE));
+            Log.e("here 3", String.valueOf(possible.getGuildVisibility()));
             new CustomToast().warning("صنف وارد نشده است");
             return;
         }
-
 
         if (possible.getPossibleMobile() != null && possible.getPossibleMobile().length() > 0) {
             if (possible.getPossibleMobile().length() < 11 || !possible.getPossibleMobile().substring(0, 2).contains("09")) {
