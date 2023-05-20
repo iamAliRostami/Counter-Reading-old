@@ -7,6 +7,7 @@ import static com.leon.counter_reading.enums.DialogType.Green;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.FragmentTags.CALL_USER;
 import static com.leon.counter_reading.enums.NotificationType.OTHER;
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getEshterakMinLength;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
@@ -177,6 +178,10 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         if (binding.spinnerGuild.getSelectedItemPosition() > 0)
             possible.getOnOffLoadDto().guildId =
                     guildsTemp.get(binding.spinnerGuild.getSelectedItemPosition() - 1).id;
+        else if (binding.spinnerGuild.getVisibility() == View.VISIBLE) {
+            new CustomToast().warning("صنف وارد نشده است");
+            return;
+        }
 
 
         if (possible.getPossibleMobile() != null && possible.getPossibleMobile().length() > 0) {
@@ -210,7 +215,7 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
     public boolean onLongClick(View view) {
         final int id = view.getId();
         if (id == R.id.text_view_mobile || id == R.id.image_view_mobile) {
-            ShowFragmentDialog.ShowDialogOnce(requireContext(), CALL_USER.getValue(),
+            ShowDialogOnce(requireContext(), CALL_USER.getValue(),
                     ContactUserFragment.newInstance(possible.getName(), possible.getMobile()));
         }
         return false;
