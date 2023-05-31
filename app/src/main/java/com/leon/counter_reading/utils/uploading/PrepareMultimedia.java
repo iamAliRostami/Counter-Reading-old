@@ -69,6 +69,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
                             MediaType.parse("text/plain")));
                 } catch (Exception e) {
                     e.printStackTrace();
+                    imageMultiples.Description.add(RequestBody.create("",
+                            MediaType.parse("text/plain")));
                 }
                 imageMultiples.OnOffLoadId.add(RequestBody.create(images.get(i).OnOffLoadId,
                         MediaType.parse("text/plain")));

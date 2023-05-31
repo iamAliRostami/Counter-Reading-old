@@ -17,7 +17,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,7 +117,7 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         if (possible.getOnOffLoadDto().guildId != null) {
             for (int i = 0; i < guildsTemp.size(); i++) {
                 if (guildsTemp.get(i).id == possible.getOnOffLoadDto().guildId)
-                    binding.spinnerGuild.setSelection(i);
+                    binding.spinnerGuild.setSelection(i + 1);
             }
         }
     }
@@ -132,6 +131,11 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         items[0] = getString(R.string.select_one);
         final SpinnerAdapter adapter = new SpinnerAdapter(requireActivity(), items);
         binding.spinnerKarbari.setAdapter(adapter);
+
+        for (int i = 0; i < karbariDtosTemp.size(); i++) {
+            if (karbariDtosTemp.get(i).moshtarakinId == possible.getOnOffLoadDto().possibleKarbariCode)
+                binding.spinnerKarbari.setSelection(i + 1);
+        }
 //        if (possible.getOnOffLoadDto().possibleKarbariCode != null)
 //            binding.spinnerKarbari.setSelection(possible.getOnOffLoadDto().possibleKarbariCode + 1);
     }
@@ -180,9 +184,6 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
             possible.getOnOffLoadDto().guildId =
                     guildsTemp.get(binding.spinnerGuild.getSelectedItemPosition() - 1).id;
         else if (possible.getGuildVisibility() == View.VISIBLE) {
-            Log.e("here 1", String.valueOf(binding.spinnerGuild.getVisibility()));
-            Log.e("here 2", String.valueOf(View.VISIBLE));
-            Log.e("here 3", String.valueOf(possible.getGuildVisibility()));
             new CustomToast().warning("صنف وارد نشده است");
             return;
         }
