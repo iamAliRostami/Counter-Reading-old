@@ -89,16 +89,14 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
                 try {
                     voiceMultiples.Description.add(RequestBody.create(voice.get(i).Description,
                             MediaType.parse("text/plain")));
-//                    voiceMultiples.Description.add(RequestBody.create((voice.get(i).Description == null ||
-//                                    voice.get(i).Description.isEmpty()) ? "-" : voice.get(i).Description,
-//                            MediaType.parse("text/plain")));
                 } catch (Exception e) {
                     e.printStackTrace();
+                    voiceMultiples.Description.add(RequestBody.create("",
+                            MediaType.parse("text/plain")));
                 }
                 voiceMultiples.File.add(voice.get(i).File);
             } else {
-                getApplicationComponent().MyDatabase().voiceDao().
-                        deleteVoice(voice.get(i).id);
+                getApplicationComponent().MyDatabase().voiceDao().deleteVoice(voice.get(i).id);
             }
         }
         return activities[0];

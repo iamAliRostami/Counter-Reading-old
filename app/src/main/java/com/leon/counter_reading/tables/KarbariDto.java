@@ -16,4 +16,5 @@ public class KarbariDto {
     public boolean isSaxt;
     public boolean hasReadingVibrate;
     public boolean isTejari;
+    public boolean isInGuild;
 }
