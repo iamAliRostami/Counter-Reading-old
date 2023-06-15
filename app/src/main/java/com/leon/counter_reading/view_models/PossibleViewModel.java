@@ -526,7 +526,7 @@ public class PossibleViewModel extends BaseObservable {
 
         for (int i = 0; i < getKarbari().size(); i++) {
             if (onOffLoadDto.karbariCode == getKarbari().get(i).moshtarakinId)
-                if (!getKarbari().get(i).isInGuild)
+                if (!getKarbari().get(i).isInGuilds)
                     return View.GONE;
         }
 
