@@ -8,6 +8,7 @@ import static com.leon.counter_reading.enums.HighLowStateEnum.LOW;
 import static com.leon.counter_reading.enums.HighLowStateEnum.NORMAL;
 import static com.leon.counter_reading.enums.HighLowStateEnum.ZERO;
 import static com.leon.counter_reading.enums.NotificationType.NOT_SAVE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.KEYBOARD_TYPE;
 import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
@@ -17,6 +18,7 @@ import static com.leon.counter_reading.helpers.Constants.karbariDtos;
 import static com.leon.counter_reading.helpers.Constants.onOffLoadDtos;
 import static com.leon.counter_reading.helpers.Constants.readingConfigDefaultDtos;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getLockNumber;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getDigits;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import static com.leon.counter_reading.utils.MakeNotification.ringNotification;
@@ -27,6 +29,7 @@ import static com.leon.counter_reading.utils.PermissionManager.forceClose;
 import static com.leon.counter_reading.utils.reading.Counting.checkHighLow;
 import static com.leon.counter_reading.utils.reading.Counting.checkHighLowMakoos;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -34,9 +37,11 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -168,6 +173,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
             binding.textViewRadif.setVisibility(View.GONE);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setOnEventsListener() {
         binding.imageButtonHideKeyboard.setOnClickListener(this);
         binding.imageButtonShowKeyboard.setOnClickListener(this);
@@ -175,7 +181,34 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         binding.textViewPreNumber.setOnClickListener(this);
         binding.editTextNumber.setOnClickListener(this);
         binding.buttonSubmit.setOnClickListener(this);
+
+        //TODO
+        binding.buttonKeyboard0.setOnClickListener(clickListener);
+        binding.buttonKeyboard1.setOnClickListener(clickListener);
+        binding.buttonKeyboard2.setOnClickListener(clickListener);
+        binding.buttonKeyboard3.setOnClickListener(clickListener);
+        binding.buttonKeyboard4.setOnClickListener(clickListener);
+        binding.buttonKeyboard5.setOnClickListener(clickListener);
+        binding.buttonKeyboard6.setOnClickListener(clickListener);
+        binding.buttonKeyboard7.setOnClickListener(clickListener);
+        binding.buttonKeyboard8.setOnClickListener(clickListener);
+        binding.buttonKeyboard9.setOnClickListener(clickListener);
+        binding.buttonKeyboardBackspace.setOnClickListener(clickListener);
+
+        binding.buttonKeyboard0.setOnTouchListener(touchListener);
+        binding.buttonKeyboard1.setOnTouchListener(touchListener);
+        binding.buttonKeyboard2.setOnTouchListener(touchListener);
+        binding.buttonKeyboard3.setOnTouchListener(touchListener);
+        binding.buttonKeyboard4.setOnTouchListener(touchListener);
+        binding.buttonKeyboard5.setOnTouchListener(touchListener);
+        binding.buttonKeyboard6.setOnTouchListener(touchListener);
+        binding.buttonKeyboard7.setOnTouchListener(touchListener);
+        binding.buttonKeyboard8.setOnTouchListener(touchListener);
+        binding.buttonKeyboard9.setOnTouchListener(touchListener);
+        binding.buttonKeyboardBackspace.setOnTouchListener(touchListener);
+        //TODO
     }
+
     private void changeKeyboardState() {
         if (readingVM.getOnOffLoadDto().isLocked) {
             binding.relativeLayoutKeyboard.setVisibility(View.GONE);
@@ -385,6 +418,31 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
             FOCUS_ON_EDIT_TEXT = !FOCUS_ON_EDIT_TEXT;
             changeKeyboardState();
         }
+    }
+
+    private final View.OnClickListener clickListener = v -> {
+        if (!getApplicationComponent().SharedPreferenceModel().getBoolData(KEYBOARD_TYPE.getValue()))
+            keyboardEvent(v);
+    };
+    @SuppressLint("ClickableViewAccessibility")
+    private final View.OnTouchListener touchListener = (v, event) -> {
+        if (getApplicationComponent().SharedPreferenceModel().getBoolData(KEYBOARD_TYPE.getValue()))
+            if (event.getAction() == MotionEvent.ACTION_DOWN)
+                keyboardEvent(v);
+        return false;
+    };
+
+    private void keyboardEvent(View view) {
+        binding.buttonSubmit.setEnabled(false);
+        ringNotification();
+        if (view.getId() == R.id.button_keyboard_backspace) {
+            if (readingVM.getCounterNumber() != null && readingVM.getCounterNumber().length() > 0)
+                readingVM.setCounterNumber(readingVM.getCounterNumber().substring(0, readingVM.getCounterNumber().length() - 1));
+        } else if (readingVM.getCounterNumber() != null && readingVM.getCounterNumber().length() < 9) {
+            readingVM.setCounterNumber((readingVM.getCounterNumber() != null ? readingVM.getCounterNumber() : "")
+                    .concat(((Button) view).getText().toString()));
+        }
+        binding.buttonSubmit.setEnabled(true);
     }
 
     @Override

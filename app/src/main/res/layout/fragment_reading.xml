@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout>
 
     <data>
 
@@ -42,11 +42,11 @@
                     <TextView
                         android:id="@+id/text_view_pre_number"
                         android:layout_width="0dp"
-                        android:maxLines="1"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="0dp"
                         android:gravity="center"
+                        android:maxLines="1"
+                        android:padding="0dp"
                         android:text="@{readingVM.debtNumber}"
                         android:textColor="@{readingVM.counterNumberColor}"
                         android:textSize="@dimen/text_size_medium" />
@@ -390,23 +390,17 @@
                 <Button
                     android:id="@+id/button_keyboard_3"
                     style="@style/ButtonKeyboard"
-                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
-                    android:text="@string/_3"
-                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
+                    android:text="@string/_3" />
 
                 <Button
                     android:id="@+id/button_keyboard_2"
                     style="@style/ButtonKeyboard"
-                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
-                    android:text="@string/_2"
-                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
+                    android:text="@string/_2" />
 
                 <Button
                     android:id="@+id/button_keyboard_1"
                     style="@style/ButtonKeyboard"
-                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
-                    android:text="@string/_1"
-                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
+                    android:text="@string/_1" />
             </LinearLayout>
 
             <LinearLayout
@@ -418,23 +412,17 @@
                 <Button
                     android:id="@+id/button_keyboard_6"
                     style="@style/ButtonKeyboard"
-                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
-                    android:text="@string/_6"
-                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
+                    android:text="@string/_6" />
 
                 <Button
                     android:id="@+id/button_keyboard_5"
                     style="@style/ButtonKeyboard"
-                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
-                    android:text="@string/_5"
-                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
+                    android:text="@string/_5" />
 
                 <Button
                     android:id="@+id/button_keyboard_4"
                     style="@style/ButtonKeyboard"
-                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
-                    android:text="@string/_4"
-                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
+                    android:text="@string/_4" />
             </LinearLayout>
 
             <LinearLayout
@@ -446,23 +434,17 @@
                 <Button
                     android:id="@+id/button_keyboard_9"
                     style="@style/ButtonKeyboard"
-                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
-                    android:text="@string/_9"
-                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
+                    android:text="@string/_9" />
 
                 <Button
                     android:id="@+id/button_keyboard_8"
                     style="@style/ButtonKeyboard"
-                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
-                    android:text="@string/_8"
-                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
+                    android:text="@string/_8" />
 
                 <Button
                     android:id="@+id/button_keyboard_7"
                     style="@style/ButtonKeyboard"
-                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
-                    android:text="@string/_7"
-                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
+                    android:text="@string/_7" />
             </LinearLayout>
 
             <LinearLayout
@@ -474,16 +456,12 @@
                 <Button
                     android:id="@+id/button_keyboard_backspace"
                     style="@style/ButtonKeyboard"
-                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
-                    android:text="@string/backspace"
-                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
+                    android:text="@string/backspace" />
 
                 <Button
                     android:id="@+id/button_keyboard_0"
                     style="@style/ButtonKeyboard"
-                    android:onClick="@{(view)->readingVM.onKeyboardClickListener(view)}"
-                    android:text="@string/_0"
-                    app:onTouchListener="@{(v,e)->readingVM.onKeyboardTouchListener(v,e)}" />
+                    android:text="@string/_0" />
 
                 <ImageButton
                     android:id="@+id/image_button_hide_keyboard"
