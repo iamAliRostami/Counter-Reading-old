@@ -5,11 +5,13 @@ import static com.leon.counter_reading.helpers.MyApplication.getApplicationCompo
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
 import com.leon.counter_reading.fragments.LoginFragment;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
+import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.view_models.LoginViewModel;
 
 import retrofit2.Call;
@@ -46,7 +48,11 @@ class CreateDNTCaptchaCompleted implements ICallback<LoginViewModel> {
     @Override
     public void execute(Response<LoginViewModel> response) {
         if (response.body() != null) {
-            fragment.showDNTCaptchaImage(response.body());
+            try {
+                fragment.showDNTCaptchaImage(response.body());
+            }catch (Exception e){
+                new CustomToast().warning(e.getMessage(), Toast.LENGTH_LONG);
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ package com.leon.counter_reading.utils.login;
 
 import static com.leon.counter_reading.enums.ProgressType.NOT_SHOW;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
 import android.app.Activity;
 import android.graphics.BitmapFactory;

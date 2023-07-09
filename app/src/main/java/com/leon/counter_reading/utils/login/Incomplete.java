@@ -1,6 +1,5 @@
 package com.leon.counter_reading.utils.login;
 
-import android.app.Activity;
 import android.widget.Toast;
 
 import com.leon.counter_reading.R;
@@ -26,21 +25,26 @@ public class Incomplete implements ICallbackIncomplete<LoginViewModel> {
 
     @Override
     public void executeIncomplete(Response<LoginViewModel> response) {
-        final CustomErrorHandling errorHandling = new CustomErrorHandling(fragment.requireContext());
-        String error = errorHandling.getErrorMessageDefault(response);
-        if (response.code() == 401 || response.code() == 400) {
-            error = fragment.getString(R.string.error_is_not_match);
-            if (response.errorBody() != null) {
-                try {
-                    JSONObject jObjError = new JSONObject(response.errorBody().string());
-                    error = jObjError.getString("message");
-                } catch (JSONException | IOException e) {
-                    e.printStackTrace();
+        String error;
+        try {
+            final CustomErrorHandling errorHandling = new CustomErrorHandling(fragment.requireContext());
+            error = errorHandling.getErrorMessageDefault(response);
+            if (response.code() == 401 || response.code() == 400) {
+                error = fragment.getString(R.string.error_is_not_match);
+                if (response.errorBody() != null) {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        error = jObjError.getString("message");
+                    } catch (JSONException | IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }
-        if (response.code() == 400) {
-            fragment.resetAttempt();
+            if (response.code() == 400) {
+                fragment.resetAttempt();
+            }
+        } catch (Exception e) {
+            error = e.getMessage();
         }
         new CustomToast().warning(error, Toast.LENGTH_LONG);
     }
