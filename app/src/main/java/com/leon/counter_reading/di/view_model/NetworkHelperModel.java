@@ -1,8 +1,8 @@
 package com.leon.counter_reading.di.view_model;
 
-import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getBaseUrl;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getLocalBaseUrl;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.content.Context;
 
@@ -55,14 +55,10 @@ public final class NetworkHelperModel {
                 .retryOnConnectionFailure(RETRY_ENABLED).addInterceptor(chain ->
                         chain.proceed(chain.request().newBuilder().build()))
                 .addInterceptor(logging)
-//                .addInterceptor(new HttpLoggingInterceptor()
-//                        .setLevel(HttpLoggingInterceptor.Level.BODY))
                 .cache(cache).build();
-        return new Retrofit.Builder()
-                .baseUrl(getBaseUrl(
-                ))
-                .client(client).addConverterFactory(GsonConverterFactory
-                        .create(new GsonBuilder().setLenient().create())).build();
+        return new Retrofit.Builder().baseUrl(getBaseUrl()).client(client)
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient()
+                        .create())).build();
     }
 
     @Inject
