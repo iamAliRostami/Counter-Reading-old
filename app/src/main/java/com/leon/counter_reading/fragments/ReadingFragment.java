@@ -544,15 +544,6 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
 
     public interface Callback {
         int getPosition();
-
-//        OnOffLoadDto getOnOffLoad(int position);
-//
-//        KarbariDto getKarbariDto(int position);
-//
-//        ReadingConfigDefaultDto getReadingConfigDefaultDto(int position);
-//
-//        ArrayList<CounterStateDto> getCounterStateDtos();
-
         void updateOnOffLoadByPreNumber(int position);
 
         void updateOnOffLoadByLock(int position);
