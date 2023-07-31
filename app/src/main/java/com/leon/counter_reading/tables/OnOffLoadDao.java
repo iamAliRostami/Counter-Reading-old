@@ -49,6 +49,10 @@ public interface OnOffLoadDao {
             "OnOffLoadDto.d1, OnOffLoadDto.d2 From OnOffLoadDto " +
             "Inner JOIN TrackingDto on OnOffLoadDto.trackingId = TrackingDto.id " +
             "WHERE OnOffLoadDto.offLoadStateId = :offLoadStateId AND TrackingDto.isActive = :isActive")
+
+//    @Query("select * From OnOffLoadDto " +
+//            "Inner JOIN TrackingDto on OnOffLoadDto.trackingId = TrackingDto.id " +
+//            "WHERE OnOffLoadDto.offLoadStateId = :offLoadStateId AND TrackingDto.isActive = :isActive")
     List<OnOffLoadDto.OffLoad> getAllOnOffLoadInsert(int offLoadStateId, boolean isActive);
 
     //TODO set limit

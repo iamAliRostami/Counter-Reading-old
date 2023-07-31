@@ -6,6 +6,14 @@
         android:title="@string/navigation"
         app:showAsAction="never" />
     <item
+        android:id="@+id/menu_karbari"
+        android:title="@string/karbari"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_ahad"
+        android:title="@string/ahad"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/menu_description"
         android:title="@string/description"
         app:showAsAction="never" />

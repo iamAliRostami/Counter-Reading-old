@@ -9,6 +9,7 @@ import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.enums.BundleEnum.TYPE;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.DialogType.Yellow;
+import static com.leon.counter_reading.enums.FragmentTags.AHAD;
 import static com.leon.counter_reading.enums.FragmentTags.NAVIGATION;
 import static com.leon.counter_reading.enums.FragmentTags.POSSIBLE_DIALOG;
 import static com.leon.counter_reading.enums.FragmentTags.REPORT_FORBID;
@@ -77,8 +78,10 @@ import com.leon.counter_reading.databinding.ActivityReadingBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.FragmentTags;
 import com.leon.counter_reading.fragments.ReadingFragment;
+import com.leon.counter_reading.fragments.dialog.AhadFragment;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
 import com.leon.counter_reading.fragments.dialog.CounterPlaceFragment;
+import com.leon.counter_reading.fragments.dialog.KarbariFragment;
 import com.leon.counter_reading.fragments.dialog.NavigationFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
 import com.leon.counter_reading.fragments.dialog.ReadingReportFragment;
@@ -567,6 +570,14 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 ShowDialogOnce(this, NAVIGATION.getValue(), NavigationFragment
                         .newInstance(binding.viewPager.getCurrentItem(), readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem())));
             }
+        } else if (id == R.id.menu_karbari) {
+            ShowDialogOnce(this, FragmentTags.KARBARI.getValue(),
+                    KarbariFragment.newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
+                            binding.viewPager.getCurrentItem()));
+        } else if (id == R.id.menu_ahad) {
+            ShowDialogOnce(this, AHAD.getValue(),
+                    AhadFragment.newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
+                            binding.viewPager.getCurrentItem()));
         } else if (id == R.id.menu_report_forbid) {
             ShowDialogOnce(this, REPORT_FORBID.getValue(),
                     ReportForbidFragment.newInstance(readingData.onOffLoadDtos.size() > 0 ?

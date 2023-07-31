@@ -1,7 +1,9 @@
 package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
+import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.NotificationType.OTHER;
+import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad1;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad2;
@@ -23,11 +25,13 @@ import org.jetbrains.annotations.NotNull;
 public class AhadFragment extends DialogFragment {
     private FragmentAhadBinding binding;
     private String uuid;
+    private int position;
 
-    public static AhadFragment newInstance(String uuid) {
+    public static AhadFragment newInstance(String uuid,int position) {
         final AhadFragment fragment = new AhadFragment();
         final Bundle args = new Bundle();
         args.putString(BILL_ID.getValue(), uuid);
+        args.putInt(POSITION.getValue(), position);
         fragment.setArguments(args);
         fragment.setCancelable(false);
         return fragment;
@@ -38,6 +42,7 @@ public class AhadFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             uuid = getArguments().getString(BILL_ID.getValue());
+            position = getArguments().getInt(POSITION.getValue());
             getArguments().clear();
         }
     }
@@ -81,6 +86,8 @@ public class AhadFragment extends DialogFragment {
                 }
             }
             if (!cancel) {
+                readingData.onOffLoadDtos.get(position).possibleAhadTejariOrFari = fari;
+                readingData.onOffLoadDtos.get(position).possibleAhadMaskooniOrAsli = asli;
                 getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(asli, fari, uuid);
                 dismiss();
             }

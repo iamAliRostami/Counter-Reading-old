@@ -29,15 +29,17 @@ public class ReadingReportAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
     private final Context context;
     private final int tracking;
+    private final int page;
     private final String uuid;
 
-    public ReadingReportAdapter(Context context, String uuid, int tracking,
+    public ReadingReportAdapter(Context context, String uuid, int tracking, int position,
                                 ArrayList<CounterReportDto> counterReportDtos,
                                 ArrayList<OffLoadReport> offLoadReports) {
         this.counterReportDtos = counterReportDtos;
         this.offLoadReports = offLoadReports;
         this.uuid = uuid;
         this.tracking = tracking;
+        this.page = position;
         this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -56,18 +58,18 @@ public class ReadingReportAdapter extends BaseAdapter {
             holder.checkBox.setChecked(!holder.checkBox.isChecked());
             if (holder.checkBox.isChecked()) {
                 final OffLoadReport offLoadReport = new OffLoadReport(uuid, tracking,
-                        counterReportDtos.get(position).id,counterReportDtos.get(position).hasImage);
+                        counterReportDtos.get(position).id, counterReportDtos.get(position).hasImage);
                 getApplicationComponent().MyDatabase().offLoadReportDao()
                         .insertOffLoadReport(offLoadReport);
                 offLoadReports.add(offLoadReport);
                 if (counterReportDtos.get(position).isAhad) {
-                    ShowDialogOnce(context, AHAD.getValue(), AhadFragment.newInstance(uuid));
+                    ShowDialogOnce(context, AHAD.getValue(), AhadFragment.newInstance(uuid, page));
                 }
                 if (counterReportDtos.get(position).isTavizi) {
-                    ShowDialogOnce(context, TAVIZ.getValue(), TaviziFragment.newInstance(uuid));
+                    ShowDialogOnce(context, TAVIZ.getValue(), TaviziFragment.newInstance(uuid,page));
                 }
                 if (counterReportDtos.get(position).isKarbari) {
-                    ShowDialogOnce(context, KARBARI.getValue(), KarbariFragment.newInstance(uuid));
+                    ShowDialogOnce(context, KARBARI.getValue(), KarbariFragment.newInstance(uuid, page));
                 }
             } else {
                 for (int i = 0; i < offLoadReports.size(); i++) {

@@ -84,7 +84,7 @@ public class ReadingReportFragment extends DialogFragment {
     public void setupRecyclerView(ArrayList<CounterReportDto> counterReportDtos,
                                   ArrayList<OffLoadReport> offLoadReports) {
         final ReadingReportAdapter adapter =
-                new ReadingReportAdapter(requireContext(), uuid, trackNumber, counterReportDtos, offLoadReports);
+                new ReadingReportAdapter(requireContext(), uuid, trackNumber, position, counterReportDtos, offLoadReports);
         requireActivity().runOnUiThread(() -> binding.listViewReports.setAdapter(adapter));
     }
 

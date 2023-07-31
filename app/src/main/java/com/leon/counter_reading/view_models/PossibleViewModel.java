@@ -20,6 +20,7 @@ import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhadTo
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.databinding.BaseObservable;
@@ -526,10 +527,10 @@ public class PossibleViewModel extends BaseObservable {
 
         for (int i = 0; i < getKarbari().size(); i++) {
             if (onOffLoadDto.karbariCode == getKarbari().get(i).moshtarakinId)
-                if (!getKarbari().get(i).isInGuilds)
+                if (!getKarbari().get(i).isInGuilds) {
                     return View.GONE;
+                }
         }
-
         return getApplicationComponent().SharedPreferenceModel()
                 .getBoolData(GUILD.getValue()) ? View.VISIBLE : View.GONE;
     }

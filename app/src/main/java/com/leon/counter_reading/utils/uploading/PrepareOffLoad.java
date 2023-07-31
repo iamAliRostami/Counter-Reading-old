@@ -97,7 +97,7 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
 
     @SuppressLint("SimpleDateFormat")
     private void uploadOffLoad(Activity activity) {
-        if (onOffLoadDtos.size() <= 0) {
+        if (onOffLoadDtos.size() == 0) {
             thankYou(activity);
             onOffLoadDtos.clear();
             onOffLoadDtos.add(getApplicationComponent().MyDatabase().onOffLoadDao()

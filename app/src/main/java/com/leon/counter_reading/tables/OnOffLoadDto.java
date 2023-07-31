@@ -100,6 +100,8 @@ public class OnOffLoadDto {
         public String possibleEshterak;
         public String possibleMobile;
         public String possiblePhoneNumber;
+
+
         public Integer possibleAhadMaskooniOrAsli;
         public Integer possibleAhadTejariOrFari;
         public Integer possibleAhadSaierOrAbBaha;

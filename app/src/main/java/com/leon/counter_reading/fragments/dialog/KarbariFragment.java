@@ -1,6 +1,8 @@
 package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
+import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
@@ -25,11 +27,13 @@ public class KarbariFragment extends DialogFragment {
     private ArrayList<KarbariDto> karbariDtos;
     private FragmentKarbariBinding binding;
     private String uuid;
+    private int position;
 
-    public static KarbariFragment newInstance(String uuid) {
+    public static KarbariFragment newInstance(String uuid,int position) {
         final KarbariFragment fragment = new KarbariFragment();
         final Bundle args = new Bundle();
         args.putString(BILL_ID.getValue(), uuid);
+        args.putInt(POSITION.getValue(), position);
         fragment.setArguments(args);
         fragment.setCancelable(false);
         return fragment;
@@ -40,6 +44,7 @@ public class KarbariFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             uuid = getArguments().getString(BILL_ID.getValue());
+            position = getArguments().getInt(POSITION.getValue());
             getArguments().clear();
         }
     }
@@ -71,8 +76,11 @@ public class KarbariFragment extends DialogFragment {
     private void setOnButtonClickListener() {
         binding.buttonClose.setOnClickListener(v -> dismiss());
         binding.buttonSubmit.setOnClickListener(v -> {
-            getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(uuid,
-                    karbariDtos.get(binding.spinner.getSelectedItemPosition()).moshtarakinId);
+            int id = karbariDtos.get(binding.spinner.getSelectedItemPosition()).moshtarakinId;
+            //TODO
+            readingData.onOffLoadDtos.get(position).possibleKarbariCode = id;
+            getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(uuid, id/*
+                    karbariDtos.get(binding.spinner.getSelectedItemPosition()).moshtarakinId*/);
             dismiss();
         });
     }
