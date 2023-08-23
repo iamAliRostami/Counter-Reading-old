@@ -80,7 +80,6 @@
     <application
         android:name=".helpers.MyApplication"
         android:allowBackup="true"
-        android:extractNativeLibs="true"
         android:fullBackupContent="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"

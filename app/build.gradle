@@ -134,6 +134,11 @@ android {
         dexInProcess = true
     }
     namespace 'com.leon.counter_reading'
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging true
+        }
+    }
 }
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
