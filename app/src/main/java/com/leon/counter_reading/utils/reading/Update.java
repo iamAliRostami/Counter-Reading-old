@@ -10,6 +10,8 @@ import android.os.AsyncTask;
 
 import com.leon.counter_reading.tables.OnOffLoadDto;
 
+import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,14 +35,22 @@ public class Update extends AsyncTask<Activity, Void, Void> {
                 onOffLoadDto.x = location.getLongitude();
                 onOffLoadDto.y = location.getLatitude();
                 onOffLoadDto.gisAccuracy = location.getAccuracy();
-                onOffLoadDto.locationDateTime = dateFormatter.format(new Date(location.getTime()));
+//                onOffLoadDto.locationDateTime = dateFormatter.format(new Date(location.getTime()));
+                onOffLoadDto.locationDateTime = convertToAscii(dateFormatter.format(new Date(location.getTime())));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        onOffLoadDto.phoneDateTime = dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis()));
+        onOffLoadDto.phoneDateTime = convertToAscii(dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis())));
+//        onOffLoadDto.phoneDateTime = dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis()));
 //        date = new Date(Calendar.getInstance().getTimeInMillis());
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
         return null;
+    }
+
+    private String convertToAscii(String s) {
+        String sTemp = Normalizer.normalize(s, Normalizer.Form.NFKD);
+        String regex = "[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+";
+        return new String(sTemp.replaceAll(regex, "").getBytes(StandardCharsets.US_ASCII), StandardCharsets.US_ASCII);
     }
 }
