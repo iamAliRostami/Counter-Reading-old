@@ -24,6 +24,7 @@ import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.overlay.Polyline;
@@ -97,7 +98,7 @@ public class RoadMapFragment extends DialogFragment {
         requireActivity().runOnUiThread(() -> {
             final StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
-            final RoadManager roadManager = new OSRMRoadManager(requireActivity());
+            final RoadManager roadManager = new OSRMRoadManager(requireActivity(), Configuration.getInstance().getUserAgentValue());
             final ArrayList<GeoPoint> wayPoints = new ArrayList<>();
             wayPoints.add(startPoint);
             wayPoints.add(endPoint);

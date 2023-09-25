@@ -42,6 +42,7 @@ import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowD
 import static com.leon.counter_reading.helpers.Constants.CAMERA;
 import static com.leon.counter_reading.helpers.Constants.MAX_OFFLINE_ATTEMPT;
 import static com.leon.counter_reading.helpers.Constants.currentOfflineAttempts;
+import static com.leon.counter_reading.helpers.Constants.karbariDtos;
 import static com.leon.counter_reading.helpers.Constants.onOffLoadDtos;
 import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
@@ -97,6 +98,7 @@ import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DepthPageTransformer2;
+import com.leon.counter_reading.utils.MakeNotification;
 import com.leon.counter_reading.utils.reading.ChangeSortType;
 import com.leon.counter_reading.utils.reading.DataResult;
 import com.leon.counter_reading.utils.reading.GetBundle;
@@ -109,8 +111,6 @@ import com.leon.counter_reading.utils.reading.Update;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByAttemptNumber;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadByIsShown;
 import com.leon.counter_reading.utils.reading.UpdateOnOffLoadDtoByLock;
-
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 
@@ -135,6 +135,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void initialize() {
+
         getDelegate().setLocalNightMode(getApplicationComponent().SharedPreferenceModel()
                 .getBoolData(THEME_TEMPORARY.getValue()) ? AppCompatDelegate.MODE_NIGHT_YES :
                 AppCompatDelegate.MODE_NIGHT_NO);
@@ -143,7 +144,9 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
         sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
-        imageSrc = ArrayUtils.clone(setAboveIcons());
+        //TODO
+//        imageSrc = ArrayUtils.clone(setAboveIcons());
+        imageSrc = setAboveIcons();
         getBundle();
         setOnImageViewsClickListener();
         new GetReadingDBData(this, readStatus, highLow, sharedPreferenceManager.
@@ -319,7 +322,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
                 if (getIntent().getExtras() != null)
                     getIntent().getExtras().clear();
-                final String number = (binding.viewPager.getCurrentItem() + 1) + "/" + readingData.onOffLoadDtos.size();
+                String number = (binding.viewPager.getCurrentItem() + 1) + "/" + readingData.onOffLoadDtos.size();
                 runOnUiThread(() -> binding.textViewPageNumber.setText(number));
                 setAboveIconsSrc(position);
             }
@@ -327,8 +330,10 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                if (karbariDtos.get(binding.viewPager.getCurrentItem()).hasReadingVibrate)
+                    MakeNotification.makeVibrate(getApplicationContext());
                 try {
-                    final FragmentManager manager = getSupportFragmentManager();
+                    FragmentManager manager = getSupportFragmentManager();
                     manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 } catch (Exception e) {
                     e.printStackTrace();

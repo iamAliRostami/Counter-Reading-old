@@ -32,6 +32,8 @@ public class DifferentCompanyManager {
                 return proxy;
         }
         switch (getActiveCompanyName()) {
+            case TEH_TOTAL:
+                return "http://85.133.245.143/";
             case ESF:
                 return "https://37.191.92.157/";
             case ZONE1:
@@ -65,6 +67,8 @@ public class DifferentCompanyManager {
 
     public static String getLocalBaseUrl() {
         switch (getActiveCompanyName()) {
+            case TEH_TOTAL:
+                return "https://85.133.245.143/";
             case ESF:
                 return "http://172.18.12.14:100";
             case ESF_MAP:
@@ -108,7 +112,6 @@ public class DifferentCompanyManager {
             case TSE:
             case TW:
             case KSH:
-                return "آحاد";
             default:
                 return "آحاد";
         }
@@ -126,7 +129,6 @@ public class DifferentCompanyManager {
             case ZONE6:
             case TW:
             case TSE:
-                return "آحاد اصلی";
             default:
                 return "آحاد اصلی";
         }
@@ -144,7 +146,6 @@ public class DifferentCompanyManager {
             case ZONE6:
             case TW:
             case TSE:
-                return "آحاد فرعی";
             default:
                 return "آحاد فرعی";
         }
@@ -162,7 +163,6 @@ public class DifferentCompanyManager {
             case KSH:
             case TW:
             case TSE:
-                return "آحاد مصرف";
             default:
                 return "آحاد مصرف";
         }
@@ -179,6 +179,7 @@ public class DifferentCompanyManager {
             case TSE:
             case TW:
             case KSH:
+            case TEH_TOTAL:
                 return 4;
             default:
                 return 6;
@@ -196,6 +197,7 @@ public class DifferentCompanyManager {
             case TSE:
             case TW:
             case KSH:
+            case TEH_TOTAL:
                 return 3;
             default:
                 return 5;
@@ -213,6 +215,7 @@ public class DifferentCompanyManager {
             case TSE:
             case TW:
             case KSH:
+            case TEH_TOTAL:
                 return 6;
             default:
                 return 5;
@@ -230,6 +233,7 @@ public class DifferentCompanyManager {
             case ZONE6:
             case TW:
             case TSE:
+            case TEH_TOTAL:
                 return 5;
             default:
                 return 10;
@@ -245,10 +249,10 @@ public class DifferentCompanyManager {
             case ZONE4:
             case ZONE5:
             case ZONE6:
-                return 15;
             case TSE:
             case TW:
-                return 12;
+            case TEH_TOTAL:
+                return 15;
             default:
                 return 10;
         }
@@ -266,9 +270,8 @@ public class DifferentCompanyManager {
             case TSE:
             case TW:
             case KSH:
-                return "شماره پرونده";
             default:
-                return "دیگر";
+                return "شماره پرونده";
         }
     }
 
@@ -294,10 +297,11 @@ public class DifferentCompanyManager {
                 return "آبفا جنوب شرقی";
             case TW:
                 return "آبفا غرب";
-            case ESF:
-                return "آبفا استان اصفهان";
+            case TEH_TOTAL:
+                return "آبفا استان تهران";
             case KSH:
                 return "آبفا استان کرمانشاه";
+            case ESF:
             default:
                 return "آبفا استان اصفهان";
         }
@@ -311,6 +315,7 @@ public class DifferentCompanyManager {
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         switch (getActiveCompanyName()) {
+            case TEH_TOTAL:
             case ZONE1:
             case ZONE2:
             case ZONE3:
@@ -341,6 +346,7 @@ public class DifferentCompanyManager {
             case TE:
             case TW:
             case ESF:
+            case TEH_TOTAL:
 //            case TSE:
                 return true;
         }

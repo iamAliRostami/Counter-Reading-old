@@ -26,24 +26,18 @@ public class MakeNotification {
     public static void makeRing(Context context, NotificationType type) {
 //        makeVibrate(context);
         try {
-            final Uri notificationPath;
-            switch (type) {
-                case NOT_SAVE:
-                    notificationPath = Uri.parse("android.resource://" + context.getPackageName() + "/raw/not_save");
-                    break;
-                case SAVE:
-                    notificationPath = Uri.parse("android.resource://" + context.getPackageName() + "/raw/save");
-                    break;
-                case LIGHT_ON:
-                    notificationPath = Uri.parse("android.resource://" + context.getPackageName() + "/raw/light_switch_on");
-                    break;
-                case LIGHT_OFF:
-                    notificationPath = Uri.parse("android.resource://" + context.getPackageName() + "/raw/light_switch_off");
-                    break;
-                default:
-                    notificationPath = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            }
-            final Ringtone r = RingtoneManager.getRingtone(context, notificationPath);
+            Uri notificationPath = switch (type) {
+                case NOT_SAVE ->
+                        Uri.parse("android.resource://" + context.getPackageName() + "/raw/not_save");
+                case SAVE ->
+                        Uri.parse("android.resource://" + context.getPackageName() + "/raw/save");
+                case LIGHT_ON ->
+                        Uri.parse("android.resource://" + context.getPackageName() + "/raw/light_switch_on");
+                case LIGHT_OFF ->
+                        Uri.parse("android.resource://" + context.getPackageName() + "/raw/light_switch_off");
+                default -> RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            };
+            Ringtone r = RingtoneManager.getRingtone(context, notificationPath);
             r.play();
         } catch (Exception e) {
             e.printStackTrace();

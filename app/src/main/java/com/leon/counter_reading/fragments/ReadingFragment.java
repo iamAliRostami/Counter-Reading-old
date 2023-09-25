@@ -20,6 +20,7 @@ import static com.leon.counter_reading.helpers.Constants.readingConfigDefaultDto
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getLockNumber;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getDigits;
+import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 import static com.leon.counter_reading.utils.MakeNotification.ringNotification;
 import static com.leon.counter_reading.utils.PermissionManager.checkLocationPermission;
@@ -160,6 +161,9 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
 //        Log.e("name", readingActivity.getOnOffLoad(readingActivity.getPosition()).firstName.concat(readingActivity.getOnOffLoad(readingActivity.getPosition()).sureName));
 //        Log.e("position", String.valueOf(readingVM.getPosition()));
 //        Log.e("name", readingVM.getOnOffLoadDto().firstName.concat(readingVM.getOnOffLoadDto().sureName));
+        if (getLocationTracker(requireActivity()) != null)
+            readingVM.setAccuracy((int) getLocationTracker(requireActivity()).getAccuracy());
+        else readingVM.setAccuracy(-1);
         binding.setReadingVM(readingVM);
         return binding.getRoot();
     }
@@ -544,6 +548,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
 
     public interface Callback {
         int getPosition();
+
         void updateOnOffLoadByPreNumber(int position);
 
         void updateOnOffLoadByLock(int position);

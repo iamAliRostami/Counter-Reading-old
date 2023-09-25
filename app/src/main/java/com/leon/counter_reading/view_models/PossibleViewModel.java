@@ -20,7 +20,6 @@ import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhadTo
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
-import android.util.Log;
 import android.view.View;
 
 import androidx.databinding.BaseObservable;

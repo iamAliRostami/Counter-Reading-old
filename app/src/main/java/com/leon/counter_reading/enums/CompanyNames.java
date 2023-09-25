@@ -1,6 +1,7 @@
 package com.leon.counter_reading.enums;
 
 public enum CompanyNames {
+    TEH_TOTAL(0),
     ZONE1(1),
     ZONE2(2),
     ZONE3(3),

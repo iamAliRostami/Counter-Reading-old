@@ -282,7 +282,7 @@
                         android:layout_marginBottom="@dimen/small_dp"
                         android:layout_weight="1"
                         android:background="@drawable/border_yellow_3"
-                        android:text="@string/submit"
+                        android:text="@{readingVM.submitTextLocation}"
                         android:textColor="@color/text_color_light"
                         android:textSize="@dimen/text_size_large" />
 

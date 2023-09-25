@@ -38,7 +38,6 @@ public class ReadingViewModel extends BaseObservable {
     private int buttonId;
     private int counterNumberColor;
     private Drawable addressBackground;
-
     private String debtNumber;
     private String ahadTotal;
     private String ahad1;
@@ -60,6 +59,7 @@ public class ReadingViewModel extends BaseObservable {
     private boolean debtOrNumber;
     private boolean isMakoos;
     private boolean isMane;
+    private int accuracy;
 
     public ReadingViewModel() {
         if (getApplicationComponent().SharedPreferenceModel().getBoolData(RTL_PAGING.getValue()))
@@ -103,7 +103,7 @@ public class ReadingViewModel extends BaseObservable {
             setDebtOrNumber(!isDebtOrNumber());
             //TODO
 //            setDebtNumber(getOnOffLoadDto().balance + " ریال");
-            setDebtNumber(String.format("%,d",getOnOffLoadDto().balance) + " ریال");
+            setDebtNumber(String.format("%,d", getOnOffLoadDto().balance) + " ریال");
             setCounterNumberColor(ContextCompat.getColor(getContext(), R.color.red));
         } else {
             if (getOnOffLoadDto().hasPreNumber) {
@@ -130,7 +130,7 @@ public class ReadingViewModel extends BaseObservable {
 //        setDebtNumber(String.valueOf(getOnOffLoadDto().balance));
 //        setDebtNumber("5558889990 ریال");
 //        setDebtNumber(getOnOffLoadDto().balance + " ریال");
-        setDebtNumber(String.format("%,d",getOnOffLoadDto().balance) + " ریال");
+        setDebtNumber(String.format("%,d", getOnOffLoadDto().balance) + " ریال");
         setSerial(getOnOffLoadDto().counterSerial);
         setPreDate(getOnOffLoadDto().preDate);
 
@@ -491,5 +491,15 @@ public class ReadingViewModel extends BaseObservable {
     public void setRadifOrBillId(String radifOrBillId) {
         this.radifOrBillId = radifOrBillId;
         notifyPropertyChanged(BR.radifOrBillId);
+    }
+
+    public void setAccuracy(int accuracy) {
+        this.accuracy = accuracy;
+    }
+
+    @SuppressLint("DefaultLocale")
+    @Bindable
+    public String getSubmitTextLocation() {
+        return String.format("ثبت (%d)", accuracy);
     }
 }
