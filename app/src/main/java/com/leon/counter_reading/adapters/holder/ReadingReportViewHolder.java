@@ -3,10 +3,13 @@ package com.leon.counter_reading.adapters.holder;
 import android.view.View;
 import android.widget.CheckedTextView;
 
-public class ReadingReportViewHolder {
-    public final CheckedTextView checkBox;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
-    public ReadingReportViewHolder(View view) {
-        checkBox = view.findViewById(android.R.id.text1);
+public class ReadingReportViewHolder extends RecyclerView.ViewHolder {
+    public final CheckedTextView checkBox;
+    public ReadingReportViewHolder(@NonNull View itemView) {
+        super(itemView);
+        checkBox = itemView.findViewById(android.R.id.text1);
     }
 }

@@ -5,6 +5,7 @@ import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
 import static com.leon.counter_reading.enums.BundleEnum.ZONE_ID;
 import static com.leon.counter_reading.enums.DialogType.Red;
+import static com.leon.counter_reading.utils.MakeNotification.makeVibrate;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,18 +17,24 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ReadingReportAdapter;
+import com.leon.counter_reading.adapters.recycler_view.RecyclerItemClickListener;
 import com.leon.counter_reading.databinding.FragmentReadingReportBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.tables.CounterReportDto;
 import com.leon.counter_reading.tables.OffLoadReport;
+import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.reporting.GetReadingReportDBData;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
 public class ReadingReportFragment extends DialogFragment {
+    //    private ArrayList<OffLoadReport> offLoadReports;
+    private ReadingReportAdapter adapter;
     private static ReadingReportFragment instance;
     private FragmentReadingReportBinding binding;
     private String uuid;
@@ -74,18 +81,43 @@ public class ReadingReportFragment extends DialogFragment {
     }
 
     private void initialize() {
+//        makeVibrate(requireContext(), 200);
         new GetReadingReportDBData(requireActivity(), trackNumber, zoneId, uuid).execute(requireActivity());
+        onItemClickListener();
         binding.buttonSubmit.setOnClickListener(v -> {
+            makeVibrate(requireContext(), 200);
+            String message = MessageFormat.format(getString(R.string.selected_report_number), adapter.selectedCount());
+            new CustomToast().info(message);
             dismiss();
             readingActivity.setResult(position, uuid);
         });
     }
 
+    private void onItemClickListener() {
+        binding.listViewReports.addOnItemTouchListener(new RecyclerItemClickListener(requireContext(),
+                binding.listViewReports, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+//                makeVibrate(requireContext(), 100);
+                adapter.update(position);
+                binding.buttonSubmit.setText(MessageFormat.format(getString(R.string.submit_count), adapter.selectedCount()));
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
+    }
+
     public void setupRecyclerView(ArrayList<CounterReportDto> counterReportDtos,
                                   ArrayList<OffLoadReport> offLoadReports) {
-        final ReadingReportAdapter adapter =
-                new ReadingReportAdapter(requireContext(), uuid, trackNumber, position, counterReportDtos, offLoadReports);
-        requireActivity().runOnUiThread(() -> binding.listViewReports.setAdapter(adapter));
+        adapter = new ReadingReportAdapter(requireContext(), uuid, trackNumber, position, counterReportDtos, offLoadReports);
+        requireActivity().runOnUiThread(() -> {
+            binding.listViewReports.setAdapter(adapter);
+            binding.listViewReports.setLayoutManager(new LinearLayoutManager(requireContext()));
+            binding.buttonSubmit.setText(MessageFormat.format(getString(R.string.submit_count), adapter.selectedCount()));
+        });
     }
 
     @Override

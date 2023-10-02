@@ -6,7 +6,7 @@
     android:padding="@dimen/medium_dp"
     tools:context=".fragments.dialog.ReadingReportFragment">
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_view_reports"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

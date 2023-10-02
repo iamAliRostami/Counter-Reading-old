@@ -84,6 +84,7 @@
     <string name="layers">لایه ها</string>
     <string name="location_counter">محل کنتور</string>
     <string name="submit">ثبت</string>
+    <string name="submit_count">ثبت ({0})</string>
     <string name="submit_with_location">ثبت (%d)</string>
     <string name="distance_from_input">فاصله از نقطه ورود</string>
     <string name="cm">cm</string>
@@ -316,4 +317,5 @@
     <string name="guild_search">جستجوی صنف</string>
     <string name="captcha">captcha</string>
     <string name="ahad">آحاد</string>
+    <string name="selected_report_number">تعداد {0} گزارش ثبت شد</string>
 </resources>

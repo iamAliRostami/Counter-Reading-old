@@ -177,6 +177,15 @@
 
 
         <TextView
+            android:id="@+id/text_view_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/text_view_version"
+            android:layout_centerInParent="true"
+            android:text="@{login.date}"
+            android:textSize="16sp"
+            android:textColor="@color/text_color_dark" />
+        <TextView
             android:id="@+id/text_view_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

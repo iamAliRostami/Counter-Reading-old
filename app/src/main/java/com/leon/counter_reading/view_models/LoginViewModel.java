@@ -17,6 +17,9 @@ import com.google.gson.annotations.SerializedName;
 import com.leon.counter_reading.BR;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
+import com.leon.counter_reading.utils.CalendarTool;
+
+import java.text.MessageFormat;
 
 public class LoginViewModel extends BaseObservable {
     @SerializedName("access_token")
@@ -337,5 +340,11 @@ public class LoginViewModel extends BaseObservable {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    @Bindable
+    public String getDate() {
+        return MessageFormat.format("امروز {0}، {1}", new CalendarTool().getIranianWeekDayStr(),
+                new CalendarTool().getIranianDate());
     }
 }
