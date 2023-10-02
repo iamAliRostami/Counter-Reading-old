@@ -135,15 +135,14 @@ public interface OnOffLoadDao {
     void updateOnOffLoad(String id, String possibleEshterak, String possibleMobile, Integer possibleEmpty,
                          String phoneNumber, String serialNumber, String address);
 
-    @Query("UPDATE OnOffLoadDto set attemptCount = :attemptNumber WHERE id = :id")
-    void updateOnOffLoadByAttemptNumber(String id, int attemptNumber);
-
-    @Query("UPDATE OnOffLoadDto set isLocked = :isLocked WHERE trackingId = :trackingId")
-    void updateOnOffLoadByLock(String trackingId, boolean isLocked);
+    @Query("UPDATE OnOffLoadDto set attemptCount = :attemptNumber WHERE id = :id AND trackingId = :trackingId")
+    void updateOnOffLoadByAttemptNumber(String id, String trackingId, int attemptNumber);
 
     @Query("UPDATE OnOffLoadDto set isLocked = :isLocked WHERE id = :id AND trackingId = :trackingId")
     void updateOnOffLoadByLock(String id, String trackingId, boolean isLocked);
 
+    @Query("UPDATE OnOffLoadDto set counterNumberShown = :isShown WHERE id = :id AND trackingId = :trackingId")
+    void updateOnOffLoadByIsShown(String id, String trackingId, boolean isShown);
     @Query("DELETE FROM OnOffLoadDto WHERE trackNumber = :trackNumber")
     void deleteOnOffLoads(int trackNumber);
 

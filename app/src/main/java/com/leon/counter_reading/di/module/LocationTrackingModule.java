@@ -1,10 +1,11 @@
 package com.leon.counter_reading.di.module;
 
+import static com.leon.counter_reading.utils.locating.CheckSensor.checkSensor;
+
 import android.app.Activity;
 
 import com.leon.counter_reading.di.view_model.GoogleLocationTracking;
 import com.leon.counter_reading.di.view_model.GpsLocationTracking;
-import com.leon.counter_reading.utils.locating.CheckSensor;
 
 import javax.inject.Singleton;
 
@@ -18,7 +19,7 @@ public class LocationTrackingModule {
     private GpsLocationTracking gpsTracking;
 
     public LocationTrackingModule(Activity activity) {
-        if (CheckSensor.checkSensor(activity, true))
+        if (checkSensor(activity, true))
             googleTracking = GoogleLocationTracking.getInstance(activity);
         else
             gpsTracking = GpsLocationTracking.getInstance();

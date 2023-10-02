@@ -16,7 +16,10 @@ public class UpdateOnOffLoadDtoByLock extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
+
+        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoadByLock(onOffLoadDto.id,
+                onOffLoadDto.trackingId, true);
+//        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
         return null;
     }
 }

@@ -3,6 +3,7 @@ package com.leon.counter_reading.utils.reading;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.leon.counter_reading.tables.OnOffLoadDto;
 
@@ -16,7 +17,10 @@ public class UpdateOnOffLoadByAttemptNumber extends AsyncTask<Void, Void, Void> 
 
     @Override
     protected Void doInBackground(Void... voids) {
-        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
+        Log.e("here1", String.valueOf(onOffLoadDto.counterNumber));
+//        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
+        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoadByAttemptNumber(onOffLoadDto.id,
+                onOffLoadDto.trackingId, onOffLoadDto.attemptCount);
         return null;
     }
 }

@@ -164,7 +164,7 @@ public class DifferentCompanyManager {
             case TW:
             case TSE:
             default:
-                return "آحاد مصرف";
+                return "آحاد آب بها";
         }
     }
 
@@ -346,7 +346,7 @@ public class DifferentCompanyManager {
             case TE:
             case TW:
             case ESF:
-            case TEH_TOTAL:
+//            case TEH_TOTAL:
 //            case TSE:
                 return true;
         }

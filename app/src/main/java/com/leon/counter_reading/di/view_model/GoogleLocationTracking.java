@@ -1,6 +1,7 @@
 package com.leon.counter_reading.di.view_model;
 
 
+import static com.leon.counter_reading.enums.SharedReferenceKeys.POINT;
 import static com.leon.counter_reading.helpers.Constants.FASTEST_INTERVAL;
 import static com.leon.counter_reading.helpers.Constants.MIN_TIME_BW_UPDATES;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
@@ -18,7 +19,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.infrastructure.ILocationTracking;
 import com.leon.counter_reading.tables.SavedLocation;
 
@@ -84,8 +84,7 @@ public class GoogleLocationTracking extends Service implements ILocationTracking
     public void addLocation(Location location) {
         if (location != null) {
             GoogleLocationTracking.location = location;
-            if (getApplicationComponent().SharedPreferenceModel()
-                    .getBoolData(SharedReferenceKeys.POINT.getValue())) {
+            if (getApplicationComponent().SharedPreferenceModel().getBoolData(POINT.getValue())) {
                 SavedLocation savedLocation = new SavedLocation(location.getAccuracy(),
                         location.getLongitude(), location.getLatitude());
                 getApplicationComponent().MyDatabase().savedLocationDao()

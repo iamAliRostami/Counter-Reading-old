@@ -57,6 +57,7 @@ import com.leon.counter_reading.adapters.SpinnerAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingBinding;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
+import com.leon.counter_reading.infrastructure.ILocationTracking;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.view_models.ReadingViewModel;
 
@@ -161,9 +162,17 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
 //        Log.e("name", readingActivity.getOnOffLoad(readingActivity.getPosition()).firstName.concat(readingActivity.getOnOffLoad(readingActivity.getPosition()).sureName));
 //        Log.e("position", String.valueOf(readingVM.getPosition()));
 //        Log.e("name", readingVM.getOnOffLoadDto().firstName.concat(readingVM.getOnOffLoadDto().sureName));
-        if (getLocationTracker(requireActivity()) != null)
-            readingVM.setAccuracy((int) getLocationTracker(requireActivity()).getAccuracy());
-        else readingVM.setAccuracy(-1);
+
+        try {
+            ILocationTracking tracking = getLocationTracker(requireActivity()) != null ? getLocationTracker(requireActivity()) : null;
+            if (tracking != null)
+                readingVM.setAccuracy((int) tracking.getAccuracy());
+            else readingVM.setAccuracy(-1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            readingVM.setAccuracy(-1);
+        }
+
         binding.setReadingVM(readingVM);
         return binding.getRoot();
     }

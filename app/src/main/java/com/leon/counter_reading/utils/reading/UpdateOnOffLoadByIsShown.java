@@ -16,7 +16,9 @@ public class UpdateOnOffLoadByIsShown extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
+//        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
+        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoadByIsShown(onOffLoadDto.id,
+                onOffLoadDto.trackingId, onOffLoadDto.counterNumberShown);
         return null;
     }
 }
