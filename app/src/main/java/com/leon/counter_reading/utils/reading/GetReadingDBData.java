@@ -124,10 +124,8 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
             readingDataTemp.readingConfigDefaultDtos.addAll(readingData.readingConfigDefaultDtos);
 
             if (sortType) {
-                Collections.sort(readingData.onOffLoadDtos, (o1, o2) -> o2.eshterak.compareTo(
-                        o1.eshterak));
-                Collections.sort(readingDataTemp.onOffLoadDtos, (o1, o2) -> o2.eshterak.compareTo(
-                        o1.eshterak));
+                Collections.sort(readingData.onOffLoadDtos, (o1, o2) -> o2.eshterak.compareTo(o1.eshterak));
+                Collections.sort(readingDataTemp.onOffLoadDtos, (o1, o2) -> o2.eshterak.compareTo(o1.eshterak));
             }
         }
         ((ReadingActivity) (activities[0])).setupViewPager();

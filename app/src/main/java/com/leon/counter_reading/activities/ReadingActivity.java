@@ -554,20 +554,24 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.reading_menu, menu);
-        menu.getItem(6).setChecked(getApplicationComponent().SharedPreferenceModel()
-                .getBoolData(SORT_TYPE.getValue()));
+//        menu.getItem(7).setChecked(sharedPreferenceManager.getBoolData(SORT_TYPE.getValue()));
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem checkable = menu.findItem(R.id.menu_sort);
+        checkable.setChecked(sharedPreferenceManager.getBoolData(SORT_TYPE.getValue()));
+        return true;
+    }
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         final int id = item.getItemId();
         Intent intent;
         if (id == R.id.menu_sort) {
-            item.setChecked(!item.isChecked());
-            sharedPreferenceManager.putData(SORT_TYPE.getValue(), item.isChecked());
-            new ChangeSortType(this, item.isChecked()).execute(this);
+            sharedPreferenceManager.putData(SORT_TYPE.getValue(), !sharedPreferenceManager.getBoolData(SORT_TYPE.getValue()));
+            new ChangeSortType(this, sharedPreferenceManager.getBoolData(SORT_TYPE.getValue())).execute(this);
         } else if (id == R.id.menu_navigation) {
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();

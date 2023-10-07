@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.leon.counter_reading.teh_total",
+  "variantName": "teh_total",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 123,
+      "versionName": "1.02.07.14",
+      "outputFile": "app-teh_total.apk"
+    }
+  ],
+  "elementType": "File"
+}
