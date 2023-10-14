@@ -27,10 +27,14 @@ public class Incomplete implements ICallbackIncomplete<LoginViewModel> {
     public void executeIncomplete(Response<LoginViewModel> response) {
         String error;
         try {
-            final CustomErrorHandling errorHandling = new CustomErrorHandling(fragment.requireContext());
+            CustomErrorHandling errorHandling = new CustomErrorHandling(fragment.requireContext());
             error = errorHandling.getErrorMessageDefault(response);
             if (response.code() == 401 || response.code() == 400) {
                 error = fragment.getString(R.string.error_is_not_match);
+            } else if (response.code() == 428 || response.code() == 451) {
+                error = errorHandling.getErrorMessageDefault(response);
+            }
+            if (response.code() == 401 || response.code() == 400 || response.code() == 428) {
                 if (response.errorBody() != null) {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());

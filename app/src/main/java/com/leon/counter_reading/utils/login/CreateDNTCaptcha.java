@@ -20,6 +20,7 @@ import retrofit2.Retrofit;
 
 public class CreateDNTCaptcha extends AsyncTask<Activity, Activity, Void> {
     private final LoginFragment fragment;
+
     public CreateDNTCaptcha(LoginFragment fragment) {
         super();
         this.fragment = fragment;
@@ -32,7 +33,7 @@ public class CreateDNTCaptcha extends AsyncTask<Activity, Activity, Void> {
         final Call<LoginViewModel> call = iAbfaService.createDNTCaptchaParams();
         activities[0].runOnUiThread(() ->
                 HttpClientWrapper.callHttpAsync(call, NOT_SHOW.getValue(), activities[0],
-                        new CreateDNTCaptchaCompleted(fragment),new CreateCaptchaIncomplete(), new Error(activities[0])));
+                        new CreateDNTCaptchaCompleted(fragment), new CreateCaptchaIncomplete(), new Error(activities[0])));
         return null;
     }
 }
@@ -50,7 +51,7 @@ class CreateDNTCaptchaCompleted implements ICallback<LoginViewModel> {
         if (response.body() != null) {
             try {
                 fragment.showDNTCaptchaImage(response.body());
-            }catch (Exception e){
+            } catch (Exception e) {
                 new CustomToast().warning(e.getMessage(), Toast.LENGTH_LONG);
             }
         }

@@ -564,6 +564,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         checkable.setChecked(sharedPreferenceManager.getBoolData(SORT_TYPE.getValue()));
         return true;
     }
+
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -571,7 +572,10 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         Intent intent;
         if (id == R.id.menu_sort) {
             sharedPreferenceManager.putData(SORT_TYPE.getValue(), !sharedPreferenceManager.getBoolData(SORT_TYPE.getValue()));
-            new ChangeSortType(this, sharedPreferenceManager.getBoolData(SORT_TYPE.getValue())).execute(this);
+            if (readingData.onOffLoadDtos.isEmpty())
+                showNoEshterakFound();
+            else
+                new ChangeSortType(this, sharedPreferenceManager.getBoolData(SORT_TYPE.getValue())).execute(this);
         } else if (id == R.id.menu_navigation) {
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();

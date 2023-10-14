@@ -318,4 +318,6 @@
     <string name="captcha">captcha</string>
     <string name="ahad">آحاد</string>
     <string name="selected_report_number">تعداد {0} گزارش ثبت شد</string>
+    <string name="error_illegal_time">زمان دسترسی مجاز به سامانه پایان یافته است</string>
+    <string name="error_illegal_ip">IP شما در لیست مجاز قرار ندارد</string>
 </resources>

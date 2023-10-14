@@ -46,9 +46,13 @@ public class CustomErrorHandling {
             errorMessage += context.getString(R.string.error_change_server);
         } else if (code == 401 || code == 403) {
             errorMessage += context.getString(R.string.error_not_auth);
+        } else if (code == 428) {
+            errorMessage += context.getString(R.string.error_illegal_time);
+        } else if (code == 451) {
+            errorMessage += context.getString(R.string.error_illegal_ip);
         } else if (code == 402) {
-            final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
-            final CustomErrorHandling.APIError apiError = errorHandling.parseError(response);
+            CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+            CustomErrorHandling.APIError apiError = errorHandling.parseError(response);
             errorMessage = apiError.message();
         } else {
             errorMessage += context.getString(R.string.error_other);

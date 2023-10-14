@@ -17,7 +17,7 @@ public class UpdateOnOffLoadByAttemptNumber extends AsyncTask<Void, Void, Void> 
 
     @Override
     protected Void doInBackground(Void... voids) {
-        Log.e("here1", String.valueOf(onOffLoadDto.counterNumber));
+//        Log.e("here1", String.valueOf(onOffLoadDto.counterNumber));
 //        getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoadByAttemptNumber(onOffLoadDto.id,
                 onOffLoadDto.trackingId, onOffLoadDto.attemptCount);

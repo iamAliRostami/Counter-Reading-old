@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.leon.counter_reading.tables.OnOffLoadDto;
 
@@ -42,7 +41,11 @@ public class Update extends AsyncTask<Activity, Void, Void> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        onOffLoadDto.phoneDateTime = convertToAscii(dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis())));
+        try {
+            onOffLoadDto.phoneDateTime = convertToAscii(dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis())));
+        } catch (Exception e) {
+            onOffLoadDto.phoneDateTime = dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis()));
+        }
 //        onOffLoadDto.phoneDateTime = dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis()));
 //        date = new Date(Calendar.getInstance().getTimeInMillis());
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
@@ -52,6 +55,7 @@ public class Update extends AsyncTask<Activity, Void, Void> {
     private String convertToAscii(String s) {
         String sTemp = Normalizer.normalize(s, Normalizer.Form.NFKD);
         String regex = "[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+";
-        return new String(sTemp.replaceAll(regex, "").getBytes(StandardCharsets.US_ASCII), StandardCharsets.US_ASCII);
+        String finalString = new String(sTemp.replaceAll(regex, "").getBytes(StandardCharsets.US_ASCII), StandardCharsets.US_ASCII);
+        return new String(finalString.getBytes(), StandardCharsets.UTF_8);
     }
 }

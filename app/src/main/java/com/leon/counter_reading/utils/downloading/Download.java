@@ -60,7 +60,7 @@ class DownloadCompleted implements ICallback<ReadingData> {
 class DownloadIncomplete implements ICallbackIncomplete<ReadingData> {
     @Override
     public void executeIncomplete(Response<ReadingData> response) {
-        final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+        CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
         String error = errorHandling.getErrorMessageDefault(response);
         if (response.code() == 400) {
             CustomErrorHandling.APIError apiError = errorHandling.parseError(response);
