@@ -257,7 +257,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         try {
             runOnUiThread(() -> {
                 if (pageNumber < readingData.onOffLoadDtos.size())
-                    binding.viewPager.setCurrentItem(pageNumber);
+                    binding.viewPager.setCurrentItem(pageNumber, false);
                 else {
                     new CustomToast().success(getString(R.string.all_masir_bazdid));
                 }
@@ -271,7 +271,8 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
 
     public boolean search(int type, String key, boolean goToPage) {
         if (type == PAGE_NUMBER.getValue()) {
-            runOnUiThread(() -> binding.viewPager.setCurrentItem(Integer.parseInt(key) - 1));
+//            runOnUiThread(() -> binding.viewPager.setCurrentItem(Integer.parseInt(key) - 1));
+            runOnUiThread(() -> binding.viewPager.setCurrentItem(Integer.parseInt(key) - 1,false));
         } else if (type == All.getValue()) {
             readingData.onOffLoadDtos.clear();
             readingData.onOffLoadDtos.addAll(readingDataTemp.onOffLoadDtos);
@@ -628,7 +629,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                     }
                     i++;
                 }
-                binding.viewPager.setCurrentItem(currentItem);
+                binding.viewPager.setCurrentItem(currentItem, false);
             }
         } else if (id == R.id.menu_verification) {
             showPersonalCode(this);
