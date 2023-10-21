@@ -48,7 +48,6 @@ import es.dmoral.toasty.Toasty;
 
 public class MyApplication extends Application {
     private static Context appContext;
-//    private static int publicErrorCounter = 0;
     private static ApplicationComponent applicationComponent;
     private static ActivityComponent activityComponent;
 
@@ -117,14 +116,6 @@ public class MyApplication extends Application {
         return appContext;
     }
 
-//    public static int getPublicErrorCounter() {
-//        return publicErrorCounter;
-//    }
-//
-//    public static void setPublicErrorCounter(int publicErrorCounter) {
-//        MyApplication.publicErrorCounter = publicErrorCounter;
-//    }
-
     public static void onActivitySetTheme(Activity activity, int theme, boolean actionBar) {
         if (!actionBar) {
             if (theme == 1) {
@@ -174,10 +165,11 @@ public class MyApplication extends Application {
             return 0;
         }
     }
+
     public static int getImageQuality() {
         final int quality = getApplicationComponent().SharedPreferenceModel().getIntData(IMAGE_QUALITY.getValue());
         if (quality == HIGH.getValue()) {
-           return 100000;
+            return 100000;
         } else if (quality == MEDIUM.getValue()) {
             return 75000;
         } else if (quality == LOW.getValue()) {

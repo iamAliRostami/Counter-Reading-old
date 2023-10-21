@@ -1,8 +1,10 @@
 package com.leon.counter_reading.utils.reading;
 
 import static com.leon.counter_reading.enums.DialogType.Red;
+import static com.leon.counter_reading.enums.FragmentTags.RESET;
 import static com.leon.counter_reading.enums.OffloadStateEnum.INSERTED;
 import static com.leon.counter_reading.enums.ProgressType.NOT_SHOW;
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.Constants.MAX_OFFLINE_ATTEMPT;
 import static com.leon.counter_reading.helpers.Constants.currentOfflineAttempts;
 import static com.leon.counter_reading.helpers.Constants.publicErrorCounter;
@@ -12,14 +14,12 @@ import static com.leon.counter_reading.helpers.MyApplication.getApplicationCompo
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
+import com.leon.counter_reading.fragments.dialog.ResetApplicationFragment;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
 import com.leon.counter_reading.infrastructure.ICallbackError;
@@ -83,7 +83,7 @@ class offLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
             new Sent(response.body()).execute(activity);
         } else if (response.body() != null) {
             try {
-                publicErrorCounter = publicErrorCounter+ 1;
+                publicErrorCounter = publicErrorCounter + 1;
                 final CustomErrorHandling errorHandling = new CustomErrorHandling(activity);
                 final String error = errorHandling.getErrorMessage(response.body().status);
                 new CustomToast().error(error);
@@ -116,12 +116,7 @@ class offLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadR
                     if (unauthorisedAttempts < getShowError())
                         unauthorisedAttempts = unauthorisedAttempts + 1;
                     else {
-                        PackageManager packageManager = activity.getPackageManager();
-                        Intent intent = packageManager.getLaunchIntentForPackage(activity.getPackageName());
-                        ComponentName componentName = intent.getComponent();
-                        Intent mainIntent = Intent.makeRestartActivityTask(componentName);
-                        activity.startActivity(mainIntent);
-                        Runtime.getRuntime().exit(0);
+                        ShowDialogOnce(activity, RESET.getValue(), ResetApplicationFragment.newInstance());
                     }
                 }
                 new CustomToast().error(error);

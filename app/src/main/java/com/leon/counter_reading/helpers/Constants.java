@@ -49,7 +49,6 @@ public class Constants {
     public static final String ACTION_USB_PERMISSION = "com.leon.counter_reading.activities.USB_PERMISSION";
     public static final int INTERFACE_SUBCLASS = 6;
     public static final int INTERFACE_PROTOCOL = 80;
-
     public final static int ZIP_ROOT = 7896;
     public final static int SORT_BY_NAME = 0;
     public final static int SORT_BY_DATE = 1;

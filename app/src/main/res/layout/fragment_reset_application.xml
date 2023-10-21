@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view_content"
+    style="@style/FragmentStyle"
+    tools:context="com.leon.counter_reading.fragments.dialog.ResetApplicationFragment">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/small_dp"
+        android:background="?attr/colorAccent" />
+
+    <TextView
+        android:id="@+id/text_view"
+        style="@style/ItemLineBasic"
+        android:layout_below="@id/view"
+        android:text="@string/error_not_auth"
+        android:textSize="@dimen/text_size_large" />
+
+    <Button
+        android:id="@+id/button_yes"
+        style="@style/ButtonSubmit.Fragment.Warning"
+        android:layout_width="match_parent"
+        android:layout_below="@id/text_view"
+        android:layout_margin="0dp"
+        android:text="@string/exit" />
+</RelativeLayout>

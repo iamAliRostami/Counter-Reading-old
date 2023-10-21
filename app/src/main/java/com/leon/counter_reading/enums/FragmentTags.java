@@ -7,6 +7,7 @@ public enum FragmentTags {
     AHAD("AHAD"),
     SEARCH("SEARCH"),
     NAVIGATION("NAVIGATION"),
+    RESET("RESET"),
     TAKE_PHOTO("TAKE_PHOTO_"),
     ARE_YOU_SURE("ARE_YOU_SURE_"),
     REPORT_FORBID("REPORT_FORBID"),

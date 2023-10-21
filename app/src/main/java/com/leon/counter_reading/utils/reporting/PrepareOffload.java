@@ -1,11 +1,14 @@
 package com.leon.counter_reading.utils.reporting;
 
 import static com.leon.counter_reading.enums.DialogType.Red;
+import static com.leon.counter_reading.enums.FragmentTags.RESET;
 import static com.leon.counter_reading.enums.ProgressType.SHOW;
+import static com.leon.counter_reading.fragments.dialog.ShowFragmentDialog.ShowDialogOnce;
 import static com.leon.counter_reading.helpers.Constants.publicErrorCounter;
+import static com.leon.counter_reading.helpers.Constants.unauthorisedAttempts;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getShowError;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getShowError;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -15,6 +18,7 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
+import com.leon.counter_reading.fragments.dialog.ResetApplicationFragment;
 import com.leon.counter_reading.fragments.report.ReportInspectionFragment;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
@@ -108,9 +112,16 @@ class offLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadR
     public void executeIncomplete(Response<OnOffLoadDto.OffLoadResponses> response) {
         if (response != null) {
             try {
-                final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
-                final CustomErrorHandling.APIError apiError = errorHandling.parseError(response);
-                final String error = apiError.message();
+                CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+                CustomErrorHandling.APIError apiError = errorHandling.parseError(response);
+                String error = apiError.message();
+                if (response.code() == 401 || response.code() == 403) {
+                    if (unauthorisedAttempts < getShowError())
+                        unauthorisedAttempts = unauthorisedAttempts + 1;
+                    else {
+                        ShowDialogOnce(activity, RESET.getValue(), ResetApplicationFragment.newInstance());
+                    }
+                }
                 new CustomToast().error(error);
             } catch (Exception e) {
                 activity.runOnUiThread(() -> new CustomDialogModel(Red, activity, e.getMessage(),
