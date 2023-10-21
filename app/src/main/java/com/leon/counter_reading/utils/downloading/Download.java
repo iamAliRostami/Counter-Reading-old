@@ -40,18 +40,13 @@ public class Download extends AsyncTask<Activity, Void, Void> {
     }
 }
 
-class DownloadCompleted implements ICallback<ReadingData> {
-    final Activity activity;
-
-    public DownloadCompleted(Activity activity) {
-        this.activity = activity;
-    }
+record DownloadCompleted(Activity activity) implements ICallback<ReadingData> {
 
     @Override
     public void execute(Response<ReadingData> response) {
         if (response != null && response.body() != null) {
-            final ReadingData readingData = response.body();
-            final ReadingData readingDataTemp = response.body();
+            ReadingData readingData = response.body();
+            ReadingData readingDataTemp = response.body();
             new SaveDownloadData().savedData(activity, readingData, readingDataTemp);
         }
     }

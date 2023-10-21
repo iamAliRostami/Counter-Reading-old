@@ -48,7 +48,7 @@ import es.dmoral.toasty.Toasty;
 
 public class MyApplication extends Application {
     private static Context appContext;
-    private static int ERROR_COUNTER = 0;
+//    private static int publicErrorCounter = 0;
     private static ApplicationComponent applicationComponent;
     private static ActivityComponent activityComponent;
 
@@ -117,13 +117,13 @@ public class MyApplication extends Application {
         return appContext;
     }
 
-    public static int getErrorCounter() {
-        return ERROR_COUNTER;
-    }
-
-    public static void setErrorCounter(int errorCounter) {
-        ERROR_COUNTER = errorCounter;
-    }
+//    public static int getPublicErrorCounter() {
+//        return publicErrorCounter;
+//    }
+//
+//    public static void setPublicErrorCounter(int publicErrorCounter) {
+//        MyApplication.publicErrorCounter = publicErrorCounter;
+//    }
 
     public static void onActivitySetTheme(Activity activity, int theme, boolean actionBar) {
         if (!actionBar) {

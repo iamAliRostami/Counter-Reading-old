@@ -55,13 +55,15 @@ public class Constants {
     public final static int SORT_BY_DATE = 1;
     public final static int SORT_BY_SIZE = 2;
     public final static int MAX_OFFLINE_ATTEMPT = 5;
+    public static int currentOfflineAttempts = 0;
+    public static int unauthorisedAttempts = 0;
+    public static int publicErrorCounter = 0;
     public final static File otgViewerCachePath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/OTGViewer/cache");
     public final static File otgViewerPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/OTGViewer");
 
 
     public static long CURRENT_IMAGE_SIZE;
 
-    public static int currentOfflineAttempts = 0;
     public static int POSITION = -1;
 
     public static Bitmap BITMAP_SELECTED_IMAGE;

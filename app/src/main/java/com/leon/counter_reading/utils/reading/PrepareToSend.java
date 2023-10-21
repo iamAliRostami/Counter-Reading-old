@@ -5,13 +5,16 @@ import static com.leon.counter_reading.enums.OffloadStateEnum.INSERTED;
 import static com.leon.counter_reading.enums.ProgressType.NOT_SHOW;
 import static com.leon.counter_reading.helpers.Constants.MAX_OFFLINE_ATTEMPT;
 import static com.leon.counter_reading.helpers.Constants.currentOfflineAttempts;
+import static com.leon.counter_reading.helpers.Constants.publicErrorCounter;
+import static com.leon.counter_reading.helpers.Constants.unauthorisedAttempts;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getShowError;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
-import static com.leon.counter_reading.helpers.MyApplication.getErrorCounter;
-import static com.leon.counter_reading.helpers.MyApplication.setErrorCounter;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getShowError;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 
 import com.leon.counter_reading.R;
@@ -80,13 +83,50 @@ class offLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
             new Sent(response.body()).execute(activity);
         } else if (response.body() != null) {
             try {
-                setErrorCounter(getErrorCounter() + 1);
+                publicErrorCounter = publicErrorCounter+ 1;
                 final CustomErrorHandling errorHandling = new CustomErrorHandling(activity);
                 final String error = errorHandling.getErrorMessage(response.body().status);
                 new CustomToast().error(error);
             } catch (Exception e) {
                 activity.runOnUiThread(() -> new CustomDialogModel(Red,
                         activity, e.getMessage(),
+                        activity.getString(R.string.dear_user),
+                        activity.getString(R.string.take_screen_shot),
+                        activity.getString(R.string.accepted)));
+            }
+        }
+    }
+}
+
+
+class offLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadResponses> {
+    final Activity activity;
+
+    public offLoadDataIncomplete(Activity activity) {
+        this.activity = activity;
+    }
+
+    @Override
+    public void executeIncomplete(Response<OnOffLoadDto.OffLoadResponses> response) {
+        if (response != null) {
+            try {
+                CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
+                String error = errorHandling.getErrorMessageDefault(response);
+                if (response.code() == 401 || response.code() == 403) {
+                    if (unauthorisedAttempts < getShowError())
+                        unauthorisedAttempts = unauthorisedAttempts + 1;
+                    else {
+                        PackageManager packageManager = activity.getPackageManager();
+                        Intent intent = packageManager.getLaunchIntentForPackage(activity.getPackageName());
+                        ComponentName componentName = intent.getComponent();
+                        Intent mainIntent = Intent.makeRestartActivityTask(componentName);
+                        activity.startActivity(mainIntent);
+                        Runtime.getRuntime().exit(0);
+                    }
+                }
+                new CustomToast().error(error);
+            } catch (Exception e) {
+                activity.runOnUiThread(() -> new CustomDialogModel(Red, activity, e.getMessage(),
                         activity.getString(R.string.dear_user),
                         activity.getString(R.string.take_screen_shot),
                         activity.getString(R.string.accepted)));
@@ -104,7 +144,7 @@ class offLoadError implements ICallbackError {
 
     @Override
     public void executeError(Throwable t) {
-        if (getErrorCounter() < getShowError()) {
+        if (publicErrorCounter < getShowError()) {
             try {
                 final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
                 final String error = errorHandling.getErrorMessageTotal(t);
@@ -117,34 +157,10 @@ class offLoadError implements ICallbackError {
                         activity.getString(R.string.accepted)));
             }
         }
-        setErrorCounter(getErrorCounter() + 1);
+        publicErrorCounter = publicErrorCounter + 1;
         currentOfflineAttempts++;
         if (currentOfflineAttempts == MAX_OFFLINE_ATTEMPT) {
             activity.runOnUiThread(() -> new CustomToast().warning("حالت آفلاین فعال گردید."));
-        }
-    }
-}
-
-class offLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadResponses> {
-    final Activity activity;
-
-    public offLoadDataIncomplete(Activity activity) {
-        this.activity = activity;
-    }
-
-    @Override
-    public void executeIncomplete(Response<OnOffLoadDto.OffLoadResponses> response) {
-        if (response != null) {
-            try {
-                final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
-                final String error = errorHandling.getErrorMessageDefault(response);
-                new CustomToast().error(error);
-            } catch (Exception e) {
-                activity.runOnUiThread(() -> new CustomDialogModel(Red, activity, e.getMessage(),
-                        activity.getString(R.string.dear_user),
-                        activity.getString(R.string.take_screen_shot),
-                        activity.getString(R.string.accepted)));
-            }
         }
     }
 }
