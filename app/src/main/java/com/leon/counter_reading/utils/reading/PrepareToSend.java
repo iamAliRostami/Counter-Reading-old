@@ -155,7 +155,7 @@ class offLoadError implements ICallbackError {
         publicErrorCounter = publicErrorCounter + 1;
         currentOfflineAttempts++;
         if (currentOfflineAttempts == MAX_OFFLINE_ATTEMPT) {
-            activity.runOnUiThread(() -> new CustomToast().warning("حالت آفلاین فعال گردید."));
+            activity.runOnUiThread(() -> new CustomToast().warning("حالت آفلاین فعال گردید"));
         }
     }
 }
