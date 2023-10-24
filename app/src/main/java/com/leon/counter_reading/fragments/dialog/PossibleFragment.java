@@ -183,7 +183,7 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         if (binding.spinnerGuild.getSelectedItemPosition() > 0)
             possible.getOnOffLoadDto().guildId =
                     guildsTemp.get(binding.spinnerGuild.getSelectedItemPosition() - 1).id;
-        else if (possible.getGuildVisibility() == View.VISIBLE) {
+        else if (!possible.isJustMobile() && possible.getGuildVisibility() == View.VISIBLE) {
             new CustomToast().warning("صنف وارد نشده است");
             return;
         }
