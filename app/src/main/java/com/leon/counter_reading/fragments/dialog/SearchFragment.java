@@ -4,11 +4,13 @@ import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.SearchTypeEnum.All;
 import static com.leon.counter_reading.enums.SearchTypeEnum.BARCODE;
 import static com.leon.counter_reading.enums.SearchTypeEnum.NAME;
+import static com.leon.counter_reading.enums.SearchTypeEnum.PAGE_NUMBER;
 import static com.leon.counter_reading.enums.SearchTypeEnum.RADIF;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getSecondSearchItem;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,6 +85,8 @@ public class SearchFragment extends DialogFragment {
                         View.VISIBLE);
                 binding.editTextSearch.setInputType(type == NAME.getValue() ?
                         InputType.TYPE_CLASS_TEXT : InputType.TYPE_CLASS_NUMBER);
+                binding.editTextSearch.setFilters(new InputFilter[]{
+                        new InputFilter.LengthFilter(type == PAGE_NUMBER.getValue() ? 9 : 20)});
                 binding.editTextSearch.setVisibility(type >= BARCODE.getValue() ? View.GONE :
                         View.VISIBLE);
                 if (type == BARCODE.getValue())
