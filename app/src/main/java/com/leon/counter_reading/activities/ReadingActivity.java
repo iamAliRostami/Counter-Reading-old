@@ -272,7 +272,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     public boolean search(int type, String key, boolean goToPage) {
         if (type == PAGE_NUMBER.getValue()) {
 //            runOnUiThread(() -> binding.viewPager.setCurrentItem(Integer.parseInt(key) - 1));
-            runOnUiThread(() -> binding.viewPager.setCurrentItem(Integer.parseInt(key) - 1,false));
+            runOnUiThread(() -> binding.viewPager.setCurrentItem(Integer.parseInt(key) - 1, false));
         } else if (type == All.getValue()) {
             readingData.onOffLoadDtos.clear();
             readingData.onOffLoadDtos.addAll(readingDataTemp.onOffLoadDtos);
@@ -561,8 +561,13 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem checkable = menu.findItem(R.id.menu_sort);
-        checkable.setChecked(sharedPreferenceManager.getBoolData(SORT_TYPE.getValue()));
+        try {
+            MenuItem checkable = menu.findItem(R.id.menu_sort);
+            checkable.setChecked(sharedPreferenceManager.getBoolData(SORT_TYPE.getValue()));
+        } catch (Exception e) {
+            new CustomToast().warning(e.getMessage());
+        }
+
         return true;
     }
 
@@ -585,13 +590,21 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                         .newInstance(binding.viewPager.getCurrentItem(), readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem())));
             }
         } else if (id == R.id.menu_karbari) {
-            ShowDialogOnce(this, FragmentTags.KARBARI.getValue(),
-                    KarbariFragment.newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
-                            binding.viewPager.getCurrentItem()));
+            if (readingData.onOffLoadDtos.isEmpty()) {
+                showNoEshterakFound();
+            } else {
+                ShowDialogOnce(this, FragmentTags.KARBARI.getValue(),
+                        KarbariFragment.newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
+                                binding.viewPager.getCurrentItem()));
+            }
         } else if (id == R.id.menu_ahad) {
-            ShowDialogOnce(this, AHAD.getValue(),
-                    AhadFragment.newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
-                            binding.viewPager.getCurrentItem()));
+            if (readingData.onOffLoadDtos.isEmpty()) {
+                showNoEshterakFound();
+            } else {
+                ShowDialogOnce(this, AHAD.getValue(),
+                        AhadFragment.newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
+                                binding.viewPager.getCurrentItem()));
+            }
         } else if (id == R.id.menu_report_forbid) {
             ShowDialogOnce(this, REPORT_FORBID.getValue(),
                     ReportForbidFragment.newInstance(readingData.onOffLoadDtos.size() > 0 ?
