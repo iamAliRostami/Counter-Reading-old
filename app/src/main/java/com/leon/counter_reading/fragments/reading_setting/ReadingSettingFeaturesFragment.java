@@ -4,9 +4,9 @@ import static com.leon.counter_reading.enums.ImageQuality.HIGH;
 import static com.leon.counter_reading.enums.ImageQuality.LOW;
 import static com.leon.counter_reading.enums.ImageQuality.MEDIUM;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.DONT_SHOW;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.GO_LAST_READ;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.IMAGE_QUALITY;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KEYBOARD_TYPE;
-import static com.leon.counter_reading.enums.SharedReferenceKeys.GO_LAST_READ;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_TEMPORARY;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
@@ -50,18 +50,41 @@ public class ReadingSettingFeaturesFragment extends Fragment {
         initializeCheckbox();
         initializeRadioGroup();
         initializeImageViewReverse();
+
+
     }
 
     private void initializeImageViewReverse() {
-        binding.imageViewReverse.setImageDrawable(ContextCompat.getDrawable(requireContext(),
-                getApplicationComponent().SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
-                        R.drawable.mode_dark : R.drawable.mode_light));
-        binding.imageViewReverse.setOnClickListener(view -> {
-            getApplicationComponent().SharedPreferenceModel().putData(THEME_TEMPORARY.getValue(),
-                    !getApplicationComponent().SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()));
-            binding.imageViewReverse.setImageDrawable(ContextCompat.getDrawable(requireContext(),
-                    getApplicationComponent().SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
-                            R.drawable.mode_dark : R.drawable.mode_light));
+        if (getApplicationComponent().SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue())) {
+            binding.linearLayoutDark.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.border_blue_2));
+            binding.linearLayoutLight.setBackgroundResource(0);
+            binding.textViewThemeDark.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue));
+            binding.textViewThemeLight.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_color_dark));
+        } else {
+            binding.linearLayoutLight.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.border_blue_2));
+            binding.linearLayoutDark.setBackgroundResource(0);
+            binding.textViewThemeLight.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue));
+            binding.textViewThemeDark.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_color_dark));
+        }
+
+
+//        binding.imageViewReverse.setImageDrawable(ContextCompat.getDrawable(requireContext(),
+//                getApplicationComponent().SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
+//                        R.drawable.mode_dark : R.drawable.mode_light));
+//        binding.imageViewReverse.setOnClickListener(view -> {
+//            getApplicationComponent().SharedPreferenceModel().putData(THEME_TEMPORARY.getValue(),
+//                    !getApplicationComponent().SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()));
+//            binding.imageViewReverse.setImageDrawable(ContextCompat.getDrawable(requireContext(),
+//                    getApplicationComponent().SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
+//                            R.drawable.mode_dark : R.drawable.mode_light));
+//        });
+        binding.linearLayoutDark.setOnClickListener(v -> {
+            getApplicationComponent().SharedPreferenceModel().putData(THEME_TEMPORARY.getValue(), true);
+            initializeImageViewReverse();
+        });
+        binding.linearLayoutLight.setOnClickListener(v -> {
+            getApplicationComponent().SharedPreferenceModel().putData(THEME_TEMPORARY.getValue(), false);
+            initializeImageViewReverse();
         });
     }
 

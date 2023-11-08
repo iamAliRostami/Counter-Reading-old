@@ -304,9 +304,13 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         runOnUiThread(() -> {
             try {
                 binding.viewPager.setOffscreenPageLimit(1);
-                if (lastRead)
-                    ShowDialogOnce(this, LAST_READ.getValue(), LastReadFragment.newInstance());
-                else {
+                if (lastRead) {
+                    try {
+                        ShowDialogOnce(this, LAST_READ.getValue(), LastReadFragment.newInstance());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
                     if (sharedPreferenceManager.getBoolData(GO_LAST_READ.getValue()))
                         goLastRead();
                     else setAdapter();

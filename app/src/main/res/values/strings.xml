@@ -325,4 +325,6 @@
     <string name="always_ask">حالت پیشفرض</string>
     <string name="always_last_page">همواره برو آخرین قرائت</string>
     <string name="stay_in_page">در صفحه اول بمان</string>
+    <string name="theme_light">روشن</string>
+    <string name="theme_dark">تیره</string>
 </resources>
