@@ -180,6 +180,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     private void initialize() {
         binding.buttonSubmit.setId(readingVM.getButtonId());
         binding.editTextNumber.setId(readingVM.getTextViewId());
+        binding.textViewPreNumber.setSelected(true);
         initializeSpinner();
         setOnEventsListener();
         if (!readingVM.getOnOffLoadDto().displayRadif && !readingVM.getOnOffLoadDto().displayBillId)
