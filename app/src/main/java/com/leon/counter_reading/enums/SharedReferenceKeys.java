@@ -42,7 +42,7 @@ public enum SharedReferenceKeys {
     SORT_FILTER_KEY("SORT_FILTER_KEY"),
     GUILD("guild"),
     DONT_SHOW("dont_show"),
-    LAST_READ("last_read"),
+    GO_LAST_READ("last_read"),
     GUILD_FIRST("guild_first");
 
     private final String value;

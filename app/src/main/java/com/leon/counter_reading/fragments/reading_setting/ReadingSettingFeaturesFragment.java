@@ -6,7 +6,7 @@ import static com.leon.counter_reading.enums.ImageQuality.MEDIUM;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.DONT_SHOW;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.IMAGE_QUALITY;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KEYBOARD_TYPE;
-import static com.leon.counter_reading.enums.SharedReferenceKeys.LAST_READ;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.GO_LAST_READ;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_TEMPORARY;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
@@ -109,20 +109,20 @@ public class ReadingSettingFeaturesFragment extends Fragment {
     private void initializeRadioGroupPage() {
         if (!getApplicationComponent().SharedPreferenceModel().getBoolData(DONT_SHOW.getValue())) {
             binding.radioButtonAsk.setChecked(true);
-        } else if (getApplicationComponent().SharedPreferenceModel().getBoolData(LAST_READ.getValue())) {
+        } else if (getApplicationComponent().SharedPreferenceModel().getBoolData(GO_LAST_READ.getValue())) {
             binding.radioButtonLast.setChecked(true);
-        } else if (!getApplicationComponent().SharedPreferenceModel().getBoolData(LAST_READ.getValue())) {
+        } else if (!getApplicationComponent().SharedPreferenceModel().getBoolData(GO_LAST_READ.getValue())) {
             binding.radioButtonStay.setChecked(true);
         }
         binding.radioGroupLastRead.setOnCheckedChangeListener((radioGroup, i) -> {
             if (i == R.id.radio_button_ask) {
-                getApplicationComponent().SharedPreferenceModel().putData(LAST_READ.getValue(), false);
+                getApplicationComponent().SharedPreferenceModel().putData(GO_LAST_READ.getValue(), false);
                 getApplicationComponent().SharedPreferenceModel().putData(DONT_SHOW.getValue(), false);
             } else if (i == R.id.radio_button_last) {
-                getApplicationComponent().SharedPreferenceModel().putData(LAST_READ.getValue(), true);
+                getApplicationComponent().SharedPreferenceModel().putData(GO_LAST_READ.getValue(), true);
                 getApplicationComponent().SharedPreferenceModel().putData(DONT_SHOW.getValue(), true);
             } else if (i == R.id.radio_button_stay) {
-                getApplicationComponent().SharedPreferenceModel().putData(LAST_READ.getValue(), false);
+                getApplicationComponent().SharedPreferenceModel().putData(GO_LAST_READ.getValue(), false);
                 getApplicationComponent().SharedPreferenceModel().putData(DONT_SHOW.getValue(), true);
             }
         });

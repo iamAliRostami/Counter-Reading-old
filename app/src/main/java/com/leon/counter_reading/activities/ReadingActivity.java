@@ -29,6 +29,7 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_1;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_2;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_EMPTY;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AHAD_TOTAL;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.GO_LAST_READ;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.GUILD;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.IMAGE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KARBARI;
@@ -306,14 +307,10 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 if (lastRead)
                     ShowDialogOnce(this, LAST_READ.getValue(), LastReadFragment.newInstance());
                 else {
-                    binding.viewPager.setAdapter(adapter);
-                    if (sharedPreferenceManager.getBoolData(SharedReferenceKeys.LAST_READ.getValue()))
+                    if (sharedPreferenceManager.getBoolData(GO_LAST_READ.getValue()))
                         goLastRead();
+                    else setAdapter();
                 }
-                RecyclerView recyclerView = ((RecyclerView) (binding.viewPager.getChildAt(0)));
-                if (recyclerView != null) recyclerView.setItemViewCacheSize(0);
-                if (getApplicationComponent().SharedPreferenceModel().getBoolData(RTL_PAGING.getValue()))
-                    binding.viewPager.setRotationY(180);
             } catch (Exception e) {
                 e.printStackTrace();
                 new CustomToast().error(getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
@@ -345,6 +342,10 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void setAdapter() {
         binding.viewPager.setAdapter(adapter);
+        RecyclerView recyclerView = ((RecyclerView) (binding.viewPager.getChildAt(0)));
+        if (recyclerView != null) recyclerView.setItemViewCacheSize(0);
+        if (getApplicationComponent().SharedPreferenceModel().getBoolData(RTL_PAGING.getValue()))
+            binding.viewPager.setRotationY(180);
     }
     private void setOnPageChangeListener() {
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {

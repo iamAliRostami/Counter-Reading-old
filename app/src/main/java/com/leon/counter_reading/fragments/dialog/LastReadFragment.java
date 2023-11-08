@@ -1,7 +1,7 @@
 package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.SharedReferenceKeys.DONT_SHOW;
-import static com.leon.counter_reading.enums.SharedReferenceKeys.LAST_READ;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.GO_LAST_READ;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -27,7 +27,9 @@ public class LastReadFragment extends DialogFragment implements View.OnClickList
     }
 
     public static LastReadFragment newInstance() {
-        return new LastReadFragment();
+        LastReadFragment fragment = new LastReadFragment();
+        fragment.setCancelable(false);
+        return fragment;
     }
 
     @Override
@@ -49,11 +51,12 @@ public class LastReadFragment extends DialogFragment implements View.OnClickList
         int id = v.getId();
         if (id == R.id.button_submit) {
             getApplicationComponent().SharedPreferenceModel().putData(DONT_SHOW.getValue(), binding.checkBoxDontShow.isChecked());
-            getApplicationComponent().SharedPreferenceModel().putData(LAST_READ.getValue(), true);
+            getApplicationComponent().SharedPreferenceModel().putData(GO_LAST_READ.getValue(), true);
             callback.goLastRead();
             dismiss();
         } else if (id == R.id.button_close) {
             getApplicationComponent().SharedPreferenceModel().putData(DONT_SHOW.getValue(), binding.checkBoxDontShow.isChecked());
+            getApplicationComponent().SharedPreferenceModel().putData(GO_LAST_READ.getValue(), false);
             callback.setAdapter();
             dismiss();
         }
