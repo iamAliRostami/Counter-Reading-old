@@ -10,6 +10,7 @@ import static com.leon.counter_reading.enums.BundleEnum.TYPE;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.DialogType.Yellow;
 import static com.leon.counter_reading.enums.FragmentTags.AHAD;
+import static com.leon.counter_reading.enums.FragmentTags.LAST_READ;
 import static com.leon.counter_reading.enums.FragmentTags.NAVIGATION;
 import static com.leon.counter_reading.enums.FragmentTags.POSSIBLE_DIALOG;
 import static com.leon.counter_reading.enums.FragmentTags.REPORT_FORBID;
@@ -49,6 +50,7 @@ import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getContext;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
+import static com.leon.counter_reading.utils.MakeNotification.makeVibrate;
 import static com.leon.counter_reading.utils.login.TwoStepVerification.showPersonalCode;
 import static com.leon.counter_reading.utils.reading.ReadingUtils.setAboveIcons;
 
@@ -56,6 +58,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Debug;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -78,11 +81,13 @@ import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReadingBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.FragmentTags;
+import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.fragments.ReadingFragment;
 import com.leon.counter_reading.fragments.dialog.AhadFragment;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
 import com.leon.counter_reading.fragments.dialog.CounterPlaceFragment;
 import com.leon.counter_reading.fragments.dialog.KarbariFragment;
+import com.leon.counter_reading.fragments.dialog.LastReadFragment;
 import com.leon.counter_reading.fragments.dialog.NavigationFragment;
 import com.leon.counter_reading.fragments.dialog.PossibleFragment;
 import com.leon.counter_reading.fragments.dialog.ReadingReportFragment;
@@ -98,7 +103,6 @@ import com.leon.counter_reading.tables.OffLoadReport;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.DepthPageTransformer2;
-import com.leon.counter_reading.utils.MakeNotification;
 import com.leon.counter_reading.utils.reading.ChangeSortType;
 import com.leon.counter_reading.utils.reading.DataResult;
 import com.leon.counter_reading.utils.reading.GetBundle;
@@ -117,7 +121,7 @@ import java.util.ArrayList;
 public class ReadingActivity extends BaseActivity implements View.OnClickListener,
         ReadingReportFragment.Callback, CounterPlaceFragment.Callback, NavigationFragment.Callback,
         ReadingFragment.Callback, TakePhotoFragment.Callback, SerialFragment.Callback,
-        AreYouSureFragment.Callback, PossibleFragment.Callback {
+        AreYouSureFragment.Callback, PossibleFragment.Callback, LastReadFragment.ICallback {
     private ActivityReadingBinding binding;
     private ISharedPreferenceManager sharedPreferenceManager;
     private ViewPagerStateAdapter2 adapter;
@@ -135,17 +139,14 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void initialize() {
-
         getDelegate().setLocalNightMode(getApplicationComponent().SharedPreferenceModel()
                 .getBoolData(THEME_TEMPORARY.getValue()) ? AppCompatDelegate.MODE_NIGHT_YES :
                 AppCompatDelegate.MODE_NIGHT_NO);
         binding = ActivityReadingBinding.inflate(getLayoutInflater());
-        final View childLayout = binding.getRoot();
-        final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
+        View childLayout = binding.getRoot();
+        ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
         sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
-        //TODO
-//        imageSrc = ArrayUtils.clone(setAboveIcons());
         imageSrc = setAboveIcons();
         getBundle();
         setOnImageViewsClickListener();
@@ -271,12 +272,11 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
 
     public boolean search(int type, String key, boolean goToPage) {
         if (type == PAGE_NUMBER.getValue()) {
-//            runOnUiThread(() -> binding.viewPager.setCurrentItem(Integer.parseInt(key) - 1));
             runOnUiThread(() -> binding.viewPager.setCurrentItem(Integer.parseInt(key) - 1, false));
         } else if (type == All.getValue()) {
             readingData.onOffLoadDtos.clear();
             readingData.onOffLoadDtos.addAll(readingDataTemp.onOffLoadDtos);
-            runOnUiThread(this::setupViewPager);
+            runOnUiThread(() -> setupViewPager(false));
         } else {
             new Search(type, key, goToPage).execute(this);
             return searchResult;
@@ -284,7 +284,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         return true;
     }
 
-    public void setupViewPager() {
+    public void setupViewPager(boolean lastRead) {
         runOnUiThread(() -> {
             binding.textViewNotFound.setVisibility(readingData.onOffLoadDtos.size() > 0 ?
                     View.GONE : View.VISIBLE);
@@ -295,27 +295,57 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
             binding.viewPager.setPageTransformer(new DepthPageTransformer2());
             setOnPageChangeListener();
         });
-        setupViewPagerAdapter();
+        setupViewPagerAdapter(lastRead);
     }
 
-    private void setupViewPagerAdapter() {
+    private void setupViewPagerAdapter(boolean lastRead) {
+        adapter = new ViewPagerStateAdapter2(this, readingData);
         runOnUiThread(() -> {
-            adapter = new ViewPagerStateAdapter2(this, readingData);
             try {
                 binding.viewPager.setOffscreenPageLimit(1);
-                binding.viewPager.setAdapter(adapter);
-                final RecyclerView recyclerView = ((RecyclerView) (binding.viewPager.getChildAt(0)));
-                if (recyclerView != null) {
-                    recyclerView.setItemViewCacheSize(0);
+                if (lastRead)
+                    ShowDialogOnce(this, LAST_READ.getValue(), LastReadFragment.newInstance());
+                else {
+                    binding.viewPager.setAdapter(adapter);
+                    if (sharedPreferenceManager.getBoolData(SharedReferenceKeys.LAST_READ.getValue()))
+                        goLastRead();
                 }
+                RecyclerView recyclerView = ((RecyclerView) (binding.viewPager.getChildAt(0)));
+                if (recyclerView != null) recyclerView.setItemViewCacheSize(0);
                 if (getApplicationComponent().SharedPreferenceModel().getBoolData(RTL_PAGING.getValue()))
                     binding.viewPager.setRotationY(180);
             } catch (Exception e) {
+                e.printStackTrace();
                 new CustomToast().error(getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
             }
         });
     }
+    @Override
+    public void goLastRead() {
+        setAdapter();
+        int page = 0;
+        for (int i = 1; i < readingData.onOffLoadDtos.size(); i++) {
+//            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss:SSS");
+            if (readingData.onOffLoadDtos.get(page).phoneDateTime == null &&
+                    readingData.onOffLoadDtos.get(i).phoneDateTime != null) {
+                page = i;
+            } else if (readingData.onOffLoadDtos.get(page).phoneDateTime != null &&
+                    readingData.onOffLoadDtos.get(i).phoneDateTime != null &&
+                    readingData.onOffLoadDtos.get(i).phoneDateTime.compareTo(readingData.onOffLoadDtos.get(page).phoneDateTime) > 0
+//                    readingData.onOffLoadDtos.get(i).phoneDateTime > readingData.onOffLoadDtos.get(page).phoneDateTime
+            ) {
+                Log.e("first day", readingData.onOffLoadDtos.get(page).phoneDateTime);
+                Log.e("second day", readingData.onOffLoadDtos.get(i).phoneDateTime);
+                page = i;
+            }
+        }
+        binding.viewPager.setCurrentItem(page, false);
+    }
 
+    @Override
+    public void setAdapter() {
+        binding.viewPager.setAdapter(adapter);
+    }
     private void setOnPageChangeListener() {
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -332,7 +362,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 if (karbariDtos.get(binding.viewPager.getCurrentItem()).hasReadingVibrate)
-                    MakeNotification.makeVibrate(getApplicationContext());
+                    makeVibrate(getApplicationContext());
                 try {
                     FragmentManager manager = getSupportFragmentManager();
                     manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -367,20 +397,18 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 || sharedPreferenceManager.getBoolData(ADDRESS.getValue())
                 || sharedPreferenceManager.getBoolData(ACCOUNT.getValue())
                 || sharedPreferenceManager.getBoolData(READING_REPORT.getValue())
-                || (sharedPreferenceManager.getBoolData(GUILD.getValue()) &&
-                //TODO
-                Constants.karbariDtos.get(binding.viewPager.getCurrentItem()).isTejari)
-                || sharedPreferenceManager.getBoolData(MOBILE.getValue());
+                || sharedPreferenceManager.getBoolData(MOBILE.getValue())
+                || (sharedPreferenceManager.getBoolData(GUILD.getValue())
+                && Constants.karbariDtos.get(binding.viewPager.getCurrentItem()).isTejari);
     }
 
     private void attemptSend(int position, boolean isForm, boolean isImage) {
-        final CounterStateDto counterState = readingData.counterStateDtos.get(readingData
+        CounterStateDto counterState = readingData.counterStateDtos.get(readingData
                 .onOffLoadDtos.get(position).counterStatePosition);
         boolean hasImage = false;
         boolean reportHasImage = false;
         if (isImage) {
-            //TODO
-            final ArrayList<OffLoadReport> offLoadReports = new ArrayList<>(getApplicationComponent()
+            ArrayList<OffLoadReport> offLoadReports = new ArrayList<>(getApplicationComponent()
                     .MyDatabase().offLoadReportDao().getAllOffLoadReportById(
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                             readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber));
@@ -396,7 +424,6 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         if (isForm && shouldShowPossible()) {
             showPossible(position);
         } else if (hasImage) {
-            //TODO
             showImage(position, counterState.hasImage, reportHasImage);
         } else {
             if (!isShowing) {

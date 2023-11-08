@@ -5,6 +5,7 @@ public enum FragmentTags {
     KARBARI("KARBARI"),
     TAVIZ("TAVIZ"),
     AHAD("AHAD"),
+    LAST_READ("LAST_READ"),
     SEARCH("SEARCH"),
     NAVIGATION("NAVIGATION"),
     RESET("RESET"),

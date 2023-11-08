@@ -38,7 +38,7 @@ public class ChangeSortType extends AsyncTask<Activity, Void, Void> {
             Collections.sort(readingData.onOffLoadDtos, (o1, o2) -> o1.eshterak.compareTo(o2.eshterak));
             Collections.sort(readingDataTemp.onOffLoadDtos, (o1, o2) -> o1.eshterak.compareTo(o2.eshterak));
         }
-        ((ReadingActivity) (activities[0])).setupViewPager();
+        ((ReadingActivity) (activities[0])).setupViewPager(false);
         return null;
     }
 }

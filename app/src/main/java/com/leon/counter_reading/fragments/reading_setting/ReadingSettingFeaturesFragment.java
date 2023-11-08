@@ -3,8 +3,10 @@ package com.leon.counter_reading.fragments.reading_setting;
 import static com.leon.counter_reading.enums.ImageQuality.HIGH;
 import static com.leon.counter_reading.enums.ImageQuality.LOW;
 import static com.leon.counter_reading.enums.ImageQuality.MEDIUM;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.DONT_SHOW;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.IMAGE_QUALITY;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.KEYBOARD_TYPE;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.LAST_READ;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.RTL_PAGING;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_TEMPORARY;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
@@ -70,14 +72,22 @@ public class ReadingSettingFeaturesFragment extends Fragment {
     }
 
     private void initializeRadioGroup() {
+        initializeRadioGroupKeyboard();
+        initializeRadioGroupImage();
+        initializeRadioGroupPage();
+    }
+
+    private void initializeRadioGroupKeyboard() {
         if (getApplicationComponent().SharedPreferenceModel().getBoolData(KEYBOARD_TYPE.getValue()))
             binding.radioButtonSensitive.setChecked(true);
         else
             binding.radioButtonStandard.setChecked(true);
         binding.radioButtonSensitive.setOnCheckedChangeListener((compoundButton, b) ->
                 getApplicationComponent().SharedPreferenceModel().putData(KEYBOARD_TYPE.getValue(), b));
+    }
 
-        final int quality = getApplicationComponent().SharedPreferenceModel().getIntData(IMAGE_QUALITY.getValue());
+    private void initializeRadioGroupImage() {
+        int quality = getApplicationComponent().SharedPreferenceModel().getIntData(IMAGE_QUALITY.getValue());
         if (quality == HIGH.getValue()) {
             binding.radioButtonHigh.setChecked(true);
         } else if (quality == MEDIUM.getValue()) {
@@ -92,6 +102,28 @@ public class ReadingSettingFeaturesFragment extends Fragment {
                 getApplicationComponent().SharedPreferenceModel().putData(IMAGE_QUALITY.getValue(), MEDIUM.getValue());
             } else if (i == R.id.radio_button_low) {
                 getApplicationComponent().SharedPreferenceModel().putData(IMAGE_QUALITY.getValue(), LOW.getValue());
+            }
+        });
+    }
+
+    private void initializeRadioGroupPage() {
+        if (!getApplicationComponent().SharedPreferenceModel().getBoolData(DONT_SHOW.getValue())) {
+            binding.radioButtonAsk.setChecked(true);
+        } else if (getApplicationComponent().SharedPreferenceModel().getBoolData(LAST_READ.getValue())) {
+            binding.radioButtonLast.setChecked(true);
+        } else if (!getApplicationComponent().SharedPreferenceModel().getBoolData(LAST_READ.getValue())) {
+            binding.radioButtonStay.setChecked(true);
+        }
+        binding.radioGroupLastRead.setOnCheckedChangeListener((radioGroup, i) -> {
+            if (i == R.id.radio_button_ask) {
+                getApplicationComponent().SharedPreferenceModel().putData(LAST_READ.getValue(), false);
+                getApplicationComponent().SharedPreferenceModel().putData(DONT_SHOW.getValue(), false);
+            } else if (i == R.id.radio_button_last) {
+                getApplicationComponent().SharedPreferenceModel().putData(LAST_READ.getValue(), true);
+                getApplicationComponent().SharedPreferenceModel().putData(DONT_SHOW.getValue(), true);
+            } else if (i == R.id.radio_button_stay) {
+                getApplicationComponent().SharedPreferenceModel().putData(LAST_READ.getValue(), false);
+                getApplicationComponent().SharedPreferenceModel().putData(DONT_SHOW.getValue(), true);
             }
         });
     }

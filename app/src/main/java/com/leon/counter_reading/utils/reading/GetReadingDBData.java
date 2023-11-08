@@ -7,6 +7,7 @@ import static com.leon.counter_reading.enums.ReadStatusEnum.ALL_MANE_UNREAD;
 import static com.leon.counter_reading.enums.ReadStatusEnum.READ;
 import static com.leon.counter_reading.enums.ReadStatusEnum.STATE;
 import static com.leon.counter_reading.enums.ReadStatusEnum.UNREAD;
+import static com.leon.counter_reading.enums.SharedReferenceKeys.DONT_SHOW;
 import static com.leon.counter_reading.helpers.Constants.IS_MANE;
 import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.Constants.readingDataTemp;
@@ -64,7 +65,7 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
 
     @Override
     protected Integer doInBackground(Activity... activities) {
-        final MyDatabase myDatabase = getApplicationComponent().MyDatabase();
+        MyDatabase myDatabase = getApplicationComponent().MyDatabase();
         readingData.trackingDtos.addAll(myDatabase.trackingDao().
                 getTrackingDtosIsActiveNotArchive(true, false));
         for (int i = 0, trackingDtosSize = readingData.trackingDtos.size(); i < trackingDtosSize; i++) {
@@ -128,7 +129,7 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
                 Collections.sort(readingDataTemp.onOffLoadDtos, (o1, o2) -> o2.eshterak.compareTo(o1.eshterak));
             }
         }
-        ((ReadingActivity) (activities[0])).setupViewPager();
+        ((ReadingActivity) (activities[0])).setupViewPager(!getApplicationComponent().SharedPreferenceModel().getBoolData(DONT_SHOW.getValue()));
         return null;
     }
 }

@@ -27,7 +27,7 @@ public class Update extends AsyncTask<Activity, Void, Void> {
     @SuppressLint("SimpleDateFormat")
     @Override
     protected Void doInBackground(Activity... activities) {
-        final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss:SSS");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss:SSS");
 
         try {
             final Location location = getLocationTracker(activities[0]).getCurrentLocation();

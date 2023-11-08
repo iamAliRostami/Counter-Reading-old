@@ -4,9 +4,9 @@ import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.NotificationType.OTHER;
 import static com.leon.counter_reading.helpers.Constants.readingData;
-import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad1;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getAhad2;
+import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
 import android.os.Bundle;
@@ -27,7 +27,7 @@ public class AhadFragment extends DialogFragment {
     private String uuid;
     private int position;
 
-    public static AhadFragment newInstance(String uuid,int position) {
+    public static AhadFragment newInstance(String uuid, int position) {
         final AhadFragment fragment = new AhadFragment();
         final Bundle args = new Bundle();
         args.putString(BILL_ID.getValue(), uuid);
@@ -96,8 +96,8 @@ public class AhadFragment extends DialogFragment {
 
     @Override
     public void onResume() {
-        if (getDialog() != null) {
-            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+        if (getDialog() != null && getDialog().getWindow() != null) {
+            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);

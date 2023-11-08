@@ -320,4 +320,9 @@
     <string name="selected_report_number">تعداد {0} گزارش ثبت شد</string>
     <string name="error_illegal_time">زمان دسترسی مجاز به سامانه پایان یافته است</string>
     <string name="error_illegal_ip">IP شما در لیست مجاز قرار ندارد</string>
+    <string name="yes">بله</string>
+    <string name="wanna_go_last_read">آیا مایل به رفتن به آخرین اشتراک قرائت شده هستید؟</string>
+    <string name="always_ask">حالت پیشفرض</string>
+    <string name="always_last_page">همواره برو صفحه آخر</string>
+    <string name="stay_in_page">در صفحه اول بمان</string>
 </resources>

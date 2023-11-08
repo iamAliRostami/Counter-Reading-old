@@ -17,6 +17,8 @@
         android:src="@drawable/mode_light" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_toStartOf="@id/image_view_reverse"
+        android:layout_alignParentStart="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -24,7 +26,7 @@
         <CheckBox
             android:id="@+id/check_box_paging_rotation"
             style="@style/CheckBox.Possible"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:background="@drawable/border_blue_2"
             android:paddingStart="@dimen/large_dp"
             android:paddingEnd="@dimen/large_dp"
@@ -32,7 +34,7 @@
 
 
         <RadioGroup
-            android:id="@+id/radio_group_keyboard"
+            android:id="@+id/radio_group_last_read"
             style="@style/CheckBox.Possible"
             android:layout_width="match_parent"
             android:layout_below="@id/check_box_paging_rotation"
@@ -40,25 +42,32 @@
             android:paddingStart="@dimen/large_dp"
             android:paddingEnd="@dimen/large_dp">
 
-<!--            android:buttonTint="@color/gray"-->
             <RadioButton
-                android:id="@+id/radio_button_standard"
+                android:id="@+id/radio_button_ask"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/standard_keyboard"
+                android:text="@string/always_ask"
                 android:textColor="@color/text_color_light"
                 android:textSize="@dimen/text_size_medium" />
 
             <RadioButton
-                android:id="@+id/radio_button_sensitive"
+                android:id="@+id/radio_button_last"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/sensitive_keyboard"
+                android:text="@string/always_last_page"
                 android:textColor="@color/text_color_light"
                 android:textSize="@dimen/text_size_medium" />
 
+            <RadioButton
+                android:id="@+id/radio_button_stay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/stay_in_page"
+                android:textColor="@color/text_color_light"
+                android:textSize="@dimen/text_size_medium" />
         </RadioGroup>
 
         <RadioGroup
@@ -96,6 +105,36 @@
                 android:text="@string/low_quality"
                 android:textColor="@color/text_color_dark"
                 android:textSize="@dimen/text_size_medium" />
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/radio_group_keyboard"
+            style="@style/CheckBox.Possible"
+            android:layout_width="match_parent"
+            android:layout_below="@id/check_box_paging_rotation"
+            android:background="@drawable/border_blue_3"
+            android:paddingStart="@dimen/large_dp"
+            android:paddingEnd="@dimen/large_dp">
+
+            <!--            android:buttonTint="@color/gray"-->
+            <RadioButton
+                android:id="@+id/radio_button_standard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/standard_keyboard"
+                android:textColor="@color/text_color_light"
+                android:textSize="@dimen/text_size_medium" />
+
+            <RadioButton
+                android:id="@+id/radio_button_sensitive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/sensitive_keyboard"
+                android:textColor="@color/text_color_light"
+                android:textSize="@dimen/text_size_medium" />
+
         </RadioGroup>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </RelativeLayout>

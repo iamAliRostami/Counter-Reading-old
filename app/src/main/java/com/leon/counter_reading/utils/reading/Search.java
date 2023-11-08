@@ -66,7 +66,7 @@ public class Search extends AsyncTask<Activity, Void, Activity> {
             }
         }
         if (readingData.onOffLoadDtos.size() > 0)
-            ((ReadingActivity) (activity)).setupViewPager();
+            ((ReadingActivity) (activity)).setupViewPager(false);
         else {
             activity.runOnUiThread(() ->
                     new CustomToast().warning(activity.getString(R.string.data_not_found)));
@@ -84,7 +84,7 @@ public class Search extends AsyncTask<Activity, Void, Activity> {
                 readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(i));
         }
         if (readingData.onOffLoadDtos.size() > 0)
-            ((ReadingActivity) (activity)).setupViewPager();
+            ((ReadingActivity) (activity)).setupViewPager(false);
         else {
             activity.runOnUiThread(() ->
                     new CustomToast().warning(activity.getString(R.string.data_not_found)));
