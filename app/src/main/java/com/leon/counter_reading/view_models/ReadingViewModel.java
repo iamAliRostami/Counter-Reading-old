@@ -46,12 +46,10 @@ public class ReadingViewModel extends BaseObservable {
     private String preDate;
     private String serial;
     private String name;
-
     private String karbariTitle;
     private String sifoonQotr;
     private String qotr;
     private String radifOrBillId;
-
     private String counterNumber;
     private boolean shouldEnterNumber;
     private boolean canLessThanPre;
@@ -101,15 +99,12 @@ public class ReadingViewModel extends BaseObservable {
     public boolean switchDebtNumber() {
         if (isDebtOrNumber()) {
             setDebtOrNumber(!isDebtOrNumber());
-            //TODO
-//            setDebtNumber(getOnOffLoadDto().balance + " ریال");
             setDebtNumber(String.format("%,d", getOnOffLoadDto().balance) + " ریال");
             setCounterNumberColor(ContextCompat.getColor(getContext(), R.color.red));
         } else {
             if (getOnOffLoadDto().hasPreNumber) {
                 setDebtOrNumber(!isDebtOrNumber());
                 setDebtNumber(String.valueOf(getOnOffLoadDto().preNumber));
-
                 setCounterNumberColor(ContextCompat.getColor(getContext(),
                         getApplicationComponent().SharedPreferenceModel().getBoolData(THEME_TEMPORARY.getValue()) ?
                                 android.R.color.white : android.R.color.black));
@@ -126,10 +121,7 @@ public class ReadingViewModel extends BaseObservable {
         setAhadTotal(String.valueOf(getOnOffLoadDto().ahadSaierOrAbBaha));
         setAhad1(String.valueOf(getOnOffLoadDto().ahadTejariOrFari));
         setAhad2(String.valueOf(getOnOffLoadDto().ahadMaskooniOrAsli));
-        //TODO
-//        setDebtNumber(String.valueOf(getOnOffLoadDto().balance));
-//        setDebtNumber("5558889990 ریال");
-//        setDebtNumber(getOnOffLoadDto().balance + " ریال");
+
         setDebtNumber(String.format("%,d", getOnOffLoadDto().balance) + " ریال");
         setSerial(getOnOffLoadDto().counterSerial);
         setPreDate(getOnOffLoadDto().preDate);

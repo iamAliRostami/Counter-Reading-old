@@ -13,7 +13,7 @@
     <string name="audio_folder">/AbfaAudioRecord/</string>
     <string name="save_format_name">yyyyMMdd_HHmmss</string>
     <string name="save_format_name_melli">yyyyMMdd_HHmmss_SSS</string>
-    <string name="copy_right">شبکه تارنما سپاهان</string>
+    <string name="copy_right">هیوا پرداز اطلس</string>
     <string name="version">نسخه</string>
     <string name="username">نام کاربری</string>
     <string name="password">گذرواژه</string>
@@ -58,7 +58,7 @@
     <string name="app_setting">تنظیمات برنامه</string>
     <string name="exit">خروج</string>
     <string name="how_to_exit">جهت خروج، از فهرست، گزینه «خروج» را بزنید.</string>
-    <string name="team">شبکه تارنما سپاهان</string>
+    <string name="team">هیوا پرداز اطلس</string>
 
     <string name="sepehr_shamsaei">سپهر شمسایی</string>
     <string name="email">ایمیل</string>
@@ -323,6 +323,6 @@
     <string name="yes">بله</string>
     <string name="wanna_go_last_read">آیا مایل به رفتن به آخرین اشتراک قرائت شده هستید؟</string>
     <string name="always_ask">حالت پیشفرض</string>
-    <string name="always_last_page">همواره برو صفحه آخر</string>
+    <string name="always_last_page">همواره برو آخرین قرائت</string>
     <string name="stay_in_page">در صفحه اول بمان</string>
 </resources>

@@ -59,7 +59,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Debug;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -82,7 +81,6 @@ import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReadingBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.enums.FragmentTags;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.fragments.ReadingFragment;
 import com.leon.counter_reading.fragments.dialog.AhadFragment;
 import com.leon.counter_reading.fragments.dialog.AreYouSureFragment;
@@ -294,9 +292,11 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
             binding.viewPager.setVisibility(readingData.onOffLoadDtos.size() > 0 ?
                     View.VISIBLE : View.GONE);
             binding.viewPager.setPageTransformer(new DepthPageTransformer2());
-            setOnPageChangeListener();
         });
-        setupViewPagerAdapter(lastRead);
+        if (readingData.onOffLoadDtos.size() > 0) {
+            setOnPageChangeListener();
+            setupViewPagerAdapter(lastRead);
+        }
     }
 
     private void setupViewPagerAdapter(boolean lastRead) {
@@ -312,27 +312,22 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                     else setAdapter();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 new CustomToast().error(getContext().getString(R.string.error_download_data), Toast.LENGTH_LONG);
             }
         });
     }
+
     @Override
     public void goLastRead() {
         setAdapter();
         int page = 0;
         for (int i = 1; i < readingData.onOffLoadDtos.size(); i++) {
-//            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss:SSS");
             if (readingData.onOffLoadDtos.get(page).phoneDateTime == null &&
                     readingData.onOffLoadDtos.get(i).phoneDateTime != null) {
                 page = i;
             } else if (readingData.onOffLoadDtos.get(page).phoneDateTime != null &&
                     readingData.onOffLoadDtos.get(i).phoneDateTime != null &&
-                    readingData.onOffLoadDtos.get(i).phoneDateTime.compareTo(readingData.onOffLoadDtos.get(page).phoneDateTime) > 0
-//                    readingData.onOffLoadDtos.get(i).phoneDateTime > readingData.onOffLoadDtos.get(page).phoneDateTime
-            ) {
-                Log.e("first day", readingData.onOffLoadDtos.get(page).phoneDateTime);
-                Log.e("second day", readingData.onOffLoadDtos.get(i).phoneDateTime);
+                    readingData.onOffLoadDtos.get(i).phoneDateTime.compareTo(readingData.onOffLoadDtos.get(page).phoneDateTime) > 0) {
                 page = i;
             }
         }
@@ -347,6 +342,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         if (getApplicationComponent().SharedPreferenceModel().getBoolData(RTL_PAGING.getValue()))
             binding.viewPager.setRotationY(180);
     }
+
     private void setOnPageChangeListener() {
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -522,10 +518,10 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
 
     private void setOnImageViewsClickListener() {
         flashLightManager = getApplicationComponent().FlashViewModel();
-        final ImageView imageViewFlash = findViewById(R.id.image_view_flash);
-        final ImageView imageViewCamera = findViewById(R.id.image_view_camera);
-        final ImageView imageViewSearch = findViewById(R.id.image_view_search);
-        final ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
+        ImageView imageViewFlash = findViewById(R.id.image_view_flash);
+        ImageView imageViewCamera = findViewById(R.id.image_view_camera);
+        ImageView imageViewSearch = findViewById(R.id.image_view_search);
+        ImageView imageViewCheck = findViewById(R.id.image_view_reading_report);
         if (imageViewFlash != null && imageViewCamera != null && imageViewSearch != null && imageViewCheck != null) {
             imageViewFlash.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                     R.drawable.img_flash_off));
@@ -583,7 +579,6 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.reading_menu, menu);
-//        menu.getItem(7).setChecked(sharedPreferenceManager.getBoolData(SORT_TYPE.getValue()));
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -642,7 +637,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 showNoEshterakFound();
             } else {
                 intent = new Intent(this, DescriptionActivity.class);
-                final OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem());
+                OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem());
                 intent.putExtra(BILL_ID.getValue(), onOffLoadDtoTemp.id);
                 intent.putExtra(TRACKING.getValue(), onOffLoadDtoTemp.trackNumber);
                 intent.putExtra(DESCRIPTION.getValue(), onOffLoadDtoTemp.description);
@@ -688,7 +683,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA && resultCode == RESULT_OK) {
+        if (requestCode == CAMERA && resultCode == RESULT_OK && data.getExtras() != null) {
             int position = data.getExtras().getInt(POSITION.getValue());
             attemptSend(position, false, false);
         }
@@ -724,7 +719,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         super.onStop();
         try {
             flashLightManager.turnOff();
-            final ImageView imageViewFlash = findViewById(R.id.image_view_flash);
+            ImageView imageViewFlash = findViewById(R.id.image_view_flash);
             imageViewFlash.setImageDrawable(AppCompatResources.getDrawable(this,
                     R.drawable.img_flash_off));
         } catch (Exception e) {
