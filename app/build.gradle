@@ -2,8 +2,7 @@ plugins {
     id 'com.android.application'
 }
 android {
-    compileSdkVersion 34
-    buildToolsVersion '34.0.0'
+    compileSdk 34
     signingConfigs {
         config {
             keyAlias 'ali_angel'

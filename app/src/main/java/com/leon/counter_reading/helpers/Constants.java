@@ -62,6 +62,7 @@ public class Constants {
 
 
     public static long CURRENT_IMAGE_SIZE;
+    public static int CURRENT_QUALITY;
 
     public static int POSITION = -1;
 

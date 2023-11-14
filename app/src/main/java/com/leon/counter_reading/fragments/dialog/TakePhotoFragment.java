@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -205,9 +206,9 @@ public class TakePhotoFragment extends DialogFragment {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null &&
                         result.getData().getData() != null) {
                     try {
-                        final InputStream inputStream = requireContext().getContentResolver()
+                        InputStream inputStream = requireContext().getContentResolver()
                                 .openInputStream(result.getData().getData());
-                        final Image image = new Image();
+                        Image image = new Image();
                         image.address = saveTempBitmap(inputStream, requireContext());
                         prepareImage(image);
                     } catch (FileNotFoundException e) {
@@ -244,6 +245,7 @@ public class TakePhotoFragment extends DialogFragment {
         final Image image = new Image();
         try {
             image.address = saveTempBitmap(path, requireContext());
+            Log.e("size 4", String.valueOf(CURRENT_IMAGE_SIZE));
             image.size = CURRENT_IMAGE_SIZE;
             image.OnOffLoadId = uuid;
             image.trackNumber = trackNumber;

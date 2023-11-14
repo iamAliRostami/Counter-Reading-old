@@ -169,12 +169,12 @@ public class MyApplication extends Application {
     public static int getImageQuality() {
         final int quality = getApplicationComponent().SharedPreferenceModel().getIntData(IMAGE_QUALITY.getValue());
         if (quality == HIGH.getValue()) {
-            return 100000;
+            return 100;
         } else if (quality == MEDIUM.getValue()) {
-            return 75000;
+            return 75;
         } else if (quality == LOW.getValue()) {
-            return 50000;
+            return 50;
         }
-        return 100000;
+        return 100;
     }
 }
