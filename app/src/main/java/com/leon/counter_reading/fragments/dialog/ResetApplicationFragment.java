@@ -48,27 +48,31 @@ public class ResetApplicationFragment extends DialogFragment implements View.OnC
     }
 
     @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.button_yes) {
+            if (isAdded() && getContext() != null) {
+                PackageManager packageManager = requireActivity().getPackageManager();
+                Intent intent = packageManager.getLaunchIntentForPackage(getContext().getPackageName());
+                if (intent != null) {
+                    ComponentName componentName = intent.getComponent();
+                    Intent mainIntent = Intent.makeRestartActivityTask(componentName);
+                    startActivity(mainIntent);
+                    Runtime.getRuntime().exit(0);
+                }
+            }
+        }
+    }
+
+    @Override
     public void onResume() {
         if (getDialog() != null && getDialog().getWindow() != null) {
-            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
             params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
         super.onResume();
-    }
-
-    @Override
-    public void onClick(View v) {
-        final int id = v.getId();
-        if (id == R.id.button_yes) {
-            PackageManager packageManager = requireActivity().getPackageManager();
-            Intent intent = packageManager.getLaunchIntentForPackage(requireActivity().getPackageName());
-            ComponentName componentName = intent.getComponent();
-            Intent mainIntent = Intent.makeRestartActivityTask(componentName);
-            startActivity(mainIntent);
-            Runtime.getRuntime().exit(0);
-        }
     }
 }

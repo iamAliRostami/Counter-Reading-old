@@ -55,8 +55,8 @@ public class ReportForbidFragment extends DialogFragment implements TextWatcher,
     private final ActivityResultLauncher<Intent> galleryResultLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                     result -> {
-                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null &&
-                                result.getData().getData() != null) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null
+                                && result.getData().getData() != null) {
                             try {
                                 if (isAdded() && getContext() != null) {
                                     InputStream inputStream = getContext().getContentResolver()
@@ -212,26 +212,27 @@ public class ReportForbidFragment extends DialogFragment implements TextWatcher,
 
     private void sendForbid() {
         double latitude = 0, longitude = 0, accuracy = 0;
-        try {
-            if (getLocationTracker(requireActivity()).getCurrentLocation() != null) {
-                Location location = getLocationTracker(requireActivity()).getCurrentLocation();
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-                accuracy = location.getAccuracy();
-            }
-            forbiddenDto.prepareToSend(accuracy, longitude, latitude,
-                    binding.editTextPostalCode.getText().toString(),
-                    binding.editTextDescription.getText().toString(),
-                    binding.editTextPreAccount.getText().toString(),
-                    binding.editTextNextAccount.getText().toString(),
-                    getDigits(binding.editTextAhadNumber.getText().toString()),
-                    zoneId, binding.radioButtonActivate.isChecked());
-            if (isAdded() && getContext() != null)
+        if (isAdded() && getContext() != null) {
+            try {
+                if (getLocationTracker(requireActivity()).getCurrentLocation() != null) {
+                    Location location = getLocationTracker(requireActivity()).getCurrentLocation();
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                    accuracy = location.getAccuracy();
+                }
+                forbiddenDto.prepareToSend(accuracy, longitude, latitude,
+                        binding.editTextPostalCode.getText().toString(),
+                        binding.editTextDescription.getText().toString(),
+                        binding.editTextPreAccount.getText().toString(),
+                        binding.editTextNextAccount.getText().toString(),
+                        getDigits(binding.editTextAhadNumber.getText().toString()),
+                        zoneId, binding.radioButtonActivate.isChecked());
                 new PrepareForbid(getContext(), forbiddenDto, zoneId).execute(requireActivity());
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
+            dismiss();
         }
-        dismiss();
     }
 
     private void pickImage() {

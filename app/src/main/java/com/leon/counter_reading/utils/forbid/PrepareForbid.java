@@ -40,11 +40,21 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
 
     @Override
     protected Activity doInBackground(Activity... activities) {
-        final Retrofit retrofit = getApplicationComponent().Retrofit();
-        final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-        final Call<ForbiddenDtoResponses> call;
+        Retrofit retrofit = getApplicationComponent().Retrofit();
+        IAbfaService abfaService = retrofit.create(IAbfaService.class);
+        Call<ForbiddenDtoResponses> call = getCall(abfaService);
+        activities[0].runOnUiThread(() -> {
+            customProgressModel.getDialog().dismiss();
+            HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activities[0],
+                    new Forbidden(activities[0], forbiddenDto), new ForbiddenIncomplete(activities[0]),
+                    new ForbiddenError(activities[0]));
+        });
+        return null;
+    }
+
+    private Call<ForbiddenDtoResponses> getCall(IAbfaService abfaService) {
         if (zoneId != 0 && forbiddenDto.File.size() > 0) {
-            call = iAbfaService.singleForbidden(forbiddenDto.File,
+            return abfaService.singleForbidden(forbiddenDto.File,
                     forbiddenDto.forbiddenDtoRequest.zoneId,
                     forbiddenDto.forbiddenDtoRequest.description,
                     forbiddenDto.forbiddenDtoRequest.preEshterak,
@@ -56,7 +66,7 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
                     forbiddenDto.forbiddenDtoRequest.y,
                     forbiddenDto.forbiddenDtoRequest.gisAccuracy);
         } else if (zoneId == 0 && forbiddenDto.File.size() > 0) {
-            call = iAbfaService.singleForbidden(forbiddenDto.File,
+            return abfaService.singleForbidden(forbiddenDto.File,
                     forbiddenDto.forbiddenDtoRequest.description,
                     forbiddenDto.forbiddenDtoRequest.preEshterak,
                     forbiddenDto.forbiddenDtoRequest.nextEshterak,
@@ -67,7 +77,7 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
                     forbiddenDto.forbiddenDtoRequest.y,
                     forbiddenDto.forbiddenDtoRequest.gisAccuracy);
         } else if (zoneId != 0) {
-            call = iAbfaService.singleForbidden(forbiddenDto.forbiddenDtoRequest.zoneId,
+            return abfaService.singleForbidden(forbiddenDto.forbiddenDtoRequest.zoneId,
                     forbiddenDto.forbiddenDtoRequest.description,
                     forbiddenDto.forbiddenDtoRequest.preEshterak,
                     forbiddenDto.forbiddenDtoRequest.nextEshterak,
@@ -78,7 +88,7 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
                     forbiddenDto.forbiddenDtoRequest.y,
                     forbiddenDto.forbiddenDtoRequest.gisAccuracy);
         } else {
-            call = iAbfaService.singleForbidden(forbiddenDto.forbiddenDtoRequest.description,
+            return abfaService.singleForbidden(forbiddenDto.forbiddenDtoRequest.description,
                     forbiddenDto.forbiddenDtoRequest.preEshterak,
                     forbiddenDto.forbiddenDtoRequest.nextEshterak,
                     forbiddenDto.forbiddenDtoRequest.postalCode,
@@ -88,13 +98,6 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
                     forbiddenDto.forbiddenDtoRequest.y,
                     forbiddenDto.forbiddenDtoRequest.gisAccuracy);
         }
-        activities[0].runOnUiThread(() -> {
-            customProgressModel.getDialog().dismiss();
-            HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activities[0],
-                    new Forbidden(activities[0], forbiddenDto), new ForbiddenIncomplete(activities[0]),
-                    new ForbiddenError(activities[0]));
-        });
-        return null;
     }
 
     @Override

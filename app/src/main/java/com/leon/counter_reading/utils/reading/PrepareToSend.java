@@ -70,12 +70,7 @@ public class PrepareToSend extends AsyncTask<Activity, Integer, Integer> {
 
 }
 
-class offLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
-    private final Activity activity;
-
-    public offLoadData(Activity activity) {
-        this.activity = activity;
-    }
+record offLoadData(Activity activity) implements ICallback<OnOffLoadDto.OffLoadResponses> {
 
     @Override
     public void execute(Response<OnOffLoadDto.OffLoadResponses> response) {
@@ -99,12 +94,8 @@ class offLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
 }
 
 
-class offLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadResponses> {
-    final Activity activity;
-
-    public offLoadDataIncomplete(Activity activity) {
-        this.activity = activity;
-    }
+record offLoadDataIncomplete(Activity activity)
+        implements ICallbackIncomplete<OnOffLoadDto.OffLoadResponses> {
 
     @Override
     public void executeIncomplete(Response<OnOffLoadDto.OffLoadResponses> response) {
@@ -130,19 +121,13 @@ class offLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadR
     }
 }
 
-class offLoadError implements ICallbackError {
-    final Activity activity;
-
-    public offLoadError(Activity activity) {
-        this.activity = activity;
-    }
+record offLoadError(Activity activity) implements ICallbackError {
 
     @Override
     public void executeError(Throwable t) {
         if (publicErrorCounter < getShowError()) {
             try {
-                final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
-                final String error = errorHandling.getErrorMessageTotal(t);
+                String error = new CustomErrorHandling(getContext()).getErrorMessageTotal(t);
                 new CustomToast().error(error);
             } catch (Exception e) {
                 activity.runOnUiThread(() -> new CustomDialogModel(Red,
