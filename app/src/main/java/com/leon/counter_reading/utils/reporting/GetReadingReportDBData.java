@@ -3,6 +3,7 @@ package com.leon.counter_reading.utils.reporting;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
@@ -18,10 +19,10 @@ public class GetReadingReportDBData extends AsyncTask<Activity, Integer, Integer
     private final int zoneId;
     private final CustomProgressModel progress;
 
-    public GetReadingReportDBData(Activity activity, int trackNumber, int zoneId, String uuid) {
+    public GetReadingReportDBData(Context context, int trackNumber, int zoneId, String uuid) {
         super();
         progress = getApplicationComponent().CustomProgressModel();
-        progress.show(activity, false);
+        progress.show(context, false);
         this.trackNumber = trackNumber;
         this.zoneId = zoneId;
         this.uuid = uuid;

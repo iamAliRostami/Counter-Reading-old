@@ -56,7 +56,9 @@ public class TaviziFragment extends DialogFragment {
     }
 
     void initialize() {
-        makeRing(requireContext(), OTHER);
+        if (isAdded() && getContext() != null) {
+            makeRing(getContext(), OTHER);
+        }
         setOnButtonsClickListener();
     }
 

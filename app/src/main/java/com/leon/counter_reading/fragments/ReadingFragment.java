@@ -109,12 +109,8 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
             readingVM.setReadingConfigDefaultDto(readingConfigDefaultDtos.get(readingVM.getPosition()));
             readingVM.setKarbariDto(karbariDtos.get(readingVM.getPosition()));
             readingVM.setOnOffLoadDto(onOffLoadDtos.get(readingVM.getPosition()));
-//            readingVM.setPosition(readingActivity.getPosition());
-//            readingVM.setReadingConfigDefaultDto(readingActivity.getReadingConfigDefaultDto(readingVM.getPosition()));
-//            readingVM.setKarbariDto(readingActivity.getKarbariDto(readingVM.getPosition()));
-//            readingVM.setOnOffLoadDto(readingActivity.getOnOffLoad(readingVM.getPosition()));
         } catch (Exception e) {
-            final Intent intent = requireActivity().getIntent();
+            Intent intent = requireActivity().getIntent();
             requireActivity().finish();
             startActivity(intent);
         }
@@ -131,14 +127,6 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
 
     private ReadingFragment(int position) {
         readingVM.setPosition(position);
-//TODO
-//        this.onOffLoadDto = Constants.onOffLoadDtos.get(position);
-//        this.readingConfigDefaultDto = Constants.readingConfigDefaultDtos.get(position);
-//        this.karbariDto = Constants.karbariDtos.get(position);
-//        Log.e("position", String.valueOf(position));
-//        readingVM.setReadingConfigDefaultDto(readingActivity.getReadingConfigDefaultDto(readingVM.getPosition()));
-//        readingVM.setKarbariDto(readingActivity.getKarbariDto(readingVM.getPosition()));
-//        readingVM.setOnOffLoadDto(readingActivity.getOnOffLoad(readingVM.getPosition()));
         readingVM.setReadingConfigDefaultDto(readingConfigDefaultDtos.get(position));
         readingVM.setKarbariDto(karbariDtos.get(position));
         readingVM.setOnOffLoadDto(onOffLoadDtos.get(position));
@@ -153,15 +141,6 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
                              Bundle savedInstanceState) {
         if (savedInstanceState != null) savedInstanceState.clear();
         binding = FragmentReadingBinding.inflate(inflater, container, false);
-//TODO
-//        readingVM.setPosition(readingActivity.getPosition());
-//        readingVM.setReadingConfigDefaultDto(readingActivity.getReadingConfigDefaultDto(readingVM.getPosition()));
-//        readingVM.setKarbariDto(readingActivity.getKarbariDto(readingVM.getPosition()));
-//        readingVM.setOnOffLoadDto(readingActivity.getOnOffLoad(readingVM.getPosition()));
-//        Log.e("position", String.valueOf(readingActivity.getPosition()));
-//        Log.e("name", readingActivity.getOnOffLoad(readingActivity.getPosition()).firstName.concat(readingActivity.getOnOffLoad(readingActivity.getPosition()).sureName));
-//        Log.e("position", String.valueOf(readingVM.getPosition()));
-//        Log.e("name", readingVM.getOnOffLoadDto().firstName.concat(readingVM.getOnOffLoadDto().sureName));
         try {
             ILocationTracking tracking = getLocationTracker(requireActivity()) != null ? getLocationTracker(requireActivity()) : null;
             if (tracking != null)

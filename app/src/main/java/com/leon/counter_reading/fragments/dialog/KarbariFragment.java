@@ -2,6 +2,7 @@ package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
 import static com.leon.counter_reading.enums.BundleEnum.POSITION;
+import static com.leon.counter_reading.enums.NotificationType.OTHER;
 import static com.leon.counter_reading.helpers.Constants.readingData;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
@@ -14,24 +15,24 @@ import android.view.WindowManager;
 
 import androidx.fragment.app.DialogFragment;
 
+import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.SpinnerAdapter;
 import com.leon.counter_reading.databinding.FragmentKarbariBinding;
-import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.tables.KarbariDto;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class KarbariFragment extends DialogFragment {
+public class KarbariFragment extends DialogFragment implements View.OnClickListener {
     private ArrayList<KarbariDto> karbariDtos;
     private FragmentKarbariBinding binding;
     private String uuid;
     private int position;
 
-    public static KarbariFragment newInstance(String uuid,int position) {
-        final KarbariFragment fragment = new KarbariFragment();
-        final Bundle args = new Bundle();
+    public static KarbariFragment newInstance(String uuid, int position) {
+        KarbariFragment fragment = new KarbariFragment();
+        Bundle args = new Bundle();
         args.putString(BILL_ID.getValue(), uuid);
         args.putInt(POSITION.getValue(), position);
         fragment.setArguments(args);
@@ -58,9 +59,12 @@ public class KarbariFragment extends DialogFragment {
     }
 
     private void initialize() {
-        makeRing(requireContext(), NotificationType.OTHER);
+        if (isAdded() && getContext() != null) {
+            makeRing(getContext(), OTHER);
+        }
         initializeSpinner();
-        setOnButtonClickListener();
+        binding.buttonClose.setOnClickListener(this);
+        binding.buttonSubmit.setOnClickListener(this);
     }
 
     private void initializeSpinner() {
@@ -69,26 +73,30 @@ public class KarbariFragment extends DialogFragment {
         String[] items = new String[karbariDtos.size()];
         for (int i = 0; i < karbariDtos.size(); i++)
             items[i] = (karbariDtos.get(i).title);
-        final SpinnerAdapter spinnerAdapter = new SpinnerAdapter(requireActivity(), items);
-        binding.spinner.setAdapter(spinnerAdapter);
+
+        if (isAdded() && getContext() != null) {
+            SpinnerAdapter spinnerAdapter = new SpinnerAdapter(getContext(), items);
+            binding.spinner.setAdapter(spinnerAdapter);
+        }
     }
 
-    private void setOnButtonClickListener() {
-        binding.buttonClose.setOnClickListener(v -> dismiss());
-        binding.buttonSubmit.setOnClickListener(v -> {
-            int id = karbariDtos.get(binding.spinner.getSelectedItemPosition()).moshtarakinId;
-            //TODO
-            readingData.onOffLoadDtos.get(position).possibleKarbariCode = id;
-            getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(uuid, id/*
-                    karbariDtos.get(binding.spinner.getSelectedItemPosition()).moshtarakinId*/);
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.button_submit) {
+            int moshtarakinId = karbariDtos.get(binding.spinner.getSelectedItemPosition()).moshtarakinId;
+            readingData.onOffLoadDtos.get(position).possibleKarbariCode = moshtarakinId;
+            getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(uuid, moshtarakinId);
             dismiss();
-        });
+        } else if (id == R.id.button_close) {
+            dismiss();
+        }
     }
 
     @Override
     public void onResume() {
-        if (getDialog() != null) {
-            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+        if (getDialog() != null && getDialog().getWindow() != null) {
+            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);

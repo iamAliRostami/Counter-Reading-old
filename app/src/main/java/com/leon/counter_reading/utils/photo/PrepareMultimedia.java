@@ -43,12 +43,12 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
     private final String description, tag;
     private final boolean result;
 
-    public PrepareMultimedia(Activity activity, ArrayList<Image> images, String description,
+    public PrepareMultimedia(Context context, ArrayList<Image> images, String description,
                              String tag, boolean result) {
         super();
         this.tag = tag;
         progress = getApplicationComponent().CustomProgressModel();
-        progress.show(activity, false);
+        progress.show(context, false);
         this.description = description;
         this.result = result;
         this.images = images;

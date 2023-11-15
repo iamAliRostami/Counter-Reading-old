@@ -80,30 +80,50 @@ public class ReadingReportFragment extends DialogFragment implements View.OnClic
     }
 
     private void initialize() {
-        new GetReadingReportDBData(requireActivity(), trackNumber, zoneId, uuid).execute(requireActivity());
-        binding.listViewReports.addOnItemTouchListener(new RecyclerItemClickListener(requireContext(),
-                binding.listViewReports, this));
+        if (isAdded() && getContext() != null) {
+            try {
+                new GetReadingReportDBData(getContext(), trackNumber, zoneId, uuid).execute(requireActivity());
+                binding.listViewReports.addOnItemTouchListener(new RecyclerItemClickListener(getContext(),
+                        binding.listViewReports, this));
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
+        }
         binding.buttonSubmit.setOnClickListener(this);
     }
 
     public void setupRecyclerView(ArrayList<CounterReportDto> counterReportDtos,
                                   ArrayList<OffLoadReport> offLoadReports) {
-        adapter = new ReadingReportAdapter(requireContext(), uuid, trackNumber, position, counterReportDtos, offLoadReports);
-        binding.listViewReports.setAdapter(adapter);
-        binding.listViewReports.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.buttonSubmit.setText(MessageFormat.format(getString(R.string.submit_count), adapter.selectedCount()));
+        if (isAdded() && getContext() != null) {
+            try {
+                adapter = new ReadingReportAdapter(getContext(), uuid, trackNumber, position,
+                        counterReportDtos, offLoadReports);
+                binding.listViewReports.setAdapter(adapter);
+                binding.listViewReports.setLayoutManager(new LinearLayoutManager(requireContext()));
+                binding.buttonSubmit.setText(MessageFormat.format(getString(R.string.submit_count),
+                        adapter.selectedCount()));
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.button_submit) {
-            makeVibrate(requireContext(), 200);
-            String message = MessageFormat.format(getString(R.string.selected_report_number),
-                    adapter.selectedCount());
-            new CustomToast().info(message);
-            dismiss();
-            readingActivity.setResult(position, uuid);
+            if (isAdded() && getContext() != null) {
+                try {
+                    makeVibrate(getContext(), 200);
+                    String message = MessageFormat.format(getString(R.string.selected_report_number),
+                            adapter.selectedCount());
+                    new CustomToast().info(message);
+                    dismiss();
+                    readingActivity.setResult(position, uuid);
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

@@ -22,7 +22,7 @@ import com.leon.counter_reading.databinding.FragmentAhadBinding;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AhadFragment extends DialogFragment {
+public class AhadFragment extends DialogFragment implements View.OnClickListener {
     private FragmentAhadBinding binding;
     private String uuid;
     private int position;
@@ -56,42 +56,52 @@ public class AhadFragment extends DialogFragment {
     }
 
     private void initialize() {
-        makeRing(requireContext(), OTHER);
-        setOnButtonClickListener();
+        if (isAdded() && getContext() != null) {
+            makeRing(getContext(), OTHER);
+        }
+        binding.buttonClose.setOnClickListener(this);
+        binding.buttonSubmit.setOnClickListener(this);
         binding.editTextAhad1.setHint(getAhad1());
         binding.editTextAhad2.setHint(getAhad2());
     }
 
-    private void setOnButtonClickListener() {
-        binding.buttonClose.setOnClickListener(v -> dismiss());
-        binding.buttonSubmit.setOnClickListener(v -> {
-            int asli = 0, fari = 0;
-            boolean cancel = false;
-            if (binding.editTextAhad1.getText().toString().isEmpty() &&
-                    binding.editTextAhad2.getText().toString().isEmpty()) {
-                binding.editTextAhad2.setError(getString(R.string.error_empty));
-                binding.editTextAhad2.setError(getString(R.string.error_empty));
-                View view = binding.editTextAhad1;
-                view.requestFocus();
-                cancel = true;
-            } else if (!binding.editTextAhad1.getText().toString().isEmpty() &&
-                    !binding.editTextAhad2.getText().toString().isEmpty()) {
-                asli = Integer.parseInt(binding.editTextAhad1.getText().toString());
-                fari = Integer.parseInt(binding.editTextAhad2.getText().toString());
-            } else {
-                if (!binding.editTextAhad1.getText().toString().isEmpty()) {
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.button_submit) {
+            if (checkInputs()) {
+                int asli = 0, fari = 0;
+                if (!binding.editTextAhad1.getText().toString().isEmpty() &&
+                        !binding.editTextAhad2.getText().toString().isEmpty()) {
                     asli = Integer.parseInt(binding.editTextAhad1.getText().toString());
-                } else if (!binding.editTextAhad2.getText().toString().isEmpty()) {
                     fari = Integer.parseInt(binding.editTextAhad2.getText().toString());
+                } else {
+                    if (!binding.editTextAhad1.getText().toString().isEmpty()) {
+                        asli = Integer.parseInt(binding.editTextAhad1.getText().toString());
+                    } else if (!binding.editTextAhad2.getText().toString().isEmpty()) {
+                        fari = Integer.parseInt(binding.editTextAhad2.getText().toString());
+                    }
                 }
-            }
-            if (!cancel) {
                 readingData.onOffLoadDtos.get(position).possibleAhadTejariOrFari = fari;
                 readingData.onOffLoadDtos.get(position).possibleAhadMaskooniOrAsli = asli;
                 getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(asli, fari, uuid);
                 dismiss();
             }
-        });
+
+        } else if (id == R.id.button_close) {
+            dismiss();
+        }
+    }
+
+    private boolean checkInputs() {
+        if (binding.editTextAhad1.getText().toString().isEmpty() &&
+                binding.editTextAhad2.getText().toString().isEmpty()) {
+            binding.editTextAhad2.setError(getString(R.string.error_empty));
+            binding.editTextAhad2.setError(getString(R.string.error_empty));
+            binding.editTextAhad1.requestFocus();
+            return false;
+        }
+        return true;
     }
 
     @Override

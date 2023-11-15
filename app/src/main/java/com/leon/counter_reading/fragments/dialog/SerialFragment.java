@@ -54,7 +54,9 @@ public class SerialFragment extends DialogFragment implements View.OnClickListen
     }
 
     private void initialize() {
-        makeRing(getContext(), OTHER);
+        if (isAdded() && getContext() != null) {
+            makeRing(getContext(), OTHER);
+        }
         binding.buttonClose.setOnClickListener(this);
         binding.buttonSubmit.setOnClickListener(this);
     }
@@ -86,8 +88,8 @@ public class SerialFragment extends DialogFragment implements View.OnClickListen
 
     @Override
     public void onResume() {
-        if (getDialog() != null) {
-            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+        if (getDialog() != null && getDialog().getWindow() != null) {
+            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);

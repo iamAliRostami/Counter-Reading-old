@@ -20,11 +20,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -48,7 +48,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class TakePhotoFragment extends DialogFragment {
+public class TakePhotoFragment extends DialogFragment implements AdapterView.OnItemClickListener,
+        AdapterView.OnItemLongClickListener, View.OnClickListener {
     private final ArrayList<Image> images = new ArrayList<>();
     private FragmentTakePhotoBinding binding;
     private ImageViewAdapter imageViewAdapter;
@@ -64,8 +65,8 @@ public class TakePhotoFragment extends DialogFragment {
     public static TakePhotoFragment newInstance(boolean sent, String uuid, int trackingNumber,
                                                 int position, boolean image, boolean counterHasImage,
                                                 boolean reportHasImage) {
-        final TakePhotoFragment fragment = newInstance(sent, uuid, trackingNumber);
-        final Bundle args;
+        TakePhotoFragment fragment = newInstance(sent, uuid, trackingNumber);
+        Bundle args;
         if (fragment.getArguments() != null)
             args = fragment.getArguments();
         else args = new Bundle();
@@ -79,8 +80,8 @@ public class TakePhotoFragment extends DialogFragment {
     }
 
     public static TakePhotoFragment newInstance(boolean sent, String uuid, int trackingNumber) {
-        final TakePhotoFragment fragment = new TakePhotoFragment();
-        final Bundle args = new Bundle();
+        TakePhotoFragment fragment = new TakePhotoFragment();
+        Bundle args = new Bundle();
         args.putBoolean(SENT.getValue(), sent);
         args.putString(BILL_ID.getValue(), uuid);
         args.putInt(TRACKING.getValue(), trackingNumber);
@@ -121,35 +122,38 @@ public class TakePhotoFragment extends DialogFragment {
         }
         if (gallerySelector())
             binding.checkBoxGallery.setVisibility(View.GONE);
-        imageSetup();
-        setOnButtonSendClickListener();
+        imageGridViewSetup();
+        binding.buttonSaveSend.setOnClickListener(this);
     }
 
-    private void imageSetup() {
+    private void imageGridViewSetup() {
         images.clear();
         if (!result) {
             images.addAll(getApplicationComponent().MyDatabase().imageDao().getImagesByOnOffLoadId(uuid));
         }
-        imageViewAdapter = new ImageViewAdapter(requireContext(), images);
-        binding.gridViewImage.setAdapter(imageViewAdapter);
-        binding.gridViewImage.setOnItemClickListener((adapterView, view, i, l) -> {
-            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
-            lastClickTime = SystemClock.elapsedRealtime();
-            replace = imageViewAdapter.setReplace(i);
-            if (replace >= 0)
-                openResourceForResult();
-        });
-        binding.gridViewImage.setOnItemLongClickListener((adapterView, view, i, l) -> {
-            imageViewAdapter.showImageHighQuality(i);
-            return true;
-        });
+        if (isAdded() && getContext() != null) {
+            imageViewAdapter = new ImageViewAdapter(getContext(), images);
+            binding.gridViewImage.setAdapter(imageViewAdapter);
+        }
+        binding.gridViewImage.setOnItemClickListener(this);
+        binding.gridViewImage.setOnItemLongClickListener(this);
     }
 
-    private void setOnButtonSendClickListener() {
-        binding.buttonSaveSend.setOnClickListener(v -> {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
+        lastClickTime = SystemClock.elapsedRealtime();
+        replace = imageViewAdapter.setReplace(position);
+        if (replace >= 0)
+            openResourceForResult();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.button_save_send) {
             if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
             lastClickTime = SystemClock.elapsedRealtime();
-            //TODO
             if (images.size() == 0) {
                 if (counterHasImage)
                     new CustomToast().error("در این وضعیت کنتور الصاق عکس الزامی است.", Toast.LENGTH_LONG);
@@ -158,9 +162,21 @@ public class TakePhotoFragment extends DialogFragment {
                 if (counterHasImage || reportHasImage)
                     return;
             }
-            new PrepareMultimedia(requireActivity(), images, binding.editTextDescription.getText().toString(),
-                    getTag(), result).execute(requireActivity());
-        });
+            if (isAdded() && getContext() != null) {
+                try {
+                    new PrepareMultimedia(getContext(), images, binding.editTextDescription.getText().toString(),
+                            getTag(), result).execute(requireActivity());
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        imageViewAdapter.showImageHighQuality(position);
+        return true;
     }
 
     private void openResourceForResult() {
@@ -170,7 +186,7 @@ public class TakePhotoFragment extends DialogFragment {
     }
 
     private void openGalleryForResult() {
-        final Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
         galleryResultLauncher.launch(galleryIntent);
     }
@@ -206,11 +222,13 @@ public class TakePhotoFragment extends DialogFragment {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null &&
                         result.getData().getData() != null) {
                     try {
-                        InputStream inputStream = requireContext().getContentResolver()
-                                .openInputStream(result.getData().getData());
-                        Image image = new Image();
-                        image.address = saveTempBitmap(inputStream, requireContext());
-                        prepareImage(image);
+                        if (isAdded() && getContext() != null) {
+                            InputStream inputStream = getContext().getContentResolver()
+                                    .openInputStream(result.getData().getData());
+                            Image image = new Image();
+                            image.address = saveTempBitmap(inputStream, getContext());
+                            prepareImage(image);
+                        }
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -244,15 +262,16 @@ public class TakePhotoFragment extends DialogFragment {
     private void prepareImage() {
         final Image image = new Image();
         try {
-            image.address = saveTempBitmap(path, requireContext());
-            Log.e("size 4", String.valueOf(CURRENT_IMAGE_SIZE));
-            image.size = CURRENT_IMAGE_SIZE;
-            image.OnOffLoadId = uuid;
-            image.trackNumber = trackNumber;
-            if (replace > 0) {
-                getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
-                images.set(replace - 1, image);
-            } else images.add(image);
+            if (isAdded() && getContext() != null) {
+                image.address = saveTempBitmap(path, getContext());
+                image.size = CURRENT_IMAGE_SIZE;
+                image.OnOffLoadId = uuid;
+                image.trackNumber = trackNumber;
+                if (replace > 0) {
+                    getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
+                    images.set(replace - 1, image);
+                } else images.add(image);
+            }
         } catch (Exception e) {
             new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
         }
