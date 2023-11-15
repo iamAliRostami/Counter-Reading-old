@@ -6,6 +6,7 @@ import static com.leon.counter_reading.helpers.MyApplication.getApplicationCompo
 import static com.leon.counter_reading.utils.CustomFile.saveTempBitmap;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
@@ -29,10 +30,10 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
     private final ForbiddenDto forbiddenDto;
     private final int zoneId;
 
-    public PrepareForbid(Activity activity, ForbiddenDto forbiddenDto, int zoneId) {
+    public PrepareForbid(Context context, ForbiddenDto forbiddenDto, int zoneId) {
         super();
         customProgressModel = getApplicationComponent().CustomProgressModel();
-        customProgressModel.show(activity, false);
+        customProgressModel.show(context, false);
         this.forbiddenDto = forbiddenDto;
         this.zoneId = zoneId;
     }

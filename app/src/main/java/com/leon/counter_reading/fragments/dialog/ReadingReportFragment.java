@@ -32,8 +32,7 @@ import com.leon.counter_reading.utils.reporting.GetReadingReportDBData;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
-public class ReadingReportFragment extends DialogFragment {
-    //    private ArrayList<OffLoadReport> offLoadReports;
+public class ReadingReportFragment extends DialogFragment implements View.OnClickListener, RecyclerItemClickListener.OnItemClickListener {
     private ReadingReportAdapter adapter;
     private static ReadingReportFragment instance;
     private FragmentReadingReportBinding binding;
@@ -81,43 +80,43 @@ public class ReadingReportFragment extends DialogFragment {
     }
 
     private void initialize() {
-//        makeVibrate(requireContext(), 200);
         new GetReadingReportDBData(requireActivity(), trackNumber, zoneId, uuid).execute(requireActivity());
-        onItemClickListener();
-        binding.buttonSubmit.setOnClickListener(v -> {
-            makeVibrate(requireContext(), 200);
-            String message = MessageFormat.format(getString(R.string.selected_report_number), adapter.selectedCount());
-            new CustomToast().info(message);
-            dismiss();
-            readingActivity.setResult(position, uuid);
-        });
-    }
-
-    private void onItemClickListener() {
         binding.listViewReports.addOnItemTouchListener(new RecyclerItemClickListener(requireContext(),
-                binding.listViewReports, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-//                makeVibrate(requireContext(), 100);
-                adapter.update(position);
-                binding.buttonSubmit.setText(MessageFormat.format(getString(R.string.submit_count), adapter.selectedCount()));
-            }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-
-            }
-        }));
+                binding.listViewReports, this));
+        binding.buttonSubmit.setOnClickListener(this);
     }
 
     public void setupRecyclerView(ArrayList<CounterReportDto> counterReportDtos,
                                   ArrayList<OffLoadReport> offLoadReports) {
         adapter = new ReadingReportAdapter(requireContext(), uuid, trackNumber, position, counterReportDtos, offLoadReports);
-        requireActivity().runOnUiThread(() -> {
-            binding.listViewReports.setAdapter(adapter);
-            binding.listViewReports.setLayoutManager(new LinearLayoutManager(requireContext()));
-            binding.buttonSubmit.setText(MessageFormat.format(getString(R.string.submit_count), adapter.selectedCount()));
-        });
+        binding.listViewReports.setAdapter(adapter);
+        binding.listViewReports.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.buttonSubmit.setText(MessageFormat.format(getString(R.string.submit_count), adapter.selectedCount()));
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.button_submit) {
+            makeVibrate(requireContext(), 200);
+            String message = MessageFormat.format(getString(R.string.selected_report_number),
+                    adapter.selectedCount());
+            new CustomToast().info(message);
+            dismiss();
+            readingActivity.setResult(position, uuid);
+        }
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        adapter.update(position);
+        binding.buttonSubmit.setText(MessageFormat.format(getString(R.string.submit_count),
+                adapter.selectedCount()));
+    }
+
+    @Override
+    public void onLongItemClick(View view, int position) {
+
     }
 
     @Override
@@ -126,9 +125,10 @@ public class ReadingReportFragment extends DialogFragment {
         if (context instanceof Activity) readingActivity = (Callback) context;
     }
 
+
     public void onResume() {
-        if (getDialog() != null) {
-            final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+        if (getDialog() != null && getDialog().getWindow() != null) {
+            WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);

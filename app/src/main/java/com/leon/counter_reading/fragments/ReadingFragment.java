@@ -83,7 +83,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         super.onSaveInstanceState(outState);
         try {
             outState.clear();
-            final Bundle args = new Bundle();
+            Bundle args = new Bundle();
             args.putInt(POSITION.getValue(), readingVM.getPosition());
             outState.putAll(args);
         } catch (Exception e) {
@@ -162,7 +162,6 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
 //        Log.e("name", readingActivity.getOnOffLoad(readingActivity.getPosition()).firstName.concat(readingActivity.getOnOffLoad(readingActivity.getPosition()).sureName));
 //        Log.e("position", String.valueOf(readingVM.getPosition()));
 //        Log.e("name", readingVM.getOnOffLoadDto().firstName.concat(readingVM.getOnOffLoadDto().sureName));
-
         try {
             ILocationTracking tracking = getLocationTracker(requireActivity()) != null ? getLocationTracker(requireActivity()) : null;
             if (tracking != null)
@@ -195,7 +194,6 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         binding.textViewPreNumber.setOnClickListener(this);
         binding.editTextNumber.setOnClickListener(this);
         binding.buttonSubmit.setOnClickListener(this);
-
         //TODO
         binding.buttonKeyboard0.setOnClickListener(clickListener);
         binding.buttonKeyboard1.setOnClickListener(clickListener);
@@ -234,24 +232,11 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     }
 
     private void initializeSpinner() {
-//TODO
-//        final String[] items = new String[readingActivity.getCounterStateDtos().size()];
-//        for (int i = 0; i < readingActivity.getCounterStateDtos().size(); i++) {
-//            items[i] = readingActivity.getCounterStateDtos().get(i).title;
-//        }
-//        final SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(requireActivity(), items);
-//        binding.spinner.setAdapter(adapter);
-//        boolean found = false;
-//        int i;
-//        for (i = 0; i < readingActivity.getCounterStateDtos().size() && !found; i++)
-//            if (readingActivity.getCounterStateDtos().get(i).id == readingVM.getOnOffLoadDto().counterStateId) {
-//                found = true;
-//            }
-        final String[] items = new String[counterStateDtos.size()];
+        String[] items = new String[counterStateDtos.size()];
         for (int i = 0; i < counterStateDtos.size(); i++) {
             items[i] = counterStateDtos.get(i).title;
         }
-        final SpinnerAdapter adapter = new SpinnerAdapter(requireActivity(), items);
+        SpinnerAdapter adapter = new SpinnerAdapter(requireActivity(), items);
         binding.spinner.setAdapter(adapter);
         boolean found = false;
         int i;
@@ -278,8 +263,6 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
     }
 
     private void setCounterStateField(int i) {
-//      TODO
-//        readingVM.setCounterStateField(readingActivity.getCounterStateDtos().get(i), i);
         readingVM.setCounterStateField(counterStateDtos.get(i), i);
         binding.imageButtonShowKeyboard.setVisibility(readingVM.isCanEnterNumber() ||
                 readingVM.isShouldEnterNumber() ? View.VISIBLE : View.GONE);

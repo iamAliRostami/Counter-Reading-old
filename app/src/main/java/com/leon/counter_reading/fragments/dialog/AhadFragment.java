@@ -28,8 +28,8 @@ public class AhadFragment extends DialogFragment {
     private int position;
 
     public static AhadFragment newInstance(String uuid, int position) {
-        final AhadFragment fragment = new AhadFragment();
-        final Bundle args = new Bundle();
+        AhadFragment fragment = new AhadFragment();
+        Bundle args = new Bundle();
         args.putString(BILL_ID.getValue(), uuid);
         args.putInt(POSITION.getValue(), position);
         fragment.setArguments(args);

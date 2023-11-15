@@ -37,8 +37,8 @@ public class AreYouSureFragment extends DialogFragment implements View.OnClickLi
 
     public static AreYouSureFragment newInstance(int position, int number, int type,
                                                  int counterStateCode, int counterStatePosition) {
-        final AreYouSureFragment fragment = new AreYouSureFragment();
-        final Bundle args = new Bundle();
+        AreYouSureFragment fragment = new AreYouSureFragment();
+        Bundle args = new Bundle();
         args.putInt(POSITION.getValue(), position);
         args.putInt(NUMBER.getValue(), number);
         args.putInt(TYPE.getValue(), type);
@@ -107,7 +107,7 @@ public class AreYouSureFragment extends DialogFragment implements View.OnClickLi
 
     @Override
     public void onResume() {
-        if (getDialog() != null) {
+        if (getDialog() != null && getDialog().getWindow() != null) {
             final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
