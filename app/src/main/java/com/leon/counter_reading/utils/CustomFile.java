@@ -95,18 +95,20 @@ public class CustomFile {
     @SuppressLint("SimpleDateFormat")
     static String saveImage(final String path, final Context context) {
 //        final Bitmap bitmapImage = compressBitmap(path);
+        Bitmap bitmapImage = compressBitmap(BitmapFactory.decodeFile(path));
+//        Bitmap bitmapImage = BitmapFactory.decodeFile(path);
         File mediaStorageDir = new File(context.getExternalFilesDir(null) + context.getString(R.string.camera_folder));
         if (!mediaStorageDir.exists()) if (!mediaStorageDir.mkdirs()) return null;
         String timeStamp = (new SimpleDateFormat(context.getString(R.string.save_format_name_melli))).format(new Date());
         String fileNameToSave = "JPEG_" + timeStamp + ".jpg";
         File file = new File(mediaStorageDir, fileNameToSave);
         if (file.exists()) if (!file.delete()) return null;
-        Bitmap bitmapImage = BitmapFactory.decodeFile(path);
         if (bitmapImage != null) {
             try {
                 FileOutputStream out = new FileOutputStream(file);
-                int quality = new CompressQuality().get(new File(path).length(), getImageQuality());
-                bitmapImage.compress(Bitmap.CompressFormat.JPEG, quality, out);
+                bitmapImage.compress(Bitmap.CompressFormat.JPEG, 80, out);
+//                int quality = new CompressQuality().get(new File(path).length(), getImageQuality());
+//                bitmapImage.compress(Bitmap.CompressFormat.JPEG, quality, out);
                 out.flush();
                 out.close();
             } catch (Exception e) {
@@ -278,56 +280,56 @@ public class CustomFile {
 
     public static Bitmap compressBitmap(String path) {
 
-//        Bitmap photo = BitmapFactory.decodeFile(path);
-//        int currSize;
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-////        int quality = new CompressQuality().get(new File(path).length(), maxKBSize);
-//        int quality = (int) ((getImageQuality() * 100) / (new File(path).length()));
-//
-//        Log.e("size 1", String.valueOf(new File(path).length() / 1000));
-//        do {
-//            Log.e("quality", String.valueOf(quality));
-//            bytes.reset();
-//            photo.compress(Bitmap.CompressFormat.JPEG, quality, bytes);
-//            currSize = bytes.toByteArray().length / 1000;
-//            Log.e("size 2", String.valueOf(currSize));
-//            if (currSize > maxKBSize) {
-//                quality -= 20;
-//            }
-//        } while (currSize > maxKBSize);
+        Bitmap photo = BitmapFactory.decodeFile(path);
+        int currSize;
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        int quality = new CompressQuality().get(new File(path).length(), maxKBSize);
+        int quality = (int) ((getImageQuality() * 100) / (new File(path).length()));
 
-
-//        Log.e("quality", String.valueOf(quality));
-//        bytes.reset();
-//        photo.compress(Bitmap.CompressFormat.JPEG, quality, bytes);
-//        CURRENT_IMAGE_SIZE = bytes.toByteArray().length / 1000;
-//        Log.e("size 2", String.valueOf(CURRENT_IMAGE_SIZE));
-//        return photo;
-
-        try {
-            Bitmap original = BitmapFactory.decodeFile(path);
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            if (stream.toByteArray().length > getImageQuality()) {
-                final int width, height;
-                if (original.getHeight() > original.getWidth()) {
-                    //TODO
-                    height = Math.min(getImageQuality(), original.getHeight());
-                    width = original.getWidth() / (original.getHeight() / height);
-                } else {
-                    width = Math.min(getImageQuality(), original.getWidth());
-                    height = original.getHeight() / (original.getWidth() / width);
-                }
-                original = Bitmap.createScaledBitmap(original, width, height, false);
-                stream = new ByteArrayOutputStream();
-                original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+        Log.e("size 1", String.valueOf(new File(path).length() / 1000));
+        do {
+            Log.e("quality", String.valueOf(quality));
+            bytes.reset();
+            photo.compress(Bitmap.CompressFormat.JPEG, quality, bytes);
+            currSize = bytes.toByteArray().length / 1000;
+            Log.e("size 2", String.valueOf(currSize));
+            if (currSize > getImageQuality()) {
+                quality -= 20;
             }
-            CURRENT_IMAGE_SIZE = stream.toByteArray().length;
-            return original;
-        } catch (Exception e) {
-            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
-        }
-        return null;
+        } while (currSize > getImageQuality());
+
+
+        Log.e("quality", String.valueOf(quality));
+        bytes.reset();
+        photo.compress(Bitmap.CompressFormat.JPEG, quality, bytes);
+        CURRENT_IMAGE_SIZE = bytes.toByteArray().length / 1000;
+        Log.e("size 2", String.valueOf(CURRENT_IMAGE_SIZE));
+        return photo;
+
+//        try {
+//            Bitmap original = BitmapFactory.decodeFile(path);
+//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//            original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+//            if (stream.toByteArray().length > getImageQuality()) {
+//                final int width, height;
+//                if (original.getHeight() > original.getWidth()) {
+//                    //TODO
+//                    height = Math.min(getImageQuality(), original.getHeight());
+//                    width = original.getWidth() / (original.getHeight() / height);
+//                } else {
+//                    width = Math.min(getImageQuality(), original.getWidth());
+//                    height = original.getHeight() / (original.getWidth() / width);
+//                }
+//                original = Bitmap.createScaledBitmap(original, width, height, false);
+//                stream = new ByteArrayOutputStream();
+//                original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+//            }
+//            CURRENT_IMAGE_SIZE = stream.toByteArray().length;
+//            return original;
+//        } catch (Exception e) {
+//            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+//        }
+//        return null;
     }
 
     public static Bitmap compressBitmap(final InputStream inputStream) {
