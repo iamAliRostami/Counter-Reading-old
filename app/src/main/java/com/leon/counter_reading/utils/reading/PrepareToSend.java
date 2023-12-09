@@ -109,6 +109,12 @@ record offLoadDataIncomplete(Activity activity)
                     else {
                         ShowDialogOnce(activity, RESET.getValue(), ResetApplicationFragment.newInstance());
                     }
+                } else if (response.code() == 400) {
+                    try {
+                        error = response.message();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 new CustomToast().error(error);
             } catch (Exception e) {

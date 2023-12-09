@@ -110,12 +110,13 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
     }
 
     private boolean checkOnOffLoad() {
-        int mane = 0, unread, alalPercent, imagesCount, voicesCount;
+        int mane = 0,/*todo*/ unread, alalPercent, imagesCount, voicesCount;
         double alalMane;
         final MyDatabase myDatabase = getApplicationComponent().MyDatabase();
         if (binding.spinner.getSelectedItemPosition() != 0) {
             final String trackingId = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id;
             final int trackNumber = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber;
+            //TODO
             final int total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId);
             unread = myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackingId);
             final ArrayList<Integer> isManes = new ArrayList<>(myDatabase.counterStateDao().
