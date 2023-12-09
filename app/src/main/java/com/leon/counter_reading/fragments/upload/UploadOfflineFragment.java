@@ -74,14 +74,22 @@ public class UploadOfflineFragment extends Fragment {
         if (binding.spinner.getSelectedItemPosition() != 0) {
             trackNumber = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber;
             trackingId = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id;
-            total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId);
-            unread = myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackingId);
-            ArrayList<Integer> isManes = new ArrayList<>(myDatabase.counterStateDao().
-                    getCounterStateDtosIsMane(true,
+            //TODO
+    //            total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId);
+            total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId,
+                    myDatabase.counterStateDao().getCounterStateDtosIsMane(true,
                             trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId));
-            for (int i = 0; i < isManes.size(); i++) {
-                mane += myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(isManes.get(i), trackingId);
-            }
+            unread = myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackingId);
+//            ArrayList<Integer> isManes = new ArrayList<>(myDatabase.counterStateDao().
+//                    getCounterStateDtosIsMane(true,
+//                            trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId));
+//            for (int i = 0; i < isManes.size(); i++) {
+//                mane += myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(isManes.get(i), trackingId);
+//            }
+            mane = myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(myDatabase.counterStateDao().
+                            getCounterStateDtosIsMane(true,
+                                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId),
+                    trackingId);
             alalPercent = myDatabase.trackingDao().getAlalHesabByZoneId(trackingDtos
                     .get(binding.spinner.getSelectedItemPosition() - 1).zoneId);
             alalMane = (double) mane / total * 100;
@@ -98,9 +106,9 @@ public class UploadOfflineFragment extends Fragment {
             return false;
         } else if (imagesCount > 0 || voicesCount > 0) {
             String message = String.format(getString(R.string.unuploaded_multimedia),
-                    imagesCount, voicesCount).concat("\n")
+                            imagesCount, voicesCount).concat("\n")
                     .concat(getString(R.string.recommend_multimedia));
-            new CustomDialogModel(YellowRedirect, activity, message,getString(R.string.dear_user),
+            new CustomDialogModel(YellowRedirect, activity, message, getString(R.string.dear_user),
                     getString(R.string.upload), getString(R.string.confirm), new Inline());
             return false;
         }

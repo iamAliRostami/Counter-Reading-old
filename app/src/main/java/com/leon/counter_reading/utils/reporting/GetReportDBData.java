@@ -46,20 +46,30 @@ public class GetReportDBData extends AsyncTask<Activity, Integer, Integer> {
     @Override
     protected Integer doInBackground(Activity... activities) {
         trackingDtos.addAll(myDatabase.trackingDao().getTrackingDtosIsActiveNotArchive(true, false));
-        final ArrayList<Integer> isManes = new ArrayList<>();
-        if (trackingDtos.size() > 0)
-            isManes.addAll(myDatabase.counterStateDao().getCounterStateDtosIsMane(true, trackingDtos.get(0).zoneId));
+        //TODO
+        //        final ArrayList<Integer> isManes = new ArrayList<>();
+        //        if (trackingDtos.size() > 0)
+//            isManes.addAll(myDatabase.counterStateDao().getCounterStateDtosIsMane(true, trackingDtos.get(0).zoneId));
         for (int j = 0, trackingDtosSize = trackingDtos.size(); j < trackingDtosSize; j++) {
             TrackingDto trackingDto = trackingDtos.get(j);
-            for (int i = 0; i < isManes.size(); i++) {
-                isMane += myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(isManes.get(i), trackingDto.id);
-            }
+            //TODO
+            //            for (int i = 0; i < isManes.size(); i++) {
+//                isMane += myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(isManes.get(i), trackingDto.id);
+            //            }
+
+            isMane = myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(myDatabase.counterStateDao().
+                    getCounterStateDtosIsMane(true, trackingDto.zoneId), trackingDto.id);
+
             zero += myDatabase.onOffLoadDao().getOnOffLoadReadCountByStatus(trackingDto.id, ZERO.getValue());
             high += myDatabase.onOffLoadDao().getOnOffLoadReadCountByStatus(trackingDto.id, HIGH.getValue());
             low += myDatabase.onOffLoadDao().getOnOffLoadReadCountByStatus(trackingDto.id, LOW.getValue());
             normal += myDatabase.onOffLoadDao().getOnOffLoadReadCountByStatus(trackingDto.id, NORMAL.getValue());
             unread += myDatabase.onOffLoadDao().getOnOffLoadReadCount(0, trackingDto.id);
-            total += myDatabase.onOffLoadDao().getOnOffLoadCount(trackingDto.id);
+            //TODO
+            //            total += myDatabase.onOffLoadDao().getOnOffLoadCount(trackingDto.id);
+            total += myDatabase.onOffLoadDao().getOnOffLoadCount(trackingDto.id,
+                    myDatabase.counterStateDao().getCounterStateDtosIsMane(true,
+                            trackingDto.zoneId));
         }
         if (trackingDtos.size() > 0)
             counterStateDtos.addAll(myDatabase.counterStateDao().getCounterStateDtos(trackingDtos.get(0).zoneId));

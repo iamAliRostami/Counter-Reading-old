@@ -117,14 +117,29 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
             final String trackingId = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id;
             final int trackNumber = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber;
             //TODO
-            final int total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId);
-            unread = myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackingId);
-            final ArrayList<Integer> isManes = new ArrayList<>(myDatabase.counterStateDao().
-                    getCounterStateDtosIsMane(true,
+//            final int total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId,);
+
+            final int total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId,
+                    myDatabase.counterStateDao().getCounterStateDtosIsMane(true,
                             trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId));
-            for (int i = 0; i < isManes.size(); i++) {
-                mane += myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(isManes.get(i), trackingId);
-            }
+
+
+            unread = myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackingId);
+            //TODO
+    //            final ArrayList<Integer> isManes = new ArrayList<>(myDatabase.counterStateDao().
+//                    getCounterStateDtosIsMane(true,
+//                            trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId));
+    //            for (int i = 0; i < isManes.size(); i++) {
+//                mane += myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(isManes.get(i), trackingId);
+    //            }
+    //            Log.e("mane 1", String.valueOf(mane));
+    //            Log.e("mane 2", String.valueOf(myDatabase.onOffLoadDao().getOnOffLoadIsManeCount1(isManes, trackingId)));
+            mane = myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(myDatabase.counterStateDao().
+                    getCounterStateDtosIsMane(true,
+                            trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId),
+                    trackingId);
+
+
             alalPercent = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).alalHesabPercent;
             alalMane = (double) mane / total * 100;
             imagesCount = myDatabase.imageDao().getUnsentImageCountByTrackNumber(trackNumber, false);

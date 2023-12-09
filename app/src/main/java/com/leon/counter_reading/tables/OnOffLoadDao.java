@@ -88,12 +88,21 @@ public interface OnOffLoadDao {
     @Query("select COUNT(*) From OnOffLoadDto WHERE counterStateId = :counterStateId AND trackingId = :trackingId")
     int getOnOffLoadUnreadCount(int counterStateId, String trackingId);
 
-    @Query("select COUNT(*) From OnOffLoadDto WHERE trackingId = :trackingId")
-    int getOnOffLoadCount(String trackingId);
+    //TODO
+//    @Query("select COUNT(*) From OnOffLoadDto WHERE trackingId = :trackingId")
+//  int getOnOffLoadCount(String trackingId);
+    @Query("select COUNT(*) From OnOffLoadDto WHERE trackingId = :trackingId AND ((offLoadStateId > 0) " +
+            "OR ((counterStateId == 0) OR (counterStateId IN (:x))))")
+    int getOnOffLoadCount(String trackingId, List<Integer> x);
 
     @Query("select COUNT(*) From OnOffLoadDto WHERE counterStateId = :counterStateId AND " +
             "trackingId = :trackingId AND hazf = 0")
-    int getOnOffLoadIsManeCount(int counterStateId, String trackingId);
+    int getOnOffLoadIsManeCount2(int counterStateId, String trackingId);
+
+
+    @Query("select COUNT(*) From OnOffLoadDto WHERE counterStateId IN (:counterStateId) AND " +
+            "trackingId = :trackingId AND hazf = 0")
+    int getOnOffLoadIsManeCount(List<Integer> counterStateId, String trackingId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAllOnOffLoad(List<OnOffLoadDto> onOffLoadDtos);
@@ -147,6 +156,7 @@ public interface OnOffLoadDao {
 
     @Query("UPDATE OnOffLoadDto set counterNumberShown = :isShown WHERE id = :id AND trackingId = :trackingId")
     void updateOnOffLoadByIsShown(String id, String trackingId, boolean isShown);
+
     @Query("DELETE FROM OnOffLoadDto WHERE trackNumber = :trackNumber")
     void deleteOnOffLoads(int trackNumber);
 
