@@ -92,8 +92,8 @@ public interface OnOffLoadDao {
 //    @Query("select COUNT(*) From OnOffLoadDto WHERE trackingId = :trackingId")
 //  int getOnOffLoadCount(String trackingId);
     @Query("select COUNT(*) From OnOffLoadDto WHERE trackingId = :trackingId AND ((offLoadStateId > 0) " +
-            "OR ((counterStateId == 0) OR (counterStateId IN (:x))))")
-    int getOnOffLoadCount(String trackingId, List<Integer> x);
+            "OR ((counterStateId == 0) OR (counterStateId IN (:mavane))))")
+    int getOnOffLoadCount(String trackingId, List<Integer> mavane);
 
     @Query("select COUNT(*) From OnOffLoadDto WHERE counterStateId = :counterStateId AND " +
             "trackingId = :trackingId AND hazf = 0")

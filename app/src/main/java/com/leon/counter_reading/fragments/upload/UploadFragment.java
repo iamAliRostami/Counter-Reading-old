@@ -9,6 +9,7 @@ import static com.leon.counter_reading.helpers.MyApplication.getApplicationCompo
 
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,22 +127,24 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
 
             unread = myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackingId);
             //TODO
-    //            final ArrayList<Integer> isManes = new ArrayList<>(myDatabase.counterStateDao().
+            //            final ArrayList<Integer> isManes = new ArrayList<>(myDatabase.counterStateDao().
 //                    getCounterStateDtosIsMane(true,
 //                            trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId));
-    //            for (int i = 0; i < isManes.size(); i++) {
+            //            for (int i = 0; i < isManes.size(); i++) {
 //                mane += myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(isManes.get(i), trackingId);
-    //            }
-    //            Log.e("mane 1", String.valueOf(mane));
-    //            Log.e("mane 2", String.valueOf(myDatabase.onOffLoadDao().getOnOffLoadIsManeCount1(isManes, trackingId)));
+            //            }
+            //            Log.e("mane 1", String.valueOf(mane));
+            //            Log.e("mane 2", String.valueOf(myDatabase.onOffLoadDao().getOnOffLoadIsManeCount1(isManes, trackingId)));
             mane = myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(myDatabase.counterStateDao().
-                    getCounterStateDtosIsMane(true,
-                            trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId),
+                            getCounterStateDtosIsMane(true,
+                                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId),
                     trackingId);
 
 
             alalPercent = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).alalHesabPercent;
             alalMane = (double) mane / total * 100;
+            Log.e("alalmane", String.valueOf(alalMane));
+            Log.e("total", String.valueOf(total));
             imagesCount = myDatabase.imageDao().getUnsentImageCountByTrackNumber(trackNumber, false);
             voicesCount = myDatabase.voiceDao().getUnsentVoiceCountByTrackNumber(trackNumber, false);
         } else return false;
