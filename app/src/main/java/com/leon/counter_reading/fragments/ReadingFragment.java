@@ -14,6 +14,7 @@ import static com.leon.counter_reading.helpers.Constants.FOCUS_ON_EDIT_TEXT;
 import static com.leon.counter_reading.helpers.Constants.LOCATION_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.STORAGE_PERMISSIONS;
 import static com.leon.counter_reading.helpers.Constants.counterStateDtos;
+import static com.leon.counter_reading.helpers.Constants.guilds;
 import static com.leon.counter_reading.helpers.Constants.karbariDtos;
 import static com.leon.counter_reading.helpers.Constants.onOffLoadDtos;
 import static com.leon.counter_reading.helpers.Constants.readingConfigDefaultDtos;
@@ -108,6 +109,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
             readingVM.setPosition(bundle.getInt(POSITION.getValue()));
             readingVM.setReadingConfigDefaultDto(readingConfigDefaultDtos.get(readingVM.getPosition()));
             readingVM.setKarbariDto(karbariDtos.get(readingVM.getPosition()));
+            readingVM.setGuilds(guilds.get(readingVM.getPosition()));
             readingVM.setOnOffLoadDto(onOffLoadDtos.get(readingVM.getPosition()));
         } catch (Exception e) {
             Intent intent = requireActivity().getIntent();
@@ -129,6 +131,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         readingVM.setPosition(position);
         readingVM.setReadingConfigDefaultDto(readingConfigDefaultDtos.get(position));
         readingVM.setKarbariDto(karbariDtos.get(position));
+        readingVM.setGuilds(guilds.get(position));
         readingVM.setOnOffLoadDto(onOffLoadDtos.get(position));
     }
 
@@ -159,6 +162,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         binding.buttonSubmit.setId(readingVM.getButtonId());
         binding.editTextNumber.setId(readingVM.getTextViewId());
         binding.textViewPreNumber.setSelected(true);
+        binding.textViewKarbari.setSelected(true);
         initializeSpinner();
         setOnEventsListener();
         if (!readingVM.getOnOffLoadDto().displayRadif && !readingVM.getOnOffLoadDto().displayBillId)

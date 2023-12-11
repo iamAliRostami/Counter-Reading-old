@@ -9,5 +9,6 @@ public class Guilds {
     @PrimaryKey(autoGenerate = true)
     public int customId;
     public int id;
+    public int moshtarakinId;
     public String title;
 }

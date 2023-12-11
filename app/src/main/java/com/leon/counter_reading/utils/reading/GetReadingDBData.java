@@ -40,6 +40,7 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
         readingData.onOffLoadDtos.clear();
         readingData.readingConfigDefaultDtos.clear();
         readingData.karbariDtos.clear();
+        readingData.guilds.clear();
         readingData.qotrDictionary.clear();
         readingData.counterReportDtos.clear();
         readingData.counterStateDtos.clear();
@@ -48,6 +49,7 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
         readingDataTemp.onOffLoadDtos.clear();
         readingDataTemp.readingConfigDefaultDtos.clear();
         readingDataTemp.karbariDtos.clear();
+        readingDataTemp.guilds.clear();
         readingDataTemp.qotrDictionary.clear();
         readingDataTemp.counterReportDtos.clear();
         readingDataTemp.counterStateDtos.clear();
@@ -112,6 +114,15 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
                 activities[0].runOnUiThread(() -> new CustomToast().error(activities[0].getString(R.string.error_on_download_karbari), Toast.LENGTH_LONG));
                 return null;
             }
+
+            readingData.guilds.addAll(myDatabase.guildDao().getAllGuilds());
+            if (readingData.guilds.size() > 0)
+                readingDataTemp.guilds.addAll(myDatabase.guildDao().getAllGuilds());
+            else {
+                activities[0].runOnUiThread(() -> new CustomToast().error(activities[0].getString(R.string.error_on_download_guilds), Toast.LENGTH_LONG));
+                return null;
+            }
+
 
             readingData.qotrDictionary.addAll(myDatabase.qotrDictionaryDao().getAllQotrDictionaries());
             if (readingData.qotrDictionary.size() > 0)

@@ -21,6 +21,7 @@ import com.leon.counter_reading.BR;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.helpers.DifferentCompanyManager;
 import com.leon.counter_reading.tables.CounterStateDto;
+import com.leon.counter_reading.tables.Guilds;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
@@ -28,6 +29,7 @@ import com.leon.counter_reading.utils.CustomToast;
 
 public class ReadingViewModel extends BaseObservable {
     private KarbariDto karbariDto;
+    private Guilds guilds;
     private OnOffLoadDto onOffLoadDto;
     private ReadingConfigDefaultDto readingConfigDefaultDto;
     private int rotation;
@@ -47,6 +49,7 @@ public class ReadingViewModel extends BaseObservable {
     private String serial;
     private String name;
     private String karbariTitle;
+    private String guildTitle;
     private String sifoonQotr;
     private String qotr;
     private String radifOrBillId;
@@ -133,6 +136,10 @@ public class ReadingViewModel extends BaseObservable {
         if (getKarbariDto().title == null)
             new CustomToast().warning(String.format("کاربری اشتراک %s به درستی بارگیری نشده است.", getOnOffLoadDto().eshterak));
         else setKarbariTitle(getKarbariDto().title);
+
+        //TODO
+        //        setGuildTitle(onOffLoadDto.preGuildCode);
+
         if (getOnOffLoadDto().qotr == null)
             new CustomToast().warning(String.format("قطر اشتراک %s به درستی بارگیری نشده است.", getOnOffLoadDto().eshterak));
         else
@@ -183,6 +190,14 @@ public class ReadingViewModel extends BaseObservable {
     public void setKarbariDto(KarbariDto karbariDto) {
         this.karbariDto = karbariDto;
         notifyPropertyChanged(BR.karbariDto);
+    }
+
+    public Guilds getGuilds() {
+        return guilds;
+    }
+
+    public void setGuilds(Guilds guilds) {
+        this.guilds = guilds;
     }
 
     @Bindable
@@ -402,6 +417,14 @@ public class ReadingViewModel extends BaseObservable {
         notifyPropertyChanged(BR.address);
     }
 
+//    public String getGuildTitle() {
+//        return guildTitle;
+//    }
+//
+//    public void setGuildTitle(String guildTitle) {
+//        this.guildTitle = guildTitle;
+//    }
+
     @Bindable
     public String getName() {
         return name;
@@ -447,7 +470,10 @@ public class ReadingViewModel extends BaseObservable {
 
     @Bindable
     public String getKarbariTitle() {
-        return karbariTitle;
+//         return karbariTitle;
+        //TODO
+        return getGuilds().title != null ? karbariTitle.concat(String.format(" (%s)",
+                getGuilds().title)) : karbariTitle;
     }
 
     public void setKarbariTitle(String karbariTitle) {

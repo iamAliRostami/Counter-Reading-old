@@ -90,6 +90,7 @@ public class OnOffLoadDto {
     public boolean displayBillId;
     @Ignore
     public boolean displayRadif;
+    public int preGuildCode;
 
     public static class OffLoad {
         public String id;

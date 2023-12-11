@@ -327,4 +327,5 @@
     <string name="stay_in_page">در صفحه اول بمان</string>
     <string name="theme_light">روشن</string>
     <string name="theme_dark">تیره</string>
+    <string name="error_on_download_guilds">بارگیری اصناف به درستی انجام نشده است، با پشیبانی تماس بگیرید.</string>
 </resources>

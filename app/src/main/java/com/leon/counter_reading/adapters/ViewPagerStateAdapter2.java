@@ -1,6 +1,7 @@
 package com.leon.counter_reading.adapters;
 
 import static com.leon.counter_reading.helpers.Constants.counterStateDtos;
+import static com.leon.counter_reading.helpers.Constants.guilds;
 import static com.leon.counter_reading.helpers.Constants.karbariDtos;
 import static com.leon.counter_reading.helpers.Constants.onOffLoadDtos;
 import static com.leon.counter_reading.helpers.Constants.readingConfigDefaultDtos;
@@ -15,6 +16,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.fragments.ReadingFragment;
+import com.leon.counter_reading.tables.Guilds;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.ReadingData;
 import com.leon.counter_reading.utils.CustomToast;
@@ -24,6 +26,7 @@ public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
     public ViewPagerStateAdapter2(@NonNull FragmentActivity fragmentActivity, ReadingData readingData) {
         super(fragmentActivity);
         karbariDtos.clear();
+        guilds.clear();
         onOffLoadDtos.clear();
         readingConfigDefaultDtos.clear();
         counterStateDtos.clear();
@@ -51,6 +54,21 @@ public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
             }
             if (!found)
                 karbariDtos.add(new KarbariDto());
+
+            //TODO
+            k = 0;
+            found = false;
+            while (!found && k < readingData.guilds.size()) {
+                if (readingData.onOffLoadDtos.get(i).preGuildCode == readingData.guilds.get(k).moshtarakinId) {
+                    guilds.add(readingData.guilds.get(k));
+                    found = true;
+                }
+                k++;
+            }
+            if (!found)
+                guilds.add(new Guilds());
+            //TODO
+
             k = 0;
             found = false;
             while (!found && k < readingData.trackingDtos.size()) {

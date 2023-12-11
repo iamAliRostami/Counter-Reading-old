@@ -14,7 +14,8 @@
         android:layout_marginTop="@dimen/medium_dp"
         android:layout_marginEnd="@dimen/low_dp"
         android:padding="@dimen/low_dp"
-        android:src="@drawable/mode_light" />
+        android:src="@drawable/mode_light"
+        android:visibility="invisible" />
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -51,10 +52,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="@dimen/text_size_medium"
                     android:padding="@dimen/small_dp"
+                    android:text="@string/theme_light"
                     android:textColor="@color/text_color_dark"
-                    android:text="@string/theme_light" />
+                    android:textSize="@dimen/text_size_medium" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -77,10 +78,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textColor="@color/text_color_dark"
-                    android:textSize="@dimen/text_size_medium"
                     android:padding="@dimen/small_dp"
-                    android:text="@string/theme_dark" />
+                    android:text="@string/theme_dark"
+                    android:textColor="@color/text_color_dark"
+                    android:textSize="@dimen/text_size_medium" />
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>
 

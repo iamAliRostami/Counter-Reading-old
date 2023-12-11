@@ -40,8 +40,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:ellipsize="marquee"
                         android:gravity="center"
+                        android:ellipsize="marquee"
                         android:marqueeRepeatLimit="marquee_forever"
                         android:maxLines="1"
                         android:singleLine="true"
@@ -313,6 +313,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/text_view_code"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:text="@{readingVM.karbariTitle}"
                     android:textSize="@dimen/text_size_large" />
 

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Environment;
 
 import com.leon.counter_reading.tables.CounterStateDto;
+import com.leon.counter_reading.tables.Guilds;
 import com.leon.counter_reading.tables.KarbariDto;
 import com.leon.counter_reading.tables.OnOffLoadDto;
 import com.leon.counter_reading.tables.ReadingConfigDefaultDto;
@@ -18,7 +19,7 @@ import java.util.regex.Pattern;
 public class Constants {
     public static final Pattern IP_PATTERN = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)");
     public static final String FONT_NAME = "font/font_1.ttf";
-    public final static String DBName = "MyDatabase_32";
+    public final static String DBName = "MyDatabase_34";
     public static final int TOAST_TEXT_SIZE = 20;
 
     public static final int GPS_CODE = 1231;
@@ -35,7 +36,6 @@ public class Constants {
     public static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
     public static final long MIN_TIME_BW_UPDATES = 10000;
     public static final long FASTEST_INTERVAL = 10000;
-//    public static final int MAX_IMAGE_SIZE = 100000;
 
     public static final ArrayList<Integer> IS_MANE = new ArrayList<>();
     public static final String[] STORAGE_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -60,9 +60,7 @@ public class Constants {
     public final static File otgViewerCachePath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/OTGViewer/cache");
     public final static File otgViewerPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/OTGViewer");
 
-
     public static long CURRENT_IMAGE_SIZE;
-    public static int CURRENT_QUALITY;
 
     public static int POSITION = -1;
 
@@ -77,4 +75,5 @@ public class Constants {
     public static final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
     public static final ArrayList<OnOffLoadDto> onOffLoadDtos = new ArrayList<>();
     public static final ArrayList<KarbariDto> karbariDtos = new ArrayList<>();
+    public static final ArrayList<Guilds> guilds = new ArrayList<>();
 }
