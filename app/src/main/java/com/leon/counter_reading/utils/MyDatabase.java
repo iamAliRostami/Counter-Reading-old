@@ -38,7 +38,7 @@ import com.leon.counter_reading.tables.VoiceDao;
         QotrDictionary.class, ReadingConfigDefaultDto.class, TrackingDto.class, Voice.class,
         CounterStateDto.class, Image.class, CounterReportDto.class, OffLoadReport.class,
         ForbiddenDto.class, Guilds.class, DynamicTraverse.class},
-        version = 1, exportSchema = false)
+        version = 1/*, exportSchema = false*/)
 public abstract class MyDatabase extends RoomDatabase {
     public static final Migration MIGRATION_4_5 = new Migration(16, 17) {
         @Override

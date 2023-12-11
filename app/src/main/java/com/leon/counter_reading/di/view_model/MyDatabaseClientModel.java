@@ -6,7 +6,10 @@ import static com.leon.counter_reading.helpers.MyApplication.getApplicationCompo
 import android.content.Context;
 import android.database.Cursor;
 
+import androidx.annotation.NonNull;
 import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.leon.counter_reading.utils.MyDatabase;
 
@@ -20,6 +23,15 @@ public class MyDatabaseClientModel {
     @Inject
     public MyDatabaseClientModel(Context context) {
         myDatabase = Room.databaseBuilder(context, MyDatabase.class, DBName)
+
+                .addCallback(new RoomDatabase.Callback() {
+                    @Override
+                    public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                        super.onCreate(db);
+                        db.execSQL("PRAGMA encoding='UTF-8';");
+                    }
+                })
+
                 .allowMainThreadQueries().build();
     }
 

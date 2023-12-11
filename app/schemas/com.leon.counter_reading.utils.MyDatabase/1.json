@@ -1,0 +1,1634 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "6576d9c650c59c5b2869ab0077a0cc96",
+    "entities": [
+      {
+        "tableName": "SavedLocation",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`accuracy` REAL NOT NULL, `longitude` REAL NOT NULL, `latitude` REAL NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "accuracy",
+            "columnName": "accuracy",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "KarbariDto",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` INTEGER NOT NULL, `moshtarakinId` INTEGER NOT NULL, `title` TEXT, `provinceId` INTEGER NOT NULL, `isMaskooni` INTEGER NOT NULL, `isSaxt` INTEGER NOT NULL, `hasReadingVibrate` INTEGER NOT NULL, `isTejari` INTEGER NOT NULL, `isInGuilds` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "customId",
+            "columnName": "customId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "moshtarakinId",
+            "columnName": "moshtarakinId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "provinceId",
+            "columnName": "provinceId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isMaskooni",
+            "columnName": "isMaskooni",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isSaxt",
+            "columnName": "isSaxt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasReadingVibrate",
+            "columnName": "hasReadingVibrate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isTejari",
+            "columnName": "isTejari",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isInGuilds",
+            "columnName": "isInGuilds",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "customId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_KarbariDto_customId",
+            "unique": true,
+            "columnNames": [
+              "customId"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_KarbariDto_customId` ON `${TABLE_NAME}` (`customId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "OnOffLoadDto",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` TEXT, `billId` TEXT, `radif` INTEGER NOT NULL, `oldRadif` TEXT, `eshterak` TEXT, `oldEshterak` TEXT, `qeraatCode` TEXT, `firstName` TEXT, `sureName` TEXT, `fatherName` TEXT, `address` TEXT, `pelak` TEXT, `karbariCode` INTEGER NOT NULL, `ahadMaskooniOrAsli` INTEGER NOT NULL, `ahadTejariOrFari` INTEGER NOT NULL, `ahadSaierOrAbBaha` INTEGER NOT NULL, `qotrCode` INTEGER NOT NULL, `sifoonQotrCode` INTEGER NOT NULL, `postalCode` TEXT, `preNumber` INTEGER NOT NULL, `preDate` TEXT, `preDateMiladi` TEXT, `preAverage` REAL NOT NULL, `preCounterStateCode` INTEGER NOT NULL, `counterSerial` TEXT, `counterInstallDate` TEXT, `tavizDate` TEXT, `tavizNumber` TEXT, `trackingId` TEXT, `trackNumber` INTEGER NOT NULL, `zarfiat` INTEGER NOT NULL, `mobile` TEXT, `mobiles` TEXT, `hazf` INTEGER NOT NULL, `noeVagozariId` INTEGER NOT NULL, `counterNumber` INTEGER, `counterStateId` INTEGER NOT NULL, `possibleKarbariCode` INTEGER NOT NULL, `possibleAhadMaskooniOrAsli` INTEGER, `possibleAhadTejariOrFari` INTEGER, `possibleAhadSaierOrAbBaha` INTEGER, `possibleEmpty` INTEGER, `possibleAddress` TEXT, `possibleCounterSerial` TEXT, `possibleEshterak` TEXT, `possibleMobile` TEXT, `possiblePhoneNumber` TEXT, `description` TEXT, `phoneDateTime` TEXT, `locationDateTime` TEXT, `d1` TEXT, `d2` TEXT, `offLoadStateId` INTEGER NOT NULL, `zoneId` INTEGER NOT NULL, `gisAccuracy` REAL NOT NULL, `x` REAL NOT NULL, `y` REAL NOT NULL, `counterNumberShown` INTEGER NOT NULL, `attemptCount` INTEGER NOT NULL, `isLocked` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, `highLowStateId` INTEGER NOT NULL, `isBazdid` INTEGER NOT NULL, `counterStatePosition` INTEGER, `guildId` INTEGER, `balance` INTEGER NOT NULL, `preGuildCode` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "customId",
+            "columnName": "customId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "billId",
+            "columnName": "billId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "radif",
+            "columnName": "radif",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "oldRadif",
+            "columnName": "oldRadif",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "eshterak",
+            "columnName": "eshterak",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "oldEshterak",
+            "columnName": "oldEshterak",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "qeraatCode",
+            "columnName": "qeraatCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "firstName",
+            "columnName": "firstName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sureName",
+            "columnName": "sureName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fatherName",
+            "columnName": "fatherName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pelak",
+            "columnName": "pelak",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "karbariCode",
+            "columnName": "karbariCode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ahadMaskooniOrAsli",
+            "columnName": "ahadMaskooniOrAsli",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ahadTejariOrFari",
+            "columnName": "ahadTejariOrFari",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ahadSaierOrAbBaha",
+            "columnName": "ahadSaierOrAbBaha",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qotrCode",
+            "columnName": "qotrCode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sifoonQotrCode",
+            "columnName": "sifoonQotrCode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "postalCode",
+            "columnName": "postalCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "preNumber",
+            "columnName": "preNumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "preDate",
+            "columnName": "preDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "preDateMiladi",
+            "columnName": "preDateMiladi",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "preAverage",
+            "columnName": "preAverage",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "preCounterStateCode",
+            "columnName": "preCounterStateCode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "counterSerial",
+            "columnName": "counterSerial",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "counterInstallDate",
+            "columnName": "counterInstallDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tavizDate",
+            "columnName": "tavizDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tavizNumber",
+            "columnName": "tavizNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "trackingId",
+            "columnName": "trackingId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "trackNumber",
+            "columnName": "trackNumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "zarfiat",
+            "columnName": "zarfiat",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mobile",
+            "columnName": "mobile",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mobiles",
+            "columnName": "mobiles",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hazf",
+            "columnName": "hazf",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "noeVagozariId",
+            "columnName": "noeVagozariId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "counterNumber",
+            "columnName": "counterNumber",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "counterStateId",
+            "columnName": "counterStateId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "possibleKarbariCode",
+            "columnName": "possibleKarbariCode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "possibleAhadMaskooniOrAsli",
+            "columnName": "possibleAhadMaskooniOrAsli",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "possibleAhadTejariOrFari",
+            "columnName": "possibleAhadTejariOrFari",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "possibleAhadSaierOrAbBaha",
+            "columnName": "possibleAhadSaierOrAbBaha",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "possibleEmpty",
+            "columnName": "possibleEmpty",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "possibleAddress",
+            "columnName": "possibleAddress",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "possibleCounterSerial",
+            "columnName": "possibleCounterSerial",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "possibleEshterak",
+            "columnName": "possibleEshterak",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "possibleMobile",
+            "columnName": "possibleMobile",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "possiblePhoneNumber",
+            "columnName": "possiblePhoneNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "phoneDateTime",
+            "columnName": "phoneDateTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "locationDateTime",
+            "columnName": "locationDateTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "d1",
+            "columnName": "d1",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "d2",
+            "columnName": "d2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "offLoadStateId",
+            "columnName": "offLoadStateId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "zoneId",
+            "columnName": "zoneId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gisAccuracy",
+            "columnName": "gisAccuracy",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "x",
+            "columnName": "x",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "y",
+            "columnName": "y",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "counterNumberShown",
+            "columnName": "counterNumberShown",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attemptCount",
+            "columnName": "attemptCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isLocked",
+            "columnName": "isLocked",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "isDeleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "highLowStateId",
+            "columnName": "highLowStateId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isBazdid",
+            "columnName": "isBazdid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "counterStatePosition",
+            "columnName": "counterStatePosition",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "guildId",
+            "columnName": "guildId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "balance",
+            "columnName": "balance",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "preGuildCode",
+            "columnName": "preGuildCode",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "customId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_OnOffLoadDto_customId",
+            "unique": true,
+            "columnNames": [
+              "customId"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_OnOffLoadDto_customId` ON `${TABLE_NAME}` (`customId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "QotrDictionary",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` INTEGER NOT NULL, `title` TEXT, `isSelected` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "customId",
+            "columnName": "customId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isSelected",
+            "columnName": "isSelected",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "customId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_QotrDictionary_customId",
+            "unique": true,
+            "columnNames": [
+              "customId"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_QotrDictionary_customId` ON `${TABLE_NAME}` (`customId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ReadingConfigDefaultDto",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` TEXT, `zoneId` INTEGER NOT NULL, `defaultAlalHesab` INTEGER NOT NULL, `maxAlalHesab` INTEGER NOT NULL, `minAlalHesab` INTEGER NOT NULL, `defaultImagePercent` INTEGER NOT NULL, `maxImagePercent` INTEGER NOT NULL, `minImagePercent` INTEGER NOT NULL, `defaultHasPreNumber` INTEGER NOT NULL, `isOnQeraatCode` INTEGER NOT NULL, `displayBillId` INTEGER NOT NULL, `displayRadif` INTEGER NOT NULL, `lowConstBoundMaskooni` INTEGER NOT NULL, `lowPercentBoundMaskooni` INTEGER NOT NULL, `highConstBoundMaskooni` INTEGER NOT NULL, `highPercentBoundMaskooni` INTEGER NOT NULL, `lowConstBoundSaxt` INTEGER NOT NULL, `lowPercentBoundSaxt` INTEGER NOT NULL, `highConstBoundSaxt` INTEGER NOT NULL, `highPercentBoundSaxt` INTEGER NOT NULL, `lowConstZarfiatBound` INTEGER NOT NULL, `lowPercentZarfiatBound` INTEGER NOT NULL, `highConstZarfiatBound` INTEGER NOT NULL, `highPercentZarfiatBound` INTEGER NOT NULL, `lowPercentRateBoundNonMaskooni` INTEGER NOT NULL, `highPercentRateBoundNonMaskooni` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `isArchive` INTEGER NOT NULL, `zone` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "customId",
+            "columnName": "customId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "zoneId",
+            "columnName": "zoneId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "defaultAlalHesab",
+            "columnName": "defaultAlalHesab",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxAlalHesab",
+            "columnName": "maxAlalHesab",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "minAlalHesab",
+            "columnName": "minAlalHesab",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "defaultImagePercent",
+            "columnName": "defaultImagePercent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxImagePercent",
+            "columnName": "maxImagePercent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "minImagePercent",
+            "columnName": "minImagePercent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "defaultHasPreNumber",
+            "columnName": "defaultHasPreNumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isOnQeraatCode",
+            "columnName": "isOnQeraatCode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayBillId",
+            "columnName": "displayBillId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayRadif",
+            "columnName": "displayRadif",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lowConstBoundMaskooni",
+            "columnName": "lowConstBoundMaskooni",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lowPercentBoundMaskooni",
+            "columnName": "lowPercentBoundMaskooni",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "highConstBoundMaskooni",
+            "columnName": "highConstBoundMaskooni",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "highPercentBoundMaskooni",
+            "columnName": "highPercentBoundMaskooni",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lowConstBoundSaxt",
+            "columnName": "lowConstBoundSaxt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lowPercentBoundSaxt",
+            "columnName": "lowPercentBoundSaxt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "highConstBoundSaxt",
+            "columnName": "highConstBoundSaxt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "highPercentBoundSaxt",
+            "columnName": "highPercentBoundSaxt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lowConstZarfiatBound",
+            "columnName": "lowConstZarfiatBound",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lowPercentZarfiatBound",
+            "columnName": "lowPercentZarfiatBound",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "highConstZarfiatBound",
+            "columnName": "highConstZarfiatBound",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "highPercentZarfiatBound",
+            "columnName": "highPercentZarfiatBound",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lowPercentRateBoundNonMaskooni",
+            "columnName": "lowPercentRateBoundNonMaskooni",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "highPercentRateBoundNonMaskooni",
+            "columnName": "highPercentRateBoundNonMaskooni",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "isActive",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isArchive",
+            "columnName": "isArchive",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "zone",
+            "columnName": "zone",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "customId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_ReadingConfigDefaultDto_customId",
+            "unique": true,
+            "columnNames": [
+              "customId"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_ReadingConfigDefaultDto_customId` ON `${TABLE_NAME}` (`customId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "TrackingDto",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` TEXT, `trackNumber` INTEGER NOT NULL, `listNumber` TEXT, `insertDateJalali` TEXT, `zoneId` INTEGER NOT NULL, `zoneTitle` TEXT, `isBazdid` INTEGER NOT NULL, `year` INTEGER NOT NULL, `isRoosta` INTEGER NOT NULL, `fromEshterak` TEXT, `toEshterak` TEXT, `fromDate` TEXT, `toDate` TEXT, `archiveDateTime` TEXT, `itemQuantity` INTEGER NOT NULL, `alalHesabPercent` INTEGER NOT NULL, `imagePercent` INTEGER NOT NULL, `hasPreNumber` INTEGER NOT NULL, `displayBillId` INTEGER NOT NULL, `displayRadif` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `isArchive` INTEGER NOT NULL, `isLocked` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, `isRepeat` INTEGER NOT NULL, `x` TEXT, `y` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "customId",
+            "columnName": "customId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "trackNumber",
+            "columnName": "trackNumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "listNumber",
+            "columnName": "listNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "insertDateJalali",
+            "columnName": "insertDateJalali",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "zoneId",
+            "columnName": "zoneId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "zoneTitle",
+            "columnName": "zoneTitle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isBazdid",
+            "columnName": "isBazdid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "year",
+            "columnName": "year",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isRoosta",
+            "columnName": "isRoosta",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fromEshterak",
+            "columnName": "fromEshterak",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toEshterak",
+            "columnName": "toEshterak",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromDate",
+            "columnName": "fromDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toDate",
+            "columnName": "toDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "archiveDateTime",
+            "columnName": "archiveDateTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemQuantity",
+            "columnName": "itemQuantity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "alalHesabPercent",
+            "columnName": "alalHesabPercent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imagePercent",
+            "columnName": "imagePercent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasPreNumber",
+            "columnName": "hasPreNumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayBillId",
+            "columnName": "displayBillId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayRadif",
+            "columnName": "displayRadif",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "isActive",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isArchive",
+            "columnName": "isArchive",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isLocked",
+            "columnName": "isLocked",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "isDeleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isRepeat",
+            "columnName": "isRepeat",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "x",
+            "columnName": "x",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "y",
+            "columnName": "y",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "customId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_TrackingDto_customId",
+            "unique": true,
+            "columnNames": [
+              "customId"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_TrackingDto_customId` ON `${TABLE_NAME}` (`customId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Voice",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `trackNumber` INTEGER NOT NULL, `size` INTEGER NOT NULL, `OnOffLoadId` TEXT, `Description` TEXT, `address` TEXT, `isSent` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, `isArchived` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "trackNumber",
+            "columnName": "trackNumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "size",
+            "columnName": "size",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "OnOffLoadId",
+            "columnName": "OnOffLoadId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Description",
+            "columnName": "Description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isSent",
+            "columnName": "isSent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "isDeleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isArchived",
+            "columnName": "isArchived",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_Voice_id",
+            "unique": true,
+            "columnNames": [
+              "id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_Voice_id` ON `${TABLE_NAME}` (`id`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "CounterStateDto",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` INTEGER NOT NULL, `moshtarakinId` INTEGER NOT NULL, `title` TEXT, `zoneId` INTEGER NOT NULL, `clientOrder` INTEGER NOT NULL, `canEnterNumber` INTEGER NOT NULL, `isMane` INTEGER NOT NULL, `canNumberBeLessThanPre` INTEGER NOT NULL, `isTavizi` INTEGER NOT NULL, `shouldEnterNumber` INTEGER NOT NULL, `isXarab` INTEGER NOT NULL, `isFaqed` INTEGER NOT NULL, `hasImage` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "customId",
+            "columnName": "customId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "moshtarakinId",
+            "columnName": "moshtarakinId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "zoneId",
+            "columnName": "zoneId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clientOrder",
+            "columnName": "clientOrder",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "canEnterNumber",
+            "columnName": "canEnterNumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isMane",
+            "columnName": "isMane",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "canNumberBeLessThanPre",
+            "columnName": "canNumberBeLessThanPre",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isTavizi",
+            "columnName": "isTavizi",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shouldEnterNumber",
+            "columnName": "shouldEnterNumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isXarab",
+            "columnName": "isXarab",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isFaqed",
+            "columnName": "isFaqed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasImage",
+            "columnName": "hasImage",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "customId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_CounterStateDto_customId",
+            "unique": true,
+            "columnNames": [
+              "customId"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_CounterStateDto_customId` ON `${TABLE_NAME}` (`customId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Image",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `trackNumber` INTEGER NOT NULL, `size` INTEGER NOT NULL, `OnOffLoadId` TEXT, `Description` TEXT, `address` TEXT, `isSent` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, `isArchived` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "trackNumber",
+            "columnName": "trackNumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "size",
+            "columnName": "size",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "OnOffLoadId",
+            "columnName": "OnOffLoadId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Description",
+            "columnName": "Description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isSent",
+            "columnName": "isSent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "isDeleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isArchived",
+            "columnName": "isArchived",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_Image_id",
+            "unique": true,
+            "columnNames": [
+              "id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_Image_id` ON `${TABLE_NAME}` (`id`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "CounterReportDto",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` INTEGER NOT NULL, `moshtarakinId` INTEGER NOT NULL, `title` TEXT, `zoneId` INTEGER NOT NULL, `isAhad` INTEGER NOT NULL, `isKarbari` INTEGER NOT NULL, `canNumberBeLessThanPre` INTEGER NOT NULL, `isTavizi` INTEGER NOT NULL, `hasImage` INTEGER NOT NULL, `clientOrder` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "customId",
+            "columnName": "customId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "moshtarakinId",
+            "columnName": "moshtarakinId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "zoneId",
+            "columnName": "zoneId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isAhad",
+            "columnName": "isAhad",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isKarbari",
+            "columnName": "isKarbari",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "canNumberBeLessThanPre",
+            "columnName": "canNumberBeLessThanPre",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isTavizi",
+            "columnName": "isTavizi",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasImage",
+            "columnName": "hasImage",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clientOrder",
+            "columnName": "clientOrder",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "customId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_CounterReportDto_customId",
+            "unique": true,
+            "columnNames": [
+              "customId"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_CounterReportDto_customId` ON `${TABLE_NAME}` (`customId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "OffLoadReport",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `onOffLoadId` TEXT, `reportId` INTEGER NOT NULL, `isSent` INTEGER NOT NULL, `trackNumber` INTEGER NOT NULL, `hasImage` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "customId",
+            "columnName": "customId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onOffLoadId",
+            "columnName": "onOffLoadId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reportId",
+            "columnName": "reportId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isSent",
+            "columnName": "isSent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "trackNumber",
+            "columnName": "trackNumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasImage",
+            "columnName": "hasImage",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "customId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_OffLoadReport_customId",
+            "unique": true,
+            "columnNames": [
+              "customId"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_OffLoadReport_customId` ON `${TABLE_NAME}` (`customId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ForbiddenDto",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `zoneId` INTEGER NOT NULL, `tedadVahed` INTEGER NOT NULL, `size` INTEGER NOT NULL, `description` TEXT, `preEshterak` TEXT, `nextEshterak` TEXT, `postalCode` TEXT, `address` TEXT, `gisAccuracy` TEXT, `x` TEXT, `y` TEXT, `isSent` INTEGER NOT NULL, `activate` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "customId",
+            "columnName": "customId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "zoneId",
+            "columnName": "zoneId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tedadVahed",
+            "columnName": "tedadVahed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "size",
+            "columnName": "size",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "preEshterak",
+            "columnName": "preEshterak",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nextEshterak",
+            "columnName": "nextEshterak",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "postalCode",
+            "columnName": "postalCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "gisAccuracy",
+            "columnName": "gisAccuracy",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "x",
+            "columnName": "x",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "y",
+            "columnName": "y",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isSent",
+            "columnName": "isSent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "activate",
+            "columnName": "activate",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "customId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_ForbiddenDto_customId",
+            "unique": true,
+            "columnNames": [
+              "customId"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_ForbiddenDto_customId` ON `${TABLE_NAME}` (`customId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Guilds",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` INTEGER NOT NULL, `moshtarakinId` INTEGER NOT NULL, `title` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "customId",
+            "columnName": "customId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "moshtarakinId",
+            "columnName": "moshtarakinId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "customId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_Guilds_customId",
+            "unique": true,
+            "columnNames": [
+              "customId"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_Guilds_customId` ON `${TABLE_NAME}` (`customId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "DynamicTraverse",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` INTEGER NOT NULL, `storageTitle` TEXT, `title` TEXT, `isChangeable` INTEGER NOT NULL, `defaultValue` INTEGER NOT NULL, `isActive` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "customId",
+            "columnName": "customId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storageTitle",
+            "columnName": "storageTitle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isChangeable",
+            "columnName": "isChangeable",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "defaultValue",
+            "columnName": "defaultValue",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "isActive",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "customId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_DynamicTraverse_customId",
+            "unique": true,
+            "columnNames": [
+              "customId"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_DynamicTraverse_customId` ON `${TABLE_NAME}` (`customId`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6576d9c650c59c5b2869ab0077a0cc96\")"
+    ]
+  }
+}
