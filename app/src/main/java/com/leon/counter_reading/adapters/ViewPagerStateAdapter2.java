@@ -68,7 +68,6 @@ public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
             if (!found)
                 guilds.add(new Guilds());
             //TODO
-
             k = 0;
             found = false;
             while (!found && k < readingData.trackingDtos.size()) {
@@ -83,8 +82,12 @@ public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
             for (int j = 0; j < readingData.qotrDictionary.size(); j++) {
                 if (readingData.onOffLoadDtos.get(i).qotrCode == readingData.qotrDictionary.get(j).id)
                     readingData.onOffLoadDtos.get(i).qotr = readingData.qotrDictionary.get(j).title;
-                if (readingData.onOffLoadDtos.get(i).sifoonQotrCode == readingData.qotrDictionary.get(j).id)
-                    readingData.onOffLoadDtos.get(i).sifoonQotr = readingData.qotrDictionary.get(j).title;
+                try {
+                    if (readingData.onOffLoadDtos.get(i).sifoonQotrCode == readingData.qotrDictionary.get(j).id)
+                        readingData.onOffLoadDtos.get(i).sifoonQotr = readingData.qotrDictionary.get(j).title;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

@@ -115,7 +115,11 @@ public class OnOffLoadDtoTemp {
         onOffLoadDto.ahadTejariOrFari = ahadTejariOrFari;
         onOffLoadDto.ahadSaierOrAbBaha = ahadSaierOrAbBaha;
         onOffLoadDto.qotrCode = qotrCode;
-        onOffLoadDto.sifoonQotrCode = sifoonQotrCode;
+        try {
+            onOffLoadDto.sifoonQotrCode = sifoonQotrCode;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 //        onOffLoadDto.preNumber = preNumber;
         onOffLoadDto.preCounterStateCode = preCounterStateCode;
         onOffLoadDto.trackNumber = trackNumber;
