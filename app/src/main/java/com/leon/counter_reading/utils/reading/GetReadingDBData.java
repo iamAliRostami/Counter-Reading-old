@@ -105,6 +105,7 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
                 readingDataTemp.counterStateDtos.addAll(readingData.counterStateDtos);
             else {
                 activities[0].runOnUiThread(() -> new CustomToast().error(activities[0].getString(R.string.error_on_download_counter_states), Toast.LENGTH_LONG));
+                readingData.onOffLoadDtos.clear();
                 return null;
             }
             readingData.karbariDtos.addAll(myDatabase.karbariDao().getAllKarbariDto());
@@ -112,6 +113,7 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
                 readingDataTemp.karbariDtos.addAll(myDatabase.karbariDao().getAllKarbariDto());
             else {
                 activities[0].runOnUiThread(() -> new CustomToast().error(activities[0].getString(R.string.error_on_download_karbari), Toast.LENGTH_LONG));
+                readingData.onOffLoadDtos.clear();
                 return null;
             }
 
@@ -120,15 +122,14 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
                 readingDataTemp.guilds.addAll(myDatabase.guildDao().getAllGuilds());
             else {
                 activities[0].runOnUiThread(() -> new CustomToast().error(activities[0].getString(R.string.error_on_download_guilds), Toast.LENGTH_LONG));
-                return null;
+//                return null;
             }
-
-
             readingData.qotrDictionary.addAll(myDatabase.qotrDictionaryDao().getAllQotrDictionaries());
             if (readingData.qotrDictionary.size() > 0)
                 readingDataTemp.qotrDictionary.addAll(myDatabase.qotrDictionaryDao().getAllQotrDictionaries());
             else {
                 activities[0].runOnUiThread(() -> new CustomToast().error(activities[0].getString(R.string.error_on_download_qotr), Toast.LENGTH_LONG));
+                readingData.onOffLoadDtos.clear();
                 return null;
             }
             readingDataTemp.onOffLoadDtos.addAll(readingData.onOffLoadDtos);
