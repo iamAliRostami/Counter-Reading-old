@@ -39,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -613,4 +614,12 @@ public class CustomFile {
         return text.toString();
     }
 
+    public static String readData(InputStream inputStream) throws Exception {
+        BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder total = new StringBuilder();
+        for (String line; (line = r.readLine()) != null; ) {
+            total.append(line).append('\n');
+        }
+        return total.toString();
+    }
 }

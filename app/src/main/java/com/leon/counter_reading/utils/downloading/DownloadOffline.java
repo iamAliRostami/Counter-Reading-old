@@ -1,6 +1,7 @@
 package com.leon.counter_reading.utils.downloading;
 
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
+import static com.leon.counter_reading.utils.CustomFile.readData;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -12,6 +13,7 @@ import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 
 import java.io.File;
+import java.io.InputStream;
 
 public class DownloadOffline extends AsyncTask<Activity, Void, Void> {
     private final CustomProgressModel progress;
@@ -21,9 +23,14 @@ public class DownloadOffline extends AsyncTask<Activity, Void, Void> {
         super();
         progress = getApplicationComponent().CustomProgressModel();
         progress.show(activity, false);
-        this.json = CustomFile.readData(file);
+        this.json = readData(file);
     }
-
+    public DownloadOffline(Activity activity, String json) {
+        super();
+        progress = getApplicationComponent().CustomProgressModel();
+        progress.show(activity, false);
+        this.json = json;
+    }
     @Override
     protected Void doInBackground(Activity... activities) {
         final Gson gson = new Gson();

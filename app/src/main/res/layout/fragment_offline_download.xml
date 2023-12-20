@@ -7,12 +7,13 @@
     tools:context="com.leon.counter_reading.fragments.download.DownloadOfflineFragment">
 
     <FrameLayout
-        android:visibility="gone"
-        android:background="@drawable/border_gray_5"
         android:id="@+id/container_body"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/large_dp" />
+        android:layout_above="@id/button_download"
+        android:layout_margin="@dimen/large_dp"
+        android:background="@drawable/border_gray_5"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/image_view_download"
@@ -27,5 +28,5 @@
         style="@style/ButtonSubmit.Fragment.Warning"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:text="@string/no_usb_found" />
+        android:text="@string/download_storage" />
 </RelativeLayout>

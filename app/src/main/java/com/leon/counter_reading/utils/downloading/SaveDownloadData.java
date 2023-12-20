@@ -45,7 +45,12 @@ public class SaveDownloadData {
                 showMessage(activity, message, Yellow);
                 return;
             } else {
-                myDatabase.counterReportDao().deleteAllCounterReport(readingData.counterReportDtos.get(0).zoneId);
+                if (!readingData.counterReportDtos.isEmpty())
+                    myDatabase.counterReportDao().deleteAllCounterReport(readingData.counterReportDtos.get(0).zoneId);
+                else {
+                    String message = activity.getString(R.string.error_on_download_counter_report);
+                    activity.runOnUiThread(() -> new CustomToast().warning(message));
+                }
             }
         }
         if (readingData.trackingDtos.size() > 0 &&
