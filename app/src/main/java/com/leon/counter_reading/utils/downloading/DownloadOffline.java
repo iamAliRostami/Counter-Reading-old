@@ -9,11 +9,9 @@ import android.os.AsyncTask;
 import com.google.gson.Gson;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.tables.ReadingData;
-import com.leon.counter_reading.utils.CustomFile;
 import com.leon.counter_reading.utils.CustomToast;
 
 import java.io.File;
-import java.io.InputStream;
 
 public class DownloadOffline extends AsyncTask<Activity, Void, Void> {
     private final CustomProgressModel progress;
@@ -25,19 +23,20 @@ public class DownloadOffline extends AsyncTask<Activity, Void, Void> {
         progress.show(activity, false);
         this.json = readData(file);
     }
+
     public DownloadOffline(Activity activity, String json) {
         super();
         progress = getApplicationComponent().CustomProgressModel();
         progress.show(activity, false);
         this.json = json;
     }
+
     @Override
     protected Void doInBackground(Activity... activities) {
         final Gson gson = new Gson();
-        ReadingData readingData, readingDataTemp;
+        ReadingData readingData;
         try {
             readingData = gson.fromJson(json, ReadingData.class);
-            readingDataTemp = gson.fromJson(json, ReadingData.class);
         } catch (Exception e) {
             activities[0].runOnUiThread(() -> new CustomToast().error("فایل انتخاب شده نادرست است."));
             return null;
@@ -46,8 +45,7 @@ public class DownloadOffline extends AsyncTask<Activity, Void, Void> {
             new CustomToast().warning("موردی برای بارگیری وجود ندارد.");
             return null;
         }
-        new SaveDownloadData().savedData(activities[0], readingData, readingDataTemp);
-
+        new SaveDownloadData().savedData(activities[0], readingData, readingData);
         return null;
     }
 

@@ -183,11 +183,8 @@ class OffLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadR
         final CustomErrorHandling errorHandling = new CustomErrorHandling(getContext());
         String error = errorHandling.getErrorMessageDefault(response);
         if (response.code() == 400) {
-            try {
-                error = response.message();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+            CustomErrorHandling.APIError apiError = errorHandling.parseError(response);
+            error = apiError.message();
         }
         new CustomToast().warning(error, Toast.LENGTH_LONG);
     }

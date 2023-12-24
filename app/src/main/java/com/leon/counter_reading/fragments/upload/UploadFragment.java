@@ -181,6 +181,7 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
                 if (checkOnOffLoad()) {
                     sendOnOffLoad();
                 }
+                sendOnOffLoad();
             }
         }
     }

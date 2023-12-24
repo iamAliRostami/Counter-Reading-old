@@ -110,11 +110,8 @@ record offLoadDataIncomplete(Activity activity)
                         ShowDialogOnce(activity, RESET.getValue(), ResetApplicationFragment.newInstance());
                     }
                 } else if (response.code() == 400) {
-                    try {
-                        error = response.message();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    CustomErrorHandling.APIError apiError = errorHandling.parseError(response);
+                    error = apiError.message();
                 }
                 new CustomToast().error(error);
             } catch (Exception e) {
