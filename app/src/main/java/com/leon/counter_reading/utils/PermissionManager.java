@@ -150,6 +150,9 @@ public class PermissionManager {
     }
 
     public static boolean isNetworkAvailable(Context context) {
+        if (Settings.System.getInt(context.getContentResolver(),
+                Settings.Global.AIRPLANE_MODE_ON, 0) != 0)
+            return false;
         final ConnectivityManager connectivityManager = ((ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE));
         return getSignalStatus(context) || (connectivityManager.getActiveNetworkInfo() != null &&

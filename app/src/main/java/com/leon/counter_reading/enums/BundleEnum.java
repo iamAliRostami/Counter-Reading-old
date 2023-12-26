@@ -6,6 +6,7 @@ public enum BundleEnum {
     IMAGE("image"),
     COUNTER_HAS_IMAGE("counter_has_image"),
     REPORT_HAS_IMAGE("report_has_image"),
+    TRACK_HAS_IMAGE("track_has_image"),
     THEME("theme"),
     ON_OFF_LOAD("on_off_load"),
     JUST_MOBILE("just_mobile"),

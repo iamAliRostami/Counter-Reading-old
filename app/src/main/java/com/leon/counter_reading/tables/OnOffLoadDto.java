@@ -79,18 +79,25 @@ public class OnOffLoadDto {
     public Integer counterStatePosition;
     public Integer guildId;
     public long balance;
+    public int preGuildCode;
 
     @Ignore
     public String qotr;
     @Ignore
     public String sifoonQotr;
+
+    @Ignore
+    public boolean hasImage;
     @Ignore
     public boolean hasPreNumber;
     @Ignore
     public boolean displayBillId;
     @Ignore
     public boolean displayRadif;
-    public int preGuildCode;
+    @Ignore
+    public boolean displayMobile;
+    @Ignore
+    public boolean displayPreDate;
 
     public static class OffLoad {
         public String id;
@@ -158,6 +165,9 @@ public class OnOffLoadDto {
         displayBillId = onOffLoadDto.displayBillId;
         displayRadif = onOffLoadDto.displayRadif;
         hasPreNumber = onOffLoadDto.hasPreNumber;
+        hasImage = onOffLoadDto.hasImage;
+        displayMobile = onOffLoadDto.displayMobile;
+        displayPreDate = onOffLoadDto.displayPreDate;
         qotr = onOffLoadDto.qotr;
         sifoonQotr = onOffLoadDto.sifoonQotr;
     }

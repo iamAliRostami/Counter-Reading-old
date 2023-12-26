@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6576d9c650c59c5b2869ab0077a0cc96",
+    "identityHash": "88143125b00f497fc5fde6731b64da33",
     "entities": [
       {
         "tableName": "SavedLocation",
@@ -808,7 +808,7 @@
       },
       {
         "tableName": "TrackingDto",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` TEXT, `trackNumber` INTEGER NOT NULL, `listNumber` TEXT, `insertDateJalali` TEXT, `zoneId` INTEGER NOT NULL, `zoneTitle` TEXT, `isBazdid` INTEGER NOT NULL, `year` INTEGER NOT NULL, `isRoosta` INTEGER NOT NULL, `fromEshterak` TEXT, `toEshterak` TEXT, `fromDate` TEXT, `toDate` TEXT, `archiveDateTime` TEXT, `itemQuantity` INTEGER NOT NULL, `alalHesabPercent` INTEGER NOT NULL, `imagePercent` INTEGER NOT NULL, `hasPreNumber` INTEGER NOT NULL, `displayBillId` INTEGER NOT NULL, `displayRadif` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `isArchive` INTEGER NOT NULL, `isLocked` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, `isRepeat` INTEGER NOT NULL, `x` TEXT, `y` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` TEXT, `trackNumber` INTEGER NOT NULL, `listNumber` TEXT, `insertDateJalali` TEXT, `zoneId` INTEGER NOT NULL, `zoneTitle` TEXT, `isBazdid` INTEGER NOT NULL, `year` INTEGER NOT NULL, `isRoosta` INTEGER NOT NULL, `fromEshterak` TEXT, `toEshterak` TEXT, `fromDate` TEXT, `toDate` TEXT, `archiveDateTime` TEXT, `itemQuantity` INTEGER NOT NULL, `alalHesabPercent` INTEGER NOT NULL, `imagePercent` INTEGER NOT NULL, `hasPreNumber` INTEGER NOT NULL, `hasImage` INTEGER NOT NULL, `displayBillId` INTEGER NOT NULL, `displayRadif` INTEGER NOT NULL, `displayMobile` INTEGER NOT NULL, `displayPreDate` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `isArchive` INTEGER NOT NULL, `isLocked` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, `isRepeat` INTEGER NOT NULL, `x` TEXT, `y` TEXT)",
         "fields": [
           {
             "fieldPath": "customId",
@@ -925,6 +925,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "hasImage",
+            "columnName": "hasImage",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "displayBillId",
             "columnName": "displayBillId",
             "affinity": "INTEGER",
@@ -933,6 +939,18 @@
           {
             "fieldPath": "displayRadif",
             "columnName": "displayRadif",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayMobile",
+            "columnName": "displayMobile",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayPreDate",
+            "columnName": "displayPreDate",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -1628,7 +1646,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6576d9c650c59c5b2869ab0077a0cc96\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"88143125b00f497fc5fde6731b64da33\")"
     ]
   }
 }

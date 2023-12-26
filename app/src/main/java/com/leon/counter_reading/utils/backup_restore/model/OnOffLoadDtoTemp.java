@@ -69,13 +69,20 @@ public class OnOffLoadDtoTemp {
     public int hasPreNumber;
     public int displayBillId;
     public int displayRadif;
+
     public int isLocked;
     public int isBazdid;
+    public int displayMobile;
+    public int displayPreDate;
+
+    public int preGuildCode;
 
     public OnOffLoadDto getOnOffLoadDto() {
         final OnOffLoadDto onOffLoadDto = new OnOffLoadDto();
         onOffLoadDto.hasPreNumber = hasPreNumber == 1;
         onOffLoadDto.displayBillId = displayBillId == 1;
+        onOffLoadDto.displayMobile = displayMobile == 1;
+        onOffLoadDto.displayPreDate = displayPreDate == 1;
         onOffLoadDto.displayRadif = displayRadif == 1;
         onOffLoadDto.isLocked = isLocked == 1;
         onOffLoadDto.isBazdid = isBazdid == 1;
@@ -111,6 +118,7 @@ public class OnOffLoadDtoTemp {
 //
         onOffLoadDto.radif = radif;
         onOffLoadDto.karbariCode = karbariCode;
+        onOffLoadDto.preGuildCode = preGuildCode;
         onOffLoadDto.ahadMaskooniOrAsli = ahadMaskooniOrAsli;
         onOffLoadDto.ahadTejariOrFari = ahadTejariOrFari;
         onOffLoadDto.ahadSaierOrAbBaha = ahadSaierOrAbBaha;

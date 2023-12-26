@@ -379,13 +379,13 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-    private void showImage(int position, boolean counterHasImage, boolean reportHasImage) {
+    private void showImage(int position, boolean counterHasImage, boolean reportHasImage,boolean trackHasImage) {
         ShowDialogOnce(this, TAKE_PHOTO.getValue().concat(readingData.onOffLoadDtos
                 .get(binding.viewPager.getCurrentItem()).id), TakePhotoFragment
                 .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber,
-                        position, true, counterHasImage, reportHasImage));
+                        position, true, counterHasImage, reportHasImage,trackHasImage));
     }
 
     private boolean shouldShowPossible() {
@@ -421,11 +421,14 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 hasImage = true;
             else if (counterState.hasImage)
                 hasImage = true;
+            else if (readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).hasImage)
+                hasImage = true;
         }
         if (isForm && shouldShowPossible()) {
             showPossible(position);
         } else if (hasImage) {
-            showImage(position, counterState.hasImage, reportHasImage);
+            showImage(position, counterState.hasImage, reportHasImage,
+                    readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).hasImage);
         } else {
             if (!isShowing) {
                 if ((counterState.isTavizi || counterState.isXarab) &&

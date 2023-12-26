@@ -484,8 +484,16 @@ public class PossibleViewModel extends BaseObservable {
 
     @Bindable
     public int getMobileVisibility() {
-        return isJustMobile() ? View.VISIBLE : getApplicationComponent().SharedPreferenceModel()
-                .getBoolData(MOBILE.getValue()) ? View.VISIBLE : View.GONE;
+        return isJustMobile() ? View.VISIBLE :
+                getApplicationComponent().SharedPreferenceModel().getBoolData(MOBILE.getValue()) ?
+                        View.VISIBLE : View.GONE;
+    }
+
+    @Bindable
+    public int getPreMobileVisibility() {
+        return !getOnOffLoadDto().displayMobile ? View.GONE : isJustMobile() ? View.VISIBLE :
+                getApplicationComponent().SharedPreferenceModel().getBoolData(MOBILE.getValue()) ?
+                        View.VISIBLE : View.GONE;
     }
 
     @Bindable

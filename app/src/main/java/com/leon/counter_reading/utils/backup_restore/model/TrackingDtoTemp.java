@@ -22,6 +22,7 @@ public class TrackingDtoTemp {
     public int isRoosta;
     public int isBazdid;
     public int hasPreNumber;
+    public int hasImage;
     public int displayBillId;
     public int displayRadif;
     public int isActive;
@@ -54,6 +55,7 @@ public class TrackingDtoTemp {
         trackingDto.isRoosta = isRoosta == 1;
         trackingDto.isBazdid = isBazdid == 1;
         trackingDto.hasPreNumber = hasPreNumber == 1;
+        trackingDto.hasImage = hasImage == 1;
         trackingDto.displayBillId = displayBillId == 1;
         trackingDto.displayRadif = displayRadif == 1;
         trackingDto.isActive = isActive == 1;

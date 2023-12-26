@@ -102,7 +102,7 @@
                         android:id="@+id/linear_layout_mobile"
                         style="@style/ItemLinePossible"
                         android:padding="@dimen/medium_dp"
-                        android:visibility="@{possible.mobileVisibility}">
+                        android:visibility="@{possible.preMobileVisibility}">
 
                         <TextView
                             style="@style/TitlePossible"

@@ -28,8 +28,12 @@ public class TrackingDto {
     public int alalHesabPercent;
     public int imagePercent;
     public boolean hasPreNumber;
+    //TODO
+    public boolean hasImage;
     public boolean displayBillId;
     public boolean displayRadif;
+    public boolean displayMobile;
+    public boolean displayPreDate;
 
     public boolean isActive;
     public boolean isArchive;

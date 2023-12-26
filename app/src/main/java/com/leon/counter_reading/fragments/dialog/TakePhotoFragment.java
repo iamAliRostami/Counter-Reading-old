@@ -7,6 +7,7 @@ import static com.leon.counter_reading.enums.BundleEnum.POSITION;
 import static com.leon.counter_reading.enums.BundleEnum.REPORT_HAS_IMAGE;
 import static com.leon.counter_reading.enums.BundleEnum.SENT;
 import static com.leon.counter_reading.enums.BundleEnum.TRACKING;
+import static com.leon.counter_reading.enums.BundleEnum.TRACK_HAS_IMAGE;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.helpers.Constants.CURRENT_IMAGE_SIZE;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.gallerySelector;
@@ -56,7 +57,7 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
     private Callback readingActivity;
     private int replace = 0, position, trackNumber;
     private String uuid, path;
-    private boolean result, counterHasImage, reportHasImage;
+    private boolean result, counterHasImage, reportHasImage, trackHasImage;
     private long lastClickTime = 0;
 
     public TakePhotoFragment() {
@@ -64,7 +65,7 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
 
     public static TakePhotoFragment newInstance(boolean sent, String uuid, int trackingNumber,
                                                 int position, boolean image, boolean counterHasImage,
-                                                boolean reportHasImage) {
+                                                boolean reportHasImage, boolean trackHasImage) {
         TakePhotoFragment fragment = newInstance(sent, uuid, trackingNumber);
         Bundle args;
         if (fragment.getArguments() != null)
@@ -74,6 +75,7 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
         args.putBoolean(IMAGE.getValue(), image);
         args.putBoolean(COUNTER_HAS_IMAGE.getValue(), counterHasImage);
         args.putBoolean(REPORT_HAS_IMAGE.getValue(), reportHasImage);
+        args.putBoolean(TRACK_HAS_IMAGE.getValue(), trackHasImage);
         fragment.setArguments(args);
         fragment.setCancelable(false);
         return fragment;
@@ -116,6 +118,7 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
             result = getArguments().getBoolean(IMAGE.getValue());
             counterHasImage = getArguments().getBoolean(COUNTER_HAS_IMAGE.getValue());
             reportHasImage = getArguments().getBoolean(REPORT_HAS_IMAGE.getValue());
+            trackHasImage = getArguments().getBoolean(TRACK_HAS_IMAGE.getValue());
             binding.textViewNotSent.setVisibility(getArguments().getBoolean(SENT.getValue()) ?
                     View.GONE : View.VISIBLE);
             getArguments().clear();
@@ -156,10 +159,12 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
             lastClickTime = SystemClock.elapsedRealtime();
             if (images.size() == 0) {
                 if (counterHasImage)
-                    new CustomToast().error("در این وضعیت کنتور الصاق عکس الزامی است.", Toast.LENGTH_LONG);
+                    new CustomToast().error("در این وضعیت کنتور الصاق عکس الزامی است", Toast.LENGTH_LONG);
                 if (reportHasImage)
-                    new CustomToast().error("گزارشات کنتور نیازمند الصاق عکس است.", Toast.LENGTH_LONG);
-                if (counterHasImage || reportHasImage)
+                    new CustomToast().error("گزارشات کنتور نیازمند الصاق عکس است", Toast.LENGTH_LONG);
+                if (trackHasImage)
+                    new CustomToast().error(String.format("شماره پیگیری %s نیازمند الصاق عکس است", trackNumber), Toast.LENGTH_LONG);
+                if (counterHasImage || reportHasImage || trackHasImage)
                     return;
             }
             if (isAdded() && getContext() != null) {
