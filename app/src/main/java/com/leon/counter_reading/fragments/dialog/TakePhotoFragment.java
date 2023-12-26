@@ -157,17 +157,7 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
         if (id == R.id.button_save_send) {
             if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
             lastClickTime = SystemClock.elapsedRealtime();
-            if (images.size() == 0) {
-                if (counterHasImage)
-                    new CustomToast().error("در این وضعیت کنتور الصاق عکس الزامی است", Toast.LENGTH_LONG);
-                if (reportHasImage)
-                    new CustomToast().error("گزارشات کنتور نیازمند الصاق عکس است", Toast.LENGTH_LONG);
-                if (trackHasImage)
-                    new CustomToast().error(String.format("شماره پیگیری %s نیازمند الصاق عکس است", trackNumber), Toast.LENGTH_LONG);
-                if (counterHasImage || reportHasImage || trackHasImage)
-                    return;
-            }
-            if (isAdded() && getContext() != null) {
+            if (!checkImageForce() && isAdded() && getContext() != null) {
                 try {
                     new PrepareMultimedia(getContext(), images, binding.editTextDescription.getText().toString(),
                             getTag(), result).execute(requireActivity());
@@ -176,6 +166,19 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
                 }
             }
         }
+    }
+
+    private boolean checkImageForce() {
+        if (images.size() == 0) {
+            if (counterHasImage)
+                new CustomToast().error("در این وضعیت کنتور الصاق عکس الزامی است", Toast.LENGTH_LONG);
+            if (reportHasImage)
+                new CustomToast().error("گزارشات کنتور نیازمند الصاق عکس است", Toast.LENGTH_LONG);
+            if (trackHasImage)
+                new CustomToast().error(String.format("شماره پیگیری %s نیازمند الصاق عکس است", trackNumber), Toast.LENGTH_LONG);
+            return counterHasImage || reportHasImage || trackHasImage;
+        }
+        return false;
     }
 
     @Override

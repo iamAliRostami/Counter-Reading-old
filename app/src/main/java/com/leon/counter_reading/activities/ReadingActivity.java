@@ -10,6 +10,7 @@ import static com.leon.counter_reading.enums.BundleEnum.TYPE;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.DialogType.Yellow;
 import static com.leon.counter_reading.enums.FragmentTags.AHAD;
+import static com.leon.counter_reading.enums.FragmentTags.COUNTER_PLACE;
 import static com.leon.counter_reading.enums.FragmentTags.LAST_READ;
 import static com.leon.counter_reading.enums.FragmentTags.NAVIGATION;
 import static com.leon.counter_reading.enums.FragmentTags.POSSIBLE_DIALOG;
@@ -379,13 +380,13 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-    private void showImage(int position, boolean counterHasImage, boolean reportHasImage,boolean trackHasImage) {
+    private void showImage(int position, boolean counterHasImage, boolean reportHasImage, boolean trackHasImage) {
         ShowDialogOnce(this, TAKE_PHOTO.getValue().concat(readingData.onOffLoadDtos
                 .get(binding.viewPager.getCurrentItem()).id), TakePhotoFragment
                 .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).offLoadStateId > 0,
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
                         readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber,
-                        position, true, counterHasImage, reportHasImage,trackHasImage));
+                        position, true, counterHasImage, reportHasImage, trackHasImage));
     }
 
     private boolean shouldShowPossible() {
@@ -407,29 +408,9 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         CounterStateDto counterState = readingData.counterStateDtos.get(readingData
                 .onOffLoadDtos.get(position).counterStatePosition);
         boolean hasImage = false;
-        boolean reportHasImage = false;
-        if (isImage) {
-            ArrayList<OffLoadReport> offLoadReports = new ArrayList<>(getApplicationComponent()
-                    .MyDatabase().offLoadReportDao().getAllOffLoadReportById(
-                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
-                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber));
-            while (!hasImage && !offLoadReports.isEmpty()) {
-                reportHasImage = hasImage = offLoadReports.get(0).hasImage;
-                offLoadReports.remove(0);
-            }
-            if (sharedPreferenceManager.getBoolData(IMAGE.getValue()))
-                hasImage = true;
-            else if (counterState.hasImage)
-                hasImage = true;
-            else if (readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).hasImage)
-                hasImage = true;
-        }
-        if (isForm && shouldShowPossible()) {
-            showPossible(position);
-        } else if (hasImage) {
-            showImage(position, counterState.hasImage, reportHasImage,
-                    readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).hasImage);
-        } else {
+        if (isImage) hasImage = checkImage(counterState, position);
+        if (isForm && shouldShowPossible()) showPossible(position);
+        else if (!hasImage) {
             if (!isShowing) {
                 if ((counterState.isTavizi || counterState.isXarab) &&
                         counterState.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {
@@ -437,17 +418,42 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                             SerialFragment.newInstance(position));
                 } else isShowing = true;
             }
-            if (isShowing) {
-                makeRing(this, SAVE);
-                updateAdapter(position);
-                isShowing = false;
-                new Update(readingData.onOffLoadDtos.get(position)).execute(this);
-                if (currentOfflineAttempts < MAX_OFFLINE_ATTEMPT)
-                    new PrepareToSend(sharedPreferenceManager.getStringData(TOKEN.getValue()))
-                            .execute(this);
-                changePage(binding.viewPager.getCurrentItem() + 1);
-            }
+            if (isShowing) submit(position);
         }
+    }
+
+    private boolean checkImage(CounterStateDto counterState, int position) {
+        boolean hasImage = false;
+        boolean reportHasImage = false;
+        ArrayList<OffLoadReport> offLoadReports = new ArrayList<>(getApplicationComponent()
+                .MyDatabase().offLoadReportDao().getAllOffLoadReportById(
+                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
+                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber));
+        while (!hasImage && !offLoadReports.isEmpty()) {
+            reportHasImage = hasImage = offLoadReports.get(0).hasImage;
+            offLoadReports.remove(0);
+        }
+        if (sharedPreferenceManager.getBoolData(IMAGE.getValue()))
+            hasImage = true;
+        else if (counterState.hasImage)
+            hasImage = true;
+        else if (readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).hasImage)
+            hasImage = true;
+        if (hasImage)
+            showImage(position, counterState.hasImage, reportHasImage,
+                    readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).hasImage);
+        return hasImage;
+    }
+
+    private void submit(int position) {
+        makeRing(this, SAVE);
+        updateAdapter(position);
+        isShowing = false;
+        new Update(readingData.onOffLoadDtos.get(position)).execute(this);
+        if (currentOfflineAttempts < MAX_OFFLINE_ATTEMPT)
+            new PrepareToSend(sharedPreferenceManager.getStringData(TOKEN.getValue()))
+                    .execute(this);
+        changePage(binding.viewPager.getCurrentItem() + 1);
     }
 
     private void showPossible(int position) {
@@ -605,7 +611,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         final int id = item.getItemId();
-        Intent intent;
+        int currentItem = binding.viewPager.getCurrentItem();
         if (id == R.id.menu_sort) {
             sharedPreferenceManager.putData(SORT_TYPE.getValue(), !sharedPreferenceManager.getBoolData(SORT_TYPE.getValue()));
             if (readingData.onOffLoadDtos.isEmpty())
@@ -616,68 +622,75 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                ShowDialogOnce(this, NAVIGATION.getValue(), NavigationFragment
-                        .newInstance(binding.viewPager.getCurrentItem(), readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem())));
+                ShowDialogOnce(this, NAVIGATION.getValue(), NavigationFragment.newInstance(currentItem,
+                        readingData.onOffLoadDtos.get(currentItem)));
             }
         } else if (id == R.id.menu_karbari) {
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
                 ShowDialogOnce(this, FragmentTags.KARBARI.getValue(),
-                        KarbariFragment.newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
-                                binding.viewPager.getCurrentItem()));
+                        KarbariFragment.newInstance(readingData.onOffLoadDtos.get(currentItem).id,
+                                currentItem));
             }
         } else if (id == R.id.menu_ahad) {
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
                 ShowDialogOnce(this, AHAD.getValue(),
-                        AhadFragment.newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
-                                binding.viewPager.getCurrentItem()));
+                        AhadFragment.newInstance(readingData.onOffLoadDtos.get(currentItem).id,
+                                currentItem));
             }
         } else if (id == R.id.menu_report_forbid) {
             ShowDialogOnce(this, REPORT_FORBID.getValue(),
                     ReportForbidFragment.newInstance(readingData.onOffLoadDtos.size() > 0 ?
-                            readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).zoneId : 0));
+                            readingData.onOffLoadDtos.get(currentItem).zoneId : 0));
         } else if (id == R.id.menu_description) {
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                intent = new Intent(this, DescriptionActivity.class);
-                OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem());
-                intent.putExtra(BILL_ID.getValue(), onOffLoadDtoTemp.id);
-                intent.putExtra(TRACKING.getValue(), onOffLoadDtoTemp.trackNumber);
-                intent.putExtra(DESCRIPTION.getValue(), onOffLoadDtoTemp.description);
-                intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
-                resultLauncher.launch(intent);
+                startDescriptionActivity();
             }
         }
         if (id == R.id.menu_location) {
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                ShowDialogOnce(this, FragmentTags.COUNTER_PLACE.getValue(), CounterPlaceFragment
-                        .newInstance(readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
-                                binding.viewPager.getCurrentItem()));
+                ShowDialogOnce(this, COUNTER_PLACE.getValue(), CounterPlaceFragment
+                        .newInstance(readingData.onOffLoadDtos.get(currentItem).id, currentItem));
             }
         } else if (id == R.id.menu_last) {
             if (readingData.onOffLoadDtos.isEmpty()) {
                 showNoEshterakFound();
             } else {
-                int currentItem = 0, i = 0;
-                for (OnOffLoadDto onOffLoadDto : readingData.onOffLoadDtos) {
-                    if (!onOffLoadDto.isBazdid) {
-                        currentItem = i;
-                        break;
-                    }
-                    i++;
-                }
-                binding.viewPager.setCurrentItem(currentItem, false);
+                goFirstUnread();
             }
         } else if (id == R.id.menu_verification) {
             showPersonalCode(this);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void goFirstUnread() {
+        int currentItem = 0, i = 0;
+        for (OnOffLoadDto onOffLoadDto : readingData.onOffLoadDtos) {
+            if (!onOffLoadDto.isBazdid) {
+                currentItem = i;
+                break;
+            }
+            i++;
+        }
+        binding.viewPager.setCurrentItem(currentItem, false);
+    }
+
+    private void startDescriptionActivity() {
+        Intent intent = new Intent(this, DescriptionActivity.class);
+        OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem());
+        intent.putExtra(BILL_ID.getValue(), onOffLoadDtoTemp.id);
+        intent.putExtra(TRACKING.getValue(), onOffLoadDtoTemp.trackNumber);
+        intent.putExtra(DESCRIPTION.getValue(), onOffLoadDtoTemp.description);
+        intent.putExtra(POSITION.getValue(), binding.viewPager.getCurrentItem());
+        resultLauncher.launch(intent);
     }
 
     private final ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
