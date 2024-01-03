@@ -130,9 +130,7 @@ public class SaveDownloadData {
 
     private void showMessage(Activity activity, String message, DialogType dialogType) {
         activity.runOnUiThread(() -> new CustomDialogModel(dialogType, activity, message,
-                MyApplication.getContext().getString(R.string.dear_user),
-                MyApplication.getContext().getString(R.string.download),
-                MyApplication.getContext().getString(R.string.accepted)));
+                R.string.dear_user, R.string.download, R.string.accepted));
     }
 
     @SuppressLint({"DefaultLocale", "SimpleDateFormat"})

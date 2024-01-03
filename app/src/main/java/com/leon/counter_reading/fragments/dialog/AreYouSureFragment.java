@@ -115,8 +115,7 @@ public class AreYouSureFragment extends DialogFragment implements View.OnClickLi
         } else {
             readingActivity.updateOnOffLoadByAttempt(position, true);
             new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
-                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
-                    getString(R.string.accepted));
+                    R.string.dear_user, R.string.take_screen_shot, R.string.accepted);
         }
         super.onResume();
     }

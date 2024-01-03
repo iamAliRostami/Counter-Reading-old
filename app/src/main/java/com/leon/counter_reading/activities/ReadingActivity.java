@@ -177,8 +177,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
             runOnUiThread(() -> adapter.notifyDataSetChanged());
         } catch (Exception e) {
             runOnUiThread(() -> new CustomDialogModel(Red, this, e.getMessage(),
-                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
-                    getString(R.string.accepted)));
+                    R.string.dear_user, R.string.take_screen_shot, R.string.accepted));
         }
     }
 
@@ -265,8 +264,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
             });
         } catch (Exception e) {
             runOnUiThread(() -> new CustomDialogModel(Red, this, e.getMessage(),
-                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
-                    getString(R.string.accepted)));
+                    R.string.dear_user, R.string.take_screen_shot, R.string.accepted));
         }
     }
 
@@ -462,9 +460,8 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void showNoEshterakFound() {
-        new CustomDialogModel(Yellow, this, getString(R.string.no_eshterak_found),
-                getString(R.string.dear_user), getString(R.string.eshterak),
-                getString(R.string.accepted));
+        new CustomDialogModel(Yellow, this, R.string.no_eshterak_found,
+                R.string.dear_user, R.string.eshterak, R.string.accepted);
     }
 
     private void setAboveIconsSrc(int position) {

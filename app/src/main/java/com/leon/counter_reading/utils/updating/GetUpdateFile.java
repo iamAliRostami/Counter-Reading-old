@@ -1,13 +1,14 @@
 package com.leon.counter_reading.utils.updating;
 
+import static com.leon.counter_reading.enums.DialogType.Yellow;
+import static com.leon.counter_reading.enums.ProgressType.SHOW_CANCELABLE;
+
 import android.app.Activity;
 import android.content.Context;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
-import com.leon.counter_reading.enums.DialogType;
-import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
 import com.leon.counter_reading.infrastructure.ICallback;
@@ -26,17 +27,12 @@ public class GetUpdateFile {
         Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
         IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
         Call<ResponseBody> call = iAbfaService.getLastApk();
-        HttpClientWrapper.callHttpAsyncProgressDismiss(call, ProgressType.SHOW_CANCELABLE.getValue(),
+        HttpClientWrapper.callHttpAsyncProgressDismiss(call, SHOW_CANCELABLE.getValue(),
                 activity, new Update(activity), new UpdateIncomplete(activity), new UpdateError(activity));
     }
 }
 
-class Update implements ICallback<ResponseBody> {
-    final Activity activity;
-
-    public Update(Activity activity) {
-        this.activity = activity;
-    }
+record Update(Activity activity) implements ICallback<ResponseBody> {
 
     @Override
     public void execute(Response<ResponseBody> response) {
@@ -46,20 +42,13 @@ class Update implements ICallback<ResponseBody> {
     }
 }
 
-class UpdateIncomplete implements ICallbackIncomplete<ResponseBody> {
-    final Context context;
-
-    public UpdateIncomplete(Context context) {
-        this.context = context;
-    }
+record UpdateIncomplete(Context context) implements ICallbackIncomplete<ResponseBody> {
 
     @Override
     public void executeIncomplete(Response<ResponseBody> response) {
-        CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(context);
-        String error = customErrorHandlingNew.getErrorMessageDefault(response);
-        new CustomDialogModel(DialogType.Yellow, context, error,
-                context.getString(R.string.dear_user),
-                context.getString(R.string.update),
-                context.getString(R.string.accepted));
+        CustomErrorHandling errorHandling = new CustomErrorHandling(context);
+        String error = errorHandling.getErrorMessageDefault(response);
+        new CustomDialogModel(Yellow, context, error, R.string.dear_user, R.string.update,
+                R.string.accepted);
     }
 }

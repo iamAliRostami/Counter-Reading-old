@@ -295,9 +295,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             attempt(true);
         } else if (id == R.id.image_view_person) {
             new CustomDialogModel(Green, requireContext(), getSerial(requireActivity()),
-                    requireContext().getString(R.string.serial),
-                    requireContext().getString(R.string.dear_user),
-                    requireContext().getString(R.string.accepted));
+                    R.string.serial, R.string.dear_user, R.string.accepted);
         } else if (id == R.id.image_view_password) {
             if (binding.editTextPassword.getInputType() != InputType.TYPE_CLASS_TEXT) {
                 binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT);

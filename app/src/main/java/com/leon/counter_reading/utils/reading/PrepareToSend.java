@@ -57,9 +57,7 @@ public class PrepareToSend extends AsyncTask<Activity, Integer, Integer> {
                 HttpClientWrapper.call.cancel();
         } catch (Exception e) {
             activities[0].runOnUiThread(() -> new CustomDialogModel(Red, activities[0], e.getMessage(),
-                    activities[0].getString(R.string.dear_user),
-                    activities[0].getString(R.string.take_screen_shot),
-                    activities[0].getString(R.string.accepted)));
+                    R.string.dear_user, R.string.take_screen_shot, R.string.accepted));
         }
         activities[0].runOnUiThread(() ->
                 HttpClientWrapper.callHttpAsync(call, NOT_SHOW.getValue(), activities[0],
@@ -83,11 +81,8 @@ record offLoadData(Activity activity) implements ICallback<OnOffLoadDto.OffLoadR
                 final String error = errorHandling.getErrorMessage(response.body().status);
                 new CustomToast().error(error);
             } catch (Exception e) {
-                activity.runOnUiThread(() -> new CustomDialogModel(Red,
-                        activity, e.getMessage(),
-                        activity.getString(R.string.dear_user),
-                        activity.getString(R.string.take_screen_shot),
-                        activity.getString(R.string.accepted)));
+                activity.runOnUiThread(() -> new CustomDialogModel(Red, activity, e.getMessage(),
+                        R.string.dear_user, R.string.take_screen_shot, R.string.accepted));
             }
         }
     }
@@ -116,9 +111,7 @@ record offLoadDataIncomplete(Activity activity)
                 new CustomToast().error(error);
             } catch (Exception e) {
                 activity.runOnUiThread(() -> new CustomDialogModel(Red, activity, e.getMessage(),
-                        activity.getString(R.string.dear_user),
-                        activity.getString(R.string.take_screen_shot),
-                        activity.getString(R.string.accepted)));
+                        R.string.dear_user, R.string.take_screen_shot, R.string.accepted));
             }
         }
     }
@@ -133,11 +126,8 @@ record offLoadError(Activity activity) implements ICallbackError {
                 String error = new CustomErrorHandling(getContext()).getErrorMessageTotal(t);
                 new CustomToast().error(error);
             } catch (Exception e) {
-                activity.runOnUiThread(() -> new CustomDialogModel(Red,
-                        activity, e.getMessage(),
-                        activity.getString(R.string.dear_user),
-                        activity.getString(R.string.take_screen_shot),
-                        activity.getString(R.string.accepted)));
+                activity.runOnUiThread(() -> new CustomDialogModel(Red, activity, e.getMessage(),
+                        R.string.dear_user, R.string.take_screen_shot, R.string.accepted));
             }
         }
         publicErrorCounter = publicErrorCounter + 1;

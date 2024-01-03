@@ -75,7 +75,7 @@ public class UploadOfflineFragment extends Fragment {
             trackNumber = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber;
             trackingId = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id;
             //TODO
-    //            total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId);
+            //            total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId);
             total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId,
                     myDatabase.counterStateDao().getCounterStateDtosIsMane(true,
                             trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId));
@@ -108,8 +108,8 @@ public class UploadOfflineFragment extends Fragment {
             String message = String.format(getString(R.string.unuploaded_multimedia),
                             imagesCount, voicesCount).concat("\n")
                     .concat(getString(R.string.recommend_multimedia));
-            new CustomDialogModel(YellowRedirect, activity, message, getString(R.string.dear_user),
-                    getString(R.string.upload), getString(R.string.confirm), new Inline());
+            new CustomDialogModel(YellowRedirect, activity, message, R.string.dear_user, R.string.upload,
+                    R.string.confirm, new Inline());
             return false;
         }
         return true;

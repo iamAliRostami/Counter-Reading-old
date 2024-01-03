@@ -1,5 +1,7 @@
 package com.leon.counter_reading.fragments.report;
 
+import static com.leon.counter_reading.enums.BundleEnum.BEFORE_READ;
+import static com.leon.counter_reading.enums.BundleEnum.CONTINUE;
 import static com.leon.counter_reading.enums.BundleEnum.READ_STATUS;
 import static com.leon.counter_reading.enums.BundleEnum.TOTAL;
 import static com.leon.counter_reading.enums.BundleEnum.UNREAD;
@@ -28,10 +30,12 @@ public class ReportNotReadingFragment extends Fragment implements View.OnClickLi
     private FragmentReportNotReadingBinding binding;
     private NotReadingViewModel notReadingVM;
 
-    public static ReportNotReadingFragment newInstance(int total, int unread) {
+    public static ReportNotReadingFragment newInstance(int total, int unread, int beforeRead, int continueRead) {
         final ReportNotReadingFragment fragment = new ReportNotReadingFragment();
         final Bundle args = new Bundle();
         args.putInt(UNREAD.getValue(), unread);
+        args.putInt(BEFORE_READ.getValue(), beforeRead);
+        args.putInt(CONTINUE.getValue(), continueRead);
         args.putInt(TOTAL.getValue(), total);
         fragment.setArguments(args);
         return fragment;
@@ -41,8 +45,9 @@ public class ReportNotReadingFragment extends Fragment implements View.OnClickLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            notReadingVM = new NotReadingViewModel(getArguments().getInt(UNREAD.getValue()),
-                    getArguments().getInt(TOTAL.getValue()));
+            notReadingVM = new NotReadingViewModel(getArguments().getInt(TOTAL.getValue()),
+                    getArguments().getInt(UNREAD.getValue()), getArguments().getInt(BEFORE_READ.getValue()),
+                    getArguments().getInt(CONTINUE.getValue()));
             getArguments().clear();
         }
     }
@@ -66,17 +71,23 @@ public class ReportNotReadingFragment extends Fragment implements View.OnClickLi
         binding.imageViewNotRead.setImageDrawable(ContextCompat.getDrawable(requireContext(),
                 R.drawable.img_not_read));
         binding.buttonContinue.setOnClickListener(this);
+        binding.buttonUnread.setOnClickListener(this);
+        binding.buttonRead.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         int id = view.getId();
+        Intent intent = new Intent(requireContext(), ReadingActivity.class);
         if (id == R.id.button_continue) {
-            final Intent intent = new Intent(requireContext(), ReadingActivity.class);
+            intent.putExtra(READ_STATUS.getValue(), ReadStatusEnum.CONTINUE.getValue());
+        } else if (id == R.id.button_unread) {
             intent.putExtra(READ_STATUS.getValue(), ReadStatusEnum.UNREAD.getValue());
-            POSITION = 1;
-            startActivity(intent);
+        } else if (id == R.id.button_read) {
+            intent.putExtra(READ_STATUS.getValue(), ReadStatusEnum.BEFORE_READ.getValue());
         }
+        POSITION = 1;
+        startActivity(intent);
     }
 
     @Override

@@ -4,6 +4,8 @@ import static com.leon.counter_reading.enums.OffloadStateEnum.SENT;
 import static com.leon.counter_reading.enums.ReadStatusEnum.ALL;
 import static com.leon.counter_reading.enums.ReadStatusEnum.ALL_MANE;
 import static com.leon.counter_reading.enums.ReadStatusEnum.ALL_MANE_UNREAD;
+import static com.leon.counter_reading.enums.ReadStatusEnum.BEFORE_READ;
+import static com.leon.counter_reading.enums.ReadStatusEnum.CONTINUE;
 import static com.leon.counter_reading.enums.ReadStatusEnum.READ;
 import static com.leon.counter_reading.enums.ReadStatusEnum.STATE;
 import static com.leon.counter_reading.enums.ReadStatusEnum.UNREAD;
@@ -95,7 +97,12 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
             } else if (readStatus == ALL_MANE.getValue()) {
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().
                         getOnOffLoadReadByIsMane(IS_MANE, id));
+            } else if (readStatus == CONTINUE.getValue()) {
+                readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().getOnOffLoadCounter(0, id));
+            }else if (readStatus ==BEFORE_READ.getValue()){
+                readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().getOnOffLoadCounterRead(0,0, id));
             }
+
         }
 
         if (readingData.onOffLoadDtos != null && readingData.onOffLoadDtos.size() > 0) {

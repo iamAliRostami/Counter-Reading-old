@@ -27,6 +27,8 @@ public class GetReportDBData extends AsyncTask<Activity, Integer, Integer> {
     private int high;
     private int low;
     private int unread;
+    private int beforeRead;
+    private int continueRead;
     private int total;
     private int isMane;
 
@@ -65,18 +67,19 @@ public class GetReportDBData extends AsyncTask<Activity, Integer, Integer> {
             low += myDatabase.onOffLoadDao().getOnOffLoadReadCountByStatus(trackingDto.id, LOW.getValue());
             normal += myDatabase.onOffLoadDao().getOnOffLoadReadCountByStatus(trackingDto.id, NORMAL.getValue());
             unread += myDatabase.onOffLoadDao().getOnOffLoadReadCount(0, trackingDto.id);
+
             //TODO
-            //            total += myDatabase.onOffLoadDao().getOnOffLoadCount(trackingDto.id);
-            total += myDatabase.onOffLoadDao().getOnOffLoadCount(trackingDto.id,
-                    myDatabase.counterStateDao().getCounterStateDtosIsMane(true,
-                            trackingDto.zoneId));
+            continueRead += myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackingDto.id);
+            beforeRead += myDatabase.onOffLoadDao().getOnOffLoadReadCount(trackingDto.id);
+            //TODO
+            total += myDatabase.onOffLoadDao().getOnOffLoad(trackingDto.id);
         }
         if (trackingDtos.size() > 0)
             counterStateDtos.addAll(myDatabase.counterStateDao().getCounterStateDtos(trackingDtos.get(0).zoneId));
         try {
             activities[0].runOnUiThread(() ->
                     ((ReportActivity) (activities[0])).setupViewPager(counterStateDtos, zero, normal,
-                            high, low, total, isMane, unread));
+                            high, low, total, isMane, unread, beforeRead, continueRead));
         } catch (Exception e) {
             e.printStackTrace();
         }

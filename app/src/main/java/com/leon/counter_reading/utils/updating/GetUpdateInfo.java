@@ -1,13 +1,14 @@
 package com.leon.counter_reading.utils.updating;
 
+import static com.leon.counter_reading.enums.DialogType.Yellow;
+import static com.leon.counter_reading.enums.ProgressType.SHOW;
+
 import android.app.Activity;
 import android.content.Context;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
-import com.leon.counter_reading.enums.DialogType;
-import com.leon.counter_reading.enums.ProgressType;
 import com.leon.counter_reading.fragments.setting.SettingUpdateFragment;
 import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.infrastructure.IAbfaService;
@@ -26,17 +27,12 @@ public class GetUpdateInfo {
         Retrofit retrofit = MyApplication.getApplicationComponent().Retrofit();
         IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
         Call<LastInfo> call = iAbfaService.getLastInfo();
-        HttpClientWrapper.callHttpAsync(call, ProgressType.SHOW.getValue(), activity,
+        HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activity,
                 new UpdateInfo(settingUpdateFragment), new UpdateInfoIncomplete(activity), new UpdateError(activity));
     }
 }
 
-class UpdateInfo implements ICallback<LastInfo> {
-    final SettingUpdateFragment settingUpdateFragment;
-
-    public UpdateInfo(SettingUpdateFragment settingUpdateFragment) {
-        this.settingUpdateFragment = settingUpdateFragment;
-    }
+record UpdateInfo(SettingUpdateFragment settingUpdateFragment) implements ICallback<LastInfo> {
 
     @Override
     public void execute(Response<LastInfo> response) {
@@ -46,20 +42,13 @@ class UpdateInfo implements ICallback<LastInfo> {
     }
 }
 
-class UpdateInfoIncomplete implements ICallbackIncomplete<LastInfo> {
-    final Context context;
-
-    public UpdateInfoIncomplete(Context context) {
-        this.context = context;
-    }
+record UpdateInfoIncomplete(Context context) implements ICallbackIncomplete<LastInfo> {
 
     @Override
     public void executeIncomplete(Response<LastInfo> response) {
         CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(context);
         String error = customErrorHandlingNew.getErrorMessageDefault(response);
-        new CustomDialogModel(DialogType.Yellow, context, error,
-                context.getString(R.string.dear_user),
-                context.getString(R.string.update),
-                context.getString(R.string.accepted));
+        new CustomDialogModel(Yellow, context, error, R.string.dear_user, R.string.update,
+                R.string.accepted);
     }
 }

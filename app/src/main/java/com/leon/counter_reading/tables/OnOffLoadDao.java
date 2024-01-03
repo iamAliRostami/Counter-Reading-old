@@ -10,7 +10,7 @@ import java.util.List;
 
 @Dao
 public interface OnOffLoadDao {
-    @Query("select * From OnOffLoadDto WHERE id = :id AND trackingId = :trackingId ORDER BY eshterak")
+    @Query("select * From OnOffLoadDto WHERE  trackingId = :trackingId AND id = :id ORDER BY eshterak")
     OnOffLoadDto getAllOnOffLoadById(String id, String trackingId);
 
     @Query("select * From OnOffLoadDto Where trackingId = :trackingId ORDER BY eshterak")
@@ -19,7 +19,7 @@ public interface OnOffLoadDao {
     @Query("select * From OnOffLoadDto Where trackingId = :trackingId AND highLowStateId = :highLow ORDER BY eshterak")
     List<OnOffLoadDto> getAllOnOffLoadByHighLowAndTracking(String trackingId, int highLow);
 
-    @Query("select * From OnOffLoadDto WHERE offLoadStateId = :offLoadStateId AND trackingId = :trackingId ORDER BY eshterak")
+    @Query("select * From OnOffLoadDto WHERE  trackingId = :trackingId AND offLoadStateId = :offLoadStateId ORDER BY eshterak")
     List<OnOffLoadDto> getAllOnOffLoadRead(int offLoadStateId, String trackingId);
 
     @Query("select * From OnOffLoadDto WHERE trackingId = :trackingId AND " +
@@ -27,7 +27,7 @@ public interface OnOffLoadDao {
             "ORDER BY eshterak")
     List<OnOffLoadDto> getOnOffLoadReadByIsManeNotRead(List<Integer> counterStateId, int offLoadStateId, String trackingId);
 
-    @Query("select * From OnOffLoadDto WHERE offLoadStateId = :offLoadStateId AND trackingId = :trackingId ORDER BY eshterak")
+    @Query("select * From OnOffLoadDto WHERE trackingId = :trackingId  AND offLoadStateId = :offLoadStateId ORDER BY eshterak")
     List<OnOffLoadDto> getAllOnOffLoadNotRead(int offLoadStateId, String trackingId);//TODO
 
     @Query("select * From OnOffLoadDto WHERE trackingId = :trackingId AND offLoadStateId = :offLoadStateId")
@@ -49,13 +49,8 @@ public interface OnOffLoadDao {
             "OnOffLoadDto.d1, OnOffLoadDto.d2 From OnOffLoadDto " +
             "Inner JOIN TrackingDto on OnOffLoadDto.trackingId = TrackingDto.id " +
             "WHERE OnOffLoadDto.offLoadStateId = :offLoadStateId AND TrackingDto.isActive = :isActive")
-
-//    @Query("select * From OnOffLoadDto " +
-//            "Inner JOIN TrackingDto on OnOffLoadDto.trackingId = TrackingDto.id " +
-//            "WHERE OnOffLoadDto.offLoadStateId = :offLoadStateId AND TrackingDto.isActive = :isActive")
     List<OnOffLoadDto.OffLoad> getAllOnOffLoadInsert(int offLoadStateId, boolean isActive);
 
-    //TODO set limit
     @Query("select OnOffLoadDto.id, OnOffLoadDto.counterNumber, OnOffLoadDto.counterStateId, " +
             "OnOffLoadDto.possibleAddress, OnOffLoadDto.possibleCounterSerial, " +
             "OnOffLoadDto.possibleEshterak, OnOffLoadDto.possibleMobile, " +
@@ -71,37 +66,40 @@ public interface OnOffLoadDao {
             "LIMIT 500")
     List<OnOffLoadDto.OffLoad> getAllOnOffLoadTopInserted(int offLoadStateId, boolean isActive);
 
-    @Query("select * From OnOffLoadDto WHERE counterStateId in (:counterStateId) AND hazf = 0 AND " +
-            "trackingId = :trackingId  ORDER BY eshterak")
+    @Query("select * From OnOffLoadDto WHERE trackingId = :trackingId AND counterStateId in (:counterStateId) " +
+            "AND hazf = 0 ORDER BY eshterak")
     List<OnOffLoadDto> getOnOffLoadReadByIsMane(List<Integer> counterStateId, String trackingId);
+
+    @Query("select * From OnOffLoadDto WHERE  trackingId = :trackingId AND counterStateId = :counterStateId")
+    List<OnOffLoadDto> getOnOffLoadCounter(int counterStateId, String trackingId);
+
+
+    @Query("select * From OnOffLoadDto WHERE  trackingId = :trackingId AND counterStateId != :counterStateId AND offLoadStateId == :offLoadStateId")
+    List<OnOffLoadDto> getOnOffLoadCounterRead(int counterStateId, int offLoadStateId, String trackingId);
 
     @Query("select COUNT(*) From OnOffLoadDto WHERE trackingId = :trackingId AND highLowStateId =:highLowStateId")
     int getOnOffLoadReadCountByStatus(String trackingId, int highLowStateId);
 
-    @Query("select COUNT(*) From OnOffLoadDto WHERE offLoadStateId == :offLoadStateId AND trackingId = :trackingId")
+    @Query("select COUNT(*) From OnOffLoadDto WHERE trackingId = :trackingId AND offLoadStateId == :offLoadStateId")
     int getOnOffLoadReadCount(int offLoadStateId, String trackingId);
 
-
-    //TODO
-    //    @Query("select COUNT(*) From OnOffLoadDto WHERE offLoadStateId = :offLoadStateId AND trackingId = :trackingId")
-    //    int getOnOffLoadUnreadCount(int offLoadStateId, String trackingId);
-    @Query("select COUNT(*) From OnOffLoadDto WHERE counterStateId = :counterStateId AND trackingId = :trackingId")
+    @Query("select COUNT(*) From OnOffLoadDto WHERE  trackingId = :trackingId AND counterStateId = :counterStateId")
     int getOnOffLoadUnreadCount(int counterStateId, String trackingId);
 
-    //TODO
-//    @Query("select COUNT(*) From OnOffLoadDto WHERE trackingId = :trackingId")
-//  int getOnOffLoadCount(String trackingId);
     @Query("select COUNT(*) From OnOffLoadDto WHERE trackingId = :trackingId AND ((offLoadStateId > 0) " +
             "OR ((counterStateId == 0) OR (counterStateId IN (:mavane))))")
     int getOnOffLoadCount(String trackingId, List<Integer> mavane);
 
-    @Query("select COUNT(*) From OnOffLoadDto WHERE counterStateId = :counterStateId AND " +
-            "trackingId = :trackingId AND hazf = 0")
-    int getOnOffLoadIsManeCount2(int counterStateId, String trackingId);
+    @Query("select COUNT(*) From OnOffLoadDto WHERE trackingId = :trackingId AND counterStateId > 0 " +
+            "AND offLoadStateId == 0")
+    int getOnOffLoadReadCount(String trackingId);
+
+    @Query("select COUNT(*) From OnOffLoadDto WHERE trackingId = :trackingId")
+    int getOnOffLoad(String trackingId);
 
 
-    @Query("select COUNT(*) From OnOffLoadDto WHERE counterStateId IN (:counterStateId) AND " +
-            "trackingId = :trackingId AND hazf = 0")
+    @Query("select COUNT(*) From OnOffLoadDto WHERE trackingId = :trackingId AND " +
+            "counterStateId IN (:counterStateId) AND hazf = 0")
     int getOnOffLoadIsManeCount(List<Integer> counterStateId, String trackingId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

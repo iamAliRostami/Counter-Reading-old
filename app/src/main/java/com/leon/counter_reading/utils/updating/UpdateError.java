@@ -1,11 +1,12 @@
 package com.leon.counter_reading.utils.updating;
 
+import static com.leon.counter_reading.enums.DialogType.Red;
+
 import android.content.Context;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
-import com.leon.counter_reading.enums.DialogType;
 import com.leon.counter_reading.infrastructure.ICallbackError;
 import com.leon.counter_reading.utils.CustomErrorHandling;
 
@@ -19,12 +20,10 @@ public class UpdateError implements ICallbackError {
     @Override
     public void executeError(Throwable t) {
         if (!HttpClientWrapper.cancel) {
-            CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(context);
-            String error = customErrorHandlingNew.getErrorMessageTotal(t);
-            new CustomDialogModel(DialogType.Red, context, error,
-                    context.getString(R.string.dear_user),
-                    context.getString(R.string.update),
-                    context.getString(R.string.accepted));
+            CustomErrorHandling errorHandling = new CustomErrorHandling(context);
+            String error = errorHandling.getErrorMessageTotal(t);
+            new CustomDialogModel(Red, context, error, R.string.dear_user, R.string.update,
+                    R.string.accepted);
         }
     }
 }

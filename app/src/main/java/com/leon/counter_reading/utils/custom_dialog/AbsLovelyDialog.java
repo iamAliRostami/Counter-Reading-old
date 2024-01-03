@@ -220,9 +220,7 @@ public abstract class AbsLovelyDialog<T extends AbsLovelyDialog> {
         @Override
         public void onClick(View v) {
             if (clickListener != null) {
-                if (clickListener instanceof LovelyDialogCompat.DialogOnClickListenerAdapter) {
-                    LovelyDialogCompat.DialogOnClickListenerAdapter listener =
-                            (LovelyDialogCompat.DialogOnClickListenerAdapter) clickListener;
+                if (clickListener instanceof LovelyDialogCompat.DialogOnClickListenerAdapter listener) {
                     listener.onClick(dialog, v.getId());
                 } else {
                     clickListener.onClick(v);

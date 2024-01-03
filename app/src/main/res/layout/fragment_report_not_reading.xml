@@ -26,10 +26,11 @@
             tools:ignore="ContentDescription" />
 
         <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/relative_layout_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/button_continue"
+            android:layout_above="@id/button_read"
             android:layout_margin="@dimen/medium_dp"
             android:background="@drawable/border_gray_4">
 
@@ -77,10 +78,27 @@
                     android:id="@+id/text_view_not_read"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{notReadingVM.unread}"
+                    android:text="@{notReadingVM.unread + @string/continue_reading}"
                     android:textColor="@color/text_color_dark" />
             </LinearLayout>
         </RelativeLayout>
+
+        <Button
+            android:id="@+id/button_read"
+            style="@style/ButtonSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/button_unread"
+            android:layout_margin="@dimen/medium_dp"
+            android:text="@{@string/before_read + ` (` +notReadingVM.beforeRead + `)`}" />
+        <Button
+            android:id="@+id/button_unread"
+            style="@style/ButtonInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/button_continue"
+            android:layout_margin="@dimen/medium_dp"
+            android:text="@{@string/not_read + ` (` +notReadingVM.unread + `)`}" />
 
         <Button
             android:id="@+id/button_continue"
@@ -90,6 +108,6 @@
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/medium_dp"
             android:background="@drawable/border_yellow_3"
-            android:text="@string/continue_reading" />
+            android:text="@{@string/continue_reading + ` (` +notReadingVM.continueRead + `)`}" />
     </RelativeLayout>
 </layout>

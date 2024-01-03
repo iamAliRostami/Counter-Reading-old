@@ -91,11 +91,8 @@ class offLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
                 final String error = errorHandling.getErrorMessage(response.body().status);
                 new CustomToast().error(error);
             } catch (Exception e) {
-                activity.runOnUiThread(() -> new CustomDialogModel(Red,
-                        activity, e.getMessage(),
-                        activity.getString(R.string.dear_user),
-                        activity.getString(R.string.take_screen_shot),
-                        activity.getString(R.string.accepted)));
+                activity.runOnUiThread(() -> new CustomDialogModel(Red, activity, e.getMessage(),
+                        R.string.dear_user, R.string.take_screen_shot, R.string.accepted));
             }
         }
     }
@@ -125,9 +122,7 @@ class offLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadR
                 new CustomToast().error(error);
             } catch (Exception e) {
                 activity.runOnUiThread(() -> new CustomDialogModel(Red, activity, e.getMessage(),
-                        activity.getString(R.string.dear_user),
-                        activity.getString(R.string.take_screen_shot),
-                        activity.getString(R.string.accepted)));
+                        R.string.dear_user, R.string.take_screen_shot, R.string.accepted));
             }
         }
     }
@@ -148,11 +143,8 @@ class offLoadError implements ICallbackError {
                 final String error = errorHandling.getErrorMessageTotal(t);
                 new CustomToast().error(error);
             } catch (Exception e) {
-                activity.runOnUiThread(() -> new CustomDialogModel(Red,
-                        activity, e.getMessage(),
-                        activity.getString(R.string.dear_user),
-                        activity.getString(R.string.take_screen_shot),
-                        activity.getString(R.string.accepted)));
+                activity.runOnUiThread(() -> new CustomDialogModel(Red, activity, e.getMessage(),
+                        R.string.dear_user, R.string.take_screen_shot, R.string.accepted));
             }
         }
     }

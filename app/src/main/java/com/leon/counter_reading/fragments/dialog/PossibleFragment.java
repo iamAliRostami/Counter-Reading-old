@@ -105,7 +105,6 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
     }
 
     private void initializeGuildsSpinner() {
-        //TODO
         guildsTemp = new ArrayList<>(possible.getGuilds());
         final String[] items = new String[guildsTemp.size() + 1];
         for (int i = 0; i < guildsTemp.size(); i++) {
@@ -131,13 +130,10 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         items[0] = getString(R.string.select_one);
         final SpinnerAdapter adapter = new SpinnerAdapter(requireActivity(), items);
         binding.spinnerKarbari.setAdapter(adapter);
-
         for (int i = 0; i < karbariDtosTemp.size(); i++) {
             if (karbariDtosTemp.get(i).moshtarakinId == possible.getOnOffLoadDto().possibleKarbariCode)
                 binding.spinnerKarbari.setSelection(i + 1);
         }
-//        if (possible.getOnOffLoadDto().possibleKarbariCode != null)
-//            binding.spinnerKarbari.setSelection(possible.getOnOffLoadDto().possibleKarbariCode + 1);
     }
 
     private void counterReport() {
@@ -231,8 +227,7 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
         if (id == R.id.text_view_mobile || id == R.id.image_view_mobile) {
             if (possible.getMobiles() != null) {
                 new CustomDialogModel(Green, requireContext(), possible.getMobiles(),
-                        getString(R.string.dear_user), getString(R.string.mobile_number),
-                        getString(R.string.accepted));
+                        R.string.dear_user, R.string.mobile_number, R.string.accepted);
             } else new CustomToast().warning("موردی یافت نشد.");
         } else if (id == R.id.text_view_report) {
             counterReport();
@@ -297,9 +292,8 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
             getDialog().getWindow().setAttributes(params);
         } else {
             readingActivity.updateOnOffLoadByAttempt(possible.getPosition(), true);
-            new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
-                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
-                    getString(R.string.accepted));
+            new CustomDialogModel(Red, requireContext(), R.string.refresh_page, R.string.dear_user,
+                    R.string.take_screen_shot, R.string.accepted);
         }
         super.onResume();
     }

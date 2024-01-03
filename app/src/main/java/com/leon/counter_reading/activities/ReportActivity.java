@@ -77,11 +77,12 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
     }
 
     public void setupViewPager(ArrayList<CounterStateDto> counterState, int zero, int normal,
-                               int high, int low, int total, int isMane, int unread) {
+                               int high, int low, int total, int isMane, int unread, int beforeRead,
+                               int continueRead) {
         this.counterStateDtos = new ArrayList<>(counterState);
         final ViewPagerTabAdapter adapter = new ViewPagerTabAdapter(getSupportFragmentManager());
         adapter.addFragment(ReportTotalFragment.newInstance(zero, normal, high, low));
-        adapter.addFragment(ReportNotReadingFragment.newInstance(total, unread));
+        adapter.addFragment(ReportNotReadingFragment.newInstance(total, unread, beforeRead, continueRead));
         adapter.addFragment(ReportTemporaryFragment.newInstance(total, isMane));
         adapter.addFragment(ReportForbidsFragment.newInstance());
         adapter.addFragment(ReportInspectionFragment.newInstance());

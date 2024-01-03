@@ -9,7 +9,6 @@ import static com.leon.counter_reading.helpers.MyApplication.getApplicationCompo
 
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,24 +116,12 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
         if (binding.spinner.getSelectedItemPosition() != 0) {
             final String trackingId = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id;
             final int trackNumber = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber;
-            //TODO
-//            final int total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId,);
-
             final int total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId,
                     myDatabase.counterStateDao().getCounterStateDtosIsMane(true,
                             trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId));
 
 
             unread = myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackingId);
-            //TODO
-            //            final ArrayList<Integer> isManes = new ArrayList<>(myDatabase.counterStateDao().
-//                    getCounterStateDtosIsMane(true,
-//                            trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId));
-            //            for (int i = 0; i < isManes.size(); i++) {
-//                mane += myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(isManes.get(i), trackingId);
-            //            }
-            //            Log.e("mane 1", String.valueOf(mane));
-            //            Log.e("mane 2", String.valueOf(myDatabase.onOffLoadDao().getOnOffLoadIsManeCount1(isManes, trackingId)));
             mane = myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(myDatabase.counterStateDao().
                             getCounterStateDtosIsMane(true,
                                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId),
@@ -143,8 +130,6 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
 
             alalPercent = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).alalHesabPercent;
             alalMane = (double) mane / total * 100;
-            Log.e("alalmane", String.valueOf(alalMane));
-            Log.e("total", String.valueOf(total));
             imagesCount = myDatabase.imageDao().getUnsentImageCountByTrackNumber(trackNumber, false);
             voicesCount = myDatabase.voiceDao().getUnsentVoiceCountByTrackNumber(trackNumber, false);
         } else return false;
@@ -162,8 +147,8 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
             String message = String.format(getString(R.string.unuploaded_multimedia),
                             imagesCount, voicesCount).concat("\n")
                     .concat(getString(R.string.recommend_multimedia));
-            new CustomDialogModel(YellowRedirect, requireContext(), message, getString(R.string.dear_user),
-                    getString(R.string.upload), getString(R.string.confirm), new Inline());
+            new CustomDialogModel(YellowRedirect, requireContext(), message, R.string.dear_user,
+                    R.string.upload, R.string.confirm, new Inline());
             return false;
         }
         return true;

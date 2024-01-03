@@ -94,9 +94,8 @@ public class UsbFilesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        if (viewHolder instanceof USBViewHolder) {
+        if (viewHolder instanceof USBViewHolder holder) {
             final UsbFile file = usbFiles.get(position);
-            final USBViewHolder holder = (USBViewHolder) viewHolder;
             if (file.isDirectory()) {
                 holder.type.setImageResource(R.drawable.ic_folder_alpha);
             } else {

@@ -8,7 +8,9 @@ public enum ReadStatusEnum {
     STATE(4),
     TRACK_NUMBER(5),
     READ(6),
-    ALL_MANE_UNREAD(7);
+    ALL_MANE_UNREAD(7),
+    BEFORE_READ(8),
+    CONTINUE(9);
 
     private final int value;
 

@@ -13,7 +13,6 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
-import com.leon.counter_reading.helpers.MyApplication;
 import com.leon.counter_reading.utils.CalendarTool;
 import com.leon.counter_reading.utils.custom_dialog.LovelyTextInputDialog;
 
@@ -27,7 +26,7 @@ public class TwoStepVerification {
                         lovelyTextInputDialog.getEditTextNumber().getText().toString().isEmpty()).setConfirmButton(R.string.confirm, text -> {
                     InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-                    final int personalCode = getDigits(lovelyTextInputDialog.getEditTextNumber().getText().toString());
+                    int personalCode = getDigits(lovelyTextInputDialog.getEditTextNumber().getText().toString());
                     getApplicationComponent().SharedPreferenceModel().putData(PERSONAL_CODE.getValue(), personalCode);
                 }).setNegativeButton(R.string.close, v -> {
                     InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
@@ -38,9 +37,10 @@ public class TwoStepVerification {
 
     public static void showPersonalCode(Activity activity) {
         if (getApplicationComponent().SharedPreferenceModel().getIntNullData(PERSONAL_CODE.getValue()) > 0) {
-            final CalendarTool calendarTool = new CalendarTool();
-            final String verificationCode = String.valueOf(getApplicationComponent().SharedPreferenceModel().getIntData(PERSONAL_CODE.getValue()) + 1313 * calendarTool.getIranianMonth() * calendarTool.getIranianDay());
-            final CustomDialogModel dialog = new CustomDialogModel(Green, activity, verificationCode, MyApplication.getContext().getString(R.string.verification_code), MyApplication.getContext().getString(R.string.dear_user), MyApplication.getContext().getString(R.string.accepted));
+            CalendarTool calendarTool = new CalendarTool();
+            String verificationCode = String.valueOf(getApplicationComponent().SharedPreferenceModel().getIntData(PERSONAL_CODE.getValue()) + 1313 * calendarTool.getIranianMonth() * calendarTool.getIranianDay());
+            CustomDialogModel dialog = new CustomDialogModel(Green, activity, verificationCode,
+                    R.string.verification_code, R.string.dear_user, R.string.accepted);
             dialog.getLovelyStandardDialog().getMessageView().setTextSize(activity.getResources().getDimension(R.dimen.text_size_huge));
         } else insertPersonalCode(activity);
     }

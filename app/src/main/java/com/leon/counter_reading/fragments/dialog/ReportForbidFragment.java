@@ -300,9 +300,8 @@ public class ReportForbidFragment extends DialogFragment implements TextWatcher,
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             getDialog().getWindow().setAttributes(params);
         } else {
-            new CustomDialogModel(Red, requireContext(), getString(R.string.refresh_page),
-                    getString(R.string.dear_user), getString(R.string.take_screen_shot),
-                    getString(R.string.accepted));
+            new CustomDialogModel(Red, requireContext(), R.string.refresh_page, R.string.dear_user,
+                    R.string.take_screen_shot, R.string.accepted);
         }
         super.onResume();
     }

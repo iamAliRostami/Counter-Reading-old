@@ -76,10 +76,8 @@ class ChangeIncomplete implements ICallbackIncomplete<SimpleResponse> {
                 e.printStackTrace();
             }
         } else
-            new CustomDialogModel(Yellow, context, error,
-                    context.getString(R.string.dear_user),
-                    context.getString(R.string.change_password),
-                    context.getString(R.string.accepted));
+            new CustomDialogModel(Yellow, context, error, R.string.dear_user, R.string.change_password,
+                    R.string.accepted);
     }
 }
 
@@ -92,11 +90,9 @@ class ChangeError implements ICallbackError {
 
     @Override
     public void executeError(Throwable t) {
-        CustomErrorHandling customErrorHandlingNew = new CustomErrorHandling(context);
-        String error = customErrorHandlingNew.getErrorMessageTotal(t);
-        new CustomDialogModel(Yellow, context, error,
-                context.getString(R.string.dear_user),
-                context.getString(R.string.change_password),
-                context.getString(R.string.accepted));
+        CustomErrorHandling errorHandling = new CustomErrorHandling(context);
+        String error = errorHandling.getErrorMessageTotal(t);
+        new CustomDialogModel(Yellow, context, error, R.string.dear_user, R.string.change_password,
+                R.string.accepted);
     }
 }

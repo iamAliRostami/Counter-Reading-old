@@ -119,6 +119,7 @@
     <string name="delete_data">حذف داده ها</string>
     <string name="temporary">علی الحساب</string>
     <string name="not_read">قرائت نشده</string>
+    <string name="before_read">قبلا قرائت شده</string>
     <string name="total_statistic">آمار کلی</string>
     <string name="down">پایین </string>
     <string name="up">بالا </string>
