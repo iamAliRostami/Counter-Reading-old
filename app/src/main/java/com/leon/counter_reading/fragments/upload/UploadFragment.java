@@ -119,15 +119,11 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
             final int total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId,
                     myDatabase.counterStateDao().getCounterStateDtosIsMane(true,
                             trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId));
-
-
             unread = myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackingId);
             mane = myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(myDatabase.counterStateDao().
                             getCounterStateDtosIsMane(true,
                                     trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId),
                     trackingId);
-
-
             alalPercent = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).alalHesabPercent;
             alalMane = (double) mane / total * 100;
             imagesCount = myDatabase.imageDao().getUnsentImageCountByTrackNumber(trackNumber, false);
@@ -166,7 +162,6 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
                 if (checkOnOffLoad()) {
                     sendOnOffLoad();
                 }
-                sendOnOffLoad();
             }
         }
     }
