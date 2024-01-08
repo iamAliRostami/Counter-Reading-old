@@ -93,10 +93,11 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
     }
 
     public void setMultimediaInfo() {
-        final int imagesCount = getApplicationComponent().MyDatabase().imageDao().getUnsentImageCount(false);
-        final int voicesCount = getApplicationComponent().MyDatabase().voiceDao().getUnsentVoiceCount(false);
-        final int imagesSize = getApplicationComponent().MyDatabase().imageDao().getUnsentImageSize(false);
-        final int voicesSize = getApplicationComponent().MyDatabase().voiceDao().getUnsentVoiceSizes(false);
+        MyDatabase myDatabase = getApplicationComponent().MyDatabase();
+        final int imagesCount = myDatabase.imageDao().getUnsentImageCount(false);
+        final int voicesCount = myDatabase.voiceDao().getUnsentVoiceCount(false);
+        final int imagesSize = myDatabase.imageDao().getUnsentImageSize(false);
+        final int voicesSize = myDatabase.voiceDao().getUnsentVoiceSizes(false);
         final String message = "تعداد عکس: ".concat(String.valueOf(imagesCount))
                 .concat(" *** حجم: ").concat(String.valueOf(imagesSize)).concat(" KB").concat("\n")
                 .concat("تعداد صدا: ").concat(String.valueOf(voicesCount))
@@ -105,26 +106,26 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setupSpinner() {
-        final SpinnerAdapter adapter = new SpinnerAdapter(requireContext(), items);
+        SpinnerAdapter adapter = new SpinnerAdapter(requireContext(), items);
         binding.spinner.setAdapter(adapter);
     }
 
     private boolean checkOnOffLoad() {
-        int mane = 0,/*todo*/ unread, alalPercent, imagesCount, voicesCount;
+        int position = binding.spinner.getSelectedItemPosition();
+        int mane, unread, alalPercent, imagesCount, voicesCount;
+        TrackingDto trackingDto;
         double alalMane;
-        final MyDatabase myDatabase = getApplicationComponent().MyDatabase();
-        if (binding.spinner.getSelectedItemPosition() != 0) {
-            final String trackingId = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id;
-            final int trackNumber = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber;
-            final int total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId,
-                    myDatabase.counterStateDao().getCounterStateDtosIsMane(true,
-                            trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId));
+        MyDatabase myDatabase = getApplicationComponent().MyDatabase();
+        if (position != 0) {
+            trackingDto = trackingDtos.get(position - 1);
+            String trackingId = trackingDto.id;
+            int trackNumber = trackingDto.trackNumber;
+            int total = myDatabase.onOffLoadDao().getOnOffLoadCount(trackingId,
+                    myDatabase.counterStateDao().getCounterStateDtosIsMane(true, trackingDto.zoneId));
             unread = myDatabase.onOffLoadDao().getOnOffLoadUnreadCount(0, trackingId);
             mane = myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(myDatabase.counterStateDao().
-                            getCounterStateDtosIsMane(true,
-                                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).zoneId),
-                    trackingId);
-            alalPercent = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).alalHesabPercent;
+                    getCounterStateDtosIsMane(true, trackingDto.zoneId), trackingId);
+            alalPercent = trackingDto.alalHesabPercent;
             alalMane = (double) mane / total * 100;
             imagesCount = myDatabase.imageDao().getUnsentImageCountByTrackNumber(trackNumber, false);
             voicesCount = myDatabase.voiceDao().getUnsentVoiceCountByTrackNumber(trackNumber, false);
@@ -138,8 +139,7 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
                     alalPercent, new DecimalFormat("###.##").format(alalMane), mane);
             new CustomToast().info(message, Toast.LENGTH_LONG);
             return false;
-        } else if (!trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).isRepeat &&
-                (type != OFFLINE.getValue() && (imagesCount > 0 || voicesCount > 0))) {
+        } else if (!trackingDto.isRepeat && (type != OFFLINE.getValue() && (imagesCount > 0 || voicesCount > 0))) {
             String message = String.format(getString(R.string.unuploaded_multimedia),
                             imagesCount, voicesCount).concat("\n")
                     .concat(getString(R.string.recommend_multimedia));
@@ -154,9 +154,9 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         final int id = view.getId();
         if (id == R.id.button_upload) {
+            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
+            lastClickTime = SystemClock.elapsedRealtime();
             if (type == MULTIMEDIA.getValue()) {
-                if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
-                lastClickTime = SystemClock.elapsedRealtime();
                 new PrepareMultimedia(requireActivity(), this, false).execute(requireActivity());
             } else {
                 if (checkOnOffLoad()) {
@@ -167,18 +167,12 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
     }
 
     private void sendOnOffLoad() {
+        int trackNumber = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber;
+        String id = trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id;
         if (type == NORMAL.getValue()) {
-            if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
-            lastClickTime = SystemClock.elapsedRealtime();
-            new PrepareOffLoad(requireActivity(),
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
-                    .execute(requireActivity());
+            new PrepareOffLoad(requireActivity(), trackNumber, id).execute(requireActivity());
         } else if (type == OFFLINE.getValue()) {
-            new PrepareOffLoadOffline(requireActivity(),
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).trackNumber,
-                    trackingDtos.get(binding.spinner.getSelectedItemPosition() - 1).id)
-                    .execute(requireActivity());
+            new PrepareOffLoadOffline(requireActivity(), trackNumber, id).execute(requireActivity());
         }
     }
 
