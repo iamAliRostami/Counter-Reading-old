@@ -10,6 +10,7 @@ import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompan
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
 import static com.leon.counter_reading.utils.PermissionManager.checkRecorderPermission;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -42,6 +43,7 @@ import com.leon.counter_reading.utils.voice.PrepareMultimedia;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class DescriptionActivity extends AppCompatActivity implements View.OnClickListener,
@@ -51,17 +53,32 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
     private Voice voice;
     private MediaPlayer mediaPlayer;
     private MediaRecorder mediaRecorder;
-    private String uuid, description;
+    private String uuid, description, dir;
     private long lastClickTime = 0;
     private boolean play = false;
     private int progressChangedValue;
     private int position, startTime = 0, finalTime = 0, trackNumber;
+    private final Handler myHandler = new Handler();
+    private final Runnable UpdateSongTime = new Runnable() {
+        public void run() {
+            if (play) {
+                startTime = mediaPlayer.getCurrentPosition();
+                binding.textViewCurrent.setText(String.format(Locale.US, "%d دقیقه، %d ثانیه",
+                        MILLISECONDS.toMinutes(startTime), MILLISECONDS.toSeconds(startTime) -
+                                TimeUnit.MINUTES.toSeconds(MILLISECONDS.toMinutes(startTime))));
+                binding.seekBar.setProgress(startTime);
+                myHandler.postDelayed(this, 1);
+                if (startTime == finalTime) {
+                    stopPlaying();
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         onActivitySetTheme(this, getApplicationComponent().SharedPreferenceModel()
-                        .getIntData(THEME_STABLE.getValue()),
-                true);
+                .getIntData(THEME_STABLE.getValue()), true);
         super.onCreate(savedInstanceState);
         binding = ActivityDescriptionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -81,6 +98,7 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
             description = getIntent().getExtras().getString(DESCRIPTION.getValue());
             getIntent().getExtras().clear();
         }
+        dir = getExternalFilesDir(null).getAbsolutePath().concat(getString(R.string.audio_folder));
         binding.imageViewRecord.setImageDrawable(AppCompatResources.getDrawable(activity,
                 R.drawable.img_record));
         checkMultimediaAndToggle();
@@ -94,6 +112,30 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
         binding.imageViewPlay.setOnClickListener(this);
         binding.buttonSend.setOnClickListener(this);
         binding.seekBar.setOnSeekBarChangeListener(this);
+    }
+
+    private void startPlaying() {
+        try {
+            binding.linearLayoutSeek.setVisibility(View.VISIBLE);
+            play = true;
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setDataSource(dir.concat(voice.address));
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            finalTime = mediaPlayer.getDuration();
+            startTime = mediaPlayer.getCurrentPosition();
+            binding.seekBar.setMax(finalTime);
+            binding.seekBar.setProgress(startTime);
+            binding.textViewTotal.setText(String.format(Locale.US, "%d دقیقه، %d ثانیه",
+                    MILLISECONDS.toMinutes(finalTime), MILLISECONDS.toSeconds(finalTime) -
+                            TimeUnit.MINUTES.toSeconds(MILLISECONDS.toMinutes(finalTime))));
+            myHandler.postDelayed(UpdateSongTime, 1);
+            binding.imageViewPlay.setImageResource(R.drawable.img_pause);
+            binding.imageViewRecord.setEnabled(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+            new CustomToast().warning(getString(R.string.error_in_play_voice));
+        }
     }
 
     private void stopPlaying() {
@@ -117,8 +159,7 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        mediaRecorder.setOutputFile(getExternalFilesDir(null).getAbsolutePath() +
-                getString(R.string.audio_folder) + voice.address);
+        mediaRecorder.setOutputFile(dir.concat(voice.address));
     }
 
     private void checkMultimediaAndToggle() {
@@ -161,72 +202,33 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    @SuppressLint("DefaultLocale")
     @Override
     public void onClick(View view) {
         if (SystemClock.elapsedRealtime() - lastClickTime < 1000) return;
         lastClickTime = SystemClock.elapsedRealtime();
-        final int id = view.getId();
+        int id = view.getId();
         if (id == R.id.button_send) {
-            voice.OnOffLoadId = uuid;
-            voice.trackNumber = trackNumber;
-            String message = binding.editTextMessage.getText().toString();
-            if (voice.address != null && voice.address.length() > 0)
-                new PrepareMultimedia(activity, voice, binding.editTextMessage.getText().toString()
-                        , uuid, position).execute(activity);
-            else if (message.length() > 0) {
-                finishDescription(message);
-            } else {
-                new CustomToast().warning(getString(R.string.insert_message));
-            }
+            sendDescription();
         } else if (id == R.id.image_view_play) {
             if (!play) {
-                try {
-                    binding.linearLayoutSeek.setVisibility(View.VISIBLE);
-                    play = true;
-                    mediaPlayer = new MediaPlayer();
-                    mediaPlayer.setDataSource(getExternalFilesDir(null).getAbsolutePath() +
-                            getString(R.string.audio_folder) + voice.address);
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
-                    finalTime = mediaPlayer.getDuration();
-                    startTime = mediaPlayer.getCurrentPosition();
-                    binding.seekBar.setMax(finalTime);
-                    final Handler myHandler = new Handler();
-                    binding.seekBar.setProgress(startTime);
-                    Runnable UpdateSongTime = new Runnable() {
-                        public void run() {
-                            if (play) {
-                                startTime = mediaPlayer.getCurrentPosition();
-                                binding.textViewCurrent.setText(String.format("%d دقیقه، %d ثانیه",
-                                        TimeUnit.MILLISECONDS.toMinutes(startTime),
-                                        TimeUnit.MILLISECONDS.toSeconds(startTime) -
-                                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
-                                                        toMinutes(startTime)))
-                                );
-                                binding.seekBar.setProgress(startTime);
-                                myHandler.postDelayed(this, 1);
-                                if (startTime == finalTime) {
-                                    stopPlaying();
-                                }
-                            }
-                        }
-                    };
-                    binding.textViewTotal.setText(String.format("%d دقیقه، %d ثانیه",
-                            TimeUnit.MILLISECONDS.toMinutes(finalTime),
-                            TimeUnit.MILLISECONDS.toSeconds(finalTime) -
-                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(finalTime)))
-                    );
-                    myHandler.postDelayed(UpdateSongTime, 1);
-                    binding.imageViewPlay.setImageResource(R.drawable.img_pause);
-                    binding.imageViewRecord.setEnabled(false);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    new CustomToast().warning(getString(R.string.error_in_play_voice));
-                }
+                startPlaying();
             } else {
                 stopPlaying();
             }
+        }
+    }
+
+    private void sendDescription() {
+        voice.OnOffLoadId = uuid;
+        voice.trackNumber = trackNumber;
+        String message = binding.editTextMessage.getText().toString();
+        if (voice.address != null && voice.address.length() > 0)
+            new PrepareMultimedia(activity, voice, binding.editTextMessage.getText().toString()
+                    , uuid, position).execute(activity);
+        else if (message.length() > 0) {
+            finishDescription(message);
+        } else {
+            new CustomToast().warning(getString(R.string.insert_message));
         }
     }
 
@@ -234,53 +236,59 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-            new CustomToast().info(getString(R.string.recording), Toast.LENGTH_LONG);
-            binding.imageViewPlay.setEnabled(false);
-            voice.address = CustomFile.createAudioFile(activity);
-            setupMediaRecorder();
-            try {
-                mediaRecorder.prepare();
-                mediaRecorder.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-                new CustomToast().warning(getString(R.string.error_in_record_voice));
-                mediaRecorder.stop();
-            }
+            startRecording();
         }
         if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            stopRecording();
+        }
+        return false;
+    }
+
+    private void startRecording() {
+        new CustomToast().info(getString(R.string.recording), Toast.LENGTH_LONG);
+        binding.imageViewPlay.setEnabled(false);
+        voice.address = CustomFile.createAudioFile(activity);
+        setupMediaRecorder();
+        try {
+            mediaRecorder.prepare();
+            mediaRecorder.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            new CustomToast().warning(getString(R.string.error_in_record_voice));
             mediaRecorder.stop();
+        }
+    }
+
+    private void stopRecording() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mediaRecorder.stop();
+        try {
+            mediaPlayer = new MediaPlayer();
+            voice.size = new File(dir.concat(voice.address)).length();
+            mediaPlayer.setDataSource(dir.concat(voice.address));
+            mediaPlayer.prepare();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (mediaPlayer.getDuration() > 2000) {
+            binding.imageViewPlay.setEnabled(true);
+            binding.imageViewPlay.setImageResource(R.drawable.img_play);
+        } else {
+            binding.imageViewPlay.setImageResource(R.drawable.img_play_pause);
+            binding.imageViewPlay.setEnabled(false);
+        }
+        if (mediaPlayer != null) {
             try {
-                mediaPlayer = new MediaPlayer();
-                voice.size = new File(getExternalFilesDir(null).getAbsolutePath() +
-                        getString(R.string.audio_folder) + voice.address).length();
-                mediaPlayer.setDataSource(getExternalFilesDir(null).getAbsolutePath() +
-                        getString(R.string.audio_folder) + voice.address);
-                mediaPlayer.prepare();
+                mediaPlayer.stop();
+                mediaPlayer.release();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (mediaPlayer.getDuration() > 2000) {
-                binding.imageViewPlay.setEnabled(true);
-                binding.imageViewPlay.setImageResource(R.drawable.img_play);
-            } else {
-                binding.imageViewPlay.setImageResource(R.drawable.img_play_pause);
-                binding.imageViewPlay.setEnabled(false);
-            }
-            if (mediaPlayer != null) {
-                try {
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
         }
-        return false;
     }
 
     private void finishDescription(String message) {
@@ -314,7 +322,6 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
                 .setGotoSettingButtonText(getString(R.string.allow_permission))
                 .setPermissions(RECORD_AUDIO_PERMISSIONS).check();
     }
-
 
     @Override
     public void onBackPressed() {

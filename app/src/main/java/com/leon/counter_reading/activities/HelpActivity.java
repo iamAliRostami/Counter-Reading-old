@@ -91,7 +91,7 @@ public class HelpActivity extends BaseActivity {
         binding.imageView.setImageBitmap(bitmap);
     }
 
-    void copyToCache(File file, @RawRes int pdfResource) throws IOException {
+    private void copyToCache(File file, @RawRes int pdfResource) throws IOException {
         if (!file.exists()) {
             //Get input stream object to read the pdf
             final InputStream input = getResources().openRawResource(pdfResource);

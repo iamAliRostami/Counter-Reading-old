@@ -31,7 +31,7 @@ public class DistributionBillActivity extends AppCompatActivity {
     }
 
     void initialize() {
-        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+         TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(getCompanyName());
         binding.imageViewBill.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(),
                 R.drawable.img_temporary));

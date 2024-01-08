@@ -1,5 +1,6 @@
 package com.leon.counter_reading.base_items;
 
+import static com.leon.counter_reading.adapters.recycler_view.RecyclerItemClickListener.OnItemClickListener;
 import static com.leon.counter_reading.di.view_model.MyDatabaseClientModel.migration;
 import static com.leon.counter_reading.enums.BundleEnum.THEME;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.DISPLAY_NAME;
@@ -37,20 +38,24 @@ import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.window.OnBackInvokedDispatcher;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.OptIn;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.os.BuildCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.leon.counter_reading.BuildConfig;
@@ -65,8 +70,8 @@ import com.leon.counter_reading.activities.ReportActivity;
 import com.leon.counter_reading.activities.SettingActivity;
 import com.leon.counter_reading.activities.UploadActivity;
 import com.leon.counter_reading.adapters.NavigationDrawerAdapter;
-import com.leon.counter_reading.adapters.recycler_view.RecyclerItemClickListener;
 import com.leon.counter_reading.adapters.items.DrawerItem;
+import com.leon.counter_reading.adapters.recycler_view.RecyclerItemClickListener;
 import com.leon.counter_reading.databinding.ActivityBaseBinding;
 import com.leon.counter_reading.di.view_model.GoogleLocationTracking;
 import com.leon.counter_reading.di.view_model.GpsLocationTracking;
@@ -78,7 +83,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener {
+        OnNavigationItemSelectedListener, OnItemClickListener {
     private Activity activity;
     private Toolbar toolbar;
     private ActivityBaseBinding binding;
@@ -95,6 +100,19 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
+        onActivitySetTheme(this, getThemeId(), false);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        super.onCreate(savedInstanceState);
+        binding = ActivityBaseBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        initializeBase();
+        if (isNetworkAvailable(getApplicationContext()))
+            checkPermissions();
+        else enableNetwork(this);
+        addOnBackPressed();
+    }
+
+    private int getThemeId() {
         int theme;
         if (getIntent().getExtras() != null) {
             theme = getIntent().getExtras().getInt(THEME.getValue());
@@ -104,15 +122,30 @@ public abstract class BaseActivity extends AppCompatActivity implements
         } else {
             theme = sharedPreferenceManager.getIntData(THEME_STABLE.getValue());
         }
-        onActivitySetTheme(this, theme, false);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        super.onCreate(savedInstanceState);
-        binding = ActivityBaseBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        initializeBase();
-        if (isNetworkAvailable(getApplicationContext()))
-            checkPermissions();
-        else enableNetwork(this);
+        return theme;
+    }
+
+    @OptIn(markerClass = BuildCompat.PrereleaseSdkCheck.class)
+    private void addOnBackPressed() {
+        if (BuildCompat.isAtLeastT()) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::backPressed);
+        } else {
+            getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    backPressed();
+                }
+            });
+        }
+    }
+
+    private void backPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            new CustomToast().info(getString(R.string.how_to_exit));
+        }
     }
 
     private void checkPermissions() {
@@ -139,13 +172,12 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 PermissionManager.forceClose(activity);
             }
         };
-        //TODO
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()) {
-                final Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
+                Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
                 allFileResultLauncher.launch(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
             } else if (!Settings.System.canWrite(activity)) {
-                final Uri uri = Uri.fromParts("package", getPackageName(), null);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
                 settingResultLauncher.launch(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, uri));
             } else if (ActivityCompat.checkSelfPermission(activity,
                     Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -197,15 +229,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onBackPressed() {
-        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            new CustomToast().info(getString(R.string.how_to_exit));
-        }
-    }
-
-    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         binding.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
@@ -221,59 +244,50 @@ public abstract class BaseActivity extends AppCompatActivity implements
             } else
                 binding.drawerLayout.closeDrawer(GravityCompat.START);
         });
-        binding.recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(),
-                        binding.recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        binding.drawerLayout.closeDrawer(GravityCompat.START);
-                        if (position == 8) {
-                            POSITION = -1;
-                            exit = true;
-                            finishAffinity();
-                        } else if (POSITION != position) {
-                            POSITION = position;
-                            Intent intent = new Intent();
-                            if (position == 0) {
-                                intent = new Intent(getApplicationContext(), DownloadActivity.class);
-                            } else if (position == 1) {
-                                intent = new Intent(getApplicationContext(), ReadingActivity.class);
-                            } else if (position == 2) {
-                                intent = new Intent(getApplicationContext(), UploadActivity.class);
-                            } else if (position == 3) {
-                                intent = new Intent(getApplicationContext(), ReportActivity.class);
-                            } else if (position == 4) {
-                                intent = new Intent(getApplicationContext(), LocationActivity.class);
-                            } else if (position == 5) {
-                                intent = new Intent(getApplicationContext(), ReadingSettingActivity.class);
-                            } else if (position == 6) {
-                                intent = new Intent(getApplicationContext(), SettingActivity.class);
-                            } else if (position == 7) {
-                                intent = new Intent(getApplicationContext(), HelpActivity.class);
-                            }
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
+        binding.recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(),
+                binding.recyclerView, this));
+    }
 
-                    @Override
-                    public void onLongItemClick(View view, int position) {
-                        if (position == 1) {
-                            POSITION = position;
-                            Intent intent = new Intent(getApplicationContext(), ReadingActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-                })
-        );
+    @Override
+    public void onItemClick(View view, int position) {
+        binding.drawerLayout.closeDrawer(GravityCompat.START);
+        if (position == 8) {
+            POSITION = -1;
+            exit = true;
+            finishAffinity();
+        } else if (POSITION != position) {
+            POSITION = position;
+            Intent intent = switch (position) {
+                case 0 -> new Intent(getApplicationContext(), DownloadActivity.class);
+                case 1 -> new Intent(getApplicationContext(), ReadingActivity.class);
+                case 2 -> new Intent(getApplicationContext(), UploadActivity.class);
+                case 3 -> new Intent(getApplicationContext(), ReportActivity.class);
+                case 4 -> new Intent(getApplicationContext(), LocationActivity.class);
+                case 5 -> new Intent(getApplicationContext(), ReadingSettingActivity.class);
+                case 6 -> new Intent(getApplicationContext(), SettingActivity.class);
+                case 7 -> new Intent(getApplicationContext(), HelpActivity.class);
+                default -> new Intent(getApplicationContext(), HomeActivity.class);
+            };
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    @Override
+    public void onLongItemClick(View view, int position) {
+        if (position == 1) {
+            POSITION = position;
+            Intent intent = new Intent(getApplicationContext(), ReadingActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     private void initializeBase() {
         activity = this;
         setActivityComponent(activity);
         migration(activity);
-        final TextView textView = findViewById(R.id.text_view_title);
+        TextView textView = findViewById(R.id.text_view_title);
         textView.setText(sharedPreferenceManager.getStringData(DISPLAY_NAME.getValue()).
                 concat(" (").concat(sharedPreferenceManager.getStringData(USER_CODE.getValue()))
                 .concat(")"));
@@ -281,14 +295,13 @@ public abstract class BaseActivity extends AppCompatActivity implements
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (POSITION == 1) {
-            final View view = getLayoutInflater().inflate(R.layout.reading_header, null);
+            View view = getLayoutInflater().inflate(R.layout.reading_header, binding.getRoot(), false);
             toolbar.addView(view);
         }
         fillDrawerListView();
         setOnDrawerItemClick();
-        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle
-                (this, binding.drawerLayout, toolbar, R.string.navigation_drawer_open,
-                        R.string.navigation_drawer_close) {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+                binding.drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -297,13 +310,13 @@ public abstract class BaseActivity extends AppCompatActivity implements
         binding.drawerLayout.addDrawerListener(toggle);
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         toggle.syncState();
-        toolbar.setNavigationOnClickListener(view1 -> binding.drawerLayout.openDrawer(GravityCompat.START));
+        toolbar.setNavigationOnClickListener(v -> binding.drawerLayout.openDrawer(GravityCompat.START));
     }
 
     private void fillDrawerListView() {
-        final List<DrawerItem> dataList = DrawerItem.createItemList(getResources()
+        List<DrawerItem> dataList = DrawerItem.createItemList(getResources()
                 .getStringArray(R.array.menu), getResources().obtainTypedArray(R.array.icons));
-        final NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(this, dataList);
+        NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(this, dataList);
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         binding.recyclerView.setNestedScrollingEnabled(true);

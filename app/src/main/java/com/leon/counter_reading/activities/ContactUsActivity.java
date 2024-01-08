@@ -3,9 +3,9 @@ package com.leon.counter_reading.activities;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.DATE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.THEME_STABLE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME_TEMP;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.onActivitySetTheme;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 
 import android.os.Bundle;
 import android.os.Debug;
@@ -34,7 +34,7 @@ public class ContactUsActivity extends AppCompatActivity {
     }
 
     void initialize() {
-        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(getCompanyName());
         if (sharedPreferenceManager.checkIsNotEmpty(USERNAME_TEMP.getValue()))
             binding.textViewDate.setText(sharedPreferenceManager.getStringData(DATE.getValue()));

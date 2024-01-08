@@ -1,5 +1,7 @@
 package com.leon.counter_reading.activities;
 
+import static com.leon.counter_reading.enums.DownloadType.NORMAL;
+import static com.leon.counter_reading.enums.DownloadType.OFFLINE;
 import static com.leon.counter_reading.enums.DownloadType.RETRY;
 import static com.leon.counter_reading.enums.DownloadType.SPECIAL;
 import static com.leon.counter_reading.helpers.Constants.ALL_FILES_ACCESS_REQUEST;
@@ -28,7 +30,6 @@ import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.ViewPagerTabAdapter;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityDownloadBinding;
-import com.leon.counter_reading.enums.DownloadType;
 import com.leon.counter_reading.fragments.download.DownloadFragment;
 import com.leon.counter_reading.fragments.download.DownloadOfflineFragment;
 import com.leon.counter_reading.utils.DepthPageTransformer;
@@ -98,7 +99,7 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initializeTextViews() {
-        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(getCompanyName());
         binding.textViewDownloadNormal.setOnClickListener(this);
         binding.textViewDownloadOff.setOnClickListener(this);
@@ -117,7 +118,7 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
         } else if (id == R.id.text_view_download_off) {
             binding.textViewDownloadOff.setBackground(ContextCompat.getDrawable(getApplicationContext(),
                     R.drawable.border_white_2));
-            binding.viewPager.setCurrentItem(DownloadType.OFFLINE.getValue());
+            binding.viewPager.setCurrentItem(OFFLINE.getValue());
         } else if (id == R.id.text_view_download_retry) {
             binding.textViewDownloadRetry.setBackground(ContextCompat.getDrawable(getApplicationContext(),
                     R.drawable.border_white_2));
@@ -125,7 +126,7 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
         } else if (id == R.id.text_view_download_normal) {
             binding.textViewDownloadNormal.setBackground(ContextCompat.getDrawable(getApplicationContext(),
                     R.drawable.border_white_2));
-            binding.viewPager.setCurrentItem(DownloadType.NORMAL.getValue());
+            binding.viewPager.setCurrentItem(NORMAL.getValue());
         }
         setPadding();
     }
@@ -154,7 +155,7 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
 
     private void setupViewPager() {
         ViewPagerTabAdapter adapter = new ViewPagerTabAdapter(getSupportFragmentManager());
-        adapter.addFragment(DownloadFragment.newInstance(DownloadType.NORMAL.getValue()));
+        adapter.addFragment(DownloadFragment.newInstance(NORMAL.getValue()));
         adapter.addFragment(DownloadFragment.newInstance(RETRY.getValue()));
         adapter.addFragment(DownloadOfflineFragment.newInstance());
         adapter.addFragment(DownloadFragment.newInstance(SPECIAL.getValue()));
