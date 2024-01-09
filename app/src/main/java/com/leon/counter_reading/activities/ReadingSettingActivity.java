@@ -25,7 +25,7 @@ import com.leon.counter_reading.utils.DepthPageTransformer;
 
 import java.util.ArrayList;
 
-public class ReadingSettingActivity extends BaseActivity {
+public class ReadingSettingActivity extends BaseActivity implements View.OnClickListener {
     private ActivityReadingSettingBinding binding;
     private int previousState, currentState;
     private ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
@@ -33,10 +33,9 @@ public class ReadingSettingActivity extends BaseActivity {
     @Override
     protected void initialize() {
         binding = ActivityReadingSettingBinding.inflate(getLayoutInflater());
-        final View childLayout = binding.getRoot();
-        final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
+        View childLayout = binding.getRoot();
+        ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
-
         trackingDtos.addAll(getApplicationComponent().MyDatabase().trackingDao()
                 .getTrackingDtoNotArchive(false));
         setupViewPager();
@@ -44,48 +43,32 @@ public class ReadingSettingActivity extends BaseActivity {
     }
 
     void initializeTextViews() {
-        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(getCompanyName());
-        textViewRead();
-        textViewFeatures();
-        textViewDelete();
-        textViewNavigation();
+        binding.textViewRead.setOnClickListener(this);
+        binding.textViewFeatures.setOnClickListener(this);
+        binding.textViewNavigation.setOnClickListener(this);
+        binding.textViewDelete.setOnClickListener(this);
     }
 
-    private void textViewRead() {
-        binding.textViewRead.setOnClickListener(view -> {
-            setColor();
-            binding.textViewRead.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
-            setPadding();
-            binding.viewPager.setCurrentItem(0);
-        });
-    }
-
-    private void textViewFeatures() {
-        binding.textViewFeatures.setOnClickListener(view -> {
-            setColor();
-            binding.textViewFeatures.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
-            setPadding();
-            binding.viewPager.setCurrentItem(1);
-        });
-    }
-
-    private void textViewNavigation() {
-        binding.textViewNavigation.setOnClickListener(view -> {
-            setColor();
-            binding.textViewNavigation.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
-            setPadding();
-            binding.viewPager.setCurrentItem(2);
-        });
-    }
-
-    private void textViewDelete() {
-        binding.textViewDelete.setOnClickListener(view -> {
-            setColor();
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        setColor();
+        if (id == R.id.text_view_delete) {
             binding.textViewDelete.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
-            setPadding();
             binding.viewPager.setCurrentItem(3);
-        });
+        } else if (id == R.id.text_view_navigation) {
+            binding.textViewNavigation.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
+            binding.viewPager.setCurrentItem(2);
+        } else if (id == R.id.text_view_features) {
+            binding.textViewFeatures.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
+            binding.viewPager.setCurrentItem(1);
+        } else if (id == R.id.text_view_read) {
+            binding.textViewRead.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
+            binding.viewPager.setCurrentItem(0);
+        }
+        setPadding();
     }
 
     private void setColor() {

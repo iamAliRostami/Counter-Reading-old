@@ -33,8 +33,8 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void initialize() {
         binding = ActivityReportBinding.inflate(getLayoutInflater());
-        final View childLayout = binding.getRoot();
-        final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
+         View childLayout = binding.getRoot();
+         ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
         new GetReportDBData(this).execute(this);
         binding.textViewTotal.setOnClickListener(this);
@@ -127,8 +127,8 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
-        final int id = view.getId();
         setColor();
+        int id = view.getId();
         if (id == R.id.text_view_performance) {
             binding.textViewPerformance.setBackground(ContextCompat.getDrawable(this,
                     R.drawable.border_white_2));

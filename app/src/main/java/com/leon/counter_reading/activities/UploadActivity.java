@@ -134,7 +134,7 @@ public class UploadActivity extends BaseActivity implements ViewPager.OnPageChan
     }
 
     private void setPadding() {
-        final int medium = (int) getResources().getDimension(R.dimen.medium_dp);
+         int medium = (int) getResources().getDimension(R.dimen.medium_dp);
         binding.textViewUpload.setPadding(0, medium, 0, medium);
         binding.textViewUploadOff.setPadding(0, medium, 0, medium);
         binding.textViewUploadMultimedia.setPadding(0, medium, 0, medium);
