@@ -104,17 +104,17 @@ public class UploadActivity extends BaseActivity implements ViewPager.OnPageChan
     @Override
     public void onClick(View view) {
         setColor();
-        final int id = view.getId();
+        int id = view.getId();
         if (id == R.id.text_view_upload_multimedia) {
-            binding.textViewUploadMultimedia.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+            binding.textViewUploadMultimedia.setBackground(ContextCompat.getDrawable(this,
                     R.drawable.border_white_2));
             binding.viewPager.setCurrentItem(2);
         } else if (id == R.id.text_view_upload) {
-            binding.textViewUpload.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+            binding.textViewUpload.setBackground(ContextCompat.getDrawable(this,
                     R.drawable.border_white_2));
             binding.viewPager.setCurrentItem(0);
         } else if (id == R.id.text_view_upload_off) {
-            binding.textViewUploadOff.setBackground(ContextCompat.getDrawable(getApplicationContext(),
+            binding.textViewUploadOff.setBackground(ContextCompat.getDrawable(this,
                     R.drawable.border_white_2));
             binding.viewPager.setCurrentItem(1);
         }

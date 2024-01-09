@@ -26,15 +26,16 @@ import com.leon.counter_reading.utils.DepthPageTransformer;
 import com.leon.counter_reading.utils.backup_restore.BackUp;
 import com.leon.counter_reading.utils.backup_restore.Restore;
 
-public class SettingActivity extends BaseActivity {
+public class SettingActivity extends BaseActivity implements View.OnClickListener,
+        ViewPager.OnPageChangeListener {
     private ActivitySettingBinding binding;
-    private int previousState, currentState;
+    private int currentState;
 
     @Override
     protected void initialize() {
         binding = ActivitySettingBinding.inflate(getLayoutInflater());
-        final View childLayout = binding.getRoot();
-        final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
+        View childLayout = binding.getRoot();
+        ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
         setupViewPager();
         initializeTextViews();
@@ -43,46 +44,10 @@ public class SettingActivity extends BaseActivity {
     private void initializeTextViews() {
         final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(getCompanyName());
-        textViewChangeTheme();
-        textViewChangePassword();
-        textViewUpdate();
-        textViewAvatar();
-    }
-
-    private void textViewChangeTheme() {
-        binding.textViewChangeTheme.setOnClickListener(view -> {
-            setColor();
-            binding.textViewChangeTheme.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
-            setPadding();
-            binding.viewPager.setCurrentItem(0);
-        });
-    }
-
-    private void textViewChangePassword() {
-        binding.textViewChangePassword.setOnClickListener(view -> {
-            setColor();
-            binding.textViewChangePassword.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
-            setPadding();
-            binding.viewPager.setCurrentItem(1);
-        });
-    }
-
-    private void textViewUpdate() {
-        binding.textViewUpdate.setOnClickListener(view -> {
-            setColor();
-            binding.textViewUpdate.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
-            setPadding();
-            binding.viewPager.setCurrentItem(2);
-        });
-    }
-
-    private void textViewAvatar() {
-        binding.textViewChangeAvatar.setOnClickListener(view -> {
-            setColor();
-            binding.textViewChangeAvatar.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
-            setPadding();
-            binding.viewPager.setCurrentItem(3);
-        });
+        binding.textViewChangeTheme.setOnClickListener(this);
+        binding.textViewChangePassword.setOnClickListener(this);
+        binding.textViewUpdate.setOnClickListener(this);
+        binding.textViewChangeAvatar.setOnClickListener(this);
     }
 
     private void setColor() {
@@ -110,37 +75,58 @@ public class SettingActivity extends BaseActivity {
         adapter.addFragment(new SettingUpdateFragment());
         adapter.addFragment(new SettingChangeAvatarFragment());
         binding.viewPager.setAdapter(adapter);
-        binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 0) {
-                    binding.textViewChangeTheme.callOnClick();
-                } else if (position == 1) {
-                    binding.textViewChangePassword.callOnClick();
-                } else if (position == 2) {
-                    binding.textViewUpdate.callOnClick();
-                } else if (position == 3) {
-                    binding.textViewChangeAvatar.callOnClick();
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                int currentPage = binding.viewPager.getCurrentItem();
-                if (currentPage == 3 || currentPage == 0) {
-                    previousState = currentState;
-                    currentState = state;
-                    if (previousState == 1 && currentState == 0) {
-                        binding.viewPager.setCurrentItem(currentPage == 0 ? 3 : 0);
-                    }
-                }
-            }
-        });
+        binding.viewPager.addOnPageChangeListener(this);
         binding.viewPager.setPageTransformer(true, new DepthPageTransformer());
+    }
+
+    @Override
+    public void onClick(View v) {
+        setColor();
+        int id = v.getId();
+        if (id == R.id.text_view_update) {
+            binding.textViewUpdate.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
+            binding.viewPager.setCurrentItem(2);
+        } else if (id == R.id.text_view_change_password) {
+            binding.textViewChangePassword.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
+            binding.viewPager.setCurrentItem(1);
+        } else if (id == R.id.text_view_change_theme) {
+            binding.textViewChangeTheme.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
+            binding.viewPager.setCurrentItem(0);
+        } else if (id == R.id.text_view_change_avatar) {
+            binding.textViewChangeAvatar.setBackground(ContextCompat.getDrawable(this, R.drawable.border_white_2));
+            binding.viewPager.setCurrentItem(3);
+        }
+        setPadding();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (position == 0) {
+            binding.textViewChangeTheme.callOnClick();
+        } else if (position == 1) {
+            binding.textViewChangePassword.callOnClick();
+        } else if (position == 2) {
+            binding.textViewUpdate.callOnClick();
+        } else if (position == 3) {
+            binding.textViewChangeAvatar.callOnClick();
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        int currentPage = binding.viewPager.getCurrentItem();
+        if (currentPage == 3 || currentPage == 0) {
+            int previousState = currentState;
+            currentState = state;
+            if (previousState == 1 && currentState == 0) {
+                binding.viewPager.setCurrentItem(currentPage == 0 ? 3 : 0);
+            }
+        }
     }
 
     @Override
