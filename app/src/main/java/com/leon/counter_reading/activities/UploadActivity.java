@@ -44,16 +44,16 @@ public class UploadActivity extends BaseActivity implements ViewPager.OnPageChan
     @Override
     protected void initialize() {
         binding = ActivityUploadBinding.inflate(getLayoutInflater());
-        final View childLayout = binding.getRoot();
-        final ConstraintLayout parentLayout = findViewById(R.id.base_Content);
+        View childLayout = binding.getRoot();
+        ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
-        final TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
+        TextView textViewCompanyName = findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(getCompanyName());
         new GetUploadDBData(this).execute(this);
     }
 
     private void setupViewPager() {
-        final ViewPagerTabAdapter adapter = new ViewPagerTabAdapter(getSupportFragmentManager());
+        ViewPagerTabAdapter adapter = new ViewPagerTabAdapter(getSupportFragmentManager());
         adapter.addFragment(UploadFragment.newInstance(NORMAL.getValue()));
         adapter.addFragment(UploadFragment.newInstance(OFFLINE.getValue()));
         adapter.addFragment(UploadFragment.newInstance(MULTIMEDIA.getValue()));

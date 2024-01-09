@@ -14,9 +14,13 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.view.Window;
 import android.view.WindowManager;
+import android.window.OnBackInvokedDispatcher;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
+import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.os.BuildCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -42,6 +46,7 @@ public class StartActivity extends AppCompatActivity implements SplashFragment.C
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         binding = ActivityStartBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        addOnBackPressed();
         initialize();
     }
 
@@ -70,12 +75,11 @@ public class StartActivity extends AppCompatActivity implements SplashFragment.C
     }
 
     private void displayView(int position, boolean... isLogin) {
-        final String tag = Integer.toString(position);
-        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+        String tag = Integer.toString(position);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
         if (isLogin.length == 0 && fragment != null && fragment.isVisible()) return;
-
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.animator.enter, R.animator.exit,
                 R.animator.pop_enter, R.animator.pop_exit);
         fragmentTransaction.replace(binding.containerBody.getId(), getFragment(position), tag);
@@ -84,25 +88,35 @@ public class StartActivity extends AppCompatActivity implements SplashFragment.C
             fragmentTransaction.addToBackStack(null);
         }
         fragmentTransaction.commitAllowingStateLoss();
-        runOnUiThread(() -> getFragmentManager().executePendingTransactions());
+        runOnUiThread(fragmentManager::executePendingTransactions);
 //        getFragmentManager().executePendingTransactions();
     }
 
     private Fragment getFragment(int position) {
-        switch (position) {
-            case BASIC_FRAGMENT:
-                return BasicFragment.newInstance();
-            case LOGIN_FRAGMENT:
-                return LoginFragment.newInstance();
-            case SPLASH_FRAGMENT:
-            default:
-                return SplashFragment.newInstance();
+        return switch (position) {
+            case BASIC_FRAGMENT -> BasicFragment.newInstance();
+            case LOGIN_FRAGMENT -> LoginFragment.newInstance();
+            default -> SplashFragment.newInstance();
+        };
+    }
+
+    @OptIn(markerClass = BuildCompat.PrereleaseSdkCheck.class)
+    private void addOnBackPressed() {
+        if (BuildCompat.isAtLeastT()) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::backPressed);
+        } else {
+            getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    backPressed();
+                }
+            });
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(String.valueOf(BASIC_FRAGMENT));
+    private void backPressed() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(String.valueOf(BASIC_FRAGMENT));
         if (fragment != null && fragment.isVisible()) displayView(LOGIN_FRAGMENT);
     }
 
