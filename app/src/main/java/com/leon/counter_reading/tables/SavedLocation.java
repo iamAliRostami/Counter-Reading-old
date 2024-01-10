@@ -17,14 +17,6 @@ public class SavedLocation {
         this.latitude = latitude;
     }
 
-    public static class LocationOnMap {
-        public final double longitude;
-        public final double latitude;
-
-
-        public LocationOnMap(double longitude, double latitude) {
-            this.longitude = longitude;
-            this.latitude = latitude;
-        }
+    public record LocationOnMap(double longitude, double latitude) {
     }
 }

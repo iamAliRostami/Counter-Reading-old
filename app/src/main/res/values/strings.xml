@@ -331,4 +331,8 @@
     <string name="error_on_download_guilds">بارگیری اصناف به درستی انجام نشده است، با پشیبانی تماس بگیرید.</string>
     <string name="download_storage">بارگیری از حافظه داخلی</string>
     <string name="error_on_download_counter_report">در بارگیری گزارش های بازرسی خطایی به وجود آمد</string>
+    <string name="total_reports">مجموع گزارش بازرسی</string>
+    <string name="sent">ارسال شده</string>
+    <string name="unsent">ارسال نشده</string>
+    <string name="send_left_over">ارسال جامانده ها</string>
 </resources>

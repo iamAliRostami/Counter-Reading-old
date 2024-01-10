@@ -28,14 +28,17 @@ public class USBUtils {
         @Override
         public int compare(UsbFile lhs, UsbFile rhs) {
             switch (ExplorerFragment.sortByCurrent) {
-                case SORT_BY_NAME:
+                case SORT_BY_NAME -> {
                     return sortByName(lhs, rhs);
-                case SORT_BY_DATE:
+                }
+                case SORT_BY_DATE -> {
                     return sortByDate(lhs, rhs);
-                case SORT_BY_SIZE:
+                }
+                case SORT_BY_SIZE -> {
                     return sortBySize(lhs, rhs);
-                default:
-                    break;
+                }
+                default -> {
+                }
             }
             return 0;
         }
@@ -298,14 +301,11 @@ public class USBUtils {
     }
 
     public static boolean isConfirmButton(KeyEvent event) {
-        switch (event.getKeyCode()) {
-            case KeyEvent.KEYCODE_ENTER:
-            case KeyEvent.KEYCODE_DPAD_CENTER:
-            case KeyEvent.KEYCODE_BUTTON_A:
-                return true;
-            default:
-                return false;
-        }
+        return switch (event.getKeyCode()) {
+            case KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_BUTTON_A ->
+                    true;
+            default -> false;
+        };
     }
 
     private static void add(String mimeType, int resId) {
@@ -349,14 +349,10 @@ public class USBUtils {
     }
 
     public static String getHumanSortBy(Context context) {
-        switch (ExplorerFragment.sortByCurrent) {
-            case SORT_BY_DATE:
-                return context.getString(R.string.date);
-            case SORT_BY_SIZE:
-                return context.getString(R.string.size);
-            case SORT_BY_NAME:
-            default:
-                return context.getString(R.string.name);
-        }
+        return switch (ExplorerFragment.sortByCurrent) {
+            case SORT_BY_DATE -> context.getString(R.string.date);
+            case SORT_BY_SIZE -> context.getString(R.string.size);
+            default -> context.getString(R.string.name);
+        };
     }
 }

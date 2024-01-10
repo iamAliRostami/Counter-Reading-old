@@ -6,11 +6,13 @@ import static com.leon.counter_reading.helpers.MyApplication.getApplicationCompo
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.os.Build;
 
 import com.leon.counter_reading.activities.ReadingActivity;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 
 import java.util.Collections;
+import java.util.Comparator;
 
 public class ChangeSortType extends AsyncTask<Activity, Void, Void> {
     private final boolean sortType;

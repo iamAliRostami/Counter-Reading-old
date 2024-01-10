@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.leon.counter_reading.adapters.PossibleAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingPossibleSettingBinding;
-import com.leon.counter_reading.helpers.MyApplication;
-import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 
 import org.jetbrains.annotations.NotNull;
 

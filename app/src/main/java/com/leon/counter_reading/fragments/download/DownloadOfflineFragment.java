@@ -131,10 +131,6 @@ public class DownloadOfflineFragment extends Fragment implements View.OnClickLis
                         InputStream inputStream = requireContext().getContentResolver().openInputStream(uri);
                         String json = readData(inputStream);
                         new DownloadOffline(requireActivity(), json).execute(requireActivity());
-//                        final Gson gson = new Gson();
-//                        ReadingData readingData, readingDataTemp;
-//                        readingData = gson.fromJson(json, ReadingData.class);
-//                        readingDataTemp = gson.fromJson(json, ReadingData.class);
                     } catch (Exception e) {
                         e.printStackTrace();
                         requireActivity().runOnUiThread(() -> new CustomToast().error("فایل انتخاب شده نادرست است."));

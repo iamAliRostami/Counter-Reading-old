@@ -123,7 +123,7 @@ public class DeleteFragment extends DialogFragment {
 
     @Override
     public void onResume() {
-        if (getDialog() != null) {
+        if (getDialog() != null && getDialog().getWindow() != null) {
             final WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;

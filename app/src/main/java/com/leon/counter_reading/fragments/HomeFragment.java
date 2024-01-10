@@ -44,12 +44,12 @@ public class HomeFragment extends ListFragment {
     }
 
     private void initialize() {
-        final List<UsbDevice> mDetectedDevices = downloadFragment.getUsbDevices();
-        final List<String> showDevices = new ArrayList<>();
+        List<UsbDevice> mDetectedDevices = downloadFragment.getUsbDevices();
+        List<String> showDevices = new ArrayList<>();
         for (int i = 0; i < mDetectedDevices.size(); i++) {
             showDevices.add(mDetectedDevices.get(i).getProductName());
         }
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.item_devices,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), R.layout.item_devices,
                 R.id.text_view_device, showDevices);
         setListAdapter(adapter);
     }

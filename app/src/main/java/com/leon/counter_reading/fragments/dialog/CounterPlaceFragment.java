@@ -103,7 +103,7 @@ public class CounterPlaceFragment extends DialogFragment {
     }
 
     public void onResume() {
-        if (getDialog() != null) {
+        if (getDialog() != null && getDialog().getWindow() != null) {
             WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;

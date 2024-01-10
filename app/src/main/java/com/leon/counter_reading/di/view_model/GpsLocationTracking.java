@@ -126,18 +126,17 @@ public class GpsLocationTracking extends Service implements LocationListener, IL
     }
 
     @Override
-    public Location getCurrentLocation(/*Context context*/) {
+    public Location getCurrentLocation() {
         return getLocation();
     }
 
     @Override
-    public void onLocationChanged(Location location) {
-        if (location != null)
-            try {
-                instance.addLocation(location);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    public void onLocationChanged(@NonNull Location location) {
+        try {
+            instance.addLocation(location);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

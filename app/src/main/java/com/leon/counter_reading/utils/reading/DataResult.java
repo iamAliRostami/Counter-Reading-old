@@ -22,9 +22,9 @@ public class DataResult extends AsyncTask<Activity, Void, Void> {
 
     @Override
     protected Void doInBackground(Activity... activities) {
-        final int position = data.getExtras().getInt(POSITION.getValue());
-        final String uuid = data.getExtras().getString(BILL_ID.getValue());
-        final OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(position);
+        int position = data.getExtras().getInt(POSITION.getValue());
+        String uuid = data.getExtras().getString(BILL_ID.getValue());
+        OnOffLoadDto onOffLoadDtoTemp = readingData.onOffLoadDtos.get(position);
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(true, uuid);
         readingData.onOffLoadDtos.set(position, getApplicationComponent().MyDatabase()
                 .onOffLoadDao().getAllOnOffLoadById(uuid, readingData.onOffLoadDtos.get(position).trackingId));

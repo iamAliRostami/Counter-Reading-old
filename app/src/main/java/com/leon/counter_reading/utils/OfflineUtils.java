@@ -203,7 +203,7 @@ public class OfflineUtils {
         final String EXTERNAL_SD_STORAGE = System.getenv("EXTERNAL_SD_STORAGE");
         final String EXTERNAL_STORAGE = System.getenv("EXTERNAL_STORAGE");
 
-        Map<Integer, String> listEnvironmentVariableStoreSDCardRootDirectory = new HashMap<Integer, String>();
+        Map<Integer, String> listEnvironmentVariableStoreSDCardRootDirectory = new HashMap<>();
         listEnvironmentVariableStoreSDCardRootDirectory.put(0, SECONDARY_STORAGE);
         listEnvironmentVariableStoreSDCardRootDirectory.put(1, EXTERNAL_STORAGE_DOCOMO);
         listEnvironmentVariableStoreSDCardRootDirectory.put(2, EXTERNAL_SDCARD_STORAGE);

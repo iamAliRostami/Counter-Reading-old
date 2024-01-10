@@ -254,7 +254,8 @@ public class LocationActivity extends BaseActivity {
             markers.clear();
             int i = 0;
             while (i < savedLocations.size() && !isCancelled()) {
-                addPlace(new GeoPoint(savedLocations.get(i).latitude, savedLocations.get(i).longitude));
+                addPlace(new GeoPoint(savedLocations.get(i).latitude(),
+                        savedLocations.get(i).longitude()));
                 i++;
             }
             return null;

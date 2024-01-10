@@ -3,7 +3,6 @@ package com.leon.counter_reading.utils.reading;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.leon.counter_reading.tables.OnOffLoadDto;
 

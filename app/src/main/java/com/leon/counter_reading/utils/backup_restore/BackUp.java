@@ -23,7 +23,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public class BackUp extends AsyncTask<Activity, Integer, Void> {
     private final CustomProgressModel progress;

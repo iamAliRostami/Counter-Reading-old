@@ -6,15 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageCaptureException;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.leon.counter_reading.databinding.FragmentCameraPreviewBinding;
-import com.leon.counter_reading.databinding.FragmentTakePhotoBinding;
-
-import java.io.File;
 
 public class CameraPreviewFragment extends Fragment {
     private FragmentCameraPreviewBinding binding;

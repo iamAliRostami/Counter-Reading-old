@@ -34,7 +34,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="مجموع گزارش بازرسی"
+                    android:text="@string/total_reports"
                     android:textColor="@color/text_color_dark"
                     android:textSize="@dimen/text_size_medium" />
 
@@ -58,7 +58,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="ارسال شده"
+                    android:text="@string/sent"
                     android:textColor="@color/text_color_dark"
                     android:textSize="@dimen/text_size_medium" />
 
@@ -81,7 +81,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="ارسال نشده"
+                    android:text="@string/unsent"
                     android:textColor="@color/text_color_dark"
                     android:textSize="@dimen/text_size_medium" />
 
@@ -101,6 +101,6 @@
             android:layout_below="@id/relative_layout_inspection"
             android:layout_margin="@dimen/small_dp"
             android:background="@drawable/border_yellow_3"
-            android:text="ارسال جامانده ها" />
+            android:text="@string/send_left_over" />
     </RelativeLayout>
 </layout>

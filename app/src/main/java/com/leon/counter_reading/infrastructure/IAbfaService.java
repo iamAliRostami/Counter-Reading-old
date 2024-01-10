@@ -1,7 +1,5 @@
 package com.leon.counter_reading.infrastructure;
 
-import android.graphics.Bitmap;
-
 import com.leon.counter_reading.tables.ForbiddenDtoRequestMultiple;
 import com.leon.counter_reading.tables.ForbiddenDtoResponses;
 import com.leon.counter_reading.tables.LastInfo;

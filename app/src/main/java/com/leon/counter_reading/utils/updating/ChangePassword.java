@@ -39,12 +39,7 @@ public class ChangePassword {
     }
 }
 
-class Change implements ICallback<SimpleResponse> {
-    final Activity activity;
-
-    public Change(Activity activity) {
-        this.activity = activity;
-    }
+record Change(Activity activity) implements ICallback<SimpleResponse> {
 
     @Override
     public void execute(Response<SimpleResponse> response) {
@@ -81,12 +76,7 @@ class ChangeIncomplete implements ICallbackIncomplete<SimpleResponse> {
     }
 }
 
-class ChangeError implements ICallbackError {
-    final Context context;
-
-    public ChangeError(Context context) {
-        this.context = context;
-    }
+record ChangeError(Context context) implements ICallbackError {
 
     @Override
     public void executeError(Throwable t) {

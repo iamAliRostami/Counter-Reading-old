@@ -15,18 +15,19 @@ public class RecyclerUsbItemClickListener implements RecyclerView.OnItemTouchLis
     private final OnItemClickListener listener;
     private final RecyclerView recyclerView;
     private final GestureDetector gestureDetector;
+
     public RecyclerUsbItemClickListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener) {
         this.listener = listener;
         this.recyclerView = recyclerView;
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
-            public boolean onSingleTapUp(MotionEvent e) {
+            public boolean onSingleTapUp(@NonNull MotionEvent e) {
                 return true;
             }
 
             @Override
-            public void onLongPress(MotionEvent e) {
-                final View child = RecyclerUsbItemClickListener.this.recyclerView.findChildViewUnder(e.getX(), e.getY());
+            public void onLongPress(@NonNull MotionEvent e) {
+                View child = RecyclerUsbItemClickListener.this.recyclerView.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && RecyclerUsbItemClickListener.this.listener != null) {
                     RecyclerUsbItemClickListener.this.listener.onLongItemClick(child, RecyclerUsbItemClickListener.this.recyclerView.getChildAdapterPosition(child));
                 }
@@ -53,7 +54,7 @@ public class RecyclerUsbItemClickListener implements RecyclerView.OnItemTouchLis
     }
 
     public boolean handleDPad(View child, KeyEvent keyEvent) {
-        final int position = recyclerView.getChildLayoutPosition(child);
+        int position = recyclerView.getChildLayoutPosition(child);
         if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
             if (isConfirmButton(keyEvent)) {
                 if ((keyEvent.getFlags() & KeyEvent.FLAG_LONG_PRESS) == KeyEvent.FLAG_LONG_PRESS) {

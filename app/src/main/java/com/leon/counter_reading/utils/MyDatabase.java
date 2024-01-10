@@ -92,62 +92,63 @@ public abstract class MyDatabase extends RoomDatabase {
     public static final Migration MIGRATION_6_7 = new Migration(17, 18) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE \"OnOffLoadDtoTemp\" (\n" +
-                    "\t\"customId\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n" +
-                    "\t\"id\"\tTEXT,\n" +
-                    "\t\"billId\"\tTEXT,\n" +
-                    "\t\"radif\"\tINTEGER NOT NULL,\n" +
-                    "\t\"eshterak\"\tTEXT,\n" +
-                    "\t\"qeraatCode\"\tTEXT,\n" +
-                    "\t\"firstName\"\tTEXT,\n" +
-                    "\t\"sureName\"\tTEXT,\n" +
-                    "\t\"address\"\tTEXT,\n" +
-                    "\t\"pelak\"\tTEXT,\n" +
-                    "\t\"karbariCode\"\tINTEGER NOT NULL,\n" +
-                    "\t\"ahadMaskooniOrAsli\"\tINTEGER NOT NULL,\n" +
-                    "\t\"ahadTejariOrFari\"\tINTEGER NOT NULL,\n" +
-                    "\t\"ahadSaierOrAbBaha\"\tINTEGER NOT NULL,\n" +
-                    "\t\"qotrCode\"\tINTEGER NOT NULL,\n" +
-                    "\t\"sifoonQotrCode\"\tINTEGER NOT NULL,\n" +
-                    "\t\"postalCode\"\tTEXT,\n" +
-                    "\t\"preNumber\"\tINTEGER NOT NULL,\n" +
-                    "\t\"preDate\"\tTEXT,\n" +
-                    "\t\"preDateMiladi\"\tTEXT,\n" +
-                    "\t\"preAverage\"\tREAL NOT NULL,\n" +
-                    "\t\"preCounterStateCode\"\tINTEGER NOT NULL,\n" +
-                    "\t\"counterSerial\"\tTEXT,\n" +
-                    "\t\"counterInstallDate\"\tTEXT,\n" +
-                    "\t\"tavizDate\"\tTEXT,\n" +
-                    "\t\"tavizNumber\"\tTEXT,\n" +
-                    "\t\"trackingId\"\tTEXT,\n" +
-                    "\t\"trackNumber\"\tINTEGER,\n" +
-                    "\t\"zarfiat\"\tINTEGER NOT NULL,\n" +
-                    "\t\"mobile\"\tTEXT,\n" +
-                    "\t\"hazf\"\tINTEGER NOT NULL,\n" +
-                    "\t\"noeVagozariId\"\tINTEGER NOT NULL,\n" +
-                    "\t\"counterNumber\"\tINTEGER NOT NULL,\n" +
-                    "\t\"counterStateId\"\tINTEGER NOT NULL,\n" +
-                    "\t\"possibleAddress\"\tTEXT,\n" +
-                    "\t\"possibleCounterSerial\"\tTEXT,\n" +
-                    "\t\"possibleEshterak\"\tTEXT,\n" +
-                    "\t\"possibleMobile\"\tTEXT,\n" +
-                    "\t\"possiblePhoneNumber\"\tTEXT,\n" +
-                    "\t\"possibleAhadMaskooniOrAsli\"\tINTEGER NOT NULL,\n" +
-                    "\t\"possibleAhadTejariOrFari\"\tINTEGER NOT NULL,\n" +
-                    "\t\"possibleAhadSaierOrAbBaha\"\tINTEGER NOT NULL,\n" +
-                    "\t\"possibleEmpty\"\tINTEGER NOT NULL,\n" +
-                    "\t\"possibleKarbariCode\"\tINTEGER NOT NULL,\n" +
-                    "\t\"description\"\tTEXT,\n" +
-                    "\t\"offLoadStateId\"\tINTEGER NOT NULL,\n" +
-                    "\t\"zoneId\"\tINTEGER NOT NULL,\n" +
-                    "\t\"gisAccuracy\"\tREAL NOT NULL,\n" +
-                    "\t\"x\"\tREAL NOT NULL,\n" +
-                    "\t\"y\"\tREAL NOT NULL,\n" +
-                    "\t\"counterNumberShown\"\tINTEGER NOT NULL,\n" +
-                    "\t\"highLowStateId\"\tINTEGER NOT NULL,\n" +
-                    "\t\"isBazdid\"\tINTEGER NOT NULL,\n" +
-                    "\t\"counterStatePosition\"\tINTEGER\n" +
-                    ");");
+            database.execSQL("""
+                    CREATE TABLE "OnOffLoadDtoTemp" (
+                    \t"customId"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    \t"id"\tTEXT,
+                    \t"billId"\tTEXT,
+                    \t"radif"\tINTEGER NOT NULL,
+                    \t"eshterak"\tTEXT,
+                    \t"qeraatCode"\tTEXT,
+                    \t"firstName"\tTEXT,
+                    \t"sureName"\tTEXT,
+                    \t"address"\tTEXT,
+                    \t"pelak"\tTEXT,
+                    \t"karbariCode"\tINTEGER NOT NULL,
+                    \t"ahadMaskooniOrAsli"\tINTEGER NOT NULL,
+                    \t"ahadTejariOrFari"\tINTEGER NOT NULL,
+                    \t"ahadSaierOrAbBaha"\tINTEGER NOT NULL,
+                    \t"qotrCode"\tINTEGER NOT NULL,
+                    \t"sifoonQotrCode"\tINTEGER NOT NULL,
+                    \t"postalCode"\tTEXT,
+                    \t"preNumber"\tINTEGER NOT NULL,
+                    \t"preDate"\tTEXT,
+                    \t"preDateMiladi"\tTEXT,
+                    \t"preAverage"\tREAL NOT NULL,
+                    \t"preCounterStateCode"\tINTEGER NOT NULL,
+                    \t"counterSerial"\tTEXT,
+                    \t"counterInstallDate"\tTEXT,
+                    \t"tavizDate"\tTEXT,
+                    \t"tavizNumber"\tTEXT,
+                    \t"trackingId"\tTEXT,
+                    \t"trackNumber"\tINTEGER,
+                    \t"zarfiat"\tINTEGER NOT NULL,
+                    \t"mobile"\tTEXT,
+                    \t"hazf"\tINTEGER NOT NULL,
+                    \t"noeVagozariId"\tINTEGER NOT NULL,
+                    \t"counterNumber"\tINTEGER NOT NULL,
+                    \t"counterStateId"\tINTEGER NOT NULL,
+                    \t"possibleAddress"\tTEXT,
+                    \t"possibleCounterSerial"\tTEXT,
+                    \t"possibleEshterak"\tTEXT,
+                    \t"possibleMobile"\tTEXT,
+                    \t"possiblePhoneNumber"\tTEXT,
+                    \t"possibleAhadMaskooniOrAsli"\tINTEGER NOT NULL,
+                    \t"possibleAhadTejariOrFari"\tINTEGER NOT NULL,
+                    \t"possibleAhadSaierOrAbBaha"\tINTEGER NOT NULL,
+                    \t"possibleEmpty"\tINTEGER NOT NULL,
+                    \t"possibleKarbariCode"\tINTEGER NOT NULL,
+                    \t"description"\tTEXT,
+                    \t"offLoadStateId"\tINTEGER NOT NULL,
+                    \t"zoneId"\tINTEGER NOT NULL,
+                    \t"gisAccuracy"\tREAL NOT NULL,
+                    \t"x"\tREAL NOT NULL,
+                    \t"y"\tREAL NOT NULL,
+                    \t"counterNumberShown"\tINTEGER NOT NULL,
+                    \t"highLowStateId"\tINTEGER NOT NULL,
+                    \t"isBazdid"\tINTEGER NOT NULL,
+                    \t"counterStatePosition"\tINTEGER
+                    );""");
             database.execSQL("DROP TABLE OnOffLoadDto");
             database.execSQL("ALTER TABLE OnOffLoadDtoTemp RENAME TO OnOffLoadDto");
 
