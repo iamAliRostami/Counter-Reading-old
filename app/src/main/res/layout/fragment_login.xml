@@ -55,6 +55,7 @@
             android:layout_marginBottom="@dimen/large_dp"
             android:src="@drawable/img_login_logo"
             tools:ignore="ContentDescription" />
+
         <LinearLayout
             android:id="@+id/linear_layout_username"
             android:layout_width="match_parent"
@@ -175,7 +176,6 @@
             android:background="@drawable/border_blue_1"
             android:text="@string/login" />
 
-
         <TextView
             android:id="@+id/text_view_date"
             android:layout_width="wrap_content"
@@ -183,8 +183,9 @@
             android:layout_above="@+id/text_view_version"
             android:layout_centerInParent="true"
             android:text="@{login.date}"
-            android:textSize="16sp"
-            android:textColor="@color/text_color_dark" />
+            android:textColor="@color/text_color_dark"
+            android:textSize="16sp" />
+
         <TextView
             android:id="@+id/text_view_version"
             android:layout_width="wrap_content"

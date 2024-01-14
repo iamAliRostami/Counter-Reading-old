@@ -89,10 +89,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
 
     private void initialize() {
-//        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.imageViewCaptcha.getLayoutParams();
-//        params.height = binding.linearLayoutUsername.getHeight();
-//        binding.imageViewCaptcha.setLayoutParams(params);
-
         if (getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(AVATAR.getValue()))
             binding.imageViewPerson.setImageBitmap(loadImage(requireContext(), getApplicationComponent()
                     .SharedPreferenceModel().getStringData(AVATAR.getValue())));
@@ -170,16 +166,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         login.setOldPassword(login.getPassword());
         login.setOldUsername(login.getUsername());
         if (isNetworkAvailable(requireActivity())) {
-            //TODO
-//            final ISharedPreferenceManager sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
-//            sharedPreferenceManager.putData(USERNAME.getValue(), login.getUsername());
-//            sharedPreferenceManager.putData(PASSWORD.getValue(), Crypto.encrypt(login.getPassword()));
             if (isLogin) {
                 counter++;
-                //TODO
-//                if (login.getDntCaptchaInputText() != null && !login.getDntCaptchaInputText().isEmpty())
-//                    login.setDntCaptchaInputText(login.getDntCaptchaInputText());
-                if (counter < /*1*/4)
+                if (counter < 4)
                     new AttemptLogin(this).execute(requireActivity());
                 else
                     offlineLogin();
@@ -202,6 +191,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     public void resetAttempt() {
         createDNTCaptcha();
+        login.setDntCaptchaInputText("");
         counter = 0;
     }
 

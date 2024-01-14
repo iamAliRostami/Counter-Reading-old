@@ -6,7 +6,7 @@
 
     <include layout="@layout/dialog_view_color_area" />
 
-    <Space
+    <androidx.legacy.widget.Space
         android:layout_width="wrap_content"
         android:layout_height="@dimen/medium_dp" />
 

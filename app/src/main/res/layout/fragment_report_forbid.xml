@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:buttonTint="@color/gray"
-                android:text="@string/activate"
+                android:text="@string/active"
                 android:textColor="@color/text_color_dark"
                 android:textSize="@dimen/text_size_medium" />
 

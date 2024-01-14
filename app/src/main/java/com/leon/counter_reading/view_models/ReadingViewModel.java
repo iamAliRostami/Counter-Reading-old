@@ -128,8 +128,8 @@ public class ReadingViewModel extends BaseObservable {
         setDebtNumber(String.format("%,d", getOnOffLoadDto().balance) + " ریال");
         setSerial(getOnOffLoadDto().counterSerial);
 
-
-        setPreDate(getOnOffLoadDto().displayPreDate ? getOnOffLoadDto().preDate : "-");
+//        setPreDate(getOnOffLoadDto().displayPreDate ? getOnOffLoadDto().preDate : "-");
+        setPreDate(getOnOffLoadDto().preDate);
 
         setAddressBackground(ContextCompat.getDrawable(getContext(), getOnOffLoadDto().mobile != null ?
                 R.drawable.border_gray_3 : R.drawable.border_red_2));

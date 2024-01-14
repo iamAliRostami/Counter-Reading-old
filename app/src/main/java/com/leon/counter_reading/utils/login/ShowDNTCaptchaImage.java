@@ -32,7 +32,7 @@ public class ShowDNTCaptchaImage extends AsyncTask<Activity, Activity, Void> {
     protected Void doInBackground(Activity... activities) {
         final Retrofit retrofit = getApplicationComponent().NetworkHelperModel().getInstance();
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-        final Call<ResponseBody> call = iAbfaService.showDNTCaptchaImage(login.getData(),"bmp");
+        final Call<ResponseBody> call = iAbfaService.showDNTCaptchaImage(login.getData(), "bmp");
         activities[0].runOnUiThread(() ->
                 HttpClientWrapper.callHttpAsync(call, NOT_SHOW.getValue(), activities[0],
                         new ShowDNTCaptchaImageCompleted(fragment),

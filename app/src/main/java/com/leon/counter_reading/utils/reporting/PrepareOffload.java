@@ -98,12 +98,8 @@ class offLoadData implements ICallback<OnOffLoadDto.OffLoadResponses> {
     }
 }
 
-class offLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadResponses> {
-    final Activity activity;
-
-    public offLoadDataIncomplete(Activity activity) {
-        this.activity = activity;
-    }
+record offLoadDataIncomplete(
+        Activity activity) implements ICallbackIncomplete<OnOffLoadDto.OffLoadResponses> {
 
     @Override
     public void executeIncomplete(Response<OnOffLoadDto.OffLoadResponses> response) {
@@ -128,12 +124,7 @@ class offLoadDataIncomplete implements ICallbackIncomplete<OnOffLoadDto.OffLoadR
     }
 }
 
-class offLoadError implements ICallbackError {
-    final Activity activity;
-
-    public offLoadError(Activity activity) {
-        this.activity = activity;
-    }
+record offLoadError(Activity activity) implements ICallbackError {
 
     @Override
     public void executeError(Throwable t) {

@@ -34,7 +34,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="مجموع غیرمجاز / فعالسازی" />
+                    android:text="@string/total_forbidden_activate" />
 
                 <TextView
                     android:id="@+id/text_view_total_forbid"
@@ -58,7 +58,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="غیرمجاز" />
+                    android:text="@string/forbidden" />
 
                 <TextView
                     android:id="@+id/text_view_forbid"
@@ -82,7 +82,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="فعالسازی" />
+                    android:text="@string/activate" />
 
                 <TextView
                     android:id="@+id/text_view_activation"
@@ -106,7 +106,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="ارسال موفق" />
+                    android:text="@string/succeed_sent" />
 
                 <TextView
                     android:id="@+id/text_view_forbid_sent"
@@ -130,7 +130,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="در صف ارسال" />
+                    android:text="@string/send_waiting" />
 
                 <TextView
                     android:id="@+id/text_view_forbid_unsent"
@@ -150,7 +150,7 @@
             android:layout_below="@id/relative_layout_forbid"
             android:layout_margin="@dimen/small_dp"
             android:background="@drawable/border_yellow_3"
-            android:text="ارسال جامانده ها" />
+            android:text="@string/send_left_over" />
 
     </RelativeLayout>
 </layout>

@@ -51,12 +51,7 @@ record Change(Activity activity) implements ICallback<SimpleResponse> {
     }
 }
 
-class ChangeIncomplete implements ICallbackIncomplete<SimpleResponse> {
-    final Context context;
-
-    public ChangeIncomplete(Context context) {
-        this.context = context;
-    }
+record ChangeIncomplete(Context context) implements ICallbackIncomplete<SimpleResponse> {
 
     @Override
     public void executeIncomplete(Response<SimpleResponse> response) {

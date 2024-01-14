@@ -302,7 +302,7 @@
     <string name="select_gallery">انتخاب از گالری</string>
     <string name="standard_keyboard">کیبورد استاندارد</string>
     <string name="sensitive_keyboard">کیبورد حساس</string>
-    <string name="activate">فعال شود</string>
+    <string name="active">فعال شود</string>
     <string name="debt">بدهی</string>
     <string name="forbidden">غیرمجاز</string>
     <string name="refresh_page">صفحه را رفرش کنید.</string>
@@ -335,4 +335,8 @@
     <string name="sent">ارسال شده</string>
     <string name="unsent">ارسال نشده</string>
     <string name="send_left_over">ارسال جامانده ها</string>
+    <string name="total_forbidden_activate">مجموع غیرمجاز / فعالسازی</string>
+    <string name="activate">فعالسازی</string>
+    <string name="succeed_sent">ارسال موفق</string>
+    <string name="send_waiting">در صف ارسال</string>
 </resources>

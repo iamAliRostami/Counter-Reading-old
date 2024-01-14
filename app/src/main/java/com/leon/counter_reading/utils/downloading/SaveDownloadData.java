@@ -31,12 +31,13 @@ import java.util.Random;
 public class SaveDownloadData {
     public void savedData(Activity activity, ReadingData readingData, ReadingData readingDataTemp) {
         deleteExpiredData(activity);
-        final MyDatabase myDatabase = getApplicationComponent().MyDatabase();
+        MyDatabase myDatabase = getApplicationComponent().MyDatabase();
 //            long startTime = Calendar.getInstance().getTimeInMillis();
         for (int i = 0; i < readingData.trackingDtos.size(); i++) {
             if (myDatabase.trackingDao().getTrackingDtoArchiveCountByTrackNumber(readingData
                     .trackingDtos.get(i).trackNumber, true) > 0) {
-                if (!downloadArchive(activity, readingData, myDatabase, i)) return;
+//                if (!downloadArchive(activity, readingData, myDatabase, i)) return;
+                downloadArchive(activity, readingData, myDatabase, i);
                 myDatabase.counterReportDao().deleteAllCounterReport(readingData.trackingDtos.get(i).zoneId);
             } else if (myDatabase.trackingDao().getTrackingDtoActivesCountByTracking(readingData
                     .trackingDtos.get(i).trackNumber) > 0) {
@@ -133,9 +134,47 @@ public class SaveDownloadData {
                 R.string.dear_user, R.string.download, R.string.accepted));
     }
 
+//    @SuppressLint({"DefaultLocale", "SimpleDateFormat"})
+//    private boolean downloadArchive(Activity activity, ReadingData readingData, MyDatabase myDatabase,
+//                                    int i) {
+//        try {
+//            final String time = replaceNonstandardDigits(new SimpleDateFormat(activity
+//                    .getString(R.string.save_format_name))
+//                    .format(new Date()).concat(String.valueOf(new Random().nextInt(1000))));
+//            int trackNumber = Integer.parseInt(replaceNonstandardDigits(String.valueOf(readingData.trackingDtos.get(i).trackNumber)));
+//            final String query = "CREATE TABLE `%s` AS %s;";
+//            final String queryTrackDto = String.format(query, "TrackingDto_".concat(time),
+//                    String.format("SELECT * FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1",
+//                            trackNumber));
+//
+//            final String queryOnOffLoad = String.format(query, "OnOffLoadDto_".concat(time),
+//                    String.format("SELECT * FROM OnOffLoadDto WHERE trackNumber = %d", trackNumber));
+//
+//            try {
+//                Cursor cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryTrackDto);
+//                cursor.moveToFirst();
+//                cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryOnOffLoad);
+//                cursor.moveToFirst();
+//
+//                myDatabase.trackingDao().deleteTrackingDto(readingData.trackingDtos.get(i).trackNumber, true);
+//                myDatabase.onOffLoadDao().deleteOnOffLoads(readingData.trackingDtos.get(i).trackNumber);
+//                return true;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                new CustomToast().error(e.getMessage());
+//                return false;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            new CustomToast().error(e.getMessage());
+//            return false;
+//        }
+//    }
+
+
     @SuppressLint({"DefaultLocale", "SimpleDateFormat"})
-    private boolean downloadArchive(Activity activity, ReadingData readingData, MyDatabase myDatabase,
-                                    int i) {
+    private void downloadArchive(Activity activity, ReadingData readingData, MyDatabase myDatabase,
+                                 int i) {
         try {
             final String time = replaceNonstandardDigits(new SimpleDateFormat(activity
                     .getString(R.string.save_format_name))
@@ -155,19 +194,16 @@ public class SaveDownloadData {
                 cursor = myDatabase.getOpenHelper().getWritableDatabase().query(queryOnOffLoad);
                 cursor.moveToFirst();
 
-                myDatabase.trackingDao().deleteTrackingDto(readingData.trackingDtos.get(i).trackNumber, true);
-                myDatabase.onOffLoadDao().deleteOnOffLoads(readingData.trackingDtos.get(i).trackNumber);
-                return true;
             } catch (Exception e) {
                 e.printStackTrace();
                 new CustomToast().error(e.getMessage());
-                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
             new CustomToast().error(e.getMessage());
-            return false;
         }
+        myDatabase.trackingDao().deleteTrackingDto(readingData.trackingDtos.get(i).trackNumber, true);
+        myDatabase.onOffLoadDao().deleteOnOffLoads(readingData.trackingDtos.get(i).trackNumber);
     }
 
     private void deleteExpiredData(Activity activity) {

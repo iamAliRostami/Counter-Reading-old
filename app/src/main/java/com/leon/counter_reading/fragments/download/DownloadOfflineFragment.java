@@ -100,10 +100,6 @@ public class DownloadOfflineFragment extends Fragment implements View.OnClickLis
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.button_download) {
-//            Intent intent = new Intent(Intent.ACTION_GET_CONTENT).setType("text/plain");
-//            Intent intent = new Intent(Intent.ACTION_GET_CONTENT).setType("*/*");
-//            intent.setType("application/pdf|application/x-excel|text/csv");
-
             Intent intent;
             if (android.os.Build.MANUFACTURER.equalsIgnoreCase("samsung")) {
                 intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
@@ -140,7 +136,6 @@ public class DownloadOfflineFragment extends Fragment implements View.OnClickLis
 
     public void updateUI() {
         if (detectedDevices.size() > 0) {
-//            binding.buttonDownload.setVisibility(View.GONE);
             binding.imageViewDownload.setVisibility(View.GONE);
             binding.containerBody.setVisibility(View.VISIBLE);
             final Fragment fragment = HomeFragment.newInstance(this);
@@ -178,8 +173,6 @@ public class DownloadOfflineFragment extends Fragment implements View.OnClickLis
     }
 
     private void removedUSB() {
-//        binding.buttonDownload.setVisibility(View.VISIBLE);
-//        binding.buttonDownload.setText(R.string.no_usb_found);
         binding.imageViewDownload.setVisibility(View.VISIBLE);
         binding.containerBody.setVisibility(View.GONE);
     }
