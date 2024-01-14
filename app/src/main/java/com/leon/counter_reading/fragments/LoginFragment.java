@@ -22,6 +22,7 @@ import static com.leon.counter_reading.utils.login.TwoStepVerification.insertPer
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -53,7 +54,8 @@ import com.leon.counter_reading.view_models.LoginViewModel;
 
 import java.util.ArrayList;
 
-public class LoginFragment extends Fragment implements View.OnClickListener {
+public class LoginFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener,
+        View.OnFocusChangeListener {
     private FragmentLoginBinding binding;
     private LoginViewModel login;
     private int counter = 0;
@@ -81,12 +83,18 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         return binding.getRoot();
     }
 
+//    @Override
+//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//        initializeTextViewCompanyName();
+//    }
+
+
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         initializeTextViewCompanyName();
     }
-
 
     private void initialize() {
         if (getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(AVATAR.getValue()))
@@ -97,65 +105,20 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         binding.imageViewPassword.setOnClickListener(this);
         binding.imageViewRecaptcha.setOnClickListener(this);
 
-        setOnButtonLongCLickListener();
-        setOnImageViewPersonLongClickListener();
+        binding.imageViewPerson.setOnLongClickListener(this);
+        binding.buttonLogin.setOnLongClickListener(this);
 
-        setEditTextUsernameOnFocusChangeListener();
-        setEditTextPasswordOnFocusChangeListener();
+        binding.editTextUsername.setOnFocusChangeListener(this);
+        binding.editTextPassword.setOnFocusChangeListener(this);
+        binding.editTextCaptcha.setOnFocusChangeListener(this);
 
         createDNTCaptcha();
     }
 
     private void initializeTextViewCompanyName() {
-        final TextView textViewCompanyName = requireActivity().findViewById(R.id.text_view_company_name);
+        TextView textViewCompanyName = requireActivity().findViewById(R.id.text_view_company_name);
         textViewCompanyName.setText(getCompanyName());
-        textViewCompanyName.setOnClickListener(v -> insertProxy(requireContext()));
-    }
-
-    private void setEditTextUsernameOnFocusChangeListener() {
-        binding.editTextUsername.setOnFocusChangeListener((view, b) -> {
-            binding.editTextUsername.setHint("");
-            if (b) {
-                binding.linearLayoutUsername.setBackground(ContextCompat
-                        .getDrawable(requireContext(), R.drawable.border_black_2));
-                binding.editTextPassword.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.black));
-            } else {
-                binding.linearLayoutUsername.setBackground(ContextCompat
-                        .getDrawable(requireContext(), R.drawable.border_gray_2));
-                binding.editTextPassword.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray));
-            }
-        });
-    }
-
-    private void setEditTextPasswordOnFocusChangeListener() {
-        binding.editTextPassword.setOnFocusChangeListener((view, b) -> {
-            binding.editTextPassword.setHint("");
-            if (b) {
-                binding.linearLayoutPassword.setBackground(ContextCompat
-                        .getDrawable(requireContext(), R.drawable.border_black_2));
-                binding.editTextPassword.setTextColor(ContextCompat.getColor(requireContext(),
-                        android.R.color.black));
-            } else {
-                binding.linearLayoutPassword.setBackground(ContextCompat.getDrawable(requireContext(),
-                        R.drawable.border_gray_2));
-                binding.editTextPassword.setTextColor(ContextCompat.getColor(requireContext(),
-                        R.color.gray));
-            }
-        });
-    }
-
-    private void setOnImageViewPersonLongClickListener() {
-        binding.imageViewPerson.setOnLongClickListener(view -> {
-            insertPersonalCode(requireContext());
-            return false;
-        });
-    }
-
-    private void setOnButtonLongCLickListener() {
-        binding.buttonLogin.setOnLongClickListener(v -> {
-            attempt(false);
-            return false;
-        });
+        textViewCompanyName.setOnClickListener(this);
     }
 
     private void attempt(boolean isLogin) {
@@ -198,12 +161,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void offlineLogin() {
         if (login.checkUserPassword()) {
             new CustomToast().info(getString(R.string.check_connection), Toast.LENGTH_LONG);
-            final Intent intent = new Intent(requireActivity(), HomeActivity.class);
+            Intent intent = new Intent(requireActivity(), HomeActivity.class);
             startActivity(intent);
             requireActivity().finish();
         } else if (!getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(USERNAME.getValue()) ||
-                !getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(PASSWORD.getValue())
-        ) {
+                !getApplicationComponent().SharedPreferenceModel().checkIsNotEmpty(PASSWORD.getValue())) {
             new CustomToast().warning(getString(R.string.offline_error_empty), Toast.LENGTH_LONG);
         } else {
             new CustomToast().warning(getString(R.string.error_is_not_match), Toast.LENGTH_LONG);
@@ -219,12 +181,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void showDNTCaptchaImage(LoginViewModel login) {
         this.login.setDntCaptchaText(login.getDntCaptchaTextValue());
         this.login.setDntCaptchaToken(login.getDntCaptchaTokenValue());
-        this.login.setData(login.getDntCaptchaImgUrl().substring(login.getDntCaptchaImgUrl().lastIndexOf("data=") + 5));
+        this.login.setData(login.getDntCaptchaImgUrl().substring(
+                login.getDntCaptchaImgUrl().lastIndexOf("data=") + 5));
         new ShowDNTCaptchaImage(this, this.login).execute(requireActivity());
     }
 
     public void setCaptchaResult(Bitmap captchaResult) {
-        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.imageViewCaptcha.getLayoutParams();
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.imageViewCaptcha.getLayoutParams();
         params.height = binding.linearLayoutUsername.getHeight();
         binding.imageViewCaptcha.setLayoutParams(params);
         binding.imageViewCaptcha.setImageBitmap(captchaResult);
@@ -292,6 +255,36 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             } else
                 binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT |
                         InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        } else if (id == R.id.text_view_company_name) {
+            insertProxy(requireContext());
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        int id = v.getId();
+        if (id == R.id.button_login) {
+            attempt(false);
+        } else if (id == R.id.image_view_person) {
+            insertPersonalCode(requireContext());
+        }
+        return false;
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        int id = v.getId();
+        ((EditText) v).setHint("");
+        ((EditText) v).setTextColor(ContextCompat.getColor(requireContext(), hasFocus ?
+                android.R.color.black : R.color.gray));
+        Drawable backgroundDrawable = ContextCompat.getDrawable(requireContext(),
+                hasFocus ? R.drawable.border_black_2 : R.drawable.border_gray_2);
+        if (id == R.id.edit_text_username) {
+            binding.linearLayoutUsername.setBackground(backgroundDrawable);
+        } else if (id == R.id.edit_text_password) {
+            binding.linearLayoutPassword.setBackground(backgroundDrawable);
+        } else if (id == R.id.edit_text_captcha) {
+            binding.linearLayoutCaptcha.setBackground(backgroundDrawable);
         }
     }
 }
