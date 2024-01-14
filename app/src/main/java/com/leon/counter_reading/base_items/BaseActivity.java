@@ -82,8 +82,8 @@ import com.leon.counter_reading.utils.PermissionManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseActivity extends AppCompatActivity implements
-        OnNavigationItemSelectedListener, OnItemClickListener {
+public abstract class BaseActivity extends AppCompatActivity implements OnItemClickListener,
+        OnNavigationItemSelectedListener {
     private Activity activity;
     private Toolbar toolbar;
     private ActivityBaseBinding binding;
@@ -160,7 +160,37 @@ public abstract class BaseActivity extends AppCompatActivity implements
     }
 
     private void askStoragePermission() {
-        final PermissionListener permissionlistener = new PermissionListener() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
+                allFileResultLauncher.launch(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
+            } else if (!Settings.System.canWrite(activity)) {
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                settingResultLauncher.launch(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, uri));
+            } else if (ActivityCompat.checkSelfPermission(activity,
+                    Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                new TedPermission(this)
+                        .setPermissionListener(getStoragePermissionListener())
+                        .setRationaleMessage(getString(R.string.confirm_permission))
+                        .setRationaleConfirmText(getString(R.string.allow_permission))
+                        .setDeniedMessage(getString(R.string.if_reject_permission))
+                        .setDeniedCloseButtonText(getString(R.string.close))
+                        .setGotoSettingButtonText(getString(R.string.allow_permission))
+                        .setPermissions(Manifest.permission.CAMERA).check();
+            }
+        } else
+            new TedPermission(this)
+                    .setPermissionListener(getStoragePermissionListener())
+                    .setRationaleMessage(getString(R.string.confirm_permission))
+                    .setRationaleConfirmText(getString(R.string.allow_permission))
+                    .setDeniedMessage(getString(R.string.if_reject_permission))
+                    .setDeniedCloseButtonText(getString(R.string.close))
+                    .setGotoSettingButtonText(getString(R.string.allow_permission))
+                    .setPermissions(PHOTO_PERMISSIONS).check();
+    }
+
+    private PermissionListener getStoragePermissionListener() {
+        return new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(getString(R.string.access_granted));
@@ -172,38 +202,21 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 PermissionManager.forceClose(activity);
             }
         };
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()) {
-                Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
-                allFileResultLauncher.launch(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
-            } else if (!Settings.System.canWrite(activity)) {
-                Uri uri = Uri.fromParts("package", getPackageName(), null);
-                settingResultLauncher.launch(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, uri));
-            } else if (ActivityCompat.checkSelfPermission(activity,
-                    Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                new TedPermission(this)
-                        .setPermissionListener(permissionlistener)
-                        .setRationaleMessage(getString(R.string.confirm_permission))
-                        .setRationaleConfirmText(getString(R.string.allow_permission))
-                        .setDeniedMessage(getString(R.string.if_reject_permission))
-                        .setDeniedCloseButtonText(getString(R.string.close))
-                        .setGotoSettingButtonText(getString(R.string.allow_permission))
-                        .setPermissions(Manifest.permission.CAMERA).check();
-            }
-        } else
-            new TedPermission(this)
-                    .setPermissionListener(permissionlistener)
-                    .setRationaleMessage(getString(R.string.confirm_permission))
-                    .setRationaleConfirmText(getString(R.string.allow_permission))
-                    .setDeniedMessage(getString(R.string.if_reject_permission))
-                    .setDeniedCloseButtonText(getString(R.string.close))
-                    .setGotoSettingButtonText(getString(R.string.allow_permission))
-                    .setPermissions(PHOTO_PERMISSIONS).check();
     }
 
-
     private void askLocationPermission() {
-        final PermissionListener permissionlistener = new PermissionListener() {
+        new TedPermission(this)
+                .setPermissionListener(getLocationPermissionListener())
+                .setRationaleMessage(getString(R.string.confirm_permission))
+                .setRationaleConfirmText(getString(R.string.allow_permission))
+                .setDeniedMessage(getString(R.string.if_reject_permission))
+                .setDeniedCloseButtonText(getString(R.string.close))
+                .setGotoSettingButtonText(getString(R.string.allow_permission))
+                .setPermissions(LOCATION_PERMISSIONS).check();
+    }
+
+    private PermissionListener getLocationPermissionListener() {
+        return new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(getString(R.string.access_granted));
@@ -218,14 +231,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
                 PermissionManager.forceClose(activity);
             }
         };
-        new TedPermission(this)
-                .setPermissionListener(permissionlistener)
-                .setRationaleMessage(getString(R.string.confirm_permission))
-                .setRationaleConfirmText(getString(R.string.allow_permission))
-                .setDeniedMessage(getString(R.string.if_reject_permission))
-                .setDeniedCloseButtonText(getString(R.string.close))
-                .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(LOCATION_PERMISSIONS).check();
     }
 
     @Override

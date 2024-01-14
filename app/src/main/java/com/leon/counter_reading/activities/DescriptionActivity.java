@@ -26,9 +26,13 @@ import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.window.OnBackInvokedDispatcher;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.os.BuildCompat;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -55,13 +59,13 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
     private MediaRecorder mediaRecorder;
     private String uuid, description, dir;
     private long lastClickTime = 0;
-    private boolean play = false;
+    private boolean playing = false;
     private int progressChangedValue;
     private int position, startTime = 0, finalTime = 0, trackNumber;
     private final Handler myHandler = new Handler();
     private final Runnable UpdateSongTime = new Runnable() {
         public void run() {
-            if (play) {
+            if (playing) {
                 startTime = mediaPlayer.getCurrentPosition();
                 binding.textViewCurrent.setText(String.format(Locale.US, "%d دقیقه، %d ثانیه",
                         MILLISECONDS.toMinutes(startTime), MILLISECONDS.toSeconds(startTime) -
@@ -88,6 +92,7 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
         if (checkRecorderPermission(getApplicationContext()))
             initialize();
         else askRecorderPermission();
+        addOnBackPressed();
     }
 
     private void initialize() {
@@ -117,7 +122,7 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
     private void startPlaying() {
         try {
             binding.linearLayoutSeek.setVisibility(View.VISIBLE);
-            play = true;
+            playing = true;
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setDataSource(dir.concat(voice.address));
             mediaPlayer.prepare();
@@ -139,7 +144,7 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void stopPlaying() {
-        play = false;
+        playing = false;
         if (voice.id == 0)
             binding.imageViewRecord.setEnabled(true);
         binding.linearLayoutSeek.setVisibility(View.GONE);
@@ -196,7 +201,7 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        if (play) {
+        if (playing) {
             mediaPlayer.seekTo(progressChangedValue);
             startTime = progressChangedValue;
         }
@@ -210,7 +215,7 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
         if (id == R.id.button_send) {
             sendDescription();
         } else if (id == R.id.image_view_play) {
-            if (!play) {
+            if (!playing) {
                 startPlaying();
             } else {
                 stopPlaying();
@@ -293,7 +298,7 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
 
     private void finishDescription(String message) {
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoadDescription(uuid, message);
-        final Intent intent = new Intent();
+        Intent intent = new Intent();
         intent.putExtra(POSITION.getValue(), position);
         intent.putExtra(BILL_ID.getValue(), uuid);
         setResult(RESULT_OK, intent);
@@ -301,7 +306,18 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void askRecorderPermission() {
-        PermissionListener permissionlistener = new PermissionListener() {
+        new TedPermission(this)
+                .setPermissionListener(getPermissionListener())
+                .setRationaleMessage(getString(R.string.confirm_permission))
+                .setRationaleConfirmText(getString(R.string.allow_permission))
+                .setDeniedMessage(getString(R.string.if_reject_permission))
+                .setDeniedCloseButtonText(getString(R.string.close))
+                .setGotoSettingButtonText(getString(R.string.allow_permission))
+                .setPermissions(RECORD_AUDIO_PERMISSIONS).check();
+    }
+
+    private PermissionListener getPermissionListener() {
+        return new PermissionListener() {
             @Override
             public void onPermissionGranted() {
                 new CustomToast().info(getString(R.string.access_granted));
@@ -313,20 +329,28 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
                 PermissionManager.forceClose(activity);
             }
         };
-        new TedPermission(this)
-                .setPermissionListener(permissionlistener)
-                .setRationaleMessage(getString(R.string.confirm_permission))
-                .setRationaleConfirmText(getString(R.string.allow_permission))
-                .setDeniedMessage(getString(R.string.if_reject_permission))
-                .setDeniedCloseButtonText(getString(R.string.close))
-                .setGotoSettingButtonText(getString(R.string.allow_permission))
-                .setPermissions(RECORD_AUDIO_PERMISSIONS).check();
     }
 
-    @Override
-    public void onBackPressed() {
-        stopPlaying();
-        super.onBackPressed();
+    @OptIn(markerClass = BuildCompat.PrereleaseSdkCheck.class)
+    private void addOnBackPressed() {
+        if (BuildCompat.isAtLeastT()) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::backPressed);
+        } else {
+            getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    backPressed();
+                }
+            });
+        }
+    }
+
+    private void backPressed() {
+        if (playing)
+            stopPlaying();
+        else
+            finish();
     }
 
     @Override

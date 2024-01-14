@@ -29,6 +29,7 @@ import android.telephony.CellSignalStrengthLte;
 import android.telephony.CellSignalStrengthWcdma;
 import android.telephony.TelephonyManager;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.app.ActivityCompat;
@@ -43,16 +44,15 @@ import java.util.ArrayList;
 public class PermissionManager {
     public static boolean checkRecorderPermission(Context context) {
         //TODO
-        return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED &&
-                checkStoragePermission(context);
+        return checkStoragePermission(context) && ActivityCompat.checkSelfPermission(context,
+                Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+
     }
 
     public static boolean checkCameraPermission(Context context) {
         //TODO
-        return checkStoragePermission(context) &&
-                ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+        return checkStoragePermission(context) && ActivityCompat.checkSelfPermission(context,
+                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
     }
 
     //TODO
@@ -117,6 +117,28 @@ public class PermissionManager {
             alertDialog.setPositiveButton(R.string.setting, (dialog, which) -> {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 activity.startActivityForResult(intent, GPS_CODE);
+            });
+            alertDialog.setNegativeButton(R.string.close, (dialog, which) -> {
+                dialog.cancel();
+                forceClose(activity);
+            });
+            alertDialog.show();
+        }
+        return enabled;
+    }
+
+    public static boolean enableGpsForResult(Activity activity, ActivityResultLauncher<Intent> activityResultLauncher) {
+        final LocationManager locationManager = (LocationManager)
+                activity.getSystemService(Context.LOCATION_SERVICE);
+        final boolean enabled = LocationManagerCompat.isLocationEnabled(locationManager);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
+        if (!enabled) {
+            alertDialog.setCancelable(false);
+            alertDialog.setTitle(activity.getString(R.string.gps_setting));
+            alertDialog.setMessage(R.string.active_gps);
+            alertDialog.setPositiveButton(R.string.setting, (dialog, which) -> {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                activityResultLauncher.launch(intent);
             });
             alertDialog.setNegativeButton(R.string.close, (dialog, which) -> {
                 dialog.cancel();

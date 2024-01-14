@@ -7,7 +7,6 @@ import static com.leon.counter_reading.enums.DialogType.Green;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.AVATAR;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
-import static com.leon.counter_reading.helpers.Constants.GPS_CODE;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getSerial;
@@ -33,6 +32,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -59,6 +60,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
     private FragmentLoginBinding binding;
     private LoginViewModel login;
     private int counter = 0;
+    private final ActivityResultLauncher<Intent> settingResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result != null && result.getResultCode() == PackageManager.PERMISSION_GRANTED) {
+                    checkReadPhoneStatePermission();
+                }
+            });
 
     public LoginFragment() {
     }
@@ -88,7 +95,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
 //        super.onActivityCreated(savedInstanceState);
 //        initializeTextViewCompanyName();
 //    }
-
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == PackageManager.PERMISSION_GRANTED) {
+//            if (requestCode == GPS_CODE) checkReadPhoneStatePermission();
+//        }
+//    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -202,7 +215,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
                 ActivityCompat.checkSelfPermission(requireContext(), CALL_PHONE) != PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(requireContext(), READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             askReadPhoneStatusPermission();
-        } else if (enableGpsForResult(requireActivity())) {
+        } else if (enableGpsForResult(requireActivity(), settingResultLauncher)) {
             initialize();
         }
     }
@@ -229,14 +242,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
                 .setGotoSettingButtonText(getString(R.string.allow_permission))
                 .setPermissions(READ_PHONE_STATE, CALL_PHONE, ACCESS_FINE_LOCATION)
                 .check();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == PackageManager.PERMISSION_GRANTED) {
-            if (requestCode == GPS_CODE) checkReadPhoneStatePermission();
-        }
     }
 
     @Override
