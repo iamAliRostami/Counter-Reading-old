@@ -9,7 +9,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -138,7 +141,7 @@ public class CustomFile {
     @SuppressLint("SimpleDateFormat")
     static String saveImage(final InputStream inputStream, final Context context) {
 //        Bitmap bitmapImage = BitmapFactory.decodeStream(inputStream);
-        final Bitmap bitmapImage = compressBitmap(inputStream);
+        Bitmap bitmapImage = compressBitmap(inputStream);
 
         final File mediaStorageDir = new File(context.getExternalFilesDir(null) + context.getString(R.string.camera_folder));
         if (!mediaStorageDir.exists()) if (!mediaStorageDir.mkdirs()) return null;
@@ -148,6 +151,7 @@ public class CustomFile {
         if (file.exists()) if (!file.delete()) return null;
         if (bitmapImage != null) {
             try {
+                bitmapImage = mark(bitmapImage);
 //                ByteArrayOutputStream stream = new ByteArrayOutputStream();
 //                bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 //                Log.e("size", String.valueOf(stream.toByteArray().length));
@@ -165,6 +169,29 @@ public class CustomFile {
         CURRENT_IMAGE_SIZE = file.length();
         MediaScannerConnection.scanFile(context, new String[]{file.getPath()}, new String[]{"image/jpeg"}, null);
         return fileNameToSave;
+    }
+
+    public static Bitmap mark(Bitmap bitmap) {
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+        Bitmap result = Bitmap.createBitmap(w, h, bitmap.getConfig());
+
+        Canvas canvas = new Canvas(result);
+        canvas.drawBitmap(bitmap, 0, 0, null);
+
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+//        paint.setAlpha(alpha);
+        paint.setTextSize(30);
+        paint.setAntiAlias(true);
+        paint.setUnderlineText(true);
+
+        float yCoordinate = (float) bitmap.getHeight() ;
+//        float xCoordinate = (float) bitmap.getWidth() / 36;
+        float xCoordinate = 0;
+        canvas.drawText("G", xCoordinate, yCoordinate, paint);
+
+        return result;
     }
 
     public static String saveTempBitmap(final Bitmap bitmap, Context context) {
