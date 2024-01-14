@@ -20,5 +20,7 @@ public class Image {
     public boolean isDeleted;
     public boolean isArchived;
     @Ignore
+    public boolean isGallery;
+    @Ignore
     public MultipartBody.Part File;
 }

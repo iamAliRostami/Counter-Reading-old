@@ -257,6 +257,7 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
                 image.size = CURRENT_IMAGE_SIZE;
                 image.OnOffLoadId = uuid;
                 image.trackNumber = trackNumber;
+                image.isGallery = true;
                 if (replace > 0) {
                     getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
                     images.set(replace - 1, image);
