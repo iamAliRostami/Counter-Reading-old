@@ -17,6 +17,17 @@ import com.leon.counter_reading.databinding.FragmentSplashBinding;
 public class SplashFragment extends Fragment {
     private FragmentSplashBinding binding;
     private Callback startActivity;
+    private final Thread timerThread = new Thread() {
+        public void run() {
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                startActivity.splashLoaded();
+            }
+        }
+    };
 
     public SplashFragment() {
     }
@@ -37,21 +48,9 @@ public class SplashFragment extends Fragment {
         startSplash();
         return binding.getRoot();
     }
-
     private void startSplash() {
         binding.imageViewSplashScreen.setImageResource(R.drawable.img_splash);
         binding.shimmerViewContainer.startShimmer();
-        Thread timerThread = new Thread() {
-            public void run() {
-                try {
-                    sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    startActivity.splashLoaded();
-                }
-            }
-        };
         timerThread.start();
     }
 

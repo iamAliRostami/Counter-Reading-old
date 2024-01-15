@@ -181,7 +181,6 @@ public class CustomFile {
 
         Paint paint = new Paint();
         paint.setColor(Color.RED);
-//        paint.setAlpha(alpha);
         paint.setTextSize(30);
         paint.setAntiAlias(true);
         paint.setUnderlineText(true);
