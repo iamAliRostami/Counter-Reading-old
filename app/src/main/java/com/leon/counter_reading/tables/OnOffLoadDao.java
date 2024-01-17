@@ -45,24 +45,31 @@ public interface OnOffLoadDao {
             "OnOffLoadDto.possibleEmpty, OnOffLoadDto.possibleKarbariCode, OnOffLoadDto.guildId," +
             "OnOffLoadDto.description, OnOffLoadDto.counterNumberShown, OnOffLoadDto.attemptCount, " +
             "OnOffLoadDto.isLocked, OnOffLoadDto.gisAccuracy, OnOffLoadDto.phoneDateTime, " +
-            "OnOffLoadDto.locationDateTime, OnOffLoadDto.x , OnOffLoadDto.y, " +
-            "OnOffLoadDto.d1, OnOffLoadDto.d2 From OnOffLoadDto " +
+            "OnOffLoadDto.locationDateTime, OnOffLoadDto.x , OnOffLoadDto.y, OnOffLoadDto.d1, " +
+            "OnOffLoadDto.d2 " +
+            "From OnOffLoadDto " +
             "Inner JOIN TrackingDto on OnOffLoadDto.trackingId = TrackingDto.id " +
             "WHERE OnOffLoadDto.offLoadStateId = :offLoadStateId AND TrackingDto.isActive = :isActive")
     List<OnOffLoadDto.OffLoad> getAllOnOffLoadInsert(int offLoadStateId, boolean isActive);
 
-    @Query("select OnOffLoadDto.id, OnOffLoadDto.counterNumber, OnOffLoadDto.counterStateId, " +
-            "OnOffLoadDto.possibleAddress, OnOffLoadDto.possibleCounterSerial, " +
-            "OnOffLoadDto.possibleEshterak, OnOffLoadDto.possibleMobile, " +
-            "OnOffLoadDto.possiblePhoneNumber, OnOffLoadDto.possibleAhadMaskooniOrAsli, " +
-            "OnOffLoadDto.possibleAhadTejariOrFari, OnOffLoadDto.possibleAhadSaierOrAbBaha, " +
-            "OnOffLoadDto.possibleEmpty, OnOffLoadDto.possibleKarbariCode, " +
-            "OnOffLoadDto.description, OnOffLoadDto.counterNumberShown, OnOffLoadDto.attemptCount, " +
-            "OnOffLoadDto.isLocked, OnOffLoadDto.gisAccuracy, OnOffLoadDto.phoneDateTime, " +
-            "OnOffLoadDto.locationDateTime, OnOffLoadDto.x , OnOffLoadDto.y, " +
-            "OnOffLoadDto.d1, OnOffLoadDto.d2, OnOffLoadDto.offLoadStateId From OnOffLoadDto " +
-            "Inner JOIN TrackingDto on OnOffLoadDto.trackingId = TrackingDto.id " +
-            "WHERE OnOffLoadDto.offLoadStateId = :offLoadStateId AND TrackingDto.isActive = :isActive " +
+    @Query("select OnOffLoadDto.id, OnOffLoadDto.counterNumber, OnOffLoadDto.counterNumberShown, " +
+            "OnOffLoadDto.attemptCount, OnOffLoadDto.counterStateId, OnOffLoadDto.description, " +
+
+            "OnOffLoadDto.offLoadStateId, OnOffLoadDto.phoneDateTime, OnOffLoadDto.gisAccuracy, " +
+
+            "OnOffLoadDto.x , OnOffLoadDto.y, OnOffLoadDto.locationDateTime, OnOffLoadDto.d1, " +
+
+
+            "OnOffLoadDto.d2 ,OnOffLoadDto.counterStatePosition, OnOffLoadDto.possibleEshterak, " +
+
+
+            "OnOffLoadDto.possibleEmpty, OnOffLoadDto.possibleAddress, OnOffLoadDto.isLocked, " +
+            "OnOffLoadDto.possibleAhadTejariOrFari, OnOffLoadDto.possibleAhadMaskooniOrAsli, " +
+            "OnOffLoadDto.possiblePhoneNumber, OnOffLoadDto.possibleCounterSerial, " +
+            "OnOffLoadDto.possibleKarbariCode, OnOffLoadDto.possibleAhadSaierOrAbBaha, " +
+            "OnOffLoadDto.possibleMobile From OnOffLoadDto Inner JOIN TrackingDto on " +
+            "OnOffLoadDto.trackingId = TrackingDto.id WHERE " +
+            "OnOffLoadDto.offLoadStateId = :offLoadStateId AND TrackingDto.isActive = :isActive " +
             "LIMIT 500")
     List<OnOffLoadDto.OffLoad> getAllOnOffLoadTopInserted(int offLoadStateId, boolean isActive);
 

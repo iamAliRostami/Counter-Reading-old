@@ -77,8 +77,8 @@ record offLoadData(Activity activity) implements ICallback<OnOffLoadDto.OffLoadR
         } else if (response.body() != null) {
             try {
                 publicErrorCounter = publicErrorCounter + 1;
-                final CustomErrorHandling errorHandling = new CustomErrorHandling(activity);
-                final String error = errorHandling.getErrorMessage(response.body().status);
+                CustomErrorHandling errorHandling = new CustomErrorHandling(activity);
+                String error = errorHandling.getErrorMessage(response.body().status);
                 new CustomToast().error(error);
             } catch (Exception e) {
                 activity.runOnUiThread(() -> new CustomDialogModel(Red, activity, e.getMessage(),

@@ -98,10 +98,13 @@ public class ReadingReportFragment extends DialogFragment implements View.OnClic
             try {
                 adapter = new ReadingReportAdapter(getContext(), uuid, trackNumber, position,
                         counterReportDtos, offLoadReports);
-                binding.listViewReports.setAdapter(adapter);
-                binding.listViewReports.setLayoutManager(new LinearLayoutManager(requireContext()));
-                binding.buttonSubmit.setText(MessageFormat.format(getString(R.string.submit_count),
-                        adapter.selectedCount()));
+                requireActivity().runOnUiThread(() ->
+                {
+                    binding.listViewReports.setAdapter(adapter);
+                    binding.listViewReports.setLayoutManager(new LinearLayoutManager(requireContext()));
+                    binding.buttonSubmit.setText(MessageFormat.format(getString(R.string.submit_count),
+                            adapter.selectedCount()));
+                });
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             }

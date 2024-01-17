@@ -47,7 +47,9 @@ public class GetReadingReportDBData extends AsyncTask<Activity, Integer, Integer
                 }
             }
         }
-        ReadingReportFragment.newInstance().setupRecyclerView(counterReportDtos, offLoadReports);
+        activities[0].runOnUiThread(() ->
+                ReadingReportFragment.newInstance().setupRecyclerView(counterReportDtos, offLoadReports));
+
         return null;
     }
 }
