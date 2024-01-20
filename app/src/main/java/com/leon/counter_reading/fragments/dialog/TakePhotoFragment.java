@@ -44,8 +44,6 @@ import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.photo.PrepareMultimedia;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class TakePhotoFragment extends DialogFragment implements AdapterView.OnItemClickListener,
@@ -190,34 +188,26 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
     private void openResourceForResult() {
         if (binding.checkBoxGallery.isChecked())
             openGalleryForResult();
-//            openCameraForResult1();
         else openCameraForResult();
     }
 
     private void openGalleryForResult() {
-        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("image/*");
-        galleryResultLauncher.launch(galleryIntent);
+        if (isAdded() && getContext() != null) {
+            Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            galleryIntent.setType("image/*");
+            galleryResultLauncher.launch(galleryIntent);
+        } else {
+            new CustomToast().error("صفحه ی عکس را بسته و مجددا باز کنید.", Toast.LENGTH_LONG);
+        }
     }
 
     private void openCameraForResult() {
-//        final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (getContext() != null && cameraIntent.resolveActivity(getContext().getPackageManager()) != null) {
-//            File file = createImageFile(getContext());
-//            path = file.getPath();
-//            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(),
-//                    BuildConfig.APPLICATION_ID.concat(".FileProvider"), file));
-//            cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-//            cameraResultLauncher.launch(cameraIntent);
-//        } else {
-//            new CustomToast().error("صفحه ی عکس را بسته و مجددا باز کنید.", Toast.LENGTH_LONG);
-//        }
-        if (getContext() != null) {
-//            File file = createImageFile(getContext());
-//            path = file.getPath();
+        if (isAdded() && getContext() != null) {
             uri = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID
                     .concat(".FileProvider"), createImageFile(getContext()));
             cameraResultLauncher.launch(uri);
+        } else {
+            new CustomToast().error("صفحه ی عکس را بسته و مجددا باز کنید.", Toast.LENGTH_LONG);
         }
     }
 
@@ -225,81 +215,50 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
             new ActivityResultContracts.TakePicture(), new ActivityResultCallback<>() {
                 @Override
                 public void onActivityResult(Boolean o) {
-                    if (o)
-                        prepareImage();
-                    imageViewAdapter.notifyDataSetChanged();
-                    binding.buttonSaveSend.setEnabled(true);
+                    if (o) {
+                        if (isAdded() && getContext() != null) prepareImage(false);
+                        else {
+                            new CustomToast().error("صفحه ی عکس را بسته و مجددا باز کنید.", Toast.LENGTH_LONG);
+                        }
+                    }
                 }
             });
-
-    private final ActivityResultLauncher<Intent> cameraResultLauncher1 = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) prepareImage();
-                imageViewAdapter.notifyDataSetChanged();
-                binding.buttonSaveSend.setEnabled(true);
-            });
-
-    private void prepareImage() {
-        final Image image = new Image();
-        if (isAdded() && getContext() != null) {
-//            try {
-////                image.address = saveTempBitmap(path, getContext());
-////                InputStream inputStream = getContext().getContentResolver().openInputStream(uri);
-//
-//            } catch (FileNotFoundException e) {
-//                new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
-//            }
-            image.address = saveTempBitmap(uri, getContext(),false);
-            image.size = CURRENT_IMAGE_SIZE;
-            image.OnOffLoadId = uuid;
-            image.trackNumber = trackNumber;
-            if (replace > 0) {
-                getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
-                images.set(replace - 1, image);
-            } else images.add(image);
-        }
-
-    }
 
     private final ActivityResultLauncher<Intent> galleryResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null &&
                         result.getData().getData() != null) {
-//                    try {
-//
-//                    } catch (FileNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
                     if (isAdded() && getContext() != null) {
-//                            InputStream inputStream = getContext().getContentResolver()
-//                                    .openInputStream(result.getData().getData());
-                        Image image = new Image();
-                        image.address = saveTempBitmap(result.getData().getData(), getContext(),true);
-                        prepareImage(image);
+                        uri = result.getData().getData();
+                        prepareImage(true);
+                    } else {
+                        new CustomToast().error("صفحه ی عکس را بسته و مجددا باز کنید.", Toast.LENGTH_LONG);
                     }
                 }
-                imageViewAdapter.notifyDataSetChanged();
-                binding.buttonSaveSend.setEnabled(true);
             });
 
-    private void prepareImage(Image image) {
-        if (CURRENT_IMAGE_SIZE > 0) {
-            try {
+
+    private void prepareImage(boolean isGallery) {
+        try {
+            final Image image = new Image();
+            image.address = saveTempBitmap(uri, getContext(), isGallery);
+            if (CURRENT_IMAGE_SIZE > 0) {
                 image.size = CURRENT_IMAGE_SIZE;
                 image.OnOffLoadId = uuid;
                 image.trackNumber = trackNumber;
-                image.isGallery = true;
+                image.isGallery = isGallery;
                 if (replace > 0) {
                     getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
                     images.set(replace - 1, image);
                 } else images.add(image);
-            } catch (Exception e) {
-                new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
-            }
-        } else new CustomToast().error("مجددا تلاش کنید.");
+                imageViewAdapter.notifyDataSetChanged();
+                binding.buttonSaveSend.setEnabled(true);
+            } else new CustomToast().error("مجددا تلاش کنید.");
+        } catch (Exception e) {
+            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+        }
     }
-
 
     public void setResult() {
         try {

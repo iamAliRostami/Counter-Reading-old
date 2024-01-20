@@ -138,7 +138,6 @@ public class CustomFile {
 
     @SuppressLint("SimpleDateFormat")
     static String saveImage(final Uri uri, final Context context, boolean mark) {
-//        Bitmap bitmapImage = BitmapFactory.decodeStream(inputStream);
         Bitmap bitmapImage = compressBitmap(uri, context);
 
         final File mediaStorageDir = new File(context.getExternalFilesDir(null) + context.getString(R.string.camera_folder));
@@ -151,13 +150,7 @@ public class CustomFile {
             try {
                 if (mark)
                     bitmapImage = mark(bitmapImage);
-//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-//                Log.e("size", String.valueOf(stream.toByteArray().length));
-//                int quality = new CompressQuality().get(stream.toByteArray().length/1000, getImageQuality());
-//                Log.e("quality", String.valueOf(quality));
                 FileOutputStream out = new FileOutputStream(file);
-//                bitmapImage.compress(Bitmap.CompressFormat.JPEG, quality, out);
                 bitmapImage.compress(Bitmap.CompressFormat.JPEG, 80, out);
                 out.flush();
                 out.close();
