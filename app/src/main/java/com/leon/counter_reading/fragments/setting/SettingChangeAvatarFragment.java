@@ -7,7 +7,7 @@ import static com.leon.counter_reading.helpers.Constants.CAMERA_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.GALLERY_REQUEST;
 import static com.leon.counter_reading.helpers.Constants.PHOTO_URI;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.utils.CustomFile.createImageFile;
+import static com.leon.counter_reading.utils.CustomFile.createTempImageFile;
 import static com.leon.counter_reading.utils.CustomFile.rotateImage;
 import static com.leon.counter_reading.utils.CustomFile.saveTempBitmap;
 
@@ -114,7 +114,7 @@ public class SettingChangeAvatarFragment extends Fragment {
                 if (cameraIntent.resolveActivity(activity.getPackageManager()) != null) {
                     File photoFile = null;
                     try {
-                        photoFile = createImageFile(activity);
+                        photoFile = createTempImageFile(activity);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

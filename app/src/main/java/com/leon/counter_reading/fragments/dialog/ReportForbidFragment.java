@@ -9,7 +9,7 @@ import static com.leon.counter_reading.helpers.MyApplication.getDigits;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.Converters.bitmapToFile;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
-import static com.leon.counter_reading.utils.CustomFile.createImageFile;
+import static com.leon.counter_reading.utils.CustomFile.createTempImageFile;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -261,7 +261,7 @@ public class ReportForbidFragment extends DialogFragment implements TextWatcher,
             if (isAdded() && getContext() != null) {
                 try {
                     try {
-                        photoFile = createImageFile(getContext());
+                        photoFile = createTempImageFile(getContext());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

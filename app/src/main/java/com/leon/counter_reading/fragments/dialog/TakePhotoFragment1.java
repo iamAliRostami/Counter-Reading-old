@@ -12,7 +12,7 @@ import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.helpers.Constants.CURRENT_IMAGE_SIZE;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.gallerySelector;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.utils.CustomFile.createImageFile;
+import static com.leon.counter_reading.utils.CustomFile.createTempImageFile;
 import static com.leon.counter_reading.utils.CustomFile.saveTempBitmap;
 
 import android.app.Activity;
@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -44,29 +44,30 @@ import com.leon.counter_reading.tables.Image;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.photo.PrepareMultimedia;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class TakePhotoFragment extends DialogFragment implements AdapterView.OnItemClickListener,
+public class TakePhotoFragment1 extends DialogFragment implements AdapterView.OnItemClickListener,
         AdapterView.OnItemLongClickListener, View.OnClickListener {
     private final ArrayList<Image> images = new ArrayList<>();
     private FragmentTakePhotoBinding binding;
     private ImageViewAdapter imageViewAdapter;
     private Callback readingActivity;
     private int replace = 0, position, trackNumber;
-    private String uuid;
+    private String uuid, path;
     private boolean result, counterHasImage, reportHasImage, trackHasImage;
     private long lastClickTime = 0;
-    private Uri uri;
 
-    public TakePhotoFragment() {
+    public TakePhotoFragment1() {
     }
 
-    public static TakePhotoFragment newInstance(boolean sent, String uuid, int trackingNumber,
-                                                int position, boolean image, boolean counterHasImage,
-                                                boolean reportHasImage, boolean trackHasImage) {
-        TakePhotoFragment fragment = newInstance(sent, uuid, trackingNumber);
+    public static TakePhotoFragment1 newInstance(boolean sent, String uuid, int trackingNumber,
+                                                 int position, boolean image, boolean counterHasImage,
+                                                 boolean reportHasImage, boolean trackHasImage) {
+        TakePhotoFragment1 fragment = newInstance(sent, uuid, trackingNumber);
         Bundle args;
         if (fragment.getArguments() != null)
             args = fragment.getArguments();
@@ -81,8 +82,8 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
         return fragment;
     }
 
-    public static TakePhotoFragment newInstance(boolean sent, String uuid, int trackingNumber) {
-        TakePhotoFragment fragment = new TakePhotoFragment();
+    public static TakePhotoFragment1 newInstance(boolean sent, String uuid, int trackingNumber) {
+        TakePhotoFragment1 fragment = new TakePhotoFragment1();
         Bundle args = new Bundle();
         args.putBoolean(SENT.getValue(), sent);
         args.putString(BILL_ID.getValue(), uuid);
@@ -190,7 +191,6 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
     private void openResourceForResult() {
         if (binding.checkBoxGallery.isChecked())
             openGalleryForResult();
-//            openCameraForResult1();
         else openCameraForResult();
     }
 
@@ -201,64 +201,29 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
     }
 
     private void openCameraForResult() {
-//        final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (getContext() != null && cameraIntent.resolveActivity(getContext().getPackageManager()) != null) {
-//            File file = createImageFile(getContext());
-//            path = file.getPath();
-//            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(),
-//                    BuildConfig.APPLICATION_ID.concat(".FileProvider"), file));
-//            cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-//            cameraResultLauncher.launch(cameraIntent);
-//        } else {
-//            new CustomToast().error("صفحه ی عکس را بسته و مجددا باز کنید.", Toast.LENGTH_LONG);
-//        }
-        if (getContext() != null) {
-//            File file = createImageFile(getContext());
-//            path = file.getPath();
-            uri = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID
-                    .concat(".FileProvider"), createImageFile(getContext()));
-            cameraResultLauncher.launch(uri);
-        }
-    }
-
-    private final ActivityResultLauncher<Uri> cameraResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.TakePicture(), new ActivityResultCallback<>() {
-                @Override
-                public void onActivityResult(Boolean o) {
-                    if (o)
-                        prepareImage();
-                    imageViewAdapter.notifyDataSetChanged();
-                    binding.buttonSaveSend.setEnabled(true);
+        final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (getContext() != null && cameraIntent.resolveActivity(getContext().getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createTempImageFile(getContext());
+            } catch (IOException e) {
+                new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+            }
+            if (photoFile != null) {
+                try {
+                    path = photoFile.getPath();
+                    Uri uri = FileProvider.getUriForFile(getContext(),
+                            BuildConfig.APPLICATION_ID.concat(".provider"), photoFile);
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                    cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                    cameraResultLauncher.launch(cameraIntent);
+                } catch (Exception e) {
+                    new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
                 }
-            });
-
-    private final ActivityResultLauncher<Intent> cameraResultLauncher1 = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) prepareImage();
-                imageViewAdapter.notifyDataSetChanged();
-                binding.buttonSaveSend.setEnabled(true);
-            });
-
-    private void prepareImage() {
-        final Image image = new Image();
-        if (isAdded() && getContext() != null) {
-//            try {
-////                image.address = saveTempBitmap(path, getContext());
-////                InputStream inputStream = getContext().getContentResolver().openInputStream(uri);
-//
-//            } catch (FileNotFoundException e) {
-//                new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
-//            }
-            image.address = saveTempBitmap(uri, getContext(),false);
-            image.size = CURRENT_IMAGE_SIZE;
-            image.OnOffLoadId = uuid;
-            image.trackNumber = trackNumber;
-            if (replace > 0) {
-                getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
-                images.set(replace - 1, image);
-            } else images.add(image);
+            }
+        } else {
+            new CustomToast().error("صفحه ی عکس را بسته و مجددا باز کنید.", Toast.LENGTH_LONG);
         }
-
     }
 
     private final ActivityResultLauncher<Intent> galleryResultLauncher = registerForActivityResult(
@@ -266,11 +231,6 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null &&
                         result.getData().getData() != null) {
-//                    try {
-//
-//                    } catch (FileNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
                     if (isAdded() && getContext() != null) {
 //                            InputStream inputStream = getContext().getContentResolver()
 //                                    .openInputStream(result.getData().getData());
@@ -279,6 +239,12 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
                         prepareImage(image);
                     }
                 }
+                imageViewAdapter.notifyDataSetChanged();
+                binding.buttonSaveSend.setEnabled(true);
+            });
+    private final ActivityResultLauncher<Intent> cameraResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) prepareImage();
                 imageViewAdapter.notifyDataSetChanged();
                 binding.buttonSaveSend.setEnabled(true);
             });
@@ -300,6 +266,23 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
         } else new CustomToast().error("مجددا تلاش کنید.");
     }
 
+    private void prepareImage() {
+        final Image image = new Image();
+        try {
+            if (isAdded() && getContext() != null) {
+                image.address = saveTempBitmap(path, getContext());
+                image.size = CURRENT_IMAGE_SIZE;
+                image.OnOffLoadId = uuid;
+                image.trackNumber = trackNumber;
+                if (replace > 0) {
+                    getApplicationComponent().MyDatabase().imageDao().deleteImage(images.get(replace - 1).id);
+                    images.set(replace - 1, image);
+                } else images.add(image);
+            }
+        } catch (Exception e) {
+            new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
+        }
+    }
 
     public void setResult() {
         try {

@@ -55,7 +55,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
-public class CustomFile {
+public class CustomFile1 {
 
     public static boolean isExternalStorageWritable() {
         String state = "";
@@ -87,9 +87,9 @@ public class CustomFile {
         }
     }
 
-    public static String saveTempBitmap(final Uri uri, final Context context, boolean mark) {
+    public static String saveTempBitmap(final InputStream inputStream, final Context context) {
         if (isExternalStorageWritable()) {
-            return saveImage(uri, context, mark);
+            return saveImage(inputStream, context);
         } else {
             new CustomToast().warning(context.getString(R.string.error_external_storage_is_not_writable));
             return context.getString(R.string.error_external_storage_is_not_writable);
@@ -98,9 +98,12 @@ public class CustomFile {
 
     @SuppressLint("SimpleDateFormat")
     static String saveImage(final String path, final Context context) {
+//        final Bitmap bitmapImage = compressBitmap(path);
         Bitmap bitmapImage = compressBitmap(BitmapFactory.decodeFile(path));
-        File mediaStorageDir = new File(context.getExternalFilesDir(null) +
-                context.getString(R.string.camera_folder));
+//        Bitmap bitmapImage = compressBitmap(path);
+//        Bitmap bitmapImage = compressBitmap(BitmapFactory.decodeFile(path), path);
+//        Bitmap bitmapImage = BitmapFactory.decodeFile(path);
+        File mediaStorageDir = new File(context.getExternalFilesDir(null) + context.getString(R.string.camera_folder));
         if (!mediaStorageDir.exists()) if (!mediaStorageDir.mkdirs()) return null;
         String timeStamp = (new SimpleDateFormat(context.getString(R.string.save_format_name_melli))).format(new Date());
         String fileNameToSave = "JPEG_" + timeStamp + ".jpg";
@@ -110,23 +113,23 @@ public class CustomFile {
             try {
                 FileOutputStream out = new FileOutputStream(file);
                 bitmapImage.compress(Bitmap.CompressFormat.JPEG, 80, out);
+//                int quality = new CompressQuality().get(new File(path).length(), getImageQuality());
+//                bitmapImage.compress(Bitmap.CompressFormat.JPEG, quality, out);
                 out.flush();
                 out.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        Log.e("size 3", String.valueOf(file.length()));
         CURRENT_IMAGE_SIZE = file.length();
-        MediaScannerConnection.scanFile(context, new String[]{file.getPath()},
-                new String[]{"image/jpeg"}, null);
-//        deleteRecursive(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES));
-//        deleteRecursive(new File(context.getFilesDir(), "camera_photos"));
-        deleteRecursive(new File(context.getFilesDir(), context.getString(R.string.camera_folder)));
+        MediaScannerConnection.scanFile(context, new String[]{file.getPath()}, new String[]{"image/jpeg"}, null);
+        deleteRecursive(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES));
         return fileNameToSave;
     }
 
     private static void deleteRecursive(final File dir) {
-        if (dir != null && dir.isDirectory()) {
+        if (dir.isDirectory()) {
             String[] children = dir.list();
             if (children != null) {
                 for (String child : children) {
@@ -137,9 +140,9 @@ public class CustomFile {
     }
 
     @SuppressLint("SimpleDateFormat")
-    static String saveImage(final Uri uri, final Context context, boolean mark) {
+    static String saveImage(final InputStream inputStream, final Context context) {
 //        Bitmap bitmapImage = BitmapFactory.decodeStream(inputStream);
-        Bitmap bitmapImage = compressBitmap(uri, context);
+        Bitmap bitmapImage = compressBitmap(inputStream);
 
         final File mediaStorageDir = new File(context.getExternalFilesDir(null) + context.getString(R.string.camera_folder));
         if (!mediaStorageDir.exists()) if (!mediaStorageDir.mkdirs()) return null;
@@ -149,8 +152,7 @@ public class CustomFile {
         if (file.exists()) if (!file.delete()) return null;
         if (bitmapImage != null) {
             try {
-                if (mark)
-                    bitmapImage = mark(bitmapImage);
+                bitmapImage = mark(bitmapImage);
 //                ByteArrayOutputStream stream = new ByteArrayOutputStream();
 //                bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 //                Log.e("size", String.valueOf(stream.toByteArray().length));
@@ -306,15 +308,15 @@ public class CustomFile {
     }
 
 
-    public static Bitmap compressBitmap(final Uri uri, Context context) {
-
+    public static Bitmap compressBitmap(final InputStream inputStream) {
+        Bitmap original = BitmapFactory.decodeStream(inputStream);
         try {
-            InputStream inputStream = context.getContentResolver().openInputStream(uri);
-            Bitmap original = BitmapFactory.decodeStream(inputStream);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             original.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+
             if (stream.toByteArray().length > getImageQuality() * 10) {
                 final int width, height;
+                //TODO
                 if (original.getHeight() > original.getWidth()) {
                     height = Math.min(getImageQuality() * 10, original.getHeight());
                     width = original.getWidth() / (original.getHeight() / height);
@@ -329,7 +331,7 @@ public class CustomFile {
             }
             CURRENT_IMAGE_SIZE = stream.toByteArray().length;
             return original;
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             new CustomToast().error(e.getMessage(), Toast.LENGTH_LONG);
         }
         return null;
@@ -369,7 +371,7 @@ public class CustomFile {
     public static Bitmap compressBitmap(Bitmap original) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            original.compress(Bitmap.CompressFormat.JPEG, 80, baos);
+            original.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             if (baos.toByteArray().length > getImageQuality() * 10) {
                 final int width, height;
                 if (original.getHeight() > original.getWidth()) {
@@ -434,7 +436,7 @@ public class CustomFile {
     }
 
     @SuppressLint({"SimpleDateFormat"})
-    public static File createTempImageFile(Context context) throws IOException {
+    public static File createImageFile(Context context) throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat(context.getString(R.string.save_format_name)).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -444,20 +446,6 @@ public class CustomFile {
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
-    }
-
-    @SuppressLint({"SimpleDateFormat"})
-    public static File createImageFile(Context context) {
-        String timeStamp = new SimpleDateFormat(context.getString(R.string.save_format_name)).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + ".jpg";
-//        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        return new File(storageDir, "camera_photos.png");
-//        File storageDir = new File(context.getFilesDir(), "camera_photos");
-        File storageDir = new File(context.getFilesDir(), context.getString(R.string.camera_folder));
-        if (!storageDir.exists()) {
-            storageDir.mkdirs();
-        }
-        return new File(storageDir, imageFileName);
     }
 
     @SuppressLint({"SimpleDateFormat"})
