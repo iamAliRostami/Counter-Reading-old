@@ -268,7 +268,7 @@ public class ReportForbidFragment extends DialogFragment implements TextWatcher,
                     if (photoFile != null) {
                         path = photoFile.getPath();
                         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(),
-                                BuildConfig.APPLICATION_ID.concat(".provider"), photoFile));
+                                BuildConfig.APPLICATION_ID.concat(".FileProvider"), photoFile));
                         cameraResultLauncher.launch(cameraIntent);
                     }
 

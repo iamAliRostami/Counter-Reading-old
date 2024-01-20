@@ -120,7 +120,7 @@ public class SettingChangeAvatarFragment extends Fragment {
                     }
                     if (photoFile != null) {
                         PHOTO_URI = FileProvider.getUriForFile(activity,
-                                BuildConfig.APPLICATION_ID.concat(".provider"),
+                                BuildConfig.APPLICATION_ID.concat(".FileProvider"),
                                 photoFile);
                         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, PHOTO_URI);
                         try {
