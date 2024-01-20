@@ -9,6 +9,7 @@ import static com.leon.counter_reading.helpers.MyApplication.getDigits;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.Converters.bitmapToFile;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
+import static com.leon.counter_reading.utils.CustomFile.createImageFile;
 import static com.leon.counter_reading.utils.CustomFile.createTempImageFile;
 
 import android.app.Activity;
@@ -257,20 +258,14 @@ public class ReportForbidFragment extends DialogFragment implements TextWatcher,
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (isAdded() && getContext() != null &&
                 cameraIntent.resolveActivity(getContext().getPackageManager()) != null) {
-            File photoFile = null;
             if (isAdded() && getContext() != null) {
                 try {
-                    try {
-                        photoFile = createTempImageFile(getContext());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (photoFile != null) {
-                        path = photoFile.getPath();
-                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(),
-                                BuildConfig.APPLICATION_ID.concat(".FileProvider"), photoFile));
-                        cameraResultLauncher.launch(cameraIntent);
-                    }
+                    File photoFile = createImageFile(getContext());
+                    //                        photoFile = createTempImageFile(getContext());
+                    path = photoFile.getPath();
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext(),
+                            BuildConfig.APPLICATION_ID.concat(".FileProvider"), photoFile));
+                    cameraResultLauncher.launch(cameraIntent);
 
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
