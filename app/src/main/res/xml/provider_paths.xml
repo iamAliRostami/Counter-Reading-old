@@ -6,4 +6,7 @@
     <external-path
         name="external_download"
         path="Download" />
+    <files-path
+        name="@string/camera_folder"
+        path="."/>
 </paths>

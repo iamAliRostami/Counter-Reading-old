@@ -98,7 +98,7 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
         sendIntent.setAction(Intent.ACTION_SEND);
         File zipFile = new File(zipAddress);
         sendIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(activity,
-                BuildConfig.APPLICATION_ID.concat(".provider"), zipFile));
+                BuildConfig.APPLICATION_ID.concat(".FileProvider"), zipFile));
         sendIntent.setType("application/zip");
         activity.startActivity(sendIntent);
     }
