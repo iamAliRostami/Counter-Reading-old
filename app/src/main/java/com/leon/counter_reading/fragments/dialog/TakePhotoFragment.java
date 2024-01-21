@@ -212,14 +212,11 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
     }
 
     private final ActivityResultLauncher<Uri> cameraResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.TakePicture(), new ActivityResultCallback<>() {
-                @Override
-                public void onActivityResult(Boolean o) {
-                    if (o) {
-                        if (isAdded() && getContext() != null) prepareImage(false);
-                        else {
-                            new CustomToast().error("صفحه ی عکس را بسته و مجددا باز کنید.", Toast.LENGTH_LONG);
-                        }
+            new ActivityResultContracts.TakePicture(), o -> {
+                if (o) {
+                    if (isAdded() && getContext() != null) prepareImage(false);
+                    else {
+                        new CustomToast().error("صفحه ی عکس را بسته و مجددا باز کنید.", Toast.LENGTH_LONG);
                     }
                 }
             });
