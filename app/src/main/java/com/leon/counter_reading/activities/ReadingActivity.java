@@ -71,6 +71,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -144,6 +145,13 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 AppCompatDelegate.MODE_NIGHT_NO);
         binding = ActivityReadingBinding.inflate(getLayoutInflater());
         View childLayout = binding.getRoot();
+
+        //TODO
+        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+        View view = getLayoutInflater().inflate(R.layout.reading_header, binding.getRoot(), false);
+        toolbar.addView(view);
+
         ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
         sharedPreferenceManager = getApplicationComponent().SharedPreferenceModel();
@@ -628,6 +636,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        //TODO
         getMenuInflater().inflate(R.menu.reading_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }

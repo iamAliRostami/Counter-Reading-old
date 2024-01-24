@@ -298,11 +298,13 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
                 .concat(")"));
         binding.textViewVersion.setText(getString(R.string.version).concat(" ").concat(BuildConfig.VERSION_NAME));
         toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (POSITION == 1) {
-            View view = getLayoutInflater().inflate(R.layout.reading_header, binding.getRoot(), false);
-            toolbar.addView(view);
-        }
+        //TODO
+//        if (POSITION != 1)
+            setSupportActionBar(toolbar);
+//        if (POSITION == 1) {
+//            View view = getLayoutInflater().inflate(R.layout.reading_header, binding.getRoot(), false);
+//            toolbar.addView(view);
+//        }
         fillDrawerListView();
         setOnDrawerItemClick();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
@@ -343,6 +345,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
         }
     }
 
+/*
     @Override
     protected void onStop() {
         Debug.getNativeHeapAllocatedSize();
@@ -354,11 +357,21 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
         System.gc();
         super.onStop();
     }
+*/
 
     @Override
     protected void onDestroy() {
         if (exit)
             android.os.Process.killProcess(android.os.Process.myPid());
+        else {
+            Debug.getNativeHeapAllocatedSize();
+            System.runFinalization();
+            Runtime.getRuntime().totalMemory();
+            Runtime.getRuntime().freeMemory();
+            Runtime.getRuntime().maxMemory();
+            Runtime.getRuntime().gc();
+            System.gc();
+        }
         super.onDestroy();
     }
 }
