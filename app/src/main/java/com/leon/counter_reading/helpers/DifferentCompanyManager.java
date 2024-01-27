@@ -2,6 +2,7 @@ package com.leon.counter_reading.helpers;
 
 
 import static com.leon.counter_reading.enums.CompanyNames.ESF;
+import static com.leon.counter_reading.enums.CompanyNames.TSE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PROXY;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
@@ -83,6 +84,8 @@ public class DifferentCompanyManager {
     public static String getAhad1() {
         if (getActiveCompanyName() == ESF) {
             return "واحد مسکونی";
+        } else if (getActiveCompanyName() == TSE) {
+            return "آحاد مسکونی";
         }
         return "آحاد اصلی";
     }
@@ -90,6 +93,8 @@ public class DifferentCompanyManager {
     public static String getAhad2() {
         if (getActiveCompanyName() == ESF) {
             return "واحد تجاری";
+        }else if (getActiveCompanyName() == TSE) {
+            return "آحاد غیرمسکونی";
         }
         return "آحاد فرعی";
     }

@@ -3,6 +3,7 @@ package com.leon.counter_reading.fragments.dialog;
 import static com.leon.counter_reading.enums.DialogType.Red;
 import static com.leon.counter_reading.enums.SearchTypeEnum.All;
 import static com.leon.counter_reading.enums.SearchTypeEnum.BARCODE;
+import static com.leon.counter_reading.enums.SearchTypeEnum.ESHTERAK;
 import static com.leon.counter_reading.enums.SearchTypeEnum.NAME;
 import static com.leon.counter_reading.enums.SearchTypeEnum.PAGE_NUMBER;
 import static com.leon.counter_reading.enums.SearchTypeEnum.RADIF;
@@ -113,7 +114,7 @@ public class SearchFragment extends DialogFragment {
                 binding.editTextSearch.setText(result.getContents());
                 binding.editTextSearch.setVisibility(View.VISIBLE);
             }
-            binding.spinnerSearch.setSelection(RADIF.getValue());
+            binding.spinnerSearch.setSelection(ESHTERAK.getValue());
         }
     }
 

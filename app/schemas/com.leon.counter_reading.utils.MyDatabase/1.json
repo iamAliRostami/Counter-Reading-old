@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "88143125b00f497fc5fde6731b64da33",
+    "identityHash": "37d2c23c30a052203b9859a019839e40",
     "entities": [
       {
         "tableName": "SavedLocation",
@@ -1201,7 +1201,7 @@
       },
       {
         "tableName": "Image",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `trackNumber` INTEGER NOT NULL, `size` INTEGER NOT NULL, `OnOffLoadId` TEXT, `Description` TEXT, `address` TEXT, `isSent` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, `isArchived` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `trackNumber` INTEGER NOT NULL, `size` INTEGER NOT NULL, `OnOffLoadId` TEXT, `Description` TEXT, `address` TEXT, `isSent` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, `isArchived` INTEGER NOT NULL, `isGallery` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -1254,6 +1254,12 @@
           {
             "fieldPath": "isArchived",
             "columnName": "isArchived",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isGallery",
+            "columnName": "isGallery",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -1646,7 +1652,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"88143125b00f497fc5fde6731b64da33\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"37d2c23c30a052203b9859a019839e40\")"
     ]
   }
 }
