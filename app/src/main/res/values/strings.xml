@@ -339,4 +339,5 @@
     <string name="activate">فعالسازی</string>
     <string name="succeed_sent">ارسال موفق</string>
     <string name="send_waiting">در صف ارسال</string>
+    <string name="can_not_show_debt">بدهی قابل نمایش نمیباشد</string>
 </resources>

@@ -40,7 +40,6 @@ public class OnOffLoadDtoTemp {
     public int ahadSaierOrAbBaha;
     public int qotrCode;
     public int sifoonQotrCode;
-    //    public int preNumber;
     public int preCounterStateCode;
     public int trackNumber;
     public int zarfiat;
@@ -66,7 +65,6 @@ public class OnOffLoadDtoTemp {
     public String counterStatePosition;
 
     public int counterNumberShown;
-    public int hasPreNumber;
     public int displayBillId;
     public int displayRadif;
 
@@ -79,7 +77,6 @@ public class OnOffLoadDtoTemp {
 
     public OnOffLoadDto getOnOffLoadDto() {
         final OnOffLoadDto onOffLoadDto = new OnOffLoadDto();
-        onOffLoadDto.hasPreNumber = hasPreNumber == 1;
         onOffLoadDto.displayBillId = displayBillId == 1;
         onOffLoadDto.displayMobile = displayMobile == 1;
         onOffLoadDto.displayPreDate = displayPreDate == 1;

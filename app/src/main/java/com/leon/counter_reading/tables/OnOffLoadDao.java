@@ -46,7 +46,7 @@ public interface OnOffLoadDao {
             "OnOffLoadDto.description, OnOffLoadDto.counterNumberShown, OnOffLoadDto.attemptCount, " +
             "OnOffLoadDto.isLocked, OnOffLoadDto.gisAccuracy, OnOffLoadDto.phoneDateTime, " +
             "OnOffLoadDto.locationDateTime, OnOffLoadDto.x , OnOffLoadDto.y, OnOffLoadDto.d1, " +
-            "OnOffLoadDto.d2 " +
+            "OnOffLoadDto.d2 , OnOffLoadDto.highLowStateId " +
             "From OnOffLoadDto " +
             "Inner JOIN TrackingDto on OnOffLoadDto.trackingId = TrackingDto.id " +
             "WHERE OnOffLoadDto.offLoadStateId = :offLoadStateId AND TrackingDto.isActive = :isActive")
@@ -67,7 +67,8 @@ public interface OnOffLoadDao {
             "OnOffLoadDto.possibleAhadTejariOrFari, OnOffLoadDto.possibleAhadMaskooniOrAsli, " +
             "OnOffLoadDto.possiblePhoneNumber, OnOffLoadDto.possibleCounterSerial, " +
             "OnOffLoadDto.possibleKarbariCode, OnOffLoadDto.possibleAhadSaierOrAbBaha, " +
-            "OnOffLoadDto.possibleMobile From OnOffLoadDto Inner JOIN TrackingDto on " +
+            "OnOffLoadDto.possibleMobile , OnOffLoadDto.highLowStateId " +
+            "From OnOffLoadDto Inner JOIN TrackingDto on " +
             "OnOffLoadDto.trackingId = TrackingDto.id WHERE " +
             "OnOffLoadDto.offLoadStateId = :offLoadStateId AND TrackingDto.isActive = :isActive " +
             "LIMIT 500")

@@ -89,13 +89,15 @@ public class OnOffLoadDto {
     @Ignore
     public boolean hasImage;
     @Ignore
-    public boolean hasPreNumber;
+    public boolean displayPreNumber;
+    @Ignore
+    public boolean displayDebt;
+    @Ignore
+    public boolean displayMobile;
     @Ignore
     public boolean displayBillId;
     @Ignore
     public boolean displayRadif;
-    @Ignore
-    public boolean displayMobile;
     @Ignore
     public boolean displayPreDate;
 
@@ -108,6 +110,8 @@ public class OnOffLoadDto {
         public String possibleEshterak;
         public String possibleMobile;
         public String possiblePhoneNumber;
+
+        public int highLowStateId;
 
 
         public Integer possibleAhadMaskooniOrAsli;
@@ -135,6 +139,7 @@ public class OnOffLoadDto {
             id = onOffLoadDto.id;
             counterNumber = onOffLoadDto.counterNumber;
             counterStateId = onOffLoadDto.counterStateId;
+            highLowStateId = onOffLoadDto.highLowStateId;
             possibleAddress = onOffLoadDto.possibleAddress;
             possibleCounterSerial = onOffLoadDto.possibleCounterSerial;
             possibleEshterak = onOffLoadDto.possibleEshterak;
@@ -164,7 +169,8 @@ public class OnOffLoadDto {
     public void updateIgnore(final OnOffLoadDto onOffLoadDto) {
         displayBillId = onOffLoadDto.displayBillId;
         displayRadif = onOffLoadDto.displayRadif;
-        hasPreNumber = onOffLoadDto.hasPreNumber;
+        displayPreNumber = onOffLoadDto.displayPreNumber;
+        displayDebt = onOffLoadDto.displayDebt;
         hasImage = onOffLoadDto.hasImage;
         displayMobile = onOffLoadDto.displayMobile;
         displayPreDate = onOffLoadDto.displayPreDate;

@@ -118,7 +118,7 @@ android {
         }
 
         teh_total {
-//            debuggable true
+            debuggable true
             minifyEnabled false
             signingConfig signingConfigs.config
             applicationIdSuffix ".teh_total"

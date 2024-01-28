@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "37d2c23c30a052203b9859a019839e40",
+    "identityHash": "3885fe128d74e5da85ae7f2299fb84fa",
     "entities": [
       {
         "tableName": "SavedLocation",
@@ -808,7 +808,7 @@
       },
       {
         "tableName": "TrackingDto",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` TEXT, `trackNumber` INTEGER NOT NULL, `listNumber` TEXT, `insertDateJalali` TEXT, `zoneId` INTEGER NOT NULL, `zoneTitle` TEXT, `isBazdid` INTEGER NOT NULL, `year` INTEGER NOT NULL, `isRoosta` INTEGER NOT NULL, `fromEshterak` TEXT, `toEshterak` TEXT, `fromDate` TEXT, `toDate` TEXT, `archiveDateTime` TEXT, `itemQuantity` INTEGER NOT NULL, `alalHesabPercent` INTEGER NOT NULL, `imagePercent` INTEGER NOT NULL, `hasPreNumber` INTEGER NOT NULL, `hasImage` INTEGER NOT NULL, `displayBillId` INTEGER NOT NULL, `displayRadif` INTEGER NOT NULL, `displayMobile` INTEGER NOT NULL, `displayPreDate` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `isArchive` INTEGER NOT NULL, `isLocked` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, `isRepeat` INTEGER NOT NULL, `x` TEXT, `y` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`customId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` TEXT, `trackNumber` INTEGER NOT NULL, `listNumber` TEXT, `insertDateJalali` TEXT, `zoneId` INTEGER NOT NULL, `zoneTitle` TEXT, `isBazdid` INTEGER NOT NULL, `year` INTEGER NOT NULL, `isRoosta` INTEGER NOT NULL, `fromEshterak` TEXT, `toEshterak` TEXT, `fromDate` TEXT, `toDate` TEXT, `archiveDateTime` TEXT, `itemQuantity` INTEGER NOT NULL, `alalHesabPercent` INTEGER NOT NULL, `imagePercent` INTEGER NOT NULL, `hasPreNumber` INTEGER NOT NULL, `hasImage` INTEGER NOT NULL, `displayBillId` INTEGER NOT NULL, `displayDebt` INTEGER NOT NULL, `displayRadif` INTEGER NOT NULL, `displayMobile` INTEGER NOT NULL, `displayPreDate` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `isArchive` INTEGER NOT NULL, `isLocked` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, `isRepeat` INTEGER NOT NULL, `x` TEXT, `y` TEXT)",
         "fields": [
           {
             "fieldPath": "customId",
@@ -933,6 +933,12 @@
           {
             "fieldPath": "displayBillId",
             "columnName": "displayBillId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayDebt",
+            "columnName": "displayDebt",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -1652,7 +1658,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"37d2c23c30a052203b9859a019839e40\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3885fe128d74e5da85ae7f2299fb84fa\")"
     ]
   }
 }

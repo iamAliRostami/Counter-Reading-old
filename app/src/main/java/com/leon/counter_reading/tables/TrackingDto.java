@@ -1,6 +1,7 @@
 package com.leon.counter_reading.tables;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -28,9 +29,10 @@ public class TrackingDto {
     public int alalHesabPercent;
     public int imagePercent;
     public boolean hasPreNumber;
-    //TODO
     public boolean hasImage;
     public boolean displayBillId;
+    //TODO
+    public boolean displayDebt;
     public boolean displayRadif;
     public boolean displayMobile;
     public boolean displayPreDate;

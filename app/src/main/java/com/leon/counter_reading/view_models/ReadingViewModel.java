@@ -101,11 +101,13 @@ public class ReadingViewModel extends BaseObservable {
     @SuppressLint("DefaultLocale")
     public boolean switchDebtNumber() {
         if (isDebtOrNumber()) {
-            setDebtOrNumber(!isDebtOrNumber());
-            setDebtNumber(String.format("%,d", getOnOffLoadDto().balance) + " ریال");
-            setCounterNumberColor(ContextCompat.getColor(getContext(), R.color.red));
+            if (getOnOffLoadDto().displayDebt) {
+                setDebtOrNumber(!isDebtOrNumber());
+                setDebtNumber(String.format("%,d ریال", getOnOffLoadDto().balance));
+                setCounterNumberColor(ContextCompat.getColor(getContext(), R.color.red));
+            } else new CustomToast().warning(getContext().getString(R.string.can_not_show_debt));
         } else {
-            if (getOnOffLoadDto().hasPreNumber) {
+            if (getOnOffLoadDto().displayPreNumber) {
                 setDebtOrNumber(!isDebtOrNumber());
                 setDebtNumber(String.valueOf(getOnOffLoadDto().preNumber));
                 setCounterNumberColor(ContextCompat.getColor(getContext(),
@@ -125,7 +127,8 @@ public class ReadingViewModel extends BaseObservable {
         setAhad1(String.valueOf(getOnOffLoadDto().ahadTejariOrFari));
         setAhad2(String.valueOf(getOnOffLoadDto().ahadMaskooniOrAsli));
 
-        setDebtNumber(String.format("%,d", getOnOffLoadDto().balance) + " ریال");
+        setDebtNumber(getOnOffLoadDto().displayDebt ? String.format("%,d ریال", getOnOffLoadDto().balance) : "-");
+
         setSerial(getOnOffLoadDto().counterSerial);
 
 //        setPreDate(getOnOffLoadDto().displayPreDate ? getOnOffLoadDto().preDate : "-");
