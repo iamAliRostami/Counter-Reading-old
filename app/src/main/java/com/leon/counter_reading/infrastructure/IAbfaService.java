@@ -51,6 +51,14 @@ public interface IAbfaService {
     Call<MultimediaUploadResponse> fileUploadGrouped(
             @Part ArrayList<MultipartBody.Part> imageFiles,
             @Part("OnOffLoadId") RequestBody OnOffLoadId,
+            @Part("Description") RequestBody Description,
+            @Part("IsGallery") RequestBody IsGallery);
+
+    @Multipart
+    @POST("KontoriNew/V1/Upload/Grouped")
+    Call<MultimediaUploadResponse> fileUploadGrouped(
+            @Part ArrayList<MultipartBody.Part> imageFiles,
+            @Part("OnOffLoadId") RequestBody OnOffLoadId,
             @Part("Description") RequestBody Description);
 
     @Multipart
@@ -70,7 +78,8 @@ public interface IAbfaService {
     Call<MultimediaUploadResponse> fileUploadMultiple(
             @Part ArrayList<MultipartBody.Part> imageFiles,
             @Part("OnOffLoadId") ArrayList<RequestBody> OnOffLoadId,
-            @Part("Description") ArrayList<RequestBody> Description);
+            @Part("Description") ArrayList<RequestBody> Description,
+            @Part("IsGallery") ArrayList<RequestBody> IsGallery);
 
     @Multipart
     @POST("KontoriNew/V1/Upload/Multiple")

@@ -8,11 +8,13 @@ import okhttp3.RequestBody;
 public class ImageMultiple {
     public final ArrayList<RequestBody> OnOffLoadId;
     public final ArrayList<RequestBody> Description;
+    public final ArrayList<RequestBody> IsGallery;
     public final ArrayList<MultipartBody.Part> File;
 
     public ImageMultiple() {
         File = new ArrayList<>();
         Description = new ArrayList<>();
         OnOffLoadId = new ArrayList<>();
+        IsGallery = new ArrayList<>();
     }
 }

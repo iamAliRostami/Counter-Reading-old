@@ -72,6 +72,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
                     imageMultiples.Description.add(RequestBody.create("",
                             MediaType.parse("text/plain")));
                 }
+                imageMultiples.IsGallery.add(RequestBody.create(String.valueOf(images.get(0).isGallery),
+                        MediaType.parse("text/plain")));
                 imageMultiples.OnOffLoadId.add(RequestBody.create(images.get(i).OnOffLoadId,
                         MediaType.parse("text/plain")));
                 imageMultiples.File.add(bitmapToFile(bitmap, activities[0]));
@@ -129,8 +131,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
         if (images.size() > 0) {
             final Retrofit retrofit = getApplicationComponent().Retrofit();
             final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-            final Call<MultimediaUploadResponse> call = iAbfaService.fileUploadMultiple(
-                    imageMultiples.File, imageMultiples.OnOffLoadId, imageMultiples.Description);
+            final Call<MultimediaUploadResponse> call = iAbfaService.fileUploadMultiple(imageMultiples.File,
+                    imageMultiples.OnOffLoadId, imageMultiples.Description, imageMultiples.IsGallery);
             HttpClientWrapper.callHttpAsync(call, SHOW_CANCELABLE.getValue(), activity,
                     new UploadImages(images, activity, uploadFragment), new UploadImagesIncomplete(),
                     new UploadMultimediaError());

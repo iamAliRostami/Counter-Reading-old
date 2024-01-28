@@ -79,12 +79,14 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
                     MediaType.parse("text/plain"));
             imageGrouped.Description = RequestBody.create(images.get(0).Description,
                     MediaType.parse("text/plain"));
+            imageGrouped.IsGallery = RequestBody.create(String.valueOf(images.get(0).isGallery),
+                    MediaType.parse("text/plain"));
             final Retrofit retrofit = getApplicationComponent().NetworkHelperModel()
                     .getInstance(true, getApplicationComponent().SharedPreferenceModel()
                             .getStringData(TOKEN.getValue()), 10, 5 * imageGrouped.File.size(), 5);
             final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
             final Call<MultimediaUploadResponse> call = iAbfaService.fileUploadGrouped(imageGrouped.File,
-                    imageGrouped.OnOffLoadId, imageGrouped.Description);
+                    imageGrouped.OnOffLoadId, imageGrouped.Description, imageGrouped.IsGallery);
             HttpClientWrapper.callHttpAsync(call, SHOW_CANCELABLE.getValue(), activity,
                     new UploadImages(activity), new UploadImagesIncomplete(activity),
                     new UploadImagesError(activity));

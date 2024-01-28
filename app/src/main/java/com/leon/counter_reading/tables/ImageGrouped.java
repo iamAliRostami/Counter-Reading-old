@@ -9,6 +9,7 @@ public class ImageGrouped {
     public final ArrayList<MultipartBody.Part> File;
     public RequestBody OnOffLoadId;
     public RequestBody Description;
+    public RequestBody IsGallery;
 
     public ImageGrouped() {
         File = new ArrayList<>();
