@@ -2,10 +2,10 @@ package com.leon.counter_reading.enums;
 
 public enum HighLowStateEnum {
     NORMAL(1),
-    HIGH(2),
-    LOW(3),
+    LOW(2),
+    HIGH(3),
     ZERO(4),
-    UN_CALCULATED(16);
+    UN_CALCULATED(5);
 
     private final int value;
 
