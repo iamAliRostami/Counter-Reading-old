@@ -30,12 +30,14 @@ public class Counting {
         final int difference = currentNumber - onOffLoadDto.preNumber;
 
         int zarib;
+
         if (getActiveCompanyName() == ESF && karbariDto.isTejari) {
             zarib = onOffLoadDto.ahadTejariOrFari;
         } else {
             zarib = onOffLoadDto.ahadMaskooniOrAsli;
         }
         zarib = zarib > 0 ? zarib : 1;
+
         final double average = monthlyAverage(difference, onOffLoadDto.preDate, zarib, karbariDto);
         double preAverage = onOffLoadDto.preAverage;
 
@@ -60,9 +62,9 @@ public class Counting {
 
             if (average > highBoundRate)
                 return HIGH.getValue();
-            if (readingConfigDefaultDto.highConstZarfiatBound < (difference/zarib))
+            if (readingConfigDefaultDto.highConstZarfiatBound < (difference / zarib))
                 return HIGH.getValue();
-            else if (readingConfigDefaultDto.lowConstZarfiatBound > (difference/zarib))
+            else if (readingConfigDefaultDto.lowConstZarfiatBound > (difference / zarib))
                 return LOW.getValue();
         } else if (karbariDto.isSaxt || onOffLoadDto.noeVagozariId == 4) {
             if (readingConfigDefaultDto.highConstBoundSaxt < difference)
