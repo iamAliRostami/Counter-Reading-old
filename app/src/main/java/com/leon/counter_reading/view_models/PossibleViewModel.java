@@ -136,8 +136,6 @@ public class PossibleViewModel extends BaseObservable {
         if (getDescription() != null)
             getOnOffLoadDto().description = getDescription();
         //TODO
-//        if (getGuilds() != null)
-//            getOnOffLoadDto().guildId = getDescription();
         notifyPropertyChanged(BR.onOffLoadDto);
     }
 
@@ -539,8 +537,6 @@ public class PossibleViewModel extends BaseObservable {
         }
         return isJustMobile() ? View.VISIBLE : getApplicationComponent().SharedPreferenceModel()
                 .getBoolData(GUILD.getValue()) ? View.VISIBLE : View.GONE;
-//        return getApplicationComponent().SharedPreferenceModel()
-//                .getBoolData(GUILD.getValue()) ? View.VISIBLE : View.GONE;
     }
 
     @Bindable

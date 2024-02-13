@@ -46,8 +46,6 @@ public class Update extends AsyncTask<Activity, Void, Void> {
         } catch (Exception e) {
             onOffLoadDto.phoneDateTime = dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis()));
         }
-//        onOffLoadDto.phoneDateTime = dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis()));
-//        date = new Date(Calendar.getInstance().getTimeInMillis());
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
         return null;
     }

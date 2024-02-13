@@ -118,10 +118,6 @@ public class BackUp extends AsyncTask<Activity, Integer, Void> {
             final Cursor curCSV = getApplicationComponent().MyDatabase()
                     .query("SELECT * FROM " + OnOffLoadDtoTableName, null);
 
-//            csvWrite.writeNext(curCSV.getColumnNames());
-//            csvWrite.writeNext(new String[]{"شناسه قبض", "ردیف", "اشتراک", "کد قرائت",
-//                    "تاریخ قرائت پیشین", "شماره پیگیری", "رقم کنتور", "وضعیت کنتور"});
-
             csvWrite.writeNext(new String[]{"BillId", "Radif", "Eshterak", "QeraatCode",
                     "PreDate", "TrackNumber", "CounterNumber", "CounterStateId"});
             while (curCSV.moveToNext()) {

@@ -119,8 +119,6 @@ public class CustomFile {
         CURRENT_IMAGE_SIZE = file.length();
         MediaScannerConnection.scanFile(context, new String[]{file.getPath()},
                 new String[]{"image/jpeg"}, null);
-//        deleteRecursive(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES));
-//        deleteRecursive(new File(context.getFilesDir(), "camera_photos"));
         deleteRecursive(new File(context.getFilesDir(), context.getString(R.string.camera_folder)));
         return fileNameToSave;
     }
@@ -330,7 +328,6 @@ public class CustomFile {
 
     public static Bitmap compressBitmap(String path) {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
         options.inSampleSize = 2;  //you can also calculate your inSampleSize
         options.inJustDecodeBounds = false;
         options.inTempStorage = new byte[16 * 1024];
@@ -389,21 +386,6 @@ public class CustomFile {
             FileOutputStream out = new FileOutputStream(path);
 //            ByteArrayOutputStream stream = new ByteArrayOutputStream();
             original.compress(Bitmap.CompressFormat.WEBP, 80, out);
-//            if (stream.toByteArray().length > getImageQuality() * 10) {
-//                final int width, height;
-//                if (original.getHeight() > original.getWidth()) {
-//                    //TODO
-//                    height = Math.min(getImageQuality() * 10, original.getHeight());
-//                    width = original.getWidth() / (original.getHeight() / height);
-//                } else {
-//                    width = Math.min(getImageQuality() * 10, original.getWidth());
-//                    height = original.getHeight() / (original.getWidth() / width);
-//                }
-//                original = Bitmap.createScaledBitmap(original, width, height, false);
-//                stream = new ByteArrayOutputStream();
-//                original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-//            }
-//            CURRENT_IMAGE_SIZE = stream.toByteArray().length;
             CURRENT_IMAGE_SIZE = (long) original.getRowBytes() * original.getHeight();
 
             return original;
@@ -443,9 +425,6 @@ public class CustomFile {
     public static File createImageFile(Context context) {
         String timeStamp = new SimpleDateFormat(context.getString(R.string.save_format_name)).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + ".jpg";
-//        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        return new File(storageDir, "camera_photos.png");
-//        File storageDir = new File(context.getFilesDir(), "camera_photos");
         File storageDir = new File(context.getFilesDir(), context.getString(R.string.camera_folder));
         if (!storageDir.exists()) {
             storageDir.mkdirs();

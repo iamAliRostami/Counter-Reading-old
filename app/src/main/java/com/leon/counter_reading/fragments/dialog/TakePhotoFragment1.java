@@ -45,9 +45,7 @@ import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.photo.PrepareMultimedia;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class TakePhotoFragment1 extends DialogFragment implements AdapterView.OnItemClickListener,

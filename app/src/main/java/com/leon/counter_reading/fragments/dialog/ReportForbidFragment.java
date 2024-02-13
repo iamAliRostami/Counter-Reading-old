@@ -10,7 +10,6 @@ import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
 import static com.leon.counter_reading.utils.Converters.bitmapToFile;
 import static com.leon.counter_reading.utils.CustomFile.compressBitmap;
 import static com.leon.counter_reading.utils.CustomFile.createImageFile;
-import static com.leon.counter_reading.utils.CustomFile.createTempImageFile;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -44,7 +43,6 @@ import com.leon.counter_reading.utils.forbid.PrepareForbid;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 

@@ -77,7 +77,7 @@ public class HelpActivity extends BaseActivity {
         final File fileCopy = new File(getCacheDir(), "HELP_" + BuildConfig.VERSION_CODE +
                 "_PAGE_".concat(String.valueOf(pageNumber)));
 //        copyToCache(fileCopy, R.raw.sample);
-        copyToCache(fileCopy, R.raw.counter_reading);
+        copyToCache(fileCopy);
         // We get a page from the PDF doc by calling 'open'
         final ParcelFileDescriptor fileDescriptor = ParcelFileDescriptor.open(fileCopy,
                 ParcelFileDescriptor.MODE_READ_ONLY);
@@ -91,7 +91,8 @@ public class HelpActivity extends BaseActivity {
         binding.imageView.setImageBitmap(bitmap);
     }
 
-    private void copyToCache(File file, @RawRes int pdfResource) throws IOException {
+    private void copyToCache(File file) throws IOException {
+        @RawRes int pdfResource = R.raw.counter_reading;
         if (!file.exists()) {
             //Get input stream object to read the pdf
             final InputStream input = getResources().openRawResource(pdfResource);

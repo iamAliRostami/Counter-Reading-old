@@ -49,15 +49,9 @@ public class GetReportDBData extends AsyncTask<Activity, Integer, Integer> {
     protected Integer doInBackground(Activity... activities) {
         trackingDtos.addAll(myDatabase.trackingDao().getTrackingDtosIsActiveNotArchive(true, false));
         //TODO
-        //        final ArrayList<Integer> isManes = new ArrayList<>();
-        //        if (trackingDtos.size() > 0)
-//            isManes.addAll(myDatabase.counterStateDao().getCounterStateDtosIsMane(true, trackingDtos.get(0).zoneId));
         for (int j = 0, trackingDtosSize = trackingDtos.size(); j < trackingDtosSize; j++) {
             TrackingDto trackingDto = trackingDtos.get(j);
             //TODO
-            //            for (int i = 0; i < isManes.size(); i++) {
-//                isMane += myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(isManes.get(i), trackingDto.id);
-            //            }
 
             isMane = myDatabase.onOffLoadDao().getOnOffLoadIsManeCount(myDatabase.counterStateDao().
                     getCounterStateDtosIsMane(true, trackingDto.zoneId), trackingDto.id);

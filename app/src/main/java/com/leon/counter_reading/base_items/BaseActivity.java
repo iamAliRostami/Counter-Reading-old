@@ -345,20 +345,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
         }
     }
 
-/*
-    @Override
-    protected void onStop() {
-        Debug.getNativeHeapAllocatedSize();
-        System.runFinalization();
-        Runtime.getRuntime().totalMemory();
-        Runtime.getRuntime().freeMemory();
-        Runtime.getRuntime().maxMemory();
-        Runtime.getRuntime().gc();
-        System.gc();
-        super.onStop();
-    }
-*/
-
     @Override
     protected void onDestroy() {
         if (exit)

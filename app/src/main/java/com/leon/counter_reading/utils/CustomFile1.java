@@ -100,9 +100,6 @@ public class CustomFile1 {
     static String saveImage(final String path, final Context context) {
 //        final Bitmap bitmapImage = compressBitmap(path);
         Bitmap bitmapImage = compressBitmap(BitmapFactory.decodeFile(path));
-//        Bitmap bitmapImage = compressBitmap(path);
-//        Bitmap bitmapImage = compressBitmap(BitmapFactory.decodeFile(path), path);
-//        Bitmap bitmapImage = BitmapFactory.decodeFile(path);
         File mediaStorageDir = new File(context.getExternalFilesDir(null) + context.getString(R.string.camera_folder));
         if (!mediaStorageDir.exists()) if (!mediaStorageDir.mkdirs()) return null;
         String timeStamp = (new SimpleDateFormat(context.getString(R.string.save_format_name_melli))).format(new Date());
@@ -113,8 +110,6 @@ public class CustomFile1 {
             try {
                 FileOutputStream out = new FileOutputStream(file);
                 bitmapImage.compress(Bitmap.CompressFormat.JPEG, 80, out);
-//                int quality = new CompressQuality().get(new File(path).length(), getImageQuality());
-//                bitmapImage.compress(Bitmap.CompressFormat.JPEG, quality, out);
                 out.flush();
                 out.close();
             } catch (Exception e) {
@@ -153,11 +148,6 @@ public class CustomFile1 {
         if (bitmapImage != null) {
             try {
                 bitmapImage = mark(bitmapImage);
-//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-//                Log.e("size", String.valueOf(stream.toByteArray().length));
-//                int quality = new CompressQuality().get(stream.toByteArray().length/1000, getImageQuality());
-//                Log.e("quality", String.valueOf(quality));
                 FileOutputStream out = new FileOutputStream(file);
 //                bitmapImage.compress(Bitmap.CompressFormat.JPEG, quality, out);
                 bitmapImage.compress(Bitmap.CompressFormat.JPEG, 80, out);
@@ -339,7 +329,6 @@ public class CustomFile1 {
 
     public static Bitmap compressBitmap(String path) {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
         options.inSampleSize = 2;  //you can also calculate your inSampleSize
         options.inJustDecodeBounds = false;
         options.inTempStorage = new byte[16 * 1024];
@@ -398,21 +387,6 @@ public class CustomFile1 {
             FileOutputStream out = new FileOutputStream(path);
 //            ByteArrayOutputStream stream = new ByteArrayOutputStream();
             original.compress(Bitmap.CompressFormat.WEBP, 80, out);
-//            if (stream.toByteArray().length > getImageQuality() * 10) {
-//                final int width, height;
-//                if (original.getHeight() > original.getWidth()) {
-//                    //TODO
-//                    height = Math.min(getImageQuality() * 10, original.getHeight());
-//                    width = original.getWidth() / (original.getHeight() / height);
-//                } else {
-//                    width = Math.min(getImageQuality() * 10, original.getWidth());
-//                    height = original.getHeight() / (original.getWidth() / width);
-//                }
-//                original = Bitmap.createScaledBitmap(original, width, height, false);
-//                stream = new ByteArrayOutputStream();
-//                original.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-//            }
-//            CURRENT_IMAGE_SIZE = stream.toByteArray().length;
             CURRENT_IMAGE_SIZE = (long) original.getRowBytes() * original.getHeight();
 
             return original;

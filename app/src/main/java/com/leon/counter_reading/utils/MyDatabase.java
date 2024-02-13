@@ -152,70 +152,7 @@ public abstract class MyDatabase extends RoomDatabase {
             database.execSQL("DROP TABLE OnOffLoadDto");
             database.execSQL("ALTER TABLE OnOffLoadDtoTemp RENAME TO OnOffLoadDto");
 
-//            database.execSQL("ALter TABLE OnOffLoadDto Add column trackNumber INTEGER");
-//            database.execSQL("ALter TABLE OnOffLoadDto Add column possibleEmpty INTEGER");
-//            database.execSQL("CREATE TABLE Voice AS SELECT * FROM Image");
-//            database.execSQL("CREATE TABLE \"ForbiddenDto\" (\n" +
-//                    "\t\"customId\"\tINTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
-//                    "\t\"zoneId\"\tINTEGER,\n" +
-//                    "\t\"description\"\tTEXT,\n" +
-//                    "\t\"preEshterak\"\tTEXT,\n" +
-//                    "\t\"nextEshterak\"\tTEXT,\n" +
-//                    "\t\"postalCode\"\tTEXT,\n" +
-//                    "\t\"tedadVahed\"\tINTEGER,\n" +
-//                    "\t\"x\"\tTEXT,\n" +
-//                    "\t\"y\"\tTEXT,\n" +
-//                    "\t\"gisAccuracy\"\tTEXT\n" +
-//                    ");");
 
-//            database.execSQL("CREATE TABLE \"OffLoadReport\" (\n" +
-//                    "\t\"customId\"\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-//                    "\t\"onOffLoadId\"\tTEXT,\n" +
-//                    "\t\"reportId\"\tINTEGER\n" +
-//                    ");");
-//            database.execSQL("Alter TABLE \"ReadingConfigDefaultDto\" Add column  isArchive Integer;");
-//            database.execSQL("Alter TABLE \"OnOffLoadDto\" Add column  counterNumberShown Integer;");
-//            database.execSQL("Alter TABLE \"OnOffLoadDto\" Add column  gisAccuracy Real;");
-//            database.execSQL("Alter TABLE \"OnOffLoadDto\" Add column  x Real;");
-//            database.execSQL("Alter TABLE \"OnOffLoadDto\" Add column  y Real;");
-
-
-//            database.execSQL("CREATE TABLE \"Image\" (\n" +
-//                    "\t\"id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
-//                    "\t\"OnOffLoadId\"\tTEXT NOT NULL,\n" +
-//                    "\t\"Description\"\tTEXT NOT NULL,\n" +
-//                    "\t\"address\"\tTEXT,\n" +
-//                    "\t\"isSent\"\tINTEGER,\n" +
-//                    "\t\"isDeleted\"\tINTEGER,\n" +
-//                    "\t\"isArchived\"\tINTEGER\n" +
-//                    ");");
-//            database.execSQL("DROP INDEX 'id'");
-//            database.execSQL("DROP INDEX 'customId'");
-//            database.execSQL("DROP INDEX 'trackNumber'");
-//            database.execSQL("DROP INDEX 'moshtarakinId'");
-//            database.execSQL("DROP INDEX 'zoneId'");
-//            database.execSQL("CREATE UNIQUE INDEX 'customId' ON TrackingDto(customId);");
-//            database.execSQL("CREATE UNIQUE INDEX 'customId' ON KarbariDto(customId);");
-//            database.execSQL("CREATE UNIQUE INDEX 'customId' ON OnOffLoadDto(customId);");
-//            database.execSQL("CREATE UNIQUE INDEX 'customId' ON QotrDictionary(customId);");
-//            database.execSQL("CREATE UNIQUE INDEX 'customId' ON ReadingConfigDefaultDto(customId);");
-//            database.execSQL("CREATE UNIQUE INDEX 'customId' ON CounterStateDto(customId);");
-//
-//
-//            database.execSQL("CREATE UNIQUE INDEX 'id' ON TrackingDto(id);");
-//            database.execSQL("CREATE UNIQUE INDEX 'id' ON KarbariDto(id);");
-//            database.execSQL("CREATE UNIQUE INDEX 'id' ON OnOffLoadDto(id);");
-//            database.execSQL("CREATE UNIQUE INDEX 'id' ON QotrDictionary(id);");
-//            database.execSQL("CREATE UNIQUE INDEX 'id' ON ReadingConfigDefaultDto(id);");
-//            database.execSQL("CREATE UNIQUE INDEX 'id' ON CounterStateDto(id);");
-//
-//
-//            database.execSQL("CREATE UNIQUE INDEX 'trackNumber' ON TrackingDto(trackNumber);");
-//            database.execSQL("CREATE UNIQUE INDEX 'moshtarakinId' ON KarbariDto(moshtarakinId);");
-//            database.execSQL("CREATE UNIQUE INDEX 'id' ON OnOffLoadDto(id);");
-//            database.execSQL("CREATE UNIQUE INDEX 'id' ON QotrDictionary(id);");
-//            database.execSQL("CREATE UNIQUE INDEX 'zoneId' ON ReadingConfigDefaultDto(zoneId);");
-//            database.execSQL("CREATE UNIQUE INDEX 'moshtarakinId' ON CounterStateDto(moshtarakinId);");
         }
     };
     public static final Migration MIGRATION_8_9 = new Migration(8, 9) {

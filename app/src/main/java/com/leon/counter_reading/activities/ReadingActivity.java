@@ -447,49 +447,6 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
             if (isShowing) submit(position);
         }
     }
-//    private void attemptSend(int position, boolean isForm, boolean isImage) {
-//        CounterStateDto counterState = readingData.counterStateDtos.get(readingData
-//                .onOffLoadDtos.get(position).counterStatePosition);
-//        boolean hasImage = false;
-//        if (isForm && shouldShowPossible())
-//            showPossible(position);
-//        else if (isImage) hasImage = checkImage(counterState, position);
-//        if (!hasImage)
-//            /*else if (!hasImage) */ {
-//            if (!isShowing) {
-//                if ((counterState.isTavizi || counterState.isXarab) &&
-//                        counterState.moshtarakinId != readingData.onOffLoadDtos.get(position).preCounterStateCode) {
-//                    ShowDialogOnce(this, SERIAL_DIALOG.getValue().concat(readingData.onOffLoadDtos.get(position).eshterak),
-//                            SerialFragment.newInstance(position));
-//                } else isShowing = true;
-//            }
-//            if (isShowing) submit(position);
-//        }
-//
-//    }
-
-//    private boolean checkImage(CounterStateDto counterState, int position) {
-//        boolean hasImage = false;
-//        boolean reportHasImage = false;
-//        ArrayList<OffLoadReport> offLoadReports = new ArrayList<>(getApplicationComponent()
-//                .MyDatabase().offLoadReportDao().getAllOffLoadReportById(
-//                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).id,
-//                        readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).trackNumber));
-//        while (!hasImage && !offLoadReports.isEmpty()) {
-//            reportHasImage = hasImage = offLoadReports.get(0).hasImage;
-//            offLoadReports.remove(0);
-//        }
-//        if (sharedPreferenceManager.getBoolData(IMAGE.getValue()))
-//            hasImage = true;
-//        else if (counterState.hasImage)
-//            hasImage = true;
-//        else if (readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).hasImage)
-//            hasImage = true;
-//        if (hasImage)
-//            showImage(position, counterState.hasImage, reportHasImage,
-//                    readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).hasImage);
-//        return hasImage;
-//    }
 
     private void submit(int position) {
         makeRing(this, SAVE);

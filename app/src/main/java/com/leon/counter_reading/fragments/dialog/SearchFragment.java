@@ -6,7 +6,6 @@ import static com.leon.counter_reading.enums.SearchTypeEnum.BARCODE;
 import static com.leon.counter_reading.enums.SearchTypeEnum.ESHTERAK;
 import static com.leon.counter_reading.enums.SearchTypeEnum.NAME;
 import static com.leon.counter_reading.enums.SearchTypeEnum.PAGE_NUMBER;
-import static com.leon.counter_reading.enums.SearchTypeEnum.RADIF;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getSecondSearchItem;
 
 import android.content.Intent;

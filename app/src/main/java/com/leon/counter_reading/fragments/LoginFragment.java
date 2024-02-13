@@ -90,19 +90,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
         return binding.getRoot();
     }
 
-//    @Override
-//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        initializeTextViewCompanyName();
-//    }
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == PackageManager.PERMISSION_GRANTED) {
-//            if (requestCode == GPS_CODE) checkReadPhoneStatePermission();
-//        }
-//    }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
