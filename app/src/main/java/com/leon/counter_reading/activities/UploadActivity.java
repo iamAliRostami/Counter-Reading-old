@@ -20,7 +20,7 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.ViewPagerTabAdapter2;
+import com.leon.counter_reading.adapters.ViewPagerTabAdapter;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityUploadBinding;
 import com.leon.counter_reading.fragments.upload.UploadFragment;
@@ -52,7 +52,7 @@ public class UploadActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void setupViewPager() {
-        ViewPagerTabAdapter2 adapter = new ViewPagerTabAdapter2(this);
+        ViewPagerTabAdapter adapter = new ViewPagerTabAdapter(this);
         adapter.addFragment(UploadFragment.newInstance(NORMAL.getValue()));
         adapter.addFragment(UploadFragment.newInstance(OFFLINE.getValue()));
         adapter.addFragment(UploadFragment.newInstance(MULTIMEDIA.getValue()));

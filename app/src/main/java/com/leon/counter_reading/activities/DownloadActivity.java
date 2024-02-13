@@ -27,7 +27,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.ViewPagerTabAdapter2;
+import com.leon.counter_reading.adapters.ViewPagerTabAdapter;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityDownloadBinding;
 import com.leon.counter_reading.fragments.download.DownloadFragment;
@@ -153,7 +153,7 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void setupViewPager() {
-        ViewPagerTabAdapter2 adapter = new ViewPagerTabAdapter2(this);
+        ViewPagerTabAdapter adapter = new ViewPagerTabAdapter(this);
         adapter.addFragment(DownloadFragment.newInstance(NORMAL.getValue()));
         adapter.addFragment(DownloadFragment.newInstance(RETRY.getValue()));
         adapter.addFragment(DownloadOfflineFragment.newInstance());

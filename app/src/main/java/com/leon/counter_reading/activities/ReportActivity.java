@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.ViewPagerTabAdapter2;
+import com.leon.counter_reading.adapters.ViewPagerTabAdapter;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReportBinding;
 import com.leon.counter_reading.fragments.report.ReportForbidsFragment;
@@ -80,7 +80,7 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
                                int high, int low, int total, int isMane, int unread, int beforeRead,
                                int continueRead) {
         this.counterStateDtos = new ArrayList<>(counterState);
-        final ViewPagerTabAdapter2 adapter = new ViewPagerTabAdapter2(this);
+        final ViewPagerTabAdapter adapter = new ViewPagerTabAdapter(this);
         adapter.addFragment(ReportTotalFragment.newInstance(zero, normal, high, low));
         adapter.addFragment(ReportNotReadingFragment.newInstance(total, unread, beforeRead, continueRead));
         adapter.addFragment(ReportTemporaryFragment.newInstance(total, isMane));

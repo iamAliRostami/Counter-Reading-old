@@ -2,29 +2,27 @@ package com.leon.counter_reading.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-
-import org.jetbrains.annotations.NotNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewPagerTabAdapter extends FragmentPagerAdapter {
+public class ViewPagerTabAdapter extends FragmentStateAdapter {
     private final List<Fragment> fragments = new ArrayList<>();
 
-    public ViewPagerTabAdapter(@NonNull FragmentManager fm) {
-        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+    public ViewPagerTabAdapter(@NonNull FragmentActivity fragmentActivity) {
+        super(fragmentActivity);
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Fragment getItem(int position) {
-        return fragments.get(position);
+    public Fragment createFragment(int i) {
+        return fragments.get(i);
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return fragments.size();
     }
 
