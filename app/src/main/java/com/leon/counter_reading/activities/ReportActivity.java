@@ -6,10 +6,10 @@ import android.view.View;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.ViewPagerTabAdapter;
+import com.leon.counter_reading.adapters.ViewPagerTabAdapter2;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReportBinding;
 import com.leon.counter_reading.fragments.report.ReportForbidsFragment;
@@ -19,13 +19,13 @@ import com.leon.counter_reading.fragments.report.ReportPerformanceFragment;
 import com.leon.counter_reading.fragments.report.ReportTemporaryFragment;
 import com.leon.counter_reading.fragments.report.ReportTotalFragment;
 import com.leon.counter_reading.tables.CounterStateDto;
-import com.leon.counter_reading.utils.DepthPageTransformer;
+import com.leon.counter_reading.utils.DepthPageTransformer2;
 import com.leon.counter_reading.utils.reporting.GetReportDBData;
 
 import java.util.ArrayList;
 
 public class ReportActivity extends BaseActivity implements View.OnClickListener,
-        ViewPager.OnPageChangeListener, ReportTemporaryFragment.Callback {
+        ReportTemporaryFragment.Callback {
     private ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>();
     private ActivityReportBinding binding;
     private int currentState;
@@ -33,8 +33,8 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void initialize() {
         binding = ActivityReportBinding.inflate(getLayoutInflater());
-         View childLayout = binding.getRoot();
-         ConstraintLayout parentLayout = findViewById(R.id.base_Content);
+        View childLayout = binding.getRoot();
+        ConstraintLayout parentLayout = findViewById(R.id.base_Content);
         parentLayout.addView(childLayout);
         new GetReportDBData(this).execute(this);
         binding.textViewTotal.setOnClickListener(this);
@@ -80,7 +80,7 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
                                int high, int low, int total, int isMane, int unread, int beforeRead,
                                int continueRead) {
         this.counterStateDtos = new ArrayList<>(counterState);
-        final ViewPagerTabAdapter adapter = new ViewPagerTabAdapter(getSupportFragmentManager());
+        final ViewPagerTabAdapter2 adapter = new ViewPagerTabAdapter2(this);
         adapter.addFragment(ReportTotalFragment.newInstance(zero, normal, high, low));
         adapter.addFragment(ReportNotReadingFragment.newInstance(total, unread, beforeRead, continueRead));
         adapter.addFragment(ReportTemporaryFragment.newInstance(total, isMane));
@@ -88,42 +88,42 @@ public class ReportActivity extends BaseActivity implements View.OnClickListener
         adapter.addFragment(ReportInspectionFragment.newInstance());
         adapter.addFragment(ReportPerformanceFragment.newInstance());
         binding.viewPager.setAdapter(adapter);
-        binding.viewPager.addOnPageChangeListener(this);
-        binding.viewPager.setPageTransformer(true, new DepthPageTransformer());
+        binding.viewPager.registerOnPageChangeCallback(pageChangeListener);
+        binding.viewPager.setPageTransformer(new DepthPageTransformer2());
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        if (position == 0) {
-            binding.textViewTotal.callOnClick();
-        } else if (position == 1) {
-            binding.textViewNotRead.callOnClick();
-        } else if (position == 2) {
-            binding.textViewTemporary.callOnClick();
-        } else if (position == 3) {
-            binding.textViewForbid.callOnClick();
-        } else if (position == 4) {
-            binding.textViewInspection.callOnClick();
-        } else if (position == 5) {
-            binding.textViewPerformance.callOnClick();
-        }
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-        final int currentPage = binding.viewPager.getCurrentItem();
-        if (currentPage == 5 || currentPage == 0) {
-            final int previousState = currentState;
-            currentState = state;
-            if (previousState == 1 && currentState == 0) {
-                binding.viewPager.setCurrentItem(currentPage == 0 ? 5 : 0);
+    private final ViewPager2.OnPageChangeCallback pageChangeListener = new ViewPager2.OnPageChangeCallback() {
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            super.onPageScrollStateChanged(state);
+            int currentPage = binding.viewPager.getCurrentItem();
+            if (currentPage == 5 || currentPage == 0) {
+                final int previousState = currentState;
+                currentState = state;
+                if (previousState == 1 && currentState == 0) {
+                    binding.viewPager.setCurrentItem(currentPage == 0 ? 5 : 0);
+                }
             }
         }
-    }
+
+        @Override
+        public void onPageSelected(int position) {
+            super.onPageSelected(position);
+            if (position == 0) {
+                binding.textViewTotal.callOnClick();
+            } else if (position == 1) {
+                binding.textViewNotRead.callOnClick();
+            } else if (position == 2) {
+                binding.textViewTemporary.callOnClick();
+            } else if (position == 3) {
+                binding.textViewForbid.callOnClick();
+            } else if (position == 4) {
+                binding.textViewInspection.callOnClick();
+            } else if (position == 5) {
+                binding.textViewPerformance.callOnClick();
+            }
+        }
+    };
 
     @Override
     public void onClick(View view) {

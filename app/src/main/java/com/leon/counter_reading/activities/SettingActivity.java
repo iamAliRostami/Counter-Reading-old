@@ -12,22 +12,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.ViewPagerTabAdapter;
+import com.leon.counter_reading.adapters.ViewPagerTabAdapter2;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivitySettingBinding;
 import com.leon.counter_reading.fragments.setting.SettingChangeAvatarFragment;
 import com.leon.counter_reading.fragments.setting.SettingChangePasswordFragment;
 import com.leon.counter_reading.fragments.setting.SettingChangeThemeFragment;
 import com.leon.counter_reading.fragments.setting.SettingUpdateFragment;
-import com.leon.counter_reading.utils.DepthPageTransformer;
+import com.leon.counter_reading.utils.DepthPageTransformer2;
 import com.leon.counter_reading.utils.backup_restore.BackUp;
 import com.leon.counter_reading.utils.backup_restore.Restore;
 
-public class SettingActivity extends BaseActivity implements View.OnClickListener,
-        ViewPager.OnPageChangeListener {
+public class SettingActivity extends BaseActivity implements View.OnClickListener {
     private ActivitySettingBinding binding;
     private int currentState;
 
@@ -69,15 +68,44 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void setupViewPager() {
-        final ViewPagerTabAdapter adapter = new ViewPagerTabAdapter(getSupportFragmentManager());
+        final ViewPagerTabAdapter2 adapter = new ViewPagerTabAdapter2(this);
         adapter.addFragment(new SettingChangeThemeFragment());
         adapter.addFragment(new SettingChangePasswordFragment());
         adapter.addFragment(new SettingUpdateFragment());
         adapter.addFragment(new SettingChangeAvatarFragment());
         binding.viewPager.setAdapter(adapter);
-        binding.viewPager.addOnPageChangeListener(this);
-        binding.viewPager.setPageTransformer(true, new DepthPageTransformer());
+        binding.viewPager.registerOnPageChangeCallback(pageChangeListener);
+        binding.viewPager.setPageTransformer(new DepthPageTransformer2());
     }
+
+    private final ViewPager2.OnPageChangeCallback pageChangeListener = new ViewPager2.OnPageChangeCallback() {
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            super.onPageScrollStateChanged(state);
+            int currentPage = binding.viewPager.getCurrentItem();
+            if (currentPage == 3 || currentPage == 0) {
+                int previousState = currentState;
+                currentState = state;
+                if (previousState == 1 && currentState == 0) {
+                    binding.viewPager.setCurrentItem(currentPage == 0 ? 3 : 0);
+                }
+            }
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            super.onPageSelected(position);
+            if (position == 0) {
+                binding.textViewChangeTheme.callOnClick();
+            } else if (position == 1) {
+                binding.textViewChangePassword.callOnClick();
+            } else if (position == 2) {
+                binding.textViewUpdate.callOnClick();
+            } else if (position == 3) {
+                binding.textViewChangeAvatar.callOnClick();
+            }
+        }
+    };
 
     @Override
     public void onClick(View v) {
@@ -97,36 +125,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             binding.viewPager.setCurrentItem(3);
         }
         setPadding();
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        if (position == 0) {
-            binding.textViewChangeTheme.callOnClick();
-        } else if (position == 1) {
-            binding.textViewChangePassword.callOnClick();
-        } else if (position == 2) {
-            binding.textViewUpdate.callOnClick();
-        } else if (position == 3) {
-            binding.textViewChangeAvatar.callOnClick();
-        }
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-        int currentPage = binding.viewPager.getCurrentItem();
-        if (currentPage == 3 || currentPage == 0) {
-            int previousState = currentState;
-            currentState = state;
-            if (previousState == 1 && currentState == 0) {
-                binding.viewPager.setCurrentItem(currentPage == 0 ? 3 : 0);
-            }
-        }
     }
 
     @Override

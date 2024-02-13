@@ -301,10 +301,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
         //TODO
 //        if (POSITION != 1)
             setSupportActionBar(toolbar);
-//        if (POSITION == 1) {
-//            View view = getLayoutInflater().inflate(R.layout.reading_header, binding.getRoot(), false);
-//            toolbar.addView(view);
-//        }
         fillDrawerListView();
         setOnDrawerItemClick();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,

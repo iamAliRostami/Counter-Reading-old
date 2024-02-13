@@ -78,7 +78,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.ViewPagerStateAdapter2;
+import com.leon.counter_reading.adapters.ViewPagerStateAdapter;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReadingBinding;
 import com.leon.counter_reading.di.view_model.CustomDialogModel;
@@ -125,7 +125,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
         AreYouSureFragment.Callback, PossibleFragment.Callback, LastReadFragment.ICallback {
     private ActivityReadingBinding binding;
     private ISharedPreferenceManager sharedPreferenceManager;
-    private ViewPagerStateAdapter2 adapter;
+    private ViewPagerStateAdapter adapter;
     private IFlashLightManager flashLightManager;
     private int readStatus = 0, highLow = 1;
     private boolean isShowing = false;
@@ -307,7 +307,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void setupViewPagerAdapter(boolean lastRead) {
-        adapter = new ViewPagerStateAdapter2(this, readingData);
+        adapter = new ViewPagerStateAdapter(this, readingData);
         runOnUiThread(() -> {
             try {
                 binding.viewPager.setOffscreenPageLimit(1);

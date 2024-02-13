@@ -10,10 +10,10 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.ViewPagerTabAdapter;
+import com.leon.counter_reading.adapters.ViewPagerTabAdapter2;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityReadingSettingBinding;
 import com.leon.counter_reading.fragments.reading_setting.ReadingPossibleSettingFragment;
@@ -21,13 +21,13 @@ import com.leon.counter_reading.fragments.reading_setting.ReadingSettingActiveFr
 import com.leon.counter_reading.fragments.reading_setting.ReadingSettingDeleteFragment;
 import com.leon.counter_reading.fragments.reading_setting.ReadingSettingFeaturesFragment;
 import com.leon.counter_reading.tables.TrackingDto;
-import com.leon.counter_reading.utils.DepthPageTransformer;
+import com.leon.counter_reading.utils.DepthPageTransformer2;
 
 import java.util.ArrayList;
 
 public class ReadingSettingActivity extends BaseActivity implements View.OnClickListener {
     private ActivityReadingSettingBinding binding;
-    private int previousState, currentState;
+    private int currentState;
     private ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
 
     @Override
@@ -90,45 +90,46 @@ public class ReadingSettingActivity extends BaseActivity implements View.OnClick
     }
 
     private void setupViewPager() {
-        final ViewPagerTabAdapter adapter = new ViewPagerTabAdapter(getSupportFragmentManager());
+        final ViewPagerTabAdapter2 adapter = new ViewPagerTabAdapter2(this);
         adapter.addFragment(ReadingSettingActiveFragment.newInstance(trackingDtos));
         adapter.addFragment(ReadingSettingFeaturesFragment.newInstance());
         adapter.addFragment(new ReadingPossibleSettingFragment());
         adapter.addFragment(ReadingSettingDeleteFragment.newInstance(trackingDtos));
-
         binding.viewPager.setAdapter(adapter);
-        binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 0) {
-                    binding.textViewRead.callOnClick();
-                } else if (position == 1) {
-                    binding.textViewFeatures.callOnClick();
-                } else if (position == 2) {
-                    binding.textViewNavigation.callOnClick();
-                } else if (position == 3) {
-                    binding.textViewDelete.callOnClick();
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                final int currentPage = binding.viewPager.getCurrentItem();
-                if (currentPage == 3 || currentPage == 0) {
-                    previousState = currentState;
-                    currentState = state;
-                    if (previousState == 1 && currentState == 0) {
-                        binding.viewPager.setCurrentItem(currentPage == 0 ? 3 : 0);
-                    }
-                }
-            }
-        });
-        binding.viewPager.setPageTransformer(true, new DepthPageTransformer());
+        binding.viewPager.registerOnPageChangeCallback(pageChangeListener);
+        binding.viewPager.setPageTransformer(new DepthPageTransformer2());
     }
+
+    private final ViewPager2.OnPageChangeCallback pageChangeListener = new ViewPager2.OnPageChangeCallback() {
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            super.onPageScrollStateChanged(state);
+            final int currentPage = binding.viewPager.getCurrentItem();
+            if (currentPage == 3 || currentPage == 0) {
+                int previousState = currentState;
+                currentState = state;
+                if (previousState == 1 && currentState == 0) {
+                    binding.viewPager.setCurrentItem(currentPage == 0 ? 3 : 0);
+                }
+            }
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            super.onPageSelected(position);
+            if (position == 0) {
+                binding.textViewRead.callOnClick();
+            } else if (position == 1) {
+                binding.textViewFeatures.callOnClick();
+            } else if (position == 2) {
+                binding.textViewNavigation.callOnClick();
+            } else if (position == 3) {
+                binding.textViewDelete.callOnClick();
+            }
+
+
+        }
+    };
 
     @Override
     protected void onStop() {

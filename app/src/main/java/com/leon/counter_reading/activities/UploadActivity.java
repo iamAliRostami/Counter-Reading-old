@@ -17,22 +17,21 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.leon.counter_reading.R;
-import com.leon.counter_reading.adapters.ViewPagerTabAdapter;
+import com.leon.counter_reading.adapters.ViewPagerTabAdapter2;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityUploadBinding;
 import com.leon.counter_reading.fragments.upload.UploadFragment;
 import com.leon.counter_reading.tables.TrackingDto;
-import com.leon.counter_reading.utils.DepthPageTransformer;
+import com.leon.counter_reading.utils.DepthPageTransformer2;
 import com.leon.counter_reading.utils.uploading.GetUploadDBData;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class UploadActivity extends BaseActivity implements ViewPager.OnPageChangeListener,
-        View.OnClickListener {
+public class UploadActivity extends BaseActivity implements View.OnClickListener {
     private final ArrayList<TrackingDto> trackingDtos = new ArrayList<>();
     private ActivityUploadBinding binding;
     private int currentState;
@@ -53,42 +52,41 @@ public class UploadActivity extends BaseActivity implements ViewPager.OnPageChan
     }
 
     private void setupViewPager() {
-        ViewPagerTabAdapter adapter = new ViewPagerTabAdapter(getSupportFragmentManager());
+        ViewPagerTabAdapter2 adapter = new ViewPagerTabAdapter2(this);
         adapter.addFragment(UploadFragment.newInstance(NORMAL.getValue()));
         adapter.addFragment(UploadFragment.newInstance(OFFLINE.getValue()));
         adapter.addFragment(UploadFragment.newInstance(MULTIMEDIA.getValue()));
         binding.viewPager.setAdapter(adapter);
-        binding.viewPager.addOnPageChangeListener(this);
-        binding.viewPager.setPageTransformer(true, new DepthPageTransformer());
+        binding.viewPager.registerOnPageChangeCallback(pageChangeListener);
+        binding.viewPager.setPageTransformer(new DepthPageTransformer2());
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        if (position == 0) {
-            binding.textViewUpload.callOnClick();
-        } else if (position == 1) {
-            binding.textViewUploadOff.callOnClick();
-        } else if (position == 2) {
-            binding.textViewUploadMultimedia.callOnClick();
-        }
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-        final int currentPage = binding.viewPager.getCurrentItem();
-        if (currentPage == 2 || currentPage == 0) {
-            int previousState = currentState;
-            currentState = state;
-            if (previousState == 1 && currentState == 0) {
-                binding.viewPager.setCurrentItem(currentPage == 0 ? 2 : 0);
+    private final ViewPager2.OnPageChangeCallback pageChangeListener = new ViewPager2.OnPageChangeCallback() {
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            super.onPageScrollStateChanged(state);
+            int currentPage = binding.viewPager.getCurrentItem();
+            if (currentPage == 2 || currentPage == 0) {
+                int previousState = currentState;
+                currentState = state;
+                if (previousState == 1 && currentState == 0) {
+                    binding.viewPager.setCurrentItem(currentPage == 0 ? 2 : 0);
+                }
             }
         }
-    }
+
+        @Override
+        public void onPageSelected(int position) {
+            super.onPageSelected(position);
+            if (position == 0) {
+                binding.textViewUpload.callOnClick();
+            } else if (position == 1) {
+                binding.textViewUploadOff.callOnClick();
+            } else if (position == 2) {
+                binding.textViewUploadMultimedia.callOnClick();
+            }
+        }
+    };
 
     public void setupUI(ArrayList<TrackingDto> trackingDtos) {
         this.trackingDtos.clear();
@@ -134,7 +132,7 @@ public class UploadActivity extends BaseActivity implements ViewPager.OnPageChan
     }
 
     private void setPadding() {
-         int medium = (int) getResources().getDimension(R.dimen.medium_dp);
+        int medium = (int) getResources().getDimension(R.dimen.medium_dp);
         binding.textViewUpload.setPadding(0, medium, 0, medium);
         binding.textViewUploadOff.setPadding(0, medium, 0, medium);
         binding.textViewUploadMultimedia.setPadding(0, medium, 0, medium);
