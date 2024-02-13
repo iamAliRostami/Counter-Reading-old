@@ -76,6 +76,7 @@ public class ViewPagerStateAdapter2 extends FragmentStateAdapter {
                     readingData.onOffLoadDtos.get(i).displayDebt = readingData.trackingDtos.get(k).displayDebt;
                     readingData.onOffLoadDtos.get(i).hasImage = readingData.trackingDtos.get(k).hasImage;
                     readingData.onOffLoadDtos.get(i).displayPreDate = readingData.trackingDtos.get(k).displayPreDate;
+                    readingData.onOffLoadDtos.get(i).displayIcons = readingData.trackingDtos.get(k).displayIcons;
                     readingData.onOffLoadDtos.get(i).displayMobile = readingData.trackingDtos.get(k).displayMobile;
                     readingData.onOffLoadDtos.get(i).displayBillId = readingData.trackingDtos.get(k).displayBillId;
                     readingData.onOffLoadDtos.get(i).displayRadif = readingData.trackingDtos.get(k).displayRadif;

@@ -6,6 +6,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
+
 @Entity(tableName = "OnOffLoadDto", indices = @Index(value = {"customId"}, unique = true))
 public class OnOffLoadDto {
     @PrimaryKey(autoGenerate = true)
@@ -100,6 +101,8 @@ public class OnOffLoadDto {
     public boolean displayRadif;
     @Ignore
     public boolean displayPreDate;
+    @Ignore
+    public boolean displayIcons;
 
     public static class OffLoad {
         public String id;
@@ -174,6 +177,7 @@ public class OnOffLoadDto {
         hasImage = onOffLoadDto.hasImage;
         displayMobile = onOffLoadDto.displayMobile;
         displayPreDate = onOffLoadDto.displayPreDate;
+        displayIcons = onOffLoadDto.displayIcons;
         qotr = onOffLoadDto.qotr;
         sifoonQotr = onOffLoadDto.sifoonQotr;
     }

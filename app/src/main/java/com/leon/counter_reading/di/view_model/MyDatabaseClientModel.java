@@ -23,16 +23,13 @@ public class MyDatabaseClientModel {
     @Inject
     public MyDatabaseClientModel(Context context) {
         myDatabase = Room.databaseBuilder(context, MyDatabase.class, DBName)
-
                 .addCallback(new RoomDatabase.Callback() {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
                         db.execSQL("PRAGMA encoding='UTF-8';");
                     }
-                })
-
-                .allowMainThreadQueries().build();
+                }).allowMainThreadQueries().build();
     }
 
     public static synchronized MyDatabaseClientModel getInstance(Context context) {
@@ -54,8 +51,7 @@ public class MyDatabaseClientModel {
             query = query.concat(s).concat("\n");
         }
         query = query.concat("COMMIT;");
-
-        final Cursor cursor = getApplicationComponent().MyDatabase().getOpenHelper().getWritableDatabase().query(query);
+        Cursor cursor = getApplicationComponent().MyDatabase().getOpenHelper().getWritableDatabase().query(query);
         cursor.moveToFirst();
 
         return true;

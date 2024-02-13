@@ -72,6 +72,7 @@ public class OnOffLoadDtoTemp {
     public int isBazdid;
     public int displayMobile;
     public int displayPreDate;
+    public int displayIcons;
 
     public int preGuildCode;
 
@@ -80,6 +81,7 @@ public class OnOffLoadDtoTemp {
         onOffLoadDto.displayBillId = displayBillId == 1;
         onOffLoadDto.displayMobile = displayMobile == 1;
         onOffLoadDto.displayPreDate = displayPreDate == 1;
+        onOffLoadDto.displayIcons = displayIcons == 1;
         onOffLoadDto.displayRadif = displayRadif == 1;
         onOffLoadDto.isLocked = isLocked == 1;
         onOffLoadDto.isBazdid = isBazdid == 1;

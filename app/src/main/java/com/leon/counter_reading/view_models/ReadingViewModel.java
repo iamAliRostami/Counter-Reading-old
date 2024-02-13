@@ -131,8 +131,8 @@ public class ReadingViewModel extends BaseObservable {
 
         setSerial(getOnOffLoadDto().counterSerial);
 
-//        setPreDate(getOnOffLoadDto().displayPreDate ? getOnOffLoadDto().preDate : "-");
-        setPreDate(getOnOffLoadDto().preDate);
+        setPreDate(getOnOffLoadDto().displayPreDate ? getOnOffLoadDto().preDate : "-");
+//        setPreDate(getOnOffLoadDto().preDate);
 
         setAddressBackground(ContextCompat.getDrawable(getContext(), getOnOffLoadDto().mobile != null ?
                 R.drawable.border_gray_3 : R.drawable.border_red_2));
@@ -421,14 +421,6 @@ public class ReadingViewModel extends BaseObservable {
         this.address = address;
         notifyPropertyChanged(BR.address);
     }
-
-//    public String getGuildTitle() {
-//        return guildTitle;
-//    }
-//
-//    public void setGuildTitle(String guildTitle) {
-//        this.guildTitle = guildTitle;
-//    }
 
     @Bindable
     public String getName() {

@@ -1,7 +1,6 @@
 package com.leon.counter_reading.tables;
 
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -36,6 +35,7 @@ public class TrackingDto {
     public boolean displayRadif;
     public boolean displayMobile;
     public boolean displayPreDate;
+    public boolean displayIcons;
 
     public boolean isActive;
     public boolean isArchive;

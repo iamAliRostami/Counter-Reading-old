@@ -31,32 +31,34 @@ public class ReadingUtils {
     }
 
     static public int setExceptionImage(ReadingData readingData, int position) {
-        try {
-            for (int i = 0; i < readingData.counterStateDtos.size(); i++) {
-                if (readingData.counterStateDtos.get(i).isXarab &&
-                        readingData.counterStateDtos.get(i).moshtarakinId ==
-                                readingData.onOffLoadDtos.get(position).preCounterStateCode) {
-                    //TODO remove is xarab in zone 6
-                    return BuildConfig.COMPANY_NAME == ZONE6 ? -1 : 14;
+        if (readingData.onOffLoadDtos.get(position).displayIcons) {
+            try {
+                for (int i = 0; i < readingData.counterStateDtos.size(); i++) {
+                    if (readingData.counterStateDtos.get(i).isXarab &&
+                            readingData.counterStateDtos.get(i).moshtarakinId ==
+                                    readingData.onOffLoadDtos.get(position).preCounterStateCode) {
+                        //TODO remove is xarab in zone 6
+                        return BuildConfig.COMPANY_NAME == ZONE6 ? -1 : 14;
+                    }
                 }
-            }
 
-            for (int i = 0; i < readingData.karbariDtos.size(); i++) {
-                if (readingData.karbariDtos.get(i).isSaxt &&
-                        readingData.karbariDtos.get(i).moshtarakinId ==
-                                readingData.onOffLoadDtos.get(position).karbariCode) {
+                for (int i = 0; i < readingData.karbariDtos.size(); i++) {
+                    if (readingData.karbariDtos.get(i).isSaxt &&
+                            readingData.karbariDtos.get(i).moshtarakinId ==
+                                    readingData.onOffLoadDtos.get(position).karbariCode) {
+                        return 13;
+                    }
+                }
+                if (readingData.onOffLoadDtos.get(position).noeVagozariId == 4) {
                     return 13;
                 }
-            }
-            if (readingData.onOffLoadDtos.get(position).noeVagozariId == 4) {
-                return 13;
-            }
 
-            if (readingData.onOffLoadDtos.get(position).hazf > 0) {
-                return 12;
+                if (readingData.onOffLoadDtos.get(position).hazf > 0) {
+                    return 12;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return -1;
     }
