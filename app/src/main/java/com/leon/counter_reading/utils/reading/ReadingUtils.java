@@ -14,8 +14,8 @@ public class ReadingUtils {
         final int[] imageSrc = new int[15];
         imageSrc[0] = R.drawable.img_default_level;
         imageSrc[1] = R.drawable.img_normal_level;
-        imageSrc[2] = R.drawable.img_high_level;
-        imageSrc[3] = R.drawable.img_low_level;
+        imageSrc[2] = R.drawable.img_low_level;
+        imageSrc[3] = R.drawable.img_high_level;
         imageSrc[4] = R.drawable.img_low_level;
         imageSrc[5] = R.drawable.img_visit_default;
         imageSrc[6] = R.drawable.img_visit;

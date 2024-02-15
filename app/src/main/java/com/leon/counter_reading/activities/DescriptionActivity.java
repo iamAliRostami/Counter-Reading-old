@@ -273,7 +273,7 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
         mediaRecorder.stop();
         try {
             mediaPlayer = new MediaPlayer();
-            voice.size = new File(dir.concat(voice.address)).length();
+            voice.size = new File(dir.concat(voice.address)).length() / 1000;
             mediaPlayer.setDataSource(dir.concat(voice.address));
             mediaPlayer.prepare();
         } catch (Exception e) {

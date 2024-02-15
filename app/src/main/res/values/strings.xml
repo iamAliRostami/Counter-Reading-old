@@ -20,7 +20,6 @@
     <string name="login">ورود</string>
     <string name="save">ذخیره</string>
 
-
     <string name="error_upload">بارگذاری با خطا رو برو شد.</string>
     <string name="error_not_auth">مجوزهای دسترسی شما باطل شده،از برنامه خارج و مجددا وارد شوید. در صورت عدم رفع مشکل با پشتیبان تماس بگیرید.</string>
     <string name="error_connection">خطا در جابجایی اطلاعات، اتصالات خود را بررسی و مجدد تلاش کنید.</string>

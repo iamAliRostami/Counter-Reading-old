@@ -34,6 +34,7 @@
         <TextView
             android:id="@+id/text_view_multimedia"
             style="@style/InputTitle"
+            android:textSize="@dimen/text_size_medium"
             android:background="@drawable/border_gray_6"
             android:paddingLeft="@dimen/low_dp"
             android:paddingRight="@dimen/low_dp"

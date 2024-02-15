@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class UploadFragment extends Fragment implements View.OnClickListener {
     private int type;
@@ -94,14 +95,12 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
 
     public void setMultimediaInfo() {
         MyDatabase myDatabase = getApplicationComponent().MyDatabase();
-        final int imagesCount = myDatabase.imageDao().getUnsentImageCount(false);
-        final int voicesCount = myDatabase.voiceDao().getUnsentVoiceCount(false);
-        final int imagesSize = myDatabase.imageDao().getUnsentImageSize(false);
-        final int voicesSize = myDatabase.voiceDao().getUnsentVoiceSizes(false);
-        final String message = "تعداد عکس: ".concat(String.valueOf(imagesCount))
-                .concat(" *** حجم: ").concat(String.valueOf(imagesSize)).concat(" KB").concat("\n")
-                .concat("تعداد صدا: ").concat(String.valueOf(voicesCount))
-                .concat(" *** حجم: ").concat(String.valueOf(voicesSize)).concat(" KB");
+        int imagesCount = myDatabase.imageDao().getUnsentImageCount(false);
+        int voicesCount = myDatabase.voiceDao().getUnsentVoiceCount(false);
+        int imagesSize = myDatabase.imageDao().getUnsentImageSize(false);
+        int voicesSize = myDatabase.voiceDao().getUnsentVoiceSizes(false);
+        String message = String.format(Locale.US, "تعداد عکس: %d  *** حجم صدا: %d KB \n" +
+                "تعداد صدا: %d *** حجم: %d KB", imagesCount, imagesSize, voicesCount, voicesSize);
         requireActivity().runOnUiThread(() -> binding.textViewMultimedia.setText(message));
     }
 
