@@ -96,12 +96,17 @@ public class UploadFragment extends Fragment implements View.OnClickListener {
     public void setMultimediaInfo() {
         MyDatabase myDatabase = getApplicationComponent().MyDatabase();
         int imagesCount = myDatabase.imageDao().getUnsentImageCount(false);
-        int voicesCount = myDatabase.voiceDao().getUnsentVoiceCount(false);
         int imagesSize = myDatabase.imageDao().getUnsentImageSize(false);
+        String image = String.format(Locale.US, "تعداد عکس: %d *** حجم: %d %s", imagesCount,
+                imagesSize > 1000 ? imagesSize / 1000 : imagesSize, imagesSize > 1000 ? "MB" : "KB");
+        int voicesCount = myDatabase.voiceDao().getUnsentVoiceCount(false);
         int voicesSize = myDatabase.voiceDao().getUnsentVoiceSizes(false);
-        String message = String.format(Locale.US, "تعداد عکس: %d  *** حجم صدا: %d KB \n" +
-                "تعداد صدا: %d *** حجم: %d KB", imagesCount, imagesSize, voicesCount, voicesSize);
-        requireActivity().runOnUiThread(() -> binding.textViewMultimedia.setText(message));
+        String voice = String.format(Locale.US, "تعداد صدا: %d *** حجم: %d %s", voicesCount,
+                voicesSize > 1000 ? voicesSize / 1000 : voicesSize, voicesSize > 1000 ? "MB" : "KB");
+//        String message = String.format(Locale.US, "تعداد عکس: %d  *** حجم: %d KB \n" +
+//                "تعداد صدا: %d *** حجم: %d KB", imagesCount, imagesSize, voicesCount, voicesSize);
+        requireActivity().runOnUiThread(() ->
+                binding.textViewMultimedia.setText(String.format("%s\n%s", image, voice)));
     }
 
     private void setupSpinner() {

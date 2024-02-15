@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class HelpActivity extends BaseActivity {
-    private final int maxNumber = 37;
+    private final int maxNumber = 41;
     private ActivityHelpBinding binding;
     private Activity activity;
     private int pageNumber = 0;
