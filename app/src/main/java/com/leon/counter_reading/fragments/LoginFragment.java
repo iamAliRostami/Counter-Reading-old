@@ -8,6 +8,7 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.AVATAR;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
+import static com.leon.counter_reading.helpers.MyApplication.arabicToDecimal;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getSerial;
 import static com.leon.counter_reading.helpers.MyApplication.setActivityComponent;
@@ -105,12 +106,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
         binding.imageViewPassword.setOnClickListener(this);
         binding.imageViewRecaptcha.setOnClickListener(this);
 
-        binding.imageViewPerson.setOnLongClickListener(this);
         binding.buttonLogin.setOnLongClickListener(this);
+        binding.imageViewPerson.setOnLongClickListener(this);
 
-        binding.editTextUsername.setOnFocusChangeListener(this);
-        binding.editTextPassword.setOnFocusChangeListener(this);
         binding.editTextCaptcha.setOnFocusChangeListener(this);
+        binding.editTextPassword.setOnFocusChangeListener(this);
+        binding.editTextUsername.setOnFocusChangeListener(this);
 
         createDNTCaptcha();
     }
@@ -121,11 +122,58 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
         textViewCompanyName.setOnClickListener(this);
     }
 
-    private void attempt(boolean isLogin) {
-        if (inputValidation(binding.editTextUsername)) return;
-        if (inputValidation(binding.editTextPassword)) return;
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.image_view_recaptcha) {
+            createDNTCaptcha();
+        } else if (id == R.id.button_login) {
+            if (inputValidation())
+                attempt(true);
+        } else if (id == R.id.image_view_person) {
+            new CustomDialogModel(Green, requireContext(), getSerial(requireActivity()),
+                    R.string.serial, R.string.dear_user, R.string.accepted);
+        } else if (id == R.id.image_view_password) {
+            if (binding.editTextPassword.getInputType() != InputType.TYPE_CLASS_TEXT) {
+                binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+            } else
+                binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        } else if (id == R.id.text_view_company_name) {
+            insertProxy(requireContext());
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        int id = v.getId();
+        if (id == R.id.button_login) {
+            if (inputValidation())
+                attempt(false);
+        } else if (id == R.id.image_view_person) {
+            insertPersonalCode(requireContext());
+        }
+        return false;
+    }
+
+    private boolean inputValidation() {
+        if (checkEmptyInput(binding.editTextUsername)) return false;
+        if (checkEmptyInput(binding.editTextPassword)) return false;
+        login.setPassword(arabicToDecimal(login.getPassword()));
+        login.setUsername(arabicToDecimal(login.getUsername()));
         if (counter > 0 && login.checkUserPasswordChange())
             counter = 0;
+        return true;
+    }
+    private boolean checkEmptyInput(final EditText editText) {
+        if (editText.getText().toString().isEmpty()) {
+            editText.setError(getString(R.string.error_empty));
+            editText.requestFocus();
+            return true;
+        }
+        return false;
+    }
+    private void attempt(boolean isLogin) {
         login.setOldPassword(login.getPassword());
         login.setOldUsername(login.getUsername());
         if (isNetworkAvailable(requireActivity())) {
@@ -141,21 +189,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
         } else {
             new CustomToast().warning(getString(R.string.turn_internet_on));
         }
-    }
-
-    private boolean inputValidation(final EditText editText) {
-        if (editText.getText().toString().isEmpty()) {
-            editText.setError(getString(R.string.error_empty));
-            editText.requestFocus();
-            return true;
-        }
-        return false;
-    }
-
-    public void resetAttempt() {
-        createDNTCaptcha();
-        login.setDntCaptchaInputText("");
-        counter = 0;
     }
 
     private void offlineLogin() {
@@ -174,6 +207,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
     }
 
     private void createDNTCaptcha() {
+        login.setDntCaptchaInputText("");
         binding.imageViewCaptcha.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.not_found));
         new CreateDNTCaptcha(this).execute(requireActivity());
     }
@@ -193,6 +227,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
         binding.imageViewCaptcha.setImageBitmap(captchaResult);
     }
 
+    public void resetAttempt() {
+        createDNTCaptcha();
+        counter = 0;
+    }
     public LoginViewModel getLogin() {
         return login;
     }
@@ -231,37 +269,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
                 .check();
     }
 
-    @Override
-    public void onClick(View v) {
-        final int id = v.getId();
-        if (id == R.id.image_view_recaptcha) {
-            createDNTCaptcha();
-        } else if (id == R.id.button_login) {
-            attempt(true);
-        } else if (id == R.id.image_view_person) {
-            new CustomDialogModel(Green, requireContext(), getSerial(requireActivity()),
-                    R.string.serial, R.string.dear_user, R.string.accepted);
-        } else if (id == R.id.image_view_password) {
-            if (binding.editTextPassword.getInputType() != InputType.TYPE_CLASS_TEXT) {
-                binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT);
-            } else
-                binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT |
-                        InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        } else if (id == R.id.text_view_company_name) {
-            insertProxy(requireContext());
-        }
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        int id = v.getId();
-        if (id == R.id.button_login) {
-            attempt(false);
-        } else if (id == R.id.image_view_person) {
-            insertPersonalCode(requireContext());
-        }
-        return false;
-    }
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {

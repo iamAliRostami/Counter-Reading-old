@@ -1,10 +1,8 @@
 package com.leon.counter_reading.utils.reading;
 
-import static com.leon.counter_reading.enums.CompanyNames.ESF;
 import static com.leon.counter_reading.enums.HighLowStateEnum.HIGH;
 import static com.leon.counter_reading.enums.HighLowStateEnum.LOW;
 import static com.leon.counter_reading.enums.HighLowStateEnum.NORMAL;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getActiveCompanyName;
 import static com.leon.counter_reading.utils.CalendarTool.findDifferentDays;
 
 import com.leon.counter_reading.tables.KarbariDto;
@@ -31,7 +29,7 @@ public class Counting {
 
         int zarib;
 
-        if (getActiveCompanyName() == ESF && karbariDto.isTejari) {
+        if (/*getActiveCompanyName() == ESF && */karbariDto.isTejari) {
             zarib = onOffLoadDto.ahadTejariOrFari;
         } else {
             zarib = onOffLoadDto.ahadMaskooniOrAsli;

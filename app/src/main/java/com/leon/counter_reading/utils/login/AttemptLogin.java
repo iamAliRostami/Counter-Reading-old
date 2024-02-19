@@ -10,6 +10,7 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME_TEMP;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USER_CODE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.XSRF;
+import static com.leon.counter_reading.helpers.MyApplication.arabicToDecimal;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -47,7 +48,7 @@ public class AttemptLogin extends AsyncTask<Activity, Activity, Void> {
     protected Void doInBackground(Activity... activities) {
         final Retrofit retrofit = getApplicationComponent().NetworkHelperModel().getInstance();
         final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
-        final Call<LoginViewModel> call = iAbfaService.login(fragment.getLogin());
+         final Call<LoginViewModel> call = iAbfaService.login(fragment.getLogin());
         activities[0].runOnUiThread(() ->
                 HttpClientWrapper.callHttpAsync(call, SHOW.getValue(), activities[0],
                         new LoginCompleted(activities[0], fragment.getLogin()), new Incomplete(fragment),
