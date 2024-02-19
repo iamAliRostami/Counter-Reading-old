@@ -4,7 +4,7 @@ import static com.leon.counter_reading.enums.DialogType.Green;
 import static com.leon.counter_reading.enums.DialogType.Yellow;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getExpireDate;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
-import static com.leon.counter_reading.utils.Converters.replaceNonstandardDigits;
+import static com.leon.counter_reading.utils.Converters.arabicToDecimal;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -139,10 +139,10 @@ public class SaveDownloadData {
     private void downloadArchive(Activity activity, ReadingData readingData, MyDatabase myDatabase,
                                  int i) {
         try {
-            final String time = replaceNonstandardDigits(new SimpleDateFormat(activity
+            final String time = arabicToDecimal(new SimpleDateFormat(activity
                     .getString(R.string.save_format_name))
                     .format(new Date()).concat(String.valueOf(new Random().nextInt(1000))));
-            int trackNumber = Integer.parseInt(replaceNonstandardDigits(String.valueOf(readingData.trackingDtos.get(i).trackNumber)));
+            int trackNumber = Integer.parseInt(arabicToDecimal(String.valueOf(readingData.trackingDtos.get(i).trackNumber)));
             final String query = "CREATE TABLE `%s` AS %s;";
             final String queryTrackDto = String.format(query, "TrackingDto_".concat(time),
                     String.format("SELECT * FROM TrackingDto WHERE trackNumber = %d AND isArchive = 1",

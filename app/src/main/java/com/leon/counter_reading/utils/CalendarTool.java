@@ -1,6 +1,7 @@
 package com.leon.counter_reading.utils;
 
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
+import static com.leon.counter_reading.utils.Converters.arabicToDecimal;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -377,7 +378,7 @@ public class CalendarTool {
     public static String getDate(Activity activity) {
         final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         final Location location = getLocationTracker(activity).getCurrentLocation();
-        return Converters.replaceNonstandardDigits(dateFormatter.format(new Date(location != null ? location.getTime() :
+        return arabicToDecimal(dateFormatter.format(new Date(location != null ? location.getTime() :
                 Calendar.getInstance().getTimeInMillis())));
     }
 }

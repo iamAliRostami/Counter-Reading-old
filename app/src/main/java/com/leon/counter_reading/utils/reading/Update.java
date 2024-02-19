@@ -2,6 +2,7 @@ package com.leon.counter_reading.utils.reading;
 
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
+import static com.leon.counter_reading.utils.Converters.convertToAscii;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -10,8 +11,6 @@ import android.os.AsyncTask;
 
 import com.leon.counter_reading.tables.OnOffLoadDto;
 
-import java.nio.charset.StandardCharsets;
-import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,12 +47,5 @@ public class Update extends AsyncTask<Activity, Void, Void> {
         }
         getApplicationComponent().MyDatabase().onOffLoadDao().updateOnOffLoad(onOffLoadDto);
         return null;
-    }
-
-    private String convertToAscii(String s) {
-        String sTemp = Normalizer.normalize(s, Normalizer.Form.NFKD);
-        String regex = "[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+";
-        String finalString = new String(sTemp.replaceAll(regex, "").getBytes(StandardCharsets.US_ASCII), StandardCharsets.US_ASCII);
-        return new String(finalString.getBytes(), StandardCharsets.UTF_8);
     }
 }

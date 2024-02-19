@@ -10,7 +10,6 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME_TEMP;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USER_CODE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.XSRF;
-import static com.leon.counter_reading.helpers.MyApplication.arabicToDecimal;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;

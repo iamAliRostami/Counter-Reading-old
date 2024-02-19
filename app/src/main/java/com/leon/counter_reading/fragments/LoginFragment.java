@@ -8,10 +8,10 @@ import static com.leon.counter_reading.enums.SharedReferenceKeys.AVATAR;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME;
 import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
-import static com.leon.counter_reading.helpers.MyApplication.arabicToDecimal;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getSerial;
 import static com.leon.counter_reading.helpers.MyApplication.setActivityComponent;
+import static com.leon.counter_reading.utils.Converters.arabicToDecimal;
 import static com.leon.counter_reading.utils.CustomFile.loadImage;
 import static com.leon.counter_reading.utils.PermissionManager.enableGpsForResult;
 import static com.leon.counter_reading.utils.PermissionManager.forceClose;
@@ -165,6 +165,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
             counter = 0;
         return true;
     }
+
     private boolean checkEmptyInput(final EditText editText) {
         if (editText.getText().toString().isEmpty()) {
             editText.setError(getString(R.string.error_empty));
@@ -173,6 +174,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
         }
         return false;
     }
+
     private void attempt(boolean isLogin) {
         login.setOldPassword(login.getPassword());
         login.setOldUsername(login.getUsername());
@@ -231,6 +233,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
         createDNTCaptcha();
         counter = 0;
     }
+
     public LoginViewModel getLogin() {
         return login;
     }

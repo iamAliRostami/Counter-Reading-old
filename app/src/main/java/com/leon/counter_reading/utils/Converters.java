@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,5 +96,24 @@ public class Converters {
     public static Bitmap binaryToBitmap(String s) {
         byte[] bytes = s.getBytes();
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    }
+    public static String arabicToDecimal(String number) {
+        char[] chars = new char[number.length()];
+        for (int i = 0; i < number.length(); i++) {
+            char ch = number.charAt(i);
+            if (ch >= 0x0660 && ch <= 0x0669)
+                ch -= 0x0660 - '0';
+            else if (ch >= 0x06f0 && ch <= 0x06F9)
+                ch -= 0x06f0 - '0';
+            chars[i] = ch;
+        }
+        return new String(chars);
+    }
+
+    public static String convertToAscii(String s) {
+        String sTemp = Normalizer.normalize(s, Normalizer.Form.NFKD);
+        String regex = "[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+";
+        String finalString = new String(sTemp.replaceAll(regex, "").getBytes(StandardCharsets.US_ASCII), StandardCharsets.US_ASCII);
+        return new String(finalString.getBytes(), StandardCharsets.UTF_8);
     }
 }

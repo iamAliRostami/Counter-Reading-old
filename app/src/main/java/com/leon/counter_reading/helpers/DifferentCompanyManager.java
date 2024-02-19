@@ -5,7 +5,7 @@ import static com.leon.counter_reading.enums.CompanyNames.ESF;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PROXY;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
-import static com.leon.counter_reading.utils.Converters.replaceNonstandardDigits;
+import static com.leon.counter_reading.utils.Converters.arabicToDecimal;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -178,7 +178,7 @@ public class DifferentCompanyManager {
         }
         date = new Date(calendar.getTimeInMillis());
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        return replaceNonstandardDigits(dateFormatter.format(date));
+        return arabicToDecimal(dateFormatter.format(date));
     }
 
     public static boolean gallerySelector() {
