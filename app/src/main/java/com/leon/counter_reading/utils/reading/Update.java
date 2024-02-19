@@ -2,7 +2,7 @@ package com.leon.counter_reading.utils.reading;
 
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getLocationTracker;
-import static com.leon.counter_reading.utils.Converters.convertToAscii;
+import static com.leon.counter_reading.utils.Converters.arabicToDecimal;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -35,13 +35,13 @@ public class Update extends AsyncTask<Activity, Void, Void> {
                 onOffLoadDto.y = location.getLatitude();
                 onOffLoadDto.gisAccuracy = location.getAccuracy();
 //                onOffLoadDto.locationDateTime = dateFormatter.format(new Date(location.getTime()));
-                onOffLoadDto.locationDateTime = convertToAscii(dateFormatter.format(new Date(location.getTime())));
+                onOffLoadDto.locationDateTime = arabicToDecimal(dateFormatter.format(new Date(location.getTime())));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            onOffLoadDto.phoneDateTime = convertToAscii(dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis())));
+            onOffLoadDto.phoneDateTime = arabicToDecimal(dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis())));
         } catch (Exception e) {
             onOffLoadDto.phoneDateTime = dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis()));
         }
