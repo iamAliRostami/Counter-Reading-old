@@ -27,6 +27,7 @@ import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.MyDatabase;
 
 import java.util.Collections;
+import java.util.Comparator;
 
 public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
     private final CustomProgressModel progress;
@@ -99,8 +100,8 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
                         getOnOffLoadReadByIsMane(IS_MANE, id));
             } else if (readStatus == CONTINUE.getValue()) {
                 readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().getOnOffLoadCounter(0, id));
-            }else if (readStatus ==BEFORE_READ.getValue()){
-                readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().getOnOffLoadCounterRead(0,0, id));
+            } else if (readStatus == BEFORE_READ.getValue()) {
+                readingData.onOffLoadDtos.addAll(myDatabase.onOffLoadDao().getOnOffLoadCounterRead(0, 0, id));
             }
 
         }
@@ -143,9 +144,21 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
             readingDataTemp.trackingDtos.addAll(readingData.trackingDtos);
             readingDataTemp.readingConfigDefaultDtos.addAll(readingData.readingConfigDefaultDtos);
 
-            if (sortType) {
-                Collections.sort(readingData.onOffLoadDtos, (o1, o2) -> o2.eshterak.compareTo(o1.eshterak));
-                Collections.sort(readingDataTemp.onOffLoadDtos, (o1, o2) -> o2.eshterak.compareTo(o1.eshterak));
+            if (readingData.readingConfigDefaultDtos.get(0).isOnQeraatCode) {
+                if (sortType) {
+                    Collections.sort(readingData.onOffLoadDtos, (o1, o2) -> o2.qeraatCode.compareTo(o1.qeraatCode));
+                    Collections.sort(readingDataTemp.onOffLoadDtos, (o1, o2) -> o2.qeraatCode.compareTo(o1.qeraatCode));
+                } else {
+//                    Collections.sort(readingData.onOffLoadDtos, (o2, o1) -> o1.qeraatCode.compareTo(o2.qeraatCode));
+//                    Collections.sort(readingDataTemp.onOffLoadDtos, (o2, o1) -> o1.qeraatCode.compareTo(o2.qeraatCode));
+                    Collections.sort(readingData.onOffLoadDtos, Comparator.comparing(o -> o.qeraatCode));
+                    Collections.sort(readingDataTemp.onOffLoadDtos, Comparator.comparing(o -> o.qeraatCode));
+                }
+            } else {
+                if (sortType) {
+                    Collections.sort(readingData.onOffLoadDtos, (o1, o2) -> o2.eshterak.compareTo(o1.eshterak));
+                    Collections.sort(readingDataTemp.onOffLoadDtos, (o1, o2) -> o2.eshterak.compareTo(o1.eshterak));
+                }
             }
         }
         ((ReadingActivity) (activities[0])).setupViewPager(!getApplicationComponent().SharedPreferenceModel().getBoolData(DONT_SHOW.getValue()));

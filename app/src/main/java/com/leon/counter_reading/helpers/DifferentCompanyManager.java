@@ -34,8 +34,8 @@ public class DifferentCompanyManager {
         }
         return switch (getActiveCompanyName()) {
             case TEH_TOTAL -> "http://85.133.245.143/";
-            case ESF -> "https://37.191.92.157/";
-//                return "http://172.18.12.36";
+//            case ESF -> "https://37.191.92.157/";
+                case ESF -> "http://172.18.12.36";
             case ZONE1 -> "http://217.146.220.33:50012/";
             case ZONE2 -> "http://212.16.75.194:8080/";
             case ZONE3 -> "http://46.209.219.36:90/";
