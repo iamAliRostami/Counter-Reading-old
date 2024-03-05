@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.leon.counter_reading.tables.OnOffLoadDto;
 
@@ -33,7 +34,8 @@ public class Update extends AsyncTask<Activity, Void, Void> {
                 onOffLoadDto.x = location.getLongitude();
                 onOffLoadDto.y = location.getLatitude();
                 onOffLoadDto.gisAccuracy = location.getAccuracy();
-//                onOffLoadDto.locationDateTime = dateFormatter.format(new Date(location.getTime()));
+//                Log.e("date time", String.valueOf(location.getTime()));
+//TODO                onOffLoadDto.locationDateTime = dateFormatter.format(new Date(location.getTime()));
                 onOffLoadDto.locationDateTime = arabicToDecimal(dateFormatter.format(new Date(location.getTime())));
             }
         } catch (Exception e) {
@@ -41,6 +43,7 @@ public class Update extends AsyncTask<Activity, Void, Void> {
         }
         try {
             onOffLoadDto.phoneDateTime = arabicToDecimal(dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis())));
+//            Log.e("date time", onOffLoadDto.phoneDateTime);
         } catch (Exception e) {
             onOffLoadDto.phoneDateTime = dateFormatter.format(new Date(Calendar.getInstance().getTimeInMillis()));
         }
