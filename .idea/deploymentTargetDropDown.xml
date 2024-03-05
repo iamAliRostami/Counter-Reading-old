@@ -2,6 +2,9 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="Counter Reading.Counter_Reading.app">
+        <State />
+      </entry>
       <entry key="app">
         <State>
           <targetSelectedWithDropDown>
@@ -17,6 +20,12 @@
           </targetSelectedWithDropDown>
           <timeTargetWasSelectedWithDropDown value="2024-02-13T11:35:30.941745300Z" />
         </State>
+      </entry>
+      <entry key="app.main">
+        <State />
+      </entry>
+      <entry key="app.unitTest">
+        <State />
       </entry>
     </value>
   </component>
