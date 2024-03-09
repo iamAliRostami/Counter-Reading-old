@@ -50,7 +50,6 @@ public class SettingUpdateFragment extends Fragment {
         binding.imageViewUpdate.
                 setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.img_update));
         setOnButtonReceiveClickListener();
-        binding.imageViewUpdate.setOnClickListener(view -> Log.e("here", "imageViewUpdate"));
     }
 
     private void setOnButtonReceiveClickListener() {

@@ -11,10 +11,11 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 141,
-      "versionName": "1.02.11.25",
+      "versionCode": 143,
+      "versionName": "1.02.12.16",
       "outputFile": "app-teh_total.apk"
     }
   ],
-  "elementType": "File"
+  "elementType": "File",
+  "minSdkVersionForDexing": 23
 }

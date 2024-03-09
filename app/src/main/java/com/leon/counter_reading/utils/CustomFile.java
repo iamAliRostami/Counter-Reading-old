@@ -513,7 +513,7 @@ public class CustomFile {
         Intent intent;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             final Uri apkUri = FileProvider.getUriForFile(activity, BuildConfig.APPLICATION_ID +
-                    ".provider", toInstall);
+                    ".FileProvider", toInstall);
             intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
             intent.setData(apkUri);
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
