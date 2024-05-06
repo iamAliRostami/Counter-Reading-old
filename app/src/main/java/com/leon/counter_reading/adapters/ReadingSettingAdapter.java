@@ -93,7 +93,7 @@ public class ReadingSettingAdapter extends BaseAdapter {
     }
 
     private boolean checkLocation(TrackingDto trackingDto) {
-        if (trackingDto.y != null && trackingDto.y.length() > 0 && !trackingDto.y.equals("0"))
+        if (trackingDto.y != null && !trackingDto.y.isEmpty() && !trackingDto.y.equals("0"))
             return true;
         new CustomToast().warning(context.getString(R.string.location_not_found));
         return false;

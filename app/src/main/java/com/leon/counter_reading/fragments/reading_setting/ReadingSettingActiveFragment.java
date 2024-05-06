@@ -49,7 +49,7 @@ public class ReadingSettingActiveFragment extends Fragment {
     }
 
     private void setupListView() {
-        if (trackingDtos.size() > 0) {
+        if (!trackingDtos.isEmpty()) {
             binding.listViewRead.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
             binding.listViewRead.setAdapter(new ReadingSettingAdapter(requireContext(), trackingDtos));
         } else {

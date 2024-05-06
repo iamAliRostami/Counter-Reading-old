@@ -68,7 +68,7 @@ public class GetReportDBData extends AsyncTask<Activity, Integer, Integer> {
             //TODO
             total += myDatabase.onOffLoadDao().getOnOffLoad(trackingDto.id);
         }
-        if (trackingDtos.size() > 0)
+        if (!trackingDtos.isEmpty())
             counterStateDtos.addAll(myDatabase.counterStateDao().getCounterStateDtos(trackingDtos.get(0).zoneId));
         try {
             activities[0].runOnUiThread(() ->

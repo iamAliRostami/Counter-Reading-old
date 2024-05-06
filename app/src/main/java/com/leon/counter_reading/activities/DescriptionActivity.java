@@ -227,10 +227,10 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
         voice.OnOffLoadId = uuid;
         voice.trackNumber = trackNumber;
         String message = binding.editTextMessage.getText().toString();
-        if (voice.address != null && voice.address.length() > 0)
+        if (voice.address != null && !voice.address.isEmpty())
             new PrepareMultimedia(activity, voice, binding.editTextMessage.getText().toString()
                     , uuid, position).execute(activity);
-        else if (message.length() > 0) {
+        else if (!message.isEmpty()) {
             finishDescription(message);
         } else {
             new CustomToast().warning(getString(R.string.insert_message));

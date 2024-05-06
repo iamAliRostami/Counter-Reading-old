@@ -33,7 +33,8 @@ public class DifferentCompanyManager {
                 return proxy;
         }
         return switch (getActiveCompanyName()) {
-            case TEH_TOTAL -> "http://85.133.245.143/";
+//            case TEH_TOTAL -> "http://85.133.245.143/";
+            case TEH_TOTAL -> "http://85.133.148.71";
 //            case ESF -> "https://37.191.92.157/";
                 case ESF -> "http://172.18.12.36";
             case ZONE1 -> "http://217.146.220.33:50012/";
@@ -49,6 +50,7 @@ public class DifferentCompanyManager {
             case TSE -> "http://172.28.5.40/";
             case TW -> "http://217.66.195.75/";
             case KSH -> "http://46.225.241.211:25123/";
+            case INDEPENDENT -> "http://130.185.75.117";
             default -> "http://192.168.100.8:7529";
         };
     }
@@ -69,6 +71,7 @@ public class DifferentCompanyManager {
             case TSE -> "http://172.28.5.40/";
             case TW -> "http://172.28.5.41/";
             case KSH -> "http://46.209.219.36:90";
+            case INDEPENDENT -> "http://130.185.75.117";
             default -> "https://192.168.100.8:44321";
         };
     }
@@ -92,9 +95,7 @@ public class DifferentCompanyManager {
     public static String getAhad2() {
         if (getActiveCompanyName() == ESF) {
             return "واحد تجاری";
-        }/*else if (getActiveCompanyName() == TSE) {
-            return "آحاد غیرمسکونی";
-        }*/
+        }
         return "آحاد فرعی";
     }
 
@@ -161,6 +162,7 @@ public class DifferentCompanyManager {
             case TW -> "آبفا غرب";
             case TEH_TOTAL -> "آبفا استان تهران";
             case KSH -> "آبفا استان کرمانشاه";
+            case INDEPENDENT -> "منطقه خودگردان";
             default -> "آبفا استان اصفهان";
         };
     }

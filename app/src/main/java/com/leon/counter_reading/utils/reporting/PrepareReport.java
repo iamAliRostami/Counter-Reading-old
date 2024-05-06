@@ -56,7 +56,7 @@ public class PrepareReport extends AsyncTask<Activity, Activity, Activity> {
     protected void onPostExecute(Activity activity) {
         super.onPostExecute(activity);
         progress.getDialog().dismiss();
-        if (forbiddenDtos.size() > 0) uploadForbid(activity);
+        if (!forbiddenDtos.isEmpty()) uploadForbid(activity);
         else new CustomToast().error(activity.getString(R.string.data_not_found));
         fragment.setButtonState();
     }

@@ -21,7 +21,7 @@ public class SharedPreferenceModel implements ISharedPreferenceManager {
     public boolean checkIsNotEmpty(String key) {
         if (appPrefs == null) {
             return false;
-        } else if (appPrefs.getString(key, "").length() > 0) {
+        } else if (!appPrefs.getString(key, "").isEmpty()) {
             return true;
         } else return !appPrefs.getString(key, "").isEmpty();
     }

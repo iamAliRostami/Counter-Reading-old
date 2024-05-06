@@ -54,7 +54,7 @@ public class SaveDownloadData {
                 }
             }
         }
-        if (readingData.trackingDtos.size() > 0 &&
+        if (!readingData.trackingDtos.isEmpty() &&
                 myDatabase.trackingDao().getTrackingDtoActivesCount(true, false) == 0) {
             readingData.trackingDtos.get(0).isActive = true;
         }
@@ -107,12 +107,12 @@ public class SaveDownloadData {
         myDatabase.readingConfigDefaultDao().insertAllReadingConfigDefault(
                 readingData.readingConfigDefaultDtos);
 
-        if (readingData.counterReportDtos.size() > 0) {
+        if (!readingData.counterReportDtos.isEmpty()) {
             myDatabase.counterReportDao().insertAllCounterStateReport(readingData.counterReportDtos);
         }
 
         myDatabase.guildDao().deleteGuildCompletely();
-        if (readingData.guilds.size() > 0) {
+        if (!readingData.guilds.isEmpty()) {
             myDatabase.guildDao().insertGuild(readingData.guilds);
         }
 

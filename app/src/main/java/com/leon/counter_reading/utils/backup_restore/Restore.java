@@ -207,8 +207,8 @@ public class Restore extends AsyncTask<Activity, Integer, Void> {
 
     @Override
     protected Void doInBackground(Activity... activities) {
-        if (restoreTrackingDto(activities[0]).size() > 0) {
-            if (restoreOnOffLoadDto(activities[0]).size() > 0) {
+        if (!restoreTrackingDto(activities[0]).isEmpty()) {
+            if (!restoreOnOffLoadDto(activities[0]).isEmpty()) {
                 restoreReadingConfigDefaultDto(activities[0]);
                 restoreCounterStateDto(activities[0]);
                 restoreQotrDictionary(activities[0]);

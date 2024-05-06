@@ -184,21 +184,21 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
             return;
         }
 
-        if (possible.getPossibleMobile() != null && possible.getPossibleMobile().length() > 0) {
+        if (possible.getPossibleMobile() != null && !possible.getPossibleMobile().isEmpty()) {
             if (possible.getPossibleMobile().length() < 11 || !possible.getPossibleMobile().substring(0, 2).contains("09")) {
                 binding.editTextMobile.setError(getString(R.string.error_format));
                 binding.editTextMobile.requestFocus();
                 return;
             }
         }
-        if (possible.getPossibleCounterSerial() != null && possible.getPossibleCounterSerial().length() > 0) {
+        if (possible.getPossibleCounterSerial() != null && !possible.getPossibleCounterSerial().isEmpty()) {
             if (possible.getPossibleCounterSerial().length() < 3) {
                 binding.editTextSerial.setError(getString(R.string.error_format));
                 binding.editTextSerial.requestFocus();
                 return;
             }
         }
-        if (possible.getPossibleEshterak() != null && possible.getPossibleEshterak().length() > 0) {
+        if (possible.getPossibleEshterak() != null && !possible.getPossibleEshterak().isEmpty()) {
             if (possible.getPossibleEshterak().length() < getEshterakMinLength()) {
                 binding.editTextAccount.setError(getString(R.string.error_format));
                 binding.editTextAccount.requestFocus();

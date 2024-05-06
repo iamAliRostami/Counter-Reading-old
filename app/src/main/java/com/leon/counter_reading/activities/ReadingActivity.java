@@ -292,15 +292,15 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
 
     public void setupViewPager(boolean lastRead) {
         runOnUiThread(() -> {
-            binding.textViewNotFound.setVisibility(readingData.onOffLoadDtos.size() > 0 ?
+            binding.textViewNotFound.setVisibility(!readingData.onOffLoadDtos.isEmpty() ?
                     View.GONE : View.VISIBLE);
-            binding.linearLayoutAbove.setVisibility(readingData.onOffLoadDtos.size() > 0 ?
+            binding.linearLayoutAbove.setVisibility(!readingData.onOffLoadDtos.isEmpty() ?
                     View.VISIBLE : View.GONE);
-            binding.viewPager.setVisibility(readingData.onOffLoadDtos.size() > 0 ?
+            binding.viewPager.setVisibility(!readingData.onOffLoadDtos.isEmpty() ?
                     View.VISIBLE : View.GONE);
             binding.viewPager.setPageTransformer(new DepthPageTransformer2());
         });
-        if (readingData.onOffLoadDtos.size() > 0) {
+        if (!readingData.onOffLoadDtos.isEmpty()) {
             setOnPageChangeListener();
             setupViewPagerAdapter(lastRead);
         }
@@ -646,7 +646,7 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
             }
         } else if (id == R.id.menu_report_forbid) {
             ShowDialogOnce(this, REPORT_FORBID.getValue(),
-                    ReportForbidFragment.newInstance(readingData.onOffLoadDtos.size() > 0 ?
+                    ReportForbidFragment.newInstance(!readingData.onOffLoadDtos.isEmpty() ?
                             readingData.onOffLoadDtos.get(currentItem).zoneId : 0));
         } else if (id == R.id.menu_description) {
             if (readingData.onOffLoadDtos.isEmpty()) {

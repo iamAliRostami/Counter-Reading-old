@@ -416,7 +416,7 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
         binding.buttonSubmit.setEnabled(false);
         ringNotification();
         if (view.getId() == R.id.button_keyboard_backspace) {
-            if (readingVM.getCounterNumber() != null && readingVM.getCounterNumber().length() > 0)
+            if (readingVM.getCounterNumber() != null && !readingVM.getCounterNumber().isEmpty())
                 readingVM.setCounterNumber(readingVM.getCounterNumber().substring(0, readingVM.getCounterNumber().length() - 1));
         } else if (readingVM.getCounterNumber() != null && readingVM.getCounterNumber().length() < 9) {
             readingVM.setCounterNumber((readingVM.getCounterNumber() != null ? readingVM.getCounterNumber() : "")

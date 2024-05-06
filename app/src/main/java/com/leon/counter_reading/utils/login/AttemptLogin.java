@@ -69,8 +69,8 @@ class LoginCompleted implements ICallback<LoginViewModel> {
     public void execute(Response<LoginViewModel> response) {
         if (login.setLoginFeedback(response.body()) || login.getAccessToken() == null ||
                 login.getRefreshToken() == null ||
-                login.getAccessToken().length() < 1 ||
-                login.getRefreshToken().length() < 1) {
+                login.getAccessToken().isEmpty() ||
+                login.getRefreshToken().isEmpty()) {
             new CustomToast().warning(activity.getString(R.string.error_is_not_match), Toast.LENGTH_LONG);
         } else {
             final List<String> cookieList = response.headers().values("Set-Cookie");

@@ -57,7 +57,7 @@ public class PrepareOffload extends AsyncTask<Activity, Activity, Activity> {
     protected void onPostExecute(Activity activity) {
         super.onPostExecute(activity);
         progress.getDialog().dismiss();
-        if (offLoadData.offLoadReports.size() > 0) uploadOffload(activity);
+        if (!offLoadData.offLoadReports.isEmpty()) uploadOffload(activity);
         else new CustomToast().error(activity.getString(R.string.data_not_found));
     }
 

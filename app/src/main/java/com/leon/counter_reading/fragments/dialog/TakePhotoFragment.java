@@ -166,7 +166,7 @@ public class TakePhotoFragment extends DialogFragment implements AdapterView.OnI
     }
 
     private boolean checkImageForce() {
-        if (images.size() == 0) {
+        if (images.isEmpty()) {
             if (counterHasImage)
                 new CustomToast().error("در این وضعیت کنتور الصاق عکس الزامی است", Toast.LENGTH_LONG);
             if (reportHasImage)

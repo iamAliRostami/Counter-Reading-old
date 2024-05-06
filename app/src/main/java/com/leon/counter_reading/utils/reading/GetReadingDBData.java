@@ -106,10 +106,10 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
 
         }
 
-        if (readingData.onOffLoadDtos != null && readingData.onOffLoadDtos.size() > 0) {
+        if (readingData.onOffLoadDtos != null && !readingData.onOffLoadDtos.isEmpty()) {
             readingData.counterStateDtos.addAll(myDatabase.counterStateDao()
                     .getCounterStateDtos(readingData.onOffLoadDtos.get(0).zoneId));
-            if (readingData.counterStateDtos.size() > 0)
+            if (!readingData.counterStateDtos.isEmpty())
                 readingDataTemp.counterStateDtos.addAll(readingData.counterStateDtos);
             else {
                 activities[0].runOnUiThread(() -> new CustomToast().error(activities[0].getString(R.string.error_on_download_counter_states), Toast.LENGTH_LONG));
@@ -117,7 +117,7 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
                 return null;
             }
             readingData.karbariDtos.addAll(myDatabase.karbariDao().getAllKarbariDto());
-            if (readingData.karbariDtos.size() > 0)
+            if (!readingData.karbariDtos.isEmpty())
                 readingDataTemp.karbariDtos.addAll(myDatabase.karbariDao().getAllKarbariDto());
             else {
                 activities[0].runOnUiThread(() -> new CustomToast().error(activities[0].getString(R.string.error_on_download_karbari), Toast.LENGTH_LONG));
@@ -126,14 +126,14 @@ public class GetReadingDBData extends AsyncTask<Activity, Integer, Integer> {
             }
 
             readingData.guilds.addAll(myDatabase.guildDao().getAllGuilds());
-            if (readingData.guilds.size() > 0)
+            if (!readingData.guilds.isEmpty())
                 readingDataTemp.guilds.addAll(myDatabase.guildDao().getAllGuilds());
             else {
                 activities[0].runOnUiThread(() -> new CustomToast().error(activities[0].getString(R.string.error_on_download_guilds), Toast.LENGTH_LONG));
 //                return null;
             }
             readingData.qotrDictionary.addAll(myDatabase.qotrDictionaryDao().getAllQotrDictionaries());
-            if (readingData.qotrDictionary.size() > 0)
+            if (!readingData.qotrDictionary.isEmpty())
                 readingDataTemp.qotrDictionary.addAll(myDatabase.qotrDictionaryDao().getAllQotrDictionaries());
             else {
                 activities[0].runOnUiThread(() -> new CustomToast().error(activities[0].getString(R.string.error_on_download_qotr), Toast.LENGTH_LONG));

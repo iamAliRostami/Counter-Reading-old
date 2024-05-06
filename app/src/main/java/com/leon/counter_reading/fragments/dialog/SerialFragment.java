@@ -68,7 +68,7 @@ public class SerialFragment extends DialogFragment implements View.OnClickListen
             dismiss();
         else if (id == R.id.button_submit) {
             final String number = binding.editTextSerial.getText().toString();
-            if (number.length() > 0 && number.length() < 3) {
+            if (!number.isEmpty() && number.length() < 3) {
                 binding.editTextSerial.setError(getString(R.string.error_format));
                 binding.editTextSerial.requestFocus();
             } else {

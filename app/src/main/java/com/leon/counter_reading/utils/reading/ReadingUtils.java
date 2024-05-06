@@ -42,6 +42,9 @@ public class ReadingUtils {
                     }
                 }
 
+                if (readingData.onOffLoadDtos.get(position).hazf > 0) {
+                    return 12;
+                }
                 for (int i = 0; i < readingData.karbariDtos.size(); i++) {
                     if (readingData.karbariDtos.get(i).isSaxt &&
                             readingData.karbariDtos.get(i).moshtarakinId ==
@@ -53,9 +56,6 @@ public class ReadingUtils {
                     return 13;
                 }
 
-                if (readingData.onOffLoadDtos.get(position).hazf > 0) {
-                    return 12;
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

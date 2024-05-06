@@ -66,7 +66,7 @@ public class TaviziFragment extends DialogFragment {
         binding.buttonClose.setOnClickListener(v -> dismiss());
         binding.buttonSubmit.setOnClickListener(v -> {
             String number = binding.editTextSerial.getText().toString();
-            if (number.length() > 0 && number.length() < 3) {
+            if (!number.isEmpty() && number.length() < 3) {
                 binding.editTextSerial.setError(getString(R.string.error_format));
                 binding.editTextSerial.requestFocus();
             } else {

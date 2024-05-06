@@ -221,7 +221,7 @@ public class OfflineUtils {
                 directory = listEnvironmentVariableStoreSDCardRootDirectory.get(i);
 
             directory = canCreateFile(directory);
-            if (directory != null && directory.length() != 0) {
+            if (directory != null && !directory.isEmpty()) {
                 if (i == size - 1) {
                     if (directory.contains(FLAG)) {
                         return directory;

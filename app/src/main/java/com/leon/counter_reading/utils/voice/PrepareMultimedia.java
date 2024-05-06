@@ -80,8 +80,8 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
 
     private void saveVoice(boolean isSent) {
         voice.isSent = isSent;
-        if (getApplicationComponent().MyDatabase()
-                .imageDao().getImagesById(voice.id).size() > 0) {
+        if (!getApplicationComponent().MyDatabase()
+                .imageDao().getImagesById(voice.id).isEmpty()) {
             getApplicationComponent().MyDatabase().voiceDao().updateVoice(voice);
         } else {
             getApplicationComponent().MyDatabase().voiceDao().insertVoice(voice);

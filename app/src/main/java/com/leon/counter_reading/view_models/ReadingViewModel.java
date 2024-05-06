@@ -90,7 +90,7 @@ public class ReadingViewModel extends BaseObservable {
     private void keyboardEvent(View view) {
         ringNotification();
         if (view.getId() == R.id.button_keyboard_backspace) {
-            if (getCounterNumber() != null && getCounterNumber().length() > 0)
+            if (getCounterNumber() != null && !getCounterNumber().isEmpty())
                 setCounterNumber(getCounterNumber().substring(0, getCounterNumber().length() - 1));
         } else if (getCounterNumber() != null && getCounterNumber().length() < 9) {
             setCounterNumber((getCounterNumber() != null ? getCounterNumber() : "")

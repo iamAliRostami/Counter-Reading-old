@@ -65,7 +65,7 @@ public class Search extends AsyncTask<Activity, Void, Activity> {
                     readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(j));
             }
         }
-        if (readingData.onOffLoadDtos.size() > 0)
+        if (!readingData.onOffLoadDtos.isEmpty())
             ((ReadingActivity) (activity)).setupViewPager(false);
         else {
             activity.runOnUiThread(() ->
@@ -83,7 +83,7 @@ public class Search extends AsyncTask<Activity, Void, Activity> {
                     readingDataTemp.onOffLoadDtos.get(i).sureName.toLowerCase().contains(key))
                 readingData.onOffLoadDtos.add(readingDataTemp.onOffLoadDtos.get(i));
         }
-        if (readingData.onOffLoadDtos.size() > 0)
+        if (!readingData.onOffLoadDtos.isEmpty())
             ((ReadingActivity) (activity)).setupViewPager(false);
         else {
             activity.runOnUiThread(() ->

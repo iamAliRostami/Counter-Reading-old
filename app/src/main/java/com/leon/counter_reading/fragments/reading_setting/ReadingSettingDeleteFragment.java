@@ -67,7 +67,7 @@ public class ReadingSettingDeleteFragment extends Fragment {
 
     void initializeSpinner() {
         items = new String[trackingDtos.size() + 1];
-        if (trackingDtos.size() > 0) {
+        if (!trackingDtos.isEmpty()) {
             for (int i = 0; i < trackingDtos.size(); i++) {
                 items[i + 1] = String.valueOf(trackingDtos.get(i).trackNumber);
             }

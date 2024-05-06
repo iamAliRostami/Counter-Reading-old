@@ -123,6 +123,7 @@ public final class NetworkHelperModel {
         String baseUrl = b ?
                 getBaseUrl() :
                 getLocalBaseUrl();
+//        baseUrl = "http://85.133.148.71:8080";
         if (s.length == 0)
             return new Retrofit.Builder()
                     .baseUrl(baseUrl)

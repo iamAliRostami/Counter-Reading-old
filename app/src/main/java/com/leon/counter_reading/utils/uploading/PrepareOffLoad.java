@@ -72,7 +72,7 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
         super.onPostExecute(activity);
         progress.getDialog().dismiss();
         uploadOffLoad(activity);
-        if (forbiddenDtos.size() > 0) uploadForbid(activity);
+        if (!forbiddenDtos.isEmpty()) uploadForbid(activity);
     }
 
     private void uploadForbid(Activity activity) {
@@ -97,13 +97,13 @@ public class PrepareOffLoad extends AsyncTask<Activity, Activity, Activity> {
 
     @SuppressLint("SimpleDateFormat")
     private void uploadOffLoad(Activity activity) {
-        if (onOffLoadDtos.size() == 0) {
+        if (onOffLoadDtos.isEmpty()) {
             thankYou(activity);
             onOffLoadDtos.clear();
             onOffLoadDtos.add(getApplicationComponent().MyDatabase().onOffLoadDao()
                     .getOnOffLoadReadByTrackingAndOffLoad(id));
         }
-        if (onOffLoadDtos.size() == 0 || onOffLoadDtos.get(0) == null) {
+        if (onOffLoadDtos.isEmpty() || onOffLoadDtos.get(0) == null) {
             getApplicationComponent().MyDatabase().trackingDao().updateTrackingDtoByArchive(id,
                     true, false, getDate(activity));
             return;

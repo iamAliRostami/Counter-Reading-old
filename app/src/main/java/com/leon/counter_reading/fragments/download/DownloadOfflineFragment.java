@@ -135,7 +135,7 @@ public class DownloadOfflineFragment extends Fragment implements View.OnClickLis
             });
 
     public void updateUI() {
-        if (detectedDevices.size() > 0) {
+        if (!detectedDevices.isEmpty()) {
             binding.imageViewDownload.setVisibility(View.GONE);
             binding.containerBody.setVisibility(View.VISIBLE);
             final Fragment fragment = HomeFragment.newInstance(this);

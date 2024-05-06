@@ -53,7 +53,7 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
     }
 
     private Call<ForbiddenDtoResponses> getCall(IAbfaService abfaService) {
-        if (zoneId != 0 && forbiddenDto.File.size() > 0) {
+        if (zoneId != 0 && !forbiddenDto.File.isEmpty()) {
             return abfaService.singleForbidden(forbiddenDto.File,
                     forbiddenDto.forbiddenDtoRequest.zoneId,
                     forbiddenDto.forbiddenDtoRequest.description,
@@ -65,7 +65,7 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
                     forbiddenDto.forbiddenDtoRequest.x,
                     forbiddenDto.forbiddenDtoRequest.y,
                     forbiddenDto.forbiddenDtoRequest.gisAccuracy);
-        } else if (zoneId == 0 && forbiddenDto.File.size() > 0) {
+        } else if (zoneId == 0 && !forbiddenDto.File.isEmpty()) {
             return abfaService.singleForbidden(forbiddenDto.File,
                     forbiddenDto.forbiddenDtoRequest.description,
                     forbiddenDto.forbiddenDtoRequest.preEshterak,
@@ -106,7 +106,7 @@ public class PrepareForbid extends AsyncTask<Activity, Activity, Activity> {
     }
 
     private void saveForbidden(Activity activity) {
-        if (forbiddenDto.bitmaps.size() > 0)
+        if (!forbiddenDto.bitmaps.isEmpty())
             for (Bitmap bitmap : forbiddenDto.bitmaps) {
                 final String address = saveTempBitmap(bitmap, activity);
                 if (!address.equals(activity.getString(R.string.error_external_storage_is_not_writable))) {

@@ -8,7 +8,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.leon.counter_reading.tables.OnOffLoadDto;
 

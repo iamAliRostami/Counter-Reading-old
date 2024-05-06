@@ -2,12 +2,12 @@ package com.leon.counter_reading.fragments;
 
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PERSONAL_CODE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PROXY;
+import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 import static com.leon.counter_reading.helpers.MyApplication.getAndroidVersion;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.helpers.MyApplication.getDigits;
 import static com.leon.counter_reading.helpers.MyApplication.getSerial;
 import static com.leon.counter_reading.helpers.MyApplication.validate;
-import static com.leon.counter_reading.helpers.DifferentCompanyManager.getCompanyName;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -63,9 +63,9 @@ public class BasicFragment extends Fragment {
 
         binding.buttonSubmitProxy.setOnClickListener(view -> {
             final String ip = binding.editTextProxy.getText().toString();
-            if (ip.length() == 0 || validate(ip)) {
+            if (ip.isEmpty() || validate(ip)) {
                 getApplicationComponent().SharedPreferenceModel().putData(PROXY.getValue(),
-                        ip.endsWith("/") ? ip : ip.concat("/"));
+                        (ip.isEmpty() || ip.endsWith("/")) ? ip : ip.concat("/"));
                 new CustomToast().success("پروکسی با موفقیت تنظیم شد.", Toast.LENGTH_LONG);
             } else {
                 binding.editTextProxy.requestFocus();

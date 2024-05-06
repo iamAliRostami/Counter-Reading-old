@@ -173,7 +173,7 @@ public class ReportForbidFragment extends DialogFragment implements TextWatcher,
     private void deleteImage() {
         forbiddenDto.File.remove(forbiddenDto.File.size() - 1);
         forbiddenDto.bitmaps.remove(forbiddenDto.bitmaps.size() - 1);
-        if (forbiddenDto.File.size() > 0) {
+        if (!forbiddenDto.File.isEmpty()) {
             binding.imageViewTaken.setImageBitmap(forbiddenDto.bitmaps.get(forbiddenDto.bitmaps.size() - 1));
         } else {
             binding.relativeLayoutImage.setVisibility(View.GONE);

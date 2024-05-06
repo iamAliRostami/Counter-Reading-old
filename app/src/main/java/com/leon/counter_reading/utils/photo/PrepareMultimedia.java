@@ -74,7 +74,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
     }
 
     private void uploadImage(Activity activity) {
-        if (imageGrouped.File.size() > 0 && images.size() > 0) {
+        if (!imageGrouped.File.isEmpty() && !images.isEmpty()) {
             imageGrouped.OnOffLoadId = RequestBody.create(images.get(0).OnOffLoadId,
                     MediaType.parse("text/plain"));
             imageGrouped.Description = RequestBody.create(images.get(0).Description,
@@ -109,7 +109,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Integer, Activity> {
         for (int i = 0; i < images.size(); i++) {
             if (!images.get(i).isSent) {
                 images.get(i).isSent = isSent;
-                if (getApplicationComponent().MyDatabase().imageDao().getImagesById(images.get(i).id).size() > 0)
+                if (!getApplicationComponent().MyDatabase().imageDao().getImagesById(images.get(i).id).isEmpty())
                     getApplicationComponent().MyDatabase().imageDao().updateImage(images.get(i));
                 else {
                     getApplicationComponent().MyDatabase().imageDao().insertImage(images.get(i));

@@ -29,7 +29,7 @@ public class SetProxy {
                 .setInitialInput(getApplicationComponent().SharedPreferenceModel().getStringData(PROXY.getValue()))
                 .setInputFilter(R.string.error_format, text -> {
                     final String ip = lovelyTextInputDialog.getEditTextNumber().getText().toString();
-                    return !(ip.length() == 0 || validate(ip));
+                    return !(ip.isEmpty() || validate(ip));
                 })
                 .setConfirmButton(R.string.confirm, text -> {
                     InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);

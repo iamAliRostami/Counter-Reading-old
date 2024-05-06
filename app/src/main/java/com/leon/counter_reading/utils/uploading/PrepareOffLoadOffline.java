@@ -55,7 +55,7 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
         forbiddenDtos.clear();
         forbiddenDtos.addAll(getApplicationComponent().MyDatabase().forbiddenDao()
                 .getAllForbiddenDto(false));
-        if (forbiddenDtos.size() > 0) uploadForbid(activities[0]);
+        if (!forbiddenDtos.isEmpty()) uploadForbid(activities[0]);
         onOffLoadDtos.clear();
         onOffLoadDtos.addAll(getApplicationComponent().MyDatabase().onOffLoadDao()
                 .getOnOffLoadReadByTrackingAndOffLoad(id, INSERTED.getValue()));
@@ -112,7 +112,7 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
     private void uploadImages(Activity activity) {
         final ArrayList<Image> images = new ArrayList<>(getApplicationComponent().MyDatabase().
                 imageDao().getImagesByBySentAndTrack(trackNumber, false));
-        if (images.size() > 0) {
+        if (!images.isEmpty()) {
             final String onOffLoadDtoString = new Gson().toJson(images);
             writeOnSdCard(onOffLoadDtoString, "images", trackNumber);
             if (copyImages(images, trackNumber, activity)) {
@@ -127,7 +127,7 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
     private void uploadVoices(Activity activity) {
         final ArrayList<Voice> voices = new ArrayList<>(getApplicationComponent().MyDatabase().voiceDao().
                 getVoicesByBySentAndTrackNumber(trackNumber, false));
-        if (voices.size() > 0) {
+        if (!voices.isEmpty()) {
             final Gson gson = new Gson();
             final String onOffLoadDtoString = gson.toJson(voices);
             writeOnSdCard(onOffLoadDtoString, "voices", trackNumber);
@@ -141,7 +141,7 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
     }
 
     private void uploadForbid(Activity activity) {
-        if (forbiddenDtos.size() > 0) {
+        if (!forbiddenDtos.isEmpty()) {
             final Gson gson = new Gson();
             final String forbiddenString = gson.toJson(forbiddenDtos);
             writeOnSdCard(forbiddenString, "forbiddenDtos", trackNumber);
@@ -159,13 +159,13 @@ public class PrepareOffLoadOffline extends AsyncTask<Activity, Activity, Activit
 
     @SuppressLint("SimpleDateFormat")
     private boolean uploadOffLoad(Activity activity) {
-        if (onOffLoadDtos.size() == 0) {
+        if (onOffLoadDtos.isEmpty()) {
             thankYou(activity);
             onOffLoadDtos.clear();
             onOffLoadDtos.add(getApplicationComponent().MyDatabase().
                     onOffLoadDao().getOnOffLoadReadByTrackingAndOffLoad(id));
         }
-        if (onOffLoadDtos.size() == 0 || onOffLoadDtos.get(0) == null) {
+        if (onOffLoadDtos.isEmpty() || onOffLoadDtos.get(0) == null) {
             getApplicationComponent().MyDatabase().trackingDao().updateTrackingDtoByArchive(id,
                     true, false, getDate(activity));
             return false;

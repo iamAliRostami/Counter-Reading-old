@@ -32,7 +32,7 @@ public enum SharedReferenceKeys {
     PERSONAL_CODE("personal_number"),
     AVATAR("avatar"),
     LAST_BACK_UP("last_back_up"),
-    PROXY("proxy"),
+    PROXY("proxy_1"),
     RTL_PAGING("paging_rtl"),
     KEYBOARD_TYPE("keyboard_type"),
     IMAGE_QUALITY("image_quality"),

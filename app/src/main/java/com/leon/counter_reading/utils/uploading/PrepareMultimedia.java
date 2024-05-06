@@ -114,7 +114,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
     }
 
     private void uploadVoice(Activity activity) {
-        if (voice.size() > 0) {
+        if (!voice.isEmpty()) {
             final Retrofit retrofit = getApplicationComponent().Retrofit();
             final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
             final Call<MultimediaUploadResponse> call = iAbfaService.voiceUploadMultiple(
@@ -128,7 +128,7 @@ public class PrepareMultimedia extends AsyncTask<Activity, Activity, Activity> {
     }
 
     private void uploadImages(Activity activity) {
-        if (images.size() > 0) {
+        if (!images.isEmpty()) {
             final Retrofit retrofit = getApplicationComponent().Retrofit();
             final IAbfaService iAbfaService = retrofit.create(IAbfaService.class);
             final Call<MultimediaUploadResponse> call = iAbfaService.fileUploadMultiple(imageMultiples.File,

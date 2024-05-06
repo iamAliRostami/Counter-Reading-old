@@ -15,8 +15,8 @@ android {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
         targetSdkVersion 34
-        versionCode 143
-        versionName "1.02.12.16"
+        versionCode 146
+        versionName "1.03.02.09"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config
@@ -125,6 +125,14 @@ android {
             buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
                     "com.leon.counter_reading.enums.CompanyNames.TEH_TOTAL"
         }
+        independent {
+            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.config
+            applicationIdSuffix ".independent"
+            buildConfigField 'com.leon.counter_reading.enums.CompanyNames', 'COMPANY_NAME',
+                    "com.leon.counter_reading.enums.CompanyNames.INDEPENDENT"
+        }
     }
     compileOptions {
         coreLibraryDesugaringEnabled true
@@ -151,12 +159,12 @@ android {
 dependencies {
     def arch_version = '1.1.1'
     def dagger_version = '2.51.1'
-    def camera_version = '1.3.2'
+    def camera_version = '1.3.3'
     def retrofit2_version = '2.11.0'
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
-    implementation "androidx.activity:activity:1.8.2"
+    implementation "androidx.activity:activity:1.9.0"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -165,7 +173,7 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:$camera_version"
 
     testImplementation 'junit:junit:4.13.2'
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'com.google.android.material:material:1.12.0'
     implementation 'com.google.android.gms:play-services-location:21.2.0'
     implementation 'com.google.code.gson:gson:2.10.1'
 

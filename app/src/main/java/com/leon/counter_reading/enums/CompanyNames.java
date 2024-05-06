@@ -15,7 +15,8 @@ public enum CompanyNames {
     ESF(11),
     DEBUG(12),
     ESF_MAP(13),
-    KSH(14);
+    KSH(14),
+    INDEPENDENT(15);
     private final int value;
 
     CompanyNames(final int newValue) {
