@@ -92,10 +92,10 @@ class LoginCompleted implements ICallback<LoginViewModel> {
         sharedPreferenceManager.putData(TOKEN.getValue(), login.getAccessToken());
         sharedPreferenceManager.putData(REFRESH_TOKEN.getValue(), login.getRefreshToken());
         sharedPreferenceManager.putData(XSRF.getValue(), login.getXSRFToken());
-        sharedPreferenceManager.putData(USERNAME_TEMP.getValue(), login.getUsername());
+        sharedPreferenceManager.putData(USERNAME_TEMP.getValue(), login.getUsername().toLowerCase());
         sharedPreferenceManager.putData(PASSWORD_TEMP.getValue(), Crypto.encrypt(login.getPassword()));
         if (this.login.isSaved()) {
-            sharedPreferenceManager.putData(USERNAME.getValue(), login.getUsername());
+            sharedPreferenceManager.putData(USERNAME.getValue(), login.getUsername().toLowerCase());
             sharedPreferenceManager.putData(PASSWORD.getValue(), Crypto.encrypt(login.getPassword()));
         }
     }

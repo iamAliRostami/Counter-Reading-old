@@ -2,13 +2,13 @@ package com.leon.counter_reading.fragments.dialog;
 
 import static com.leon.counter_reading.enums.BundleEnum.BILL_ID;
 import static com.leon.counter_reading.enums.BundleEnum.COMPLETELY_DELETE;
+import static com.leon.counter_reading.enums.NotificationType.SAVE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.PASSWORD_TEMP;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.USERNAME_TEMP;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 import static com.leon.counter_reading.utils.CalendarTool.getDate;
 import static com.leon.counter_reading.utils.MakeNotification.makeRing;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,19 +17,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.EditText;
 
 import androidx.fragment.app.DialogFragment;
 
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentDeleteBinding;
-import com.leon.counter_reading.enums.NotificationType;
 import com.leon.counter_reading.utils.Crypto;
 import com.leon.counter_reading.utils.CustomToast;
 
 import org.jetbrains.annotations.NotNull;
 
-public class DeleteFragment extends DialogFragment {
-    private String id;
+public class DeleteFragment extends DialogFragment implements View.OnClickListener {
+    private String trackId;
     private boolean completelyDelete;
     private FragmentDeleteBinding binding;
     private Activity activity;
@@ -50,7 +50,7 @@ public class DeleteFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            id = getArguments().getString(BILL_ID.getValue());
+            trackId = getArguments().getString(BILL_ID.getValue());
             completelyDelete = getArguments().getBoolean(COMPLETELY_DELETE.getValue());
             getArguments().clear();
         }
@@ -66,59 +66,63 @@ public class DeleteFragment extends DialogFragment {
     }
 
     private void initialize() {
-        makeRing(activity, NotificationType.SAVE);
-        setOnImageViewPasswordClickListener();
-        setOnButtonsClickListener();
+        makeRing(activity, SAVE);
+        setOnClickListener();
     }
 
-    @SuppressLint("SimpleDateFormat")
-    private void setOnButtonsClickListener() {
-        binding.buttonSubmit.setOnClickListener(v -> {
-            if (binding.editTextUsername.getText().toString().isEmpty()) {
-                binding.editTextUsername.setError(getString(R.string.error_empty));
-                binding.editTextUsername.requestFocus();
-            } else if (binding.editTextPassword.getText().toString().isEmpty()) {
-                binding.editTextPassword.setError(getString(R.string.error_empty));
-                binding.editTextPassword.requestFocus();
-            } else {
-                final String password = binding.editTextPassword.getText().toString();
-                final String username = binding.editTextUsername.getText().toString();
+    private void setOnClickListener() {
+        binding.buttonSubmit.setOnClickListener(this);
+        binding.buttonClose.setOnClickListener(this);
+        binding.imageViewPassword.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.image_view_password) {
+            if (binding.editTextPassword.getInputType() != InputType.TYPE_CLASS_TEXT) {
+                binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+            } else
+                binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        } else if (id == R.id.button_close) {
+            dismiss();
+        } else if (id == R.id.button_submit) {
+            if (checkInput(binding.editTextUsername) && checkInput(binding.editTextPassword)) {
+                String password = Crypto.encrypt(binding.editTextPassword.getText().toString());
+                String username = binding.editTextUsername.getText().toString().toLowerCase();
                 if (getApplicationComponent().SharedPreferenceModel()
-                        .getStringData(USERNAME_TEMP.getValue()).contains(username) &&
-                        Crypto.decrypt(getApplicationComponent().SharedPreferenceModel()
-                                .getStringData(PASSWORD_TEMP.getValue())).contains(password)
-                ) {
-                    if (id.isEmpty()) {
+                        .getStringData(USERNAME_TEMP.getValue()).equals(username) &&
+                        getApplicationComponent().SharedPreferenceModel()
+                                .getStringData(PASSWORD_TEMP.getValue()).equals(password)) {
+                    if (trackId.isEmpty()) {
                         if (completelyDelete)
                             getApplicationComponent().MyDatabase().trackingDao().deleteTrackingDtosCompletely();
                         else
                             getApplicationComponent().MyDatabase().trackingDao()
                                     .updateTrackingDtoByArchive(true, false, true, getDate(requireActivity()));
                     } else if (completelyDelete)
-                        getApplicationComponent().MyDatabase().trackingDao().deleteTrackingDtosCompletely(id);
+                        getApplicationComponent().MyDatabase().trackingDao().deleteTrackingDtosCompletely(trackId);
                     else
                         getApplicationComponent().MyDatabase().trackingDao()
-                                .updateTrackingDtoByArchive(id, true, false, true, getDate(requireActivity()));
-                    final Intent intent = activity.getIntent();
+                                .updateTrackingDtoByArchive(trackId, true, false, true, getDate(requireActivity()));
+                    Intent intent = activity.getIntent();
                     activity.finish();
                     startActivity(intent);
                 } else {
                     new CustomToast().warning(getString(R.string.error_is_not_match));
                 }
             }
-        });
-        binding.buttonClose.setOnClickListener(v -> dismiss());
+        }
     }
 
-    private void setOnImageViewPasswordClickListener() {
-        binding.imageViewPassword.setOnClickListener(
-                v -> binding.imageViewPassword.setOnClickListener(view -> {
-                    if (binding.editTextPassword.getInputType() != InputType.TYPE_CLASS_TEXT) {
-                        binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT);
-                    } else
-                        binding.editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT |
-                                InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                }));
+    private boolean checkInput(EditText editText) {
+        if (editText.getText().toString().isEmpty()) {
+            editText.setError(getString(R.string.error_empty));
+            editText.requestFocus();
+            return false;
+        }
+        return true;
     }
 
     @Override

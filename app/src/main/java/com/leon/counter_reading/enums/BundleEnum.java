@@ -18,7 +18,7 @@ public enum BundleEnum {
     NAME("name"),
     CONTINUE("continue"),
     UNREAD("unread"),
-   BEFORE_READ("before_read"),
+    BEFORE_READ("before_read"),
     READ("read"),
     TOTAL("total"),
     ZERO("zero"),
