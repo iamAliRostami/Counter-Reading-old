@@ -23,4 +23,7 @@ public interface CounterStateDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAllCounterStateDto(List<CounterStateDto> counterStateDtos);
+
+    @Query("DELETE FROM CounterStateDto WHERE zoneId = :zoneId")
+    void deleteAllCounterState(int zoneId);
 }

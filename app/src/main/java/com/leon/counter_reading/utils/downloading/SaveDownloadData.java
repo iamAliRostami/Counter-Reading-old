@@ -36,9 +36,11 @@ public class SaveDownloadData {
         for (int i = 0; i < readingData.trackingDtos.size(); i++) {
             if (myDatabase.trackingDao().getTrackingDtoArchiveCountByTrackNumber(readingData
                     .trackingDtos.get(i).trackNumber, true) > 0) {
-//                if (!downloadArchive(activity, readingData, myDatabase, i)) return;
                 downloadArchive(activity, readingData, myDatabase, i);
                 myDatabase.counterReportDao().deleteAllCounterReport(readingData.trackingDtos.get(i).zoneId);
+                //TODO
+                myDatabase.counterStateDao().deleteAllCounterState(readingData.trackingDtos.get(i).zoneId);
+                //TODO
             } else if (myDatabase.trackingDao().getTrackingDtoActivesCountByTracking(readingData
                     .trackingDtos.get(i).trackNumber) > 0) {
                 final String message = String.format(activity.getString(R.string.download_message_error),
@@ -52,6 +54,13 @@ public class SaveDownloadData {
                     String message = activity.getString(R.string.error_on_download_counter_report);
                     activity.runOnUiThread(() -> new CustomToast().warning(message));
                 }
+                //TODO
+                if (!readingData.counterStateDtos.isEmpty()) {
+                    myDatabase.counterStateDao().deleteAllCounterState(readingData.trackingDtos.get(i).zoneId);
+                } else {
+                    String message = activity.getString(R.string.error_on_download_counter_states);
+                    activity.runOnUiThread(() -> new CustomToast().warning(message));
+                }//TODO
             }
         }
         if (!readingData.trackingDtos.isEmpty() &&
@@ -61,19 +70,20 @@ public class SaveDownloadData {
         myDatabase.trackingDao().insertAllTrackingDtos(readingData.trackingDtos);
         myDatabase.onOffLoadDao().insertAllOnOffLoad(readingData.onOffLoadDtos);
 
-        final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>(myDatabase.counterStateDao()
-                .getCounterStateDtos());
-        for (int j = 0; j < counterStateDtos.size(); j++) {
-            int i = 0;
-            boolean found = false;
-            while (readingData.counterStateDtos.size() > i && !found) {
-                if (counterStateDtos.get(j).id == readingData.counterStateDtos.get(i).id) {
-                    readingData.counterStateDtos.remove(i);
-                    found = true;
-                }
-                i++;
-            }
-        }
+//TODO
+//        final ArrayList<CounterStateDto> counterStateDtos = new ArrayList<>(myDatabase.counterStateDao()
+//                .getCounterStateDtos());
+//        for (int j = 0; j < counterStateDtos.size(); j++) {
+//            int i = 0;
+//            boolean found = false;
+//            while (readingData.counterStateDtos.size() > i && !found) {
+//                if (counterStateDtos.get(j).id == readingData.counterStateDtos.get(i).id) {
+//                    readingData.counterStateDtos.remove(i);
+//                    found = true;
+//                }
+//                i++;
+//            }
+//        }TODO
         myDatabase.counterStateDao().insertAllCounterStateDto(readingData.counterStateDtos);
 
         myDatabase.karbariDao().deleteKarbariDto();
