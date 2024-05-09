@@ -24,7 +24,9 @@ public class Constants {
                     + "[0-9]{2}|[1-9][0-9]|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}"
                     + "|[1-9][0-9]|[0-9]))");
     public static final String FONT_NAME = "font/font_1.ttf";
-    public final static String DBName = "MyDatabase_42";
+    public final static int DBVersion = 42;
+    public final static String DBPrefix = "MyDatabase_";
+    public final static String DBName = DBPrefix.concat(String.valueOf(DBVersion));
     public final static String OnOffLoadDtoTableName = "OnOffLoadDto";
     public static final int TOAST_TEXT_SIZE = 20;
     public static final int GPS_CODE = 1231;

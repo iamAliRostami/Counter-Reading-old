@@ -1,12 +1,15 @@
 package com.leon.counter_reading.utils.backup_restore;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.leon.counter_reading.enums.SharedReferenceKeys.LAST_BACK_UP;
+import static com.leon.counter_reading.helpers.Constants.DBPrefix;
+import static com.leon.counter_reading.helpers.Constants.DBVersion;
 import static com.leon.counter_reading.helpers.Constants.OnOffLoadDtoTableName;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.widget.Toast;
@@ -15,7 +18,6 @@ import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.di.view_model.CustomProgressModel;
 import com.leon.counter_reading.utils.CustomToast;
-import com.leon.counter_reading.utils.MyDatabase;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,9 +25,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class BackUp extends AsyncTask<Activity, Integer, Void> {
     private final CustomProgressModel progress;
+    private String tableName, child;
+    private SQLiteDatabase tempDB;
 
     public BackUp(Activity activity) {
         super();
@@ -40,37 +45,39 @@ public class BackUp extends AsyncTask<Activity, Integer, Void> {
     }
 
     @Override
-    @SuppressLint("SimpleDateFormat")
     protected Void doInBackground(Activity... activities) {
-        final MyDatabase myDatabase = getApplicationComponent().MyDatabase();
-        final Cursor cursor = myDatabase.getOpenHelper().getWritableDatabase()
-                .query("SELECT name FROM sqlite_master WHERE type='table';");
-        final String timeStamp = "/_" + (new SimpleDateFormat(activities[0].getString(R.string.save_format_name_melli)))
-                .format(new Date());
+        String timeStamp = new SimpleDateFormat(activities[0].getString(R.string.save_format_name_melli),
+                Locale.getDefault()).format(new Date());
         getApplicationComponent().SharedPreferenceModel().putData(LAST_BACK_UP.getValue(), timeStamp);
-        while (cursor.moveToNext()) {
-            if (!exportDatabaseToCSV(cursor.getString(0), timeStamp, activities[0]))
-                break;
-            if (cursor.getString(0).equals(OnOffLoadDtoTableName)
-                    && !exportOnOffloadSummaryToCSV(timeStamp, activities[0]))
-                break;
+        for (int i = DBVersion; i > DBVersion - 5; i--) {
+            tempDB = activities[0].openOrCreateDatabase(DBPrefix.concat(String.valueOf(i)),
+                    MODE_PRIVATE, null);
+            Cursor cursor = tempDB.rawQuery("SELECT name FROM sqlite_master WHERE type='table';", null);
+            child = String.format(Locale.US, "/_%d_%s", i, timeStamp);
+            while (cursor.moveToNext()) {
+                tableName = cursor.getString(0);
+                if (!exportDatabaseToCSV(activities[0]))
+                    break;
+                if (cursor.getString(0).equals(OnOffLoadDtoTableName)
+                        && !exportOnOffloadSummaryToCSV(activities[0]))
+                    break;
+            }
+            cursor.close();
         }
         return null;
     }
 
-    @SuppressLint("SimpleDateFormat")
-    public static boolean exportDatabaseToCSV(String tableName, String child, Activity activity) {
-        final File exportDir = new File(Environment
+    private boolean exportDatabaseToCSV(Activity activity) {
+        File exportDir = new File(Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + child);
         if (!exportDir.exists()) if (!exportDir.mkdirs()) return false;
-        final File file = new File(exportDir, tableName + "_" + BuildConfig.BUILD_TYPE + "_"
-                + BuildConfig.VERSION_CODE + ".csv");
+        File file = new File(exportDir, String.format(Locale.US, "%s_%s_%d.csv", tableName,
+                BuildConfig.BUILD_TYPE, BuildConfig.VERSION_CODE));
         try {
             if (file.exists()) if (!file.delete()) return false;
             if (!file.createNewFile()) return false;
-            final CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
-            final Cursor curCSV = getApplicationComponent().MyDatabase()
-                    .query("SELECT * FROM " + tableName, null);
+            CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
+            Cursor curCSV = tempDB.rawQuery("SELECT * FROM ".concat(tableName), null);
             csvWrite.writeNext(curCSV.getColumnNames());
             while (curCSV.moveToNext()) {
                 //Which column you want to export
@@ -103,30 +110,25 @@ public class BackUp extends AsyncTask<Activity, Integer, Void> {
     }
 
 
-    @SuppressLint("SimpleDateFormat")
-    public static boolean exportOnOffloadSummaryToCSV(String child, Activity activity) {
+    private boolean exportOnOffloadSummaryToCSV(Activity activity) {
         final File exportDir = new File(Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + child);
         if (!exportDir.exists()) if (!exportDir.mkdirs()) return false;
-        final File file = new File(exportDir, OnOffLoadDtoTableName + "Summary_" + BuildConfig.BUILD_TYPE + "_"
-                + BuildConfig.VERSION_CODE + ".csv");
+        File file = new File(exportDir, String.format(Locale.US, "%s_Summary_%s_%d.csv",
+                OnOffLoadDtoTableName, BuildConfig.BUILD_TYPE, BuildConfig.VERSION_CODE));
         try {
             if (file.exists()) if (!file.delete()) return false;
             if (!file.createNewFile()) return false;
-
-            final CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
-            final Cursor curCSV = getApplicationComponent().MyDatabase()
-                    .query("SELECT * FROM " + OnOffLoadDtoTableName, null);
+            CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
+            Cursor curCSV = tempDB.rawQuery("SELECT * FROM " + OnOffLoadDtoTableName, null);
 
             csvWrite.writeNext(new String[]{"BillId", "Radif", "Eshterak", "QeraatCode",
                     "PreDate", "TrackNumber", "CounterNumber", "CounterStateId"});
             while (curCSV.moveToNext()) {
                 //Which column you want to export
-//                final String[] arrStr = new String[curCSV.getColumnCount()];
                 final String[] arrStr = new String[8];
                 int j = 0;
                 for (int i = 0; i < curCSV.getColumnCount() - 1; i++) {
-                    //TODO
                     if (curCSV.getColumnName(i).equals("billId") ||
                             curCSV.getColumnName(i).equals("radif") ||
                             curCSV.getColumnName(i).equals("eshterak") ||
