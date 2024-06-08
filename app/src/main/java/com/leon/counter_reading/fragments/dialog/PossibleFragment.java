@@ -54,8 +54,8 @@ public class PossibleFragment extends DialogFragment implements View.OnClickList
 
     public static PossibleFragment newInstance(boolean justMobile, int position,
                                                OnOffLoadDto onOffLoadDto) {
-        final PossibleFragment fragment = new PossibleFragment();
-        final Bundle args = new Bundle();
+        PossibleFragment fragment = new PossibleFragment();
+        Bundle args = new Bundle();
         args.putString(ON_OFF_LOAD.getValue(), new Gson().toJson(onOffLoadDto));
         args.putBoolean(JUST_MOBILE.getValue(), justMobile);
         args.putInt(POSITION.getValue(), position);

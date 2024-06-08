@@ -1,5 +1,6 @@
 package com.leon.counter_reading.fragments.setting;
 
+import static com.leon.counter_reading.enums.SharedReferenceKeys.DATE;
 import static com.leon.counter_reading.helpers.MyApplication.getApplicationComponent;
 
 import android.app.Activity;
@@ -15,7 +16,6 @@ import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.FragmentSettingUpdateBinding;
 import com.leon.counter_reading.di.view_model.HttpClientWrapper;
-import com.leon.counter_reading.enums.SharedReferenceKeys;
 import com.leon.counter_reading.tables.LastInfo;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.updating.GetUpdateFile;
@@ -68,8 +68,8 @@ public class SettingUpdateFragment extends Fragment {
     public void updateInfoUi(LastInfo lastInfo) {
         activity.runOnUiThread(() -> {
             binding.textViewVersion.setText(lastInfo.versionName);
-            getApplicationComponent().SharedPreferenceModel().putData(SharedReferenceKeys.DATE.getValue()
-                    , lastInfo.uploadDateJalali);
+            getApplicationComponent().SharedPreferenceModel().putData(DATE.getValue(),
+                    lastInfo.uploadDateJalali);
             binding.textViewDate.setText(lastInfo.uploadDateJalali);
             binding.textViewPossibility.setText(lastInfo.description);
             final float size = (float) lastInfo.sizeInByte / (1028 * 1028);

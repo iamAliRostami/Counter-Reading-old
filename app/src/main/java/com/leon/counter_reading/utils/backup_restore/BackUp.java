@@ -37,8 +37,6 @@ public class BackUp extends AsyncTask<Activity, Integer, Void> {
         progress = getApplicationComponent().CustomProgressModel();
         progress.show(activity, false);
     }
-
-
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);

@@ -406,8 +406,19 @@ public class ReadingActivity extends BaseActivity implements View.OnClickListene
                 || sharedPreferenceManager.getBoolData(ACCOUNT.getValue())
                 || sharedPreferenceManager.getBoolData(READING_REPORT.getValue())
                 || sharedPreferenceManager.getBoolData(MOBILE.getValue())
-                || (sharedPreferenceManager.getBoolData(GUILD.getValue())
-                && Constants.karbariDtos.get(binding.viewPager.getCurrentItem()).isTejari);
+                || checkGuildVisibility();
+    }
+
+    private boolean checkGuildVisibility() {
+        if (sharedPreferenceManager.getBoolData(GUILD.getValue())
+                && Constants.karbariDtos.get(binding.viewPager.getCurrentItem()).isTejari) {
+            for (int i = 0; i < karbariDtos.size(); i++) {
+                if (readingData.onOffLoadDtos.get(binding.viewPager.getCurrentItem()).karbariCode ==
+                        karbariDtos.get(i).moshtarakinId)
+                    return karbariDtos.get(i).isInGuilds;
+            }
+        }
+        return false;
     }
 
     private void attemptSend(int position, boolean isForm, boolean isImage) {
