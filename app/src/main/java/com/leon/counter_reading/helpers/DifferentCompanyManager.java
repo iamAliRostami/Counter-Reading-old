@@ -49,7 +49,7 @@ public class DifferentCompanyManager {
             case TE -> "http://185.120.137.254";
             case TSE -> "http://172.28.5.40/";
             case TW -> "http://217.66.195.75/";
-            case KSH -> "http://46.225.241.211:25123/";
+            case KSH -> "http://82.99.252.21:25123";
             case INDEPENDENT -> "http://130.185.75.117";
             default -> "http://192.168.100.8:7529";
         };

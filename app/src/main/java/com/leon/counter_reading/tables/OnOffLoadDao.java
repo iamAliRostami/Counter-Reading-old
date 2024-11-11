@@ -78,11 +78,13 @@ public interface OnOffLoadDao {
             "AND hazf = 0 ORDER BY eshterak")
     List<OnOffLoadDto> getOnOffLoadReadByIsMane(List<Integer> counterStateId, String trackingId);
 
-    @Query("select * From OnOffLoadDto WHERE  trackingId = :trackingId AND counterStateId = :counterStateId")
+    @Query("select * From OnOffLoadDto WHERE  trackingId = :trackingId AND counterStateId = :counterStateId" +
+            " ORDER BY eshterak")
     List<OnOffLoadDto> getOnOffLoadCounter(int counterStateId, String trackingId);
 
 
-    @Query("select * From OnOffLoadDto WHERE  trackingId = :trackingId AND counterStateId != :counterStateId AND offLoadStateId == :offLoadStateId")
+    @Query("select * From OnOffLoadDto WHERE  trackingId = :trackingId AND counterStateId != :counterStateId AND offLoadStateId == :offLoadStateId" +
+            " ORDER BY eshterak")
     List<OnOffLoadDto> getOnOffLoadCounterRead(int counterStateId, int offLoadStateId, String trackingId);
 
     @Query("select COUNT(*) From OnOffLoadDto WHERE trackingId = :trackingId AND highLowStateId =:highLowStateId")

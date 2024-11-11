@@ -42,7 +42,7 @@ public class NavigationViewModel extends BaseObservable {
         if (getPossiblePhoneNumber() != null && !getPossiblePhoneNumber().isEmpty())
             getOnOffLoadDto().possiblePhoneNumber = getPossiblePhoneNumber();
         if (getPossibleMobile() != null && !getPossibleMobile().isEmpty())
-            getOnOffLoadDto().possiblePhoneNumber = getPossibleMobile();
+            getOnOffLoadDto().possibleMobile = getPossibleMobile();
         if (getPossibleCounterSerial() != null && !getPossibleCounterSerial().isEmpty())
             getOnOffLoadDto().possibleCounterSerial = getPossibleCounterSerial();
         if (getPossibleAddress() != null && !getPossibleAddress().isEmpty())

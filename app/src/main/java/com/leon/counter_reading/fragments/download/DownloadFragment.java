@@ -6,6 +6,7 @@ import static com.leon.counter_reading.utils.CustomFile.getFileSize;
 
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import com.leon.counter_reading.databinding.FragmentDownloadBinding;
 import com.leon.counter_reading.utils.downloading.Download;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 
 public class DownloadFragment extends Fragment {
     private long lastClickTime = 0;

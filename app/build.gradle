@@ -15,8 +15,8 @@ android {
         applicationId 'com.leon.counter_reading'
         minSdkVersion 23
         targetSdkVersion 35
-        versionCode 147
-        versionName "1.03.03.20"
+        versionCode 150
+        versionName "1.03.08.21"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.config
@@ -164,10 +164,10 @@ dependencies {
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
-    implementation "androidx.activity:activity:1.9.0"
+    implementation "androidx.activity:activity:1.9.3"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
     implementation "androidx.camera:camera-view:$camera_version"
     implementation "androidx.camera:camera-camera2:$camera_version"
     implementation "androidx.camera:camera-lifecycle:$camera_version"
