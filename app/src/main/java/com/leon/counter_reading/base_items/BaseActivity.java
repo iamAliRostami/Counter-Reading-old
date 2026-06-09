@@ -57,7 +57,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
 import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
+import com.gun0912.tedpermission.normal.TedPermission;
 import com.leon.counter_reading.BuildConfig;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.DownloadActivity;
@@ -79,7 +79,6 @@ import com.leon.counter_reading.infrastructure.ISharedPreferenceManager;
 import com.leon.counter_reading.utils.CustomToast;
 import com.leon.counter_reading.utils.PermissionManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseActivity extends AppCompatActivity implements OnItemClickListener,
@@ -169,7 +168,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
                 settingResultLauncher.launch(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, uri));
             } else if (ActivityCompat.checkSelfPermission(activity,
                     Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                new TedPermission(this)
+                TedPermission.create()
                         .setPermissionListener(getStoragePermissionListener())
                         .setRationaleMessage(getString(R.string.confirm_permission))
                         .setRationaleConfirmText(getString(R.string.allow_permission))
@@ -179,7 +178,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
                         .setPermissions(Manifest.permission.CAMERA).check();
             }
         } else
-            new TedPermission(this)
+            TedPermission.create()
                     .setPermissionListener(getStoragePermissionListener())
                     .setRationaleMessage(getString(R.string.confirm_permission))
                     .setRationaleConfirmText(getString(R.string.allow_permission))
@@ -198,14 +197,14 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
             }
 
             @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            public void onPermissionDenied(List<String> deniedPermissions) {
                 PermissionManager.forceClose(activity);
             }
         };
     }
 
     private void askLocationPermission() {
-        new TedPermission(this)
+        TedPermission.create()
                 .setPermissionListener(getLocationPermissionListener())
                 .setRationaleMessage(getString(R.string.confirm_permission))
                 .setRationaleConfirmText(getString(R.string.allow_permission))
@@ -227,7 +226,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnItemCl
             }
 
             @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            public void onPermissionDenied(List<String> deniedPermissions) {
                 PermissionManager.forceClose(activity);
             }
         };

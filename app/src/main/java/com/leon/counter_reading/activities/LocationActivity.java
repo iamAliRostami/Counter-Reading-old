@@ -25,7 +25,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
+import com.gun0912.tedpermission.normal.TedPermission;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.base_items.BaseActivity;
 import com.leon.counter_reading.databinding.ActivityLocationBinding;
@@ -42,6 +42,7 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LocationActivity extends BaseActivity {
     private final ArrayList<SavedLocation.LocationOnMap> savedLocations = new ArrayList<>();
@@ -109,11 +110,11 @@ public class LocationActivity extends BaseActivity {
             }
 
             @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            public void onPermissionDenied(List<String> deniedPermissions) {
                 PermissionManager.forceClose(activity);
             }
         };
-        new TedPermission(this)
+        TedPermission.create()
                 .setPermissionListener(permissionlistener)
                 .setRationaleMessage(getString(R.string.confirm_permission))
                 .setRationaleConfirmText(getString(R.string.allow_permission))
@@ -132,11 +133,11 @@ public class LocationActivity extends BaseActivity {
             }
 
             @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            public void onPermissionDenied(List<String> deniedPermissions) {
                 PermissionManager.forceClose(activity);
             }
         };
-        new TedPermission(this)
+        TedPermission.create()
                 .setPermissionListener(permissionlistener)
                 .setRationaleMessage(getString(R.string.confirm_permission))
                 .setRationaleConfirmText(getString(R.string.allow_permission))

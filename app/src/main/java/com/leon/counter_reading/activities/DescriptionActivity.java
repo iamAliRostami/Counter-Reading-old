@@ -35,7 +35,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.os.BuildCompat;
 
 import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
+import com.gun0912.tedpermission.normal.TedPermission;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.databinding.ActivityDescriptionBinding;
 import com.leon.counter_reading.tables.Voice;
@@ -46,7 +46,7 @@ import com.leon.counter_reading.utils.voice.PrepareMultimedia;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -306,7 +306,7 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void askRecorderPermission() {
-        new TedPermission(this)
+        TedPermission.create()
                 .setPermissionListener(getPermissionListener())
                 .setRationaleMessage(getString(R.string.confirm_permission))
                 .setRationaleConfirmText(getString(R.string.allow_permission))
@@ -325,7 +325,7 @@ public class DescriptionActivity extends AppCompatActivity implements View.OnCli
             }
 
             @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            public void onPermissionDenied(List<String> deniedPermissions) {
                 PermissionManager.forceClose(activity);
             }
         };

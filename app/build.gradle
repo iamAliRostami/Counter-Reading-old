@@ -1,8 +1,8 @@
 plugins {
-    id 'com.android.application'
+    alias libs.plugins.android.application
 }
 android {
-    compileSdk 35
+    compileSdk 37
     signingConfigs {
         config {
             keyAlias 'ali_angel'
@@ -142,6 +142,7 @@ android {
     buildFeatures {
         dataBinding = true
         viewBinding true
+        buildConfig = true
     }
 
     dexOptions {
@@ -164,63 +165,66 @@ dependencies {
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
-    implementation "androidx.activity:activity:1.9.3"
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
-    implementation "androidx.camera:camera-view:$camera_version"
-    implementation "androidx.camera:camera-camera2:$camera_version"
-    implementation "androidx.camera:camera-lifecycle:$camera_version"
+    implementation libs.activity
+    implementation libs.legacy.support.v4
+    implementation libs.appcompat
+    implementation libs.constraintlayout
+    implementation libs.camera.view
+    implementation libs.camera.camera2
+    implementation libs.camera.lifecycle
 
-    testImplementation 'junit:junit:4.13.2'
-    implementation 'com.google.android.material:material:1.12.0'
-    implementation 'com.google.android.gms:play-services-location:21.3.0'
-    implementation 'com.google.code.gson:gson:2.11.0'
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.runner
+    androidTestImplementation libs.espresso.core
+    implementation libs.material
+    implementation libs.play.services.location
+    implementation libs.gson
 
-    implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
-    implementation "com.squareup.retrofit2:converter-scalars:$retrofit2_version"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit2_version"
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    implementation libs.retrofit
+    implementation libs.converter.gson
+    implementation libs.converter.scalars
+    implementation libs.adapter.rxjava2
+    implementation libs.logging.interceptor
 
-    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+    implementation libs.zxing.android.embedded
 
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation libs.multidex
 
-    implementation 'com.intuit.sdp:sdp-android:1.1.1'
-    implementation 'com.nineoldandroids:library:2.4.0'
-    implementation 'com.facebook.shimmer:shimmer:0.5.0@aar'
+    implementation libs.sdp.android
+    implementation libs.library
+    implementation libs.shimmer
 
-    implementation 'org.osmdroid:osmdroid-android:6.1.18@aar'
-    implementation 'com.github.MKergall:osmbonuspack:6.9.0'
+    implementation libs.osmdroid.android
+    implementation libs.osmbonuspack
 
-    implementation "android.arch.lifecycle:extensions:$arch_version"
-    implementation "android.arch.persistence.room:runtime:$arch_version"
-    annotationProcessor "android.arch.persistence.room:compiler:$arch_version"
-    androidTestImplementation "android.arch.persistence.room:testing:$arch_version"
+    implementation libs.lifecycle.extensions
+    implementation libs.runtime
+    annotationProcessor libs.compiler
+    androidTestImplementation libs.testing
 
-    annotationProcessor("javax.annotation:javax.annotation-api:1.3.2")
+    annotationProcessor(libs.javax.annotation.api)
 
     // Libraries For Dependency Injection Using Dagger 2
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    implementation "com.google.dagger:dagger-android:$dagger_version"
-    implementation "com.google.dagger:dagger:$dagger_version"
+    implementation libs.dagger.android
+    implementation libs.dagger
 
-    implementation 'com.auth0.android:jwtdecode:2.0.2'
-    implementation 'gun0912.ted:tedpermission:1.0.3'
+    implementation libs.jwtdecode
+    implementation libs.tedpermission.normal
 
-    implementation 'com.github.bumptech.glide:glide:4.16.0'
-    implementation 'com.github.ali-sardari:PersianRangeDatePicker:1.2.1'
-    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-    implementation 'com.github.GrenderG:Toasty:1.5.0'
-    implementation 'com.github.blackfizz:eazegraph:1.2.3@aar'
+    implementation libs.glide
+    implementation libs.persianrangedatepicker
+    implementation libs.photoview
+    implementation libs.toasty
+    implementation libs.eazegraph
 
-    implementation 'com.yandex.android:mobmetricalib:5.3.0'
+    implementation libs.mobmetricalib
 
-    implementation 'me.jahnen:libaums:0.9.0'
+    implementation libs.libaums
 
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+    coreLibraryDesugaring libs.desugar.jdk.libs
 
     constraints {
         add("implementation", "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {

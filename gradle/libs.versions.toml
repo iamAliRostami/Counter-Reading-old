@@ -1,0 +1,88 @@
+[versions]
+activity = "1.13.0"
+agp = "9.2.1"
+appcompat = "1.7.1"
+camera = "1.6.1"
+constraintlayout = "2.2.1"
+dagger = "2.51.1"
+desugar_jdk_libs = "2.1.5"
+eazegraph = "1.2.3"
+espressoCore = "3.7.0"
+lifecycleExtensions = "1.1.1"
+glide = "4.16.0"
+gradle = "9.2.1"
+gson = "2.11.0"
+javaxAnnotationApi = "1.3.2"
+junit = "4.13.2"
+junitVersion = "1.3.0"
+jwtdecode = "2.0.2"
+legacySupportV4 = "1.0.0"
+libaums = "0.9.0"
+library = "2.4.0"
+loggingInterceptor = "5.4.0"
+material = "1.14.0"
+mobmetricalib = "5.3.0"
+multidex = "1.0.3"
+osmbonuspack = "6.9.0"
+osmdroidAndroid = "6.1.18"
+persianrangedatepicker = "1.2.1"
+photoview = "2.3.0"
+playServicesLocation = "21.3.0"
+retrofit2 = "3.0.0"
+retrofit2Version = "2.11.0"
+room = "1.1.1"
+runner = "1.7.0"
+sdpAndroid = "1.1.1"
+shimmer = "0.5.0"
+tedpermissionNormal = "3.4.2"
+toasty = "1.5.0"
+zxingAndroidEmbedded = "4.3.0"
+
+[libraries]
+activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+adapter-rxjava2 = { group = "com.squareup.retrofit2", name = "adapter-rxjava2", version.ref = "retrofit2" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camera" }
+camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camera" }
+camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camera" }
+compiler = { group = "android.arch.persistence.room", name = "compiler", version.ref = "room" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit2Version" }
+converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit2" }
+dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
+dagger-android = { group = "com.google.dagger", name = "dagger-android", version.ref = "dagger" }
+desugar_jdk_libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
+eazegraph = { group = "com.github.blackfizz", name = "eazegraph", version.ref = "eazegraph" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+lifecycle-extensions = { group = "android.arch.lifecycle", name = "extensions", version.ref = "lifecycleExtensions" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+gradle = { group = "com.android.tools.build", name = "gradle", version.ref = "gradle" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+javax-annotation-api = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javaxAnnotationApi" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+jwtdecode = { group = "com.auth0.android", name = "jwtdecode", version.ref = "jwtdecode" }
+legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
+libaums = { group = "me.jahnen", name = "libaums", version.ref = "libaums" }
+library = { group = "com.nineoldandroids", name = "library", version.ref = "library" }
+logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingInterceptor" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+mobmetricalib = { group = "com.yandex.android", name = "mobmetricalib", version.ref = "mobmetricalib" }
+multidex = { group = "com.android.support", name = "multidex", version.ref = "multidex" }
+osmbonuspack = { group = "com.github.MKergall", name = "osmbonuspack", version.ref = "osmbonuspack" }
+osmdroid-android = { group = "org.osmdroid", name = "osmdroid-android", version.ref = "osmdroidAndroid" }
+persianrangedatepicker = { group = "com.github.ali-sardari", name = "PersianRangeDatePicker", version.ref = "persianrangedatepicker" }
+photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit2Version" }
+runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+runtime = { group = "android.arch.persistence.room", name = "runtime", version.ref = "room" }
+sdp-android = { group = "com.intuit.sdp", name = "sdp-android", version.ref = "sdpAndroid" }
+shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "shimmer" }
+tedpermission-normal = { group = "io.github.ParkSangGwon", name = "tedpermission-normal", version.ref = "tedpermissionNormal" }
+testing = { group = "android.arch.persistence.room", name = "testing", version.ref = "room" }
+toasty = { group = "com.github.GrenderG", name = "Toasty", version.ref = "toasty" }
+zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }

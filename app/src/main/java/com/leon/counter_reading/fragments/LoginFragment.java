@@ -42,7 +42,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
+import com.gun0912.tedpermission.normal.TedPermission;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.activities.HomeActivity;
 import com.leon.counter_reading.databinding.FragmentLoginBinding;
@@ -54,7 +54,7 @@ import com.leon.counter_reading.utils.login.CreateDNTCaptcha;
 import com.leon.counter_reading.utils.login.ShowDNTCaptchaImage;
 import com.leon.counter_reading.view_models.LoginViewModel;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class LoginFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener,
         View.OnFocusChangeListener {
@@ -257,11 +257,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Vie
             }
 
             @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            public void onPermissionDenied(List<String> deniedPermissions) {
                 forceClose(requireActivity());
             }
         };
-        new TedPermission(requireActivity())
+        TedPermission.create()
                 .setPermissionListener(permissionlistener)
                 .setRationaleMessage(getString(R.string.confirm_permission))
                 .setRationaleConfirmText(getString(R.string.allow_permission))

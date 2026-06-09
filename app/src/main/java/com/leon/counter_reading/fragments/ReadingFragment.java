@@ -52,7 +52,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
+import com.gun0912.tedpermission.normal.TedPermission;
 import com.leon.counter_reading.R;
 import com.leon.counter_reading.adapters.SpinnerAdapter;
 import com.leon.counter_reading.databinding.FragmentReadingBinding;
@@ -64,7 +64,7 @@ import com.leon.counter_reading.view_models.ReadingViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ReadingFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
     private final ReadingViewModel readingVM = new ReadingViewModel();
@@ -443,11 +443,11 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
             }
 
             @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            public void onPermissionDenied(List<String> deniedPermissions) {
                 new CustomToast().warning(getString(R.string.cant_fine_location));
             }
         };
-        new TedPermission(requireContext())
+        TedPermission.create()
                 .setPermissionListener(permissionlistener)
                 .setRationaleMessage(getString(R.string.confirm_permission))
                 .setRationaleConfirmText(getString(R.string.allow_permission))
@@ -466,11 +466,11 @@ public class ReadingFragment extends Fragment implements View.OnClickListener, V
             }
 
             @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            public void onPermissionDenied(List<String> deniedPermissions) {
                 forceClose(requireActivity());
             }
         };
-        new TedPermission(requireContext())
+        TedPermission.create()
                 .setPermissionListener(permissionlistener)
                 .setRationaleMessage(getString(R.string.confirm_permission))
                 .setRationaleConfirmText(getString(R.string.allow_permission))

@@ -1,2 +1,23 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        mavenLocal()
+        maven { url "https://jitpack.io" }
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+            name 'OSS-Sonatype'
+        }
+    }
+}
+
 include ':app'
 rootProject.name = "Counter Reading"

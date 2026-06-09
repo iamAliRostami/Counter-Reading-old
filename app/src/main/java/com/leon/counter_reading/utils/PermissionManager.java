@@ -36,10 +36,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.location.LocationManagerCompat;
 
 import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
+import com.gun0912.tedpermission.normal.TedPermission;
 import com.leon.counter_reading.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PermissionManager {
     public static boolean checkRecorderPermission(Context context) {
@@ -90,11 +91,11 @@ public class PermissionManager {
             }
 
             @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            public void onPermissionDenied(List<String> deniedPermissions) {
                 PermissionManager.forceClose(activity);
             }
         };
-        new TedPermission(activity)
+        TedPermission.create()
                 .setPermissionListener(permissionlistener)
                 .setRationaleMessage(activity.getString(R.string.confirm_permission))
                 .setRationaleConfirmText(activity.getString(R.string.allow_permission))
